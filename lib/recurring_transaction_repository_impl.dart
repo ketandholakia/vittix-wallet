@@ -5,8 +5,9 @@ import 'package:expense_tracker/recurring_transaction_repository.dart';
 
 class RecurringTransactionRepositoryImpl implements RecurringTransactionRepository {
   final db.RecurringTransactionDao _dao;
+  final int walletId;
 
-  RecurringTransactionRepositoryImpl(this._dao);
+  RecurringTransactionRepositoryImpl(this._dao, this.walletId);
 
   @override
   Stream<List<RecurringTransaction>> watchAll() {

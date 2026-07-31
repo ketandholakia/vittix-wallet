@@ -1,1 +1,1 @@
-export 'package:expense_tracker/recent_transactions_list.dart';
+export 'package:expense_tracker/features/transactions/presentation/recent_transactions_list.dart';

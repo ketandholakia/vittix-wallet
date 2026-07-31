@@ -1,6 +1,6 @@
-import 'package:expense_tracker/usecase_providers.dart';
+import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/trend_data_point.dart';
-import 'package:expense_tracker/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:expense_tracker/empty_state_widget.dart';
 import 'package:expense_tracker/error_display_widget.dart';
@@ -143,7 +143,7 @@ class TrendReportScreen extends ConsumerWidget {
                           dotData: const FlDotData(show: false),
                           belowBarData: BarAreaData(
                             show: true,
-                            color: Theme.of(context).primaryColor.withOpacity(0.3),
+                            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                           ),
                         ),
                       ],

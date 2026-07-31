@@ -1,5 +1,4 @@
-import 'package:drift/drift.dart';
-import 'package:expense_tracker/app_database.dart';
+import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class DefaultCategories {

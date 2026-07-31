@@ -1,1 +1,1 @@
-export 'package:expense_tracker/dashboard_header.dart';
+export 'package:expense_tracker/features/dashboard/presentation/dashboard_header.dart';

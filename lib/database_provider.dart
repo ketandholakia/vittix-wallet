@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:expense_tracker/data/local/app_database.dart';
+import 'package:expense_tracker/family_automation_service.dart';
+import 'package:expense_tracker/notification_center_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -12,10 +14,12 @@ final databaseProvider = Provider<AppDatabase>((ref) {
 });
 
 // Provider to get the database file. This is useful for backup/restore.
+/*
 final databaseFileProvider = FutureProvider<File>((ref) async {
   final dbFolder = await getApplicationDocumentsDirectory();
   return File(p.join(dbFolder.path, 'db.sqlite'));
 });
+*/
 
 // Providers for each DAO
 final categoryDaoProvider = Provider<CategoryDao>((ref) {
@@ -37,3 +41,103 @@ final accountDaoProvider = Provider<AccountDao>((ref) {
 final recurringTransactionDaoProvider = Provider<RecurringTransactionDao>((ref) {
   return ref.watch(databaseProvider).recurringTransactionDao;
 });
+
+/*
+final walletDaoProvider = Provider<WalletDao>((ref) {
+  return ref.watch(databaseProvider).walletDao;
+});
+*/
+
+/*
+final goalDaoProvider = Provider<GoalDao>((ref) {
+  return ref.watch(databaseProvider).goalDao;
+});
+*/
+
+/*
+final allowanceDaoProvider = Provider<AllowanceDao>((ref) {
+  return ref.watch(databaseProvider).allowanceDao;
+});
+*/
+
+/*
+/*
+final commitmentDaoProvider = Provider<CommitmentDao>((ref) {
+  return ref.watch(databaseProvider).commitmentDao;
+});
+*/
+
+/*
+final settlementDaoProvider = Provider<SettlementDao>((ref) {
+  return ref.watch(databaseProvider).settlementDao;
+});
+*/
+*/
+
+/*
+final notificationDaoProvider = Provider<NotificationDao>((ref) {
+  return ref.watch(databaseProvider).notificationDao;
+});
+*/
+
+/*
+final notificationPreferenceDaoProvider = Provider<NotificationPreferenceDao>((ref) {
+  return ref.watch(databaseProvider).notificationPreferenceDao;
+});
+*/
+
+/*
+final feedbackDaoProvider = Provider<FeedbackDao>((ref) {
+  return ref.watch(databaseProvider).feedbackDao;
+});
+*/
+
+/*
+final smsImportMetricsDaoProvider = Provider<SmsImportMetricsDao>((ref) {
+  return ref.watch(databaseProvider).smsImportMetricsDao;
+});
+*/
+
+/*
+/*
+final smsParsingDaoProvider = Provider<SmsParsingDao>((ref) {
+  return ref.watch(databaseProvider).smsParsingDao;
+});
+*/
+
+/*
+final payeeDaoProvider = Provider<PayeeDao>((ref) {
+  return ref.watch(databaseProvider).payeeDao;
+});
+*/
+
+/*
+final tagDaoProvider = Provider<TagDao>((ref) {
+  return ref.watch(databaseProvider).tagDao;
+});
+*/
+*/
+
+/*
+final transactionTagDaoProvider = Provider<TransactionTagDao>((ref) {
+  return ref.watch(databaseProvider).transactionTagDao;
+});
+*/
+
+/*
+final attachmentDaoProvider = Provider<AttachmentDao>((ref) {
+  return ref.watch(databaseProvider).attachmentDao;
+});
+*/
+
+/*
+final familyAutomationServiceProvider = Provider<FamilyAutomationService>((ref) {
+  return const FamilyAutomationService();
+});
+*/
+
+/*
+final notificationCenterServiceProvider = Provider<NotificationCenterService>((ref) {
+  return const NotificationCenterService();
+});
+*/

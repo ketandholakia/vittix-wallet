@@ -11,7 +11,7 @@ Color colorFromHex(String hexColor) {
 
 // Helper to convert Color to hex string
 String colorToHex(Color color) {
-  return color.value.toRadixString(16).toUpperCase();
+  return color.toARGB32().toRadixString(16).toUpperCase();
 }
 
 extension CategoryDBMapper on db.Category {

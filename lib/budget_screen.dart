@@ -1,17 +1,20 @@
+// BROKEN DEPENDENCY: Experimental
+/*
 import 'package:expense_tracker/budget_form_dialog.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/budget.dart';
 import 'package:expense_tracker/presentation/screens/budget/widgets/budget_list_item.dart';
 import 'package:expense_tracker/presentation/widgets/empty_state_widget.dart';
 import 'package:expense_tracker/presentation/widgets/shimmer_list.dart';
-import 'package:expense_tracker/usecase_providers.dart';
+import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/budget.dart';
 import 'package:expense_tracker/budget_list_item.dart';
 import 'package:expense_tracker/empty_state_widget.dart';
 import 'package:expense_tracker/shimmer_list.dart';
-import 'package:expense_tracker/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:expense_tracker/app_drawer.dart';
 
 class BudgetScreen extends ConsumerWidget {
   const BudgetScreen({super.key});
@@ -24,6 +27,7 @@ class BudgetScreen extends ConsumerWidget {
     final budgetStatusStream = ref.watch(getBudgetStatusUseCaseProvider).call(DateTime.now(), rolloverMode);
 
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
         title: const Text('Budgets'),
       ),
@@ -65,3 +69,4 @@ class BudgetScreen extends ConsumerWidget {
     );
   }
 }
+*/

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:expense_tracker/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 
 /// Shows a dialog to add or edit a budget.
 /// Returns the [Budget] if the user saves, or `null` if cancelled.
@@ -156,7 +156,7 @@ class _BudgetFormDialogState extends State<_BudgetFormDialog> {
                 }
 
                 return DropdownButtonFormField<Category>(
-                  value: dropdownValue,
+                  initialValue: dropdownValue,
                   decoration: const InputDecoration(
                     labelText: 'Category',
                     prefixIcon: Icon(Icons.category),

@@ -31,10 +31,11 @@ void main() {
 
   test('should get monthly summary from the repository and calculate totals correctly', () async {
     when(mockTransactionRepository.watchTransactionsInMonth(any)).thenAnswer((_) => Stream.value(tTransactions));
+    when(mockTransactionRepository.getMonthlySummaryTotals(any)).thenAnswer((_) async => (500.0, 150.0));
 
     final resultStream = usecase(tDateTime);
 
-    final report = await resultStream.first;
+    final report = await resultStream;
     expect(report.totalExpense, 150.0);
     expect(report.totalIncome, 500.0);
     expect(report.balance, 350.0);

@@ -37,7 +37,7 @@ void main() {
       ProviderScope(
         overrides: [
           // Override providers with mock data streams
-          monthlyReportProvider.overrideWith((ref) => Stream.value(mockReport)),
+          monthlyReportProvider.overrideWith((ref) => Future.value(mockReport)),
           recentTransactionsProvider.overrideWith((ref) => Stream.value(mockTransactions)),
           // Override currency for consistent test results
           currencyFormatProvider.overrideWithValue(NumberFormat.currency(locale: 'en_IN', symbol: '₹')),

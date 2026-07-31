@@ -3,7 +3,6 @@ import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class SpendingInsightsWidget extends ConsumerWidget {
   final List<domain.Transaction> transactions;

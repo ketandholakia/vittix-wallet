@@ -1,8 +1,9 @@
-import 'package:expense_tracker/app_lock_wrapper.dart';
-import 'package:expense_tracker/app_theme.dart';
+import 'package:expense_tracker/features/security/presentation/app_lock_wrapper.dart';
+import 'package:expense_tracker/brand_assets.dart';
+import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/main_screen.dart';
 import 'package:expense_tracker/notification_provider.dart';
-import 'package:expense_tracker/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +31,8 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  bool _startupComplete = false;
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +46,11 @@ class _MyAppState extends ConsumerState<MyApp> {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
     await _initNotificationsAndRecurringWork();
+    if (mounted) {
+      setState(() {
+        _startupComplete = true;
+      });
+    }
   }
 
   Future<void> _initNotificationsAndRecurringWork() async {
@@ -58,6 +66,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         await notificationService.init();
         await notificationService.requestPermissions();
         await notificationService.scheduleDailyReminder();
+        await notificationService.scheduleMonthlySummary();
         await prefs.setString('lastNotificationBootstrapDay', todayKey);
       }
 
@@ -78,12 +87,77 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
     return MaterialApp(
-      title: 'Expense Tracker',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      title: 'Vittix Wallet',
+      theme: VittixTheme.light(),
+      darkTheme: VittixTheme.dark(),
       themeMode: themeMode,
       debugShowCheckedModeBanner: false,
-      home: const AppLockWrapper(child: MainScreen()),
+      home: _startupComplete
+          ? const AppLockWrapper(child: MainScreen())
+          : const _BrandSplashScreen(),
+    );
+  }
+}
+
+class _BrandSplashScreen extends StatelessWidget {
+  const _BrandSplashScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF071524),
+              Color(0xFF0B1F3A),
+              Color(0xFF12315A),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: colors.surface.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                  ),
+                  child: const BrandLogo(size: 112),
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Vittix Wallet',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700, color: Colors.white),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Personal & Family Finance Simplified',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 15, color: Color(0xFFD7E3F5)),
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  width: 180,
+                  child: LinearProgressIndicator(
+                    minHeight: 4,
+                    borderRadius: BorderRadius.circular(99),
+                    backgroundColor: Colors.white.withValues(alpha: 0.12),
+                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF5AD84F)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -6,13 +6,17 @@ import 'package:expense_tracker/domain/repositories/budget_repository.dart';
 
 class BudgetRepositoryImpl implements BudgetRepository {
   final db.BudgetDao _budgetDao;
+  
+  final int walletId;
 
-  BudgetRepositoryImpl(this._budgetDao);
+  BudgetRepositoryImpl(this._budgetDao, this.walletId);
 
   @override
   Future<void> addBudget(Budget budget) {
     final companion = budget.toCompanion().copyWith(id: const Value.absent());
-    return _budgetDao.insertBudget(companion);
+    return _budgetDao.insertBudget(companion).then((budgetId) {
+      return budgetId;
+    });
   }
 
   @override
@@ -21,9 +25,10 @@ class BudgetRepositoryImpl implements BudgetRepository {
   }
 
   @override
-  Future<void> updateBudget(Budget budget) {
+  Future<void> updateBudget(Budget budget) async {
     final companion = budget.toCompanion();
-    return _budgetDao.updateBudget(companion);
+    await _budgetDao.updateBudget(companion);
+    
   }
 
   @override

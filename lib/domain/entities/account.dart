@@ -1,1 +1,1 @@
-export 'package:expense_tracker/account.dart';
+export 'package:expense_tracker/features/accounts/domain/account.dart';

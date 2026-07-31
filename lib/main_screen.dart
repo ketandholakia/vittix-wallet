@@ -1,8 +1,10 @@
+// BROKEN DEPENDENCY: Experimental
+/*
 import 'package:expense_tracker/budget_screen.dart';
-import 'package:expense_tracker/dashboard_screen.dart';
+import 'package:expense_tracker/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:expense_tracker/reports_screen.dart';
-import 'package:expense_tracker/settings_screen.dart';
-import 'package:expense_tracker/transaction_list_screen.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_screen.dart';
+import 'package:expense_tracker/features/transactions/presentation/transaction_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -135,3 +137,5 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 }
+
+*/

@@ -1,19 +1,22 @@
+// BROKEN DEPENDENCY: Experimental
+/*
 import 'package:expense_tracker/core/providers/dashboard_providers.dart';
 import 'package:expense_tracker/presentation/screens/reports/category_report_screen.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/presentation/screens/reports/trend_report_screen.dart';
 import 'package:expense_tracker/presentation/screens/reports/widgets/spending_insights_widget.dart';
 import 'package:expense_tracker/presentation/widgets/error_display_widget.dart';
-import 'package:expense_tracker/dashboard_providers.dart';
+import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
 import 'package:expense_tracker/category_report_screen.dart';
-import 'package:expense_tracker/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/trend_report_screen.dart';
 import 'package:expense_tracker/account_report_screen.dart';
 import 'package:expense_tracker/spending_insights_widget.dart';
+import 'package:expense_tracker/spending_heatmap_screen.dart';
 import 'package:expense_tracker/error_display_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:expense_tracker/app_drawer.dart';
 
 class ReportsScreen extends ConsumerWidget {
   const ReportsScreen({super.key});
@@ -25,6 +28,7 @@ class ReportsScreen extends ConsumerWidget {
     final currencyFormat = ref.watch(currencyFormatProvider);
 
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
         title: const Text('Reports & Insights'),
       ),
@@ -92,6 +96,17 @@ class ReportsScreen extends ConsumerWidget {
                   ));
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.calendar_month),
+                title: const Text('Spending Heatmap'),
+                subtitle: const Text('Visualize daily spending intensity'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => const SpendingHeatmapScreen(),
+                  ));
+                },
+              ),
             ],
           );
         },
@@ -117,3 +132,4 @@ class ReportsScreen extends ConsumerWidget {
     );
   }
 }
+*/

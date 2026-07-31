@@ -1,6 +1,13 @@
 # expense_tracker
 
-A new Flutter project.
+Local-first expense tracker for personal and shared wallet-based finance.
+
+## Documentation
+
+- [User manual](docs/user_manual.md)
+- [Project history](docs/history.md)
+- [Roadmap](docs/roadmap.md)
+- [Analysis](docs/analysis.md)
 
 ## Getting Started
 

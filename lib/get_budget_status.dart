@@ -2,7 +2,7 @@ import 'package:expense_tracker/domain/entities/budget.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart';
 import 'package:expense_tracker/domain/repositories/budget_repository.dart';
 import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
-import 'package:expense_tracker/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:rxdart/rxdart.dart';
 
 class GetBudgetStatus {

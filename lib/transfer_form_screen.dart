@@ -1,8 +1,8 @@
-import 'package:expense_tracker/account.dart';
+import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/category.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/repository_providers.dart';
+import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -210,7 +210,7 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
 
                   // From Account
                   DropdownButtonFormField<Account>(
-                    value: _fromAccount,
+                    initialValue: _fromAccount,
                     decoration: const InputDecoration(
                       labelText: 'From Account',
                       prefixIcon: Icon(Icons.account_balance_wallet_outlined),
@@ -238,7 +238,7 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
 
                   // To Account
                   DropdownButtonFormField<Account>(
-                    value: _toAccount,
+                    initialValue: _toAccount,
                     decoration: const InputDecoration(
                       labelText: 'To Account',
                       prefixIcon: Icon(Icons.account_balance_wallet_outlined),

@@ -5,7 +5,7 @@ import 'package:expense_tracker/domain/entities/transaction.dart';
 import 'package:expense_tracker/domain/repositories/budget_repository.dart';
 import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
 import 'package:expense_tracker/domain/usecases/budget/get_budget_status.dart';
-import 'package:expense_tracker/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

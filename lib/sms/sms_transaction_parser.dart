@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:expense_tracker/account.dart';
-import 'package:expense_tracker/category.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
+import 'package:expense_tracker/sms/parsers/bank_sms_parser.dart';
+import 'package:expense_tracker/sms/parsers/hdfc_bank_parser.dart';
+import 'package:expense_tracker/sms/parsers/icici_bank_parser.dart';
+import 'package:expense_tracker/sms/parsers/sbi_bank_parser.dart';
 
 class SmsTransactionCandidate {
   final String smsId;
@@ -17,6 +18,9 @@ class SmsTransactionCandidate {
   final String? accountHint;
   final String? suggestedCategoryName;
   final bool isSelected;
+  final double confidence;
+  final bool isRecurringSetup;
+  final String? recurringIntervalHint;
 
   SmsTransactionCandidate({
     required this.smsId,
@@ -30,6 +34,9 @@ class SmsTransactionCandidate {
     required this.isSelected,
     this.accountHint,
     this.suggestedCategoryName,
+    required this.confidence,
+    this.isRecurringSetup = false,
+    this.recurringIntervalHint,
   });
 
   SmsTransactionCandidate copyWith({
@@ -40,6 +47,8 @@ class SmsTransactionCandidate {
     String? accountHint,
     String? suggestedCategoryName,
     bool? isSelected,
+    bool? isRecurringSetup,
+    String? recurringIntervalHint,
   }) {
     return SmsTransactionCandidate(
       smsId: smsId,
@@ -53,16 +62,65 @@ class SmsTransactionCandidate {
       accountHint: accountHint ?? this.accountHint,
       suggestedCategoryName: suggestedCategoryName ?? this.suggestedCategoryName,
       isSelected: isSelected ?? this.isSelected,
+      confidence: confidence,
+      isRecurringSetup: isRecurringSetup ?? this.isRecurringSetup,
+      recurringIntervalHint: recurringIntervalHint ?? this.recurringIntervalHint,
     );
   }
 }
 
 class SmsTransactionParser {
-  static final RegExp _amountRegex = RegExp(r'(?:Rs\.?|INR|₹)\s*([\d,]+(?:\.\d{1,2})?)', caseSensitive: false);
-  static final RegExp _upiAmountRegex = RegExp(r'UPI.*?(?:Rs\.?|INR|₹)\s*([\d,]+(?:\.\d{1,2})?)', caseSensitive: false);
-  static final RegExp _merchantAfterAtRegex = RegExp(r'\bat\s+([A-Z0-9][A-Z0-9 &._/-]{2,})', caseSensitive: false);
-  static final RegExp _merchantAfterToRegex = RegExp(r'\bto\s+([A-Z0-9][A-Z0-9 &._/-]{2,})', caseSensitive: false);
-  static final RegExp _merchantAfterFromRegex = RegExp(r'\bfrom\s+([A-Z0-9][A-Z0-9 &._/-]{2,})', caseSensitive: false);
+  final List<BankSmsParser> _bankParsers = [
+    HdfcBankParser(),
+    SbiBankParser(),
+    IciciBankParser(),
+  ];
+  static String buildHash({required String sender, required String body}) {
+    final normalized = body.trim().replaceAll(RegExp(r'\s+'), ' ').toLowerCase();
+    return base64Url.encode(utf8.encode('$sender|$normalized'));
+  }
+
+  // --- Advanced Regex Patterns from pennywiseai ---
+
+  static final List<RegExp> _amountRegexes = [
+    RegExp(r'Rs\.?\s*([0-9,]+(?:\.\d{2})?)', caseSensitive: false),
+    RegExp(r'INR\s*([0-9,]+(?:\.\d{2})?)', caseSensitive: false),
+    RegExp(r'₹\s*([0-9,]+(?:\.\d{2})?)', caseSensitive: false),
+    RegExp(r'(?:Rs\.?|INR|\u20B9)\s*([\d,]+(?:\.\d{1,2})?)', caseSensitive: false), // Fallback
+  ];
+
+  static final RegExp _upiAmountRegex = RegExp(r'UPI.*?(?:Rs\.?|INR|\u20B9)\s*([\d,]+(?:\.\d{1,2})?)', caseSensitive: false);
+
+  static final List<RegExp> _merchantRegexes = [
+    RegExp(r'to\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref|\s+UPI)', caseSensitive: false),
+    RegExp(r'from\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref|\s+UPI)', caseSensitive: false),
+    RegExp(r'at\s+([^\.\n]+?)(?:\s+on|\s+Ref)', caseSensitive: false),
+    RegExp(r'for\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref)', caseSensitive: false),
+    RegExp(r'\bpaid\s+to\s+([A-Z0-9][A-Z0-9 &._/-]{2,})', caseSensitive: false),
+    RegExp(r'\bspent\s+on\s+([A-Z0-9][A-Z0-9 &._/-]{2,})', caseSensitive: false),
+  ];
+
+  static final List<RegExp> _accountHintRegexes = [
+    RegExp(r'(?:A/c|Account|Acct)(?:\s+No)?\.?\s+(\S+)', caseSensitive: false),
+    RegExp(r'Card\s+(\S+)', caseSensitive: false),
+    RegExp(r'(?:ending|ends with|ending with)\s+(\d{4})', caseSensitive: false),
+    RegExp(r'(?<![/])AC\s+(\S+)', caseSensitive: false),
+    RegExp(r'(?:debit|credit)\s+card\s+(\S+)', caseSensitive: false),
+    RegExp(r'Your\s+(?:a/c|account|acct|card|#)\s*(\S+)', caseSensitive: false),
+    RegExp(r'linked\s+(?:a/c|account|acct)\s+(\S+)', caseSensitive: false),
+    RegExp(r'XX?(\d{2,4})', caseSensitive: false), // Fallback
+  ];
+
+  static final List<RegExp> _cleaningRegexes = [
+    RegExp(r'\s*\(.*?\)\s*$'), // Trailing parentheses
+    RegExp(r'\s+Ref\s+No.*', caseSensitive: false), // Ref Number suffix
+    RegExp(r'\s+on\s+\d{2}.*'), // Date suffix
+    RegExp(r'\s+UPI.*', caseSensitive: false), // UPI suffix
+    RegExp(r'\s+at\s+\d{2}:\d{2}.*'), // Time suffix
+    RegExp(r'\s*-\s*$'), // Trailing dash
+    RegExp(r'(\s+PVT\.?\s*LTD\.?|\s+PRIVATE\s+LIMITED)$', caseSensitive: false),
+    RegExp(r'(\s+LTD\.?|\s+LIMITED)$', caseSensitive: false),
+  ];
 
   static const _expenseKeywords = [
     'debited',
@@ -109,8 +167,23 @@ class SmsTransactionParser {
     if (trimmedBody.isEmpty) return null;
 
     final normalized = trimmedBody.replaceAll(RegExp(r'\s+'), ' ').toLowerCase();
-    final smsHash = base64Url.encode(utf8.encode('$sender|$normalized'));
+    final smsHash = buildHash(sender: sender, body: trimmedBody);
     if (knownHashes.contains(smsHash)) return null;
+
+    // Try bank specific parsers first
+    for (final parser in _bankParsers) {
+      if (parser.canHandle(sender, trimmedBody)) {
+        final candidate = parser.parse(smsId, smsHash, sender, trimmedBody, date);
+        if (candidate != null) {
+          // Add category hint logic from fallback if the bank parser couldn't
+          final categoryHint = _inferCategory(candidate.merchant, trimmedBody);
+          if (categoryHint != null && candidate.suggestedCategoryName == null) {
+            return candidate.copyWith(suggestedCategoryName: categoryHint);
+          }
+          return candidate;
+        }
+      }
+    }
 
     final keywordsMatch = _expenseKeywords.any(normalized.contains) || _incomeKeywords.any(normalized.contains);
     if (!keywordsMatch) return null;
@@ -122,6 +195,7 @@ class SmsTransactionParser {
     final merchant = _extractMerchant(trimmedBody) ?? _fallbackMerchant(sender);
     final accountHint = _extractAccountHint(trimmedBody);
     final categoryHint = _inferCategory(merchant, trimmedBody);
+    final confidence = _computeConfidence(merchant, categoryHint, accountHint, amount, trimmedBody);
 
     return SmsTransactionCandidate(
       smsId: smsId,
@@ -135,15 +209,22 @@ class SmsTransactionParser {
       accountHint: accountHint,
       suggestedCategoryName: categoryHint,
       isSelected: true,
+      confidence: confidence,
     );
   }
 
   double? _extractAmount(String body) {
     final upiMatch = _upiAmountRegex.firstMatch(body);
-    final match = upiMatch ?? _amountRegex.firstMatch(body);
-    if (match == null) return null;
-    final value = match.group(1)!.replaceAll(',', '');
-    return double.tryParse(value);
+    if (upiMatch != null) {
+      return double.tryParse(upiMatch.group(1)!.replaceAll(',', ''));
+    }
+    for (final regex in _amountRegexes) {
+      final match = regex.firstMatch(body);
+      if (match != null) {
+        return double.tryParse(match.group(1)!.replaceAll(',', ''));
+      }
+    }
+    return null;
   }
 
   domain.TransactionType _inferType(String normalized) {
@@ -154,7 +235,7 @@ class SmsTransactionParser {
   }
 
   String? _extractMerchant(String body) {
-    for (final regex in [_merchantAfterAtRegex, _merchantAfterToRegex, _merchantAfterFromRegex]) {
+    for (final regex in _merchantRegexes) {
       final match = regex.firstMatch(body);
       if (match != null) {
         return _cleanMerchant(match.group(1)!);
@@ -176,8 +257,12 @@ class SmsTransactionParser {
   }
 
   String? _extractAccountHint(String body) {
-    final match = RegExp(r'XX?(\d{2,4})', caseSensitive: false).firstMatch(body);
-    if (match != null) return 'XX${match.group(1)}';
+    for (final regex in _accountHintRegexes) {
+      final match = regex.firstMatch(body);
+      if (match != null) {
+        return 'XX${match.group(1)!.replaceAll(RegExp(r'[^A-Z0-9]', caseSensitive: false), '')}';
+      }
+    }
     return null;
   }
 
@@ -190,9 +275,23 @@ class SmsTransactionParser {
   }
 
   String _cleanMerchant(String merchant) {
-    return merchant
+    var cleaned = merchant;
+    for (final regex in _cleaningRegexes) {
+      cleaned = cleaned.replaceAll(regex, '');
+    }
+    return cleaned
         .replaceAll(RegExp(r'[^A-Z0-9 &._/-]', caseSensitive: false), ' ')
         .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
+  }
+
+  double _computeConfidence(String merchant, String? categoryHint, String? accountHint, double amount, String body) {
+    var confidence = 0.45;
+    if (merchant.isNotEmpty && merchant != 'SMS Import') confidence += 0.2;
+    if (categoryHint != null) confidence += 0.15;
+    if (accountHint != null) confidence += 0.1;
+    if (amount > 0) confidence += 0.05;
+    if (_upiAmountRegex.hasMatch(body)) confidence += 0.05;
+    return confidence.clamp(0.0, 1.0);
   }
 }

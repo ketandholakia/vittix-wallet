@@ -8,10 +8,12 @@ class GetMonthlySummary {
 
   Future<MonthlyReport> call(DateTime month) async {
     final totals = await repository.getMonthlySummaryTotals(month);
+    final txStream = repository.watchTransactionsInMonth(month);
+    final transactions = await txStream.first;
     return MonthlyReport(
       totalIncome: totals.$1,
       totalExpense: totals.$2,
-      transactions: const [],
+      transactions: transactions,
     );
   }
 }

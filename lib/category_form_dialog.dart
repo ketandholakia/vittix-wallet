@@ -198,7 +198,7 @@ class _CategoryFormDialogState extends ConsumerState<_CategoryFormDialog> {
                     final parentCandidates = list.where((c) => c.parentId == null && c.id != widget.category?.id).toList();
 
                     return DropdownButtonFormField<int?>(
-                      value: _selectedParentId,
+                      initialValue: _selectedParentId,
                       decoration: const InputDecoration(
                         labelText: 'Parent Category',
                         prefixIcon: Icon(Icons.subdirectory_arrow_right),

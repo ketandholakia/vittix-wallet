@@ -1,1 +1,1 @@
-export 'package:expense_tracker/transaction_mapper.dart';
+export 'package:expense_tracker/features/transactions/data/transaction_mapper.dart';

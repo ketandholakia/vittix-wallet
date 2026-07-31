@@ -1,6 +1,6 @@
-import 'package:expense_tracker/account.dart';
+import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/category.dart';
-import 'package:expense_tracker/transaction.dart';
+import 'package:expense_tracker/features/transactions/domain/transaction.dart';
 
 enum RecurringInterval {
   daily,

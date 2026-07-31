@@ -7,7 +7,8 @@ import 'dart:async' as _i3;
 
 import 'package:expense_tracker/domain/entities/transaction.dart' as _i4;
 import 'package:expense_tracker/domain/entities/trend_data_point.dart' as _i5;
-import 'package:expense_tracker/transaction_repository.dart' as _i2;
+import 'package:expense_tracker/features/transactions/domain/transaction_repository.dart'
+    as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -69,6 +70,14 @@ class MockTransactionRepository extends _i1.Mock
             ),
           )
           as _i3.Future<List<_i5.TrendDataPoint>>);
+
+  @override
+  _i3.Future<(double, double)> getMonthlySummaryTotals(DateTime? month) =>
+      (super.noSuchMethod(
+            Invocation.method(#getMonthlySummaryTotals, [month]),
+            returnValue: _i3.Future<(double, double)>.value((0.0, 0.0)),
+          )
+          as _i3.Future<(double, double)>);
 
   @override
   _i3.Future<void> addTransaction(_i4.Transaction? transaction) =>

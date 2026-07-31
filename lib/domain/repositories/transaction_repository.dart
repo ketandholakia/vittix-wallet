@@ -1,1 +1,1 @@
-export 'package:expense_tracker/transaction_repository.dart';
+export 'package:expense_tracker/features/transactions/domain/transaction_repository.dart';

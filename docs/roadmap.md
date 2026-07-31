@@ -1,0 +1,182 @@
+# Roadmap
+
+## Current milestone
+
+- [x] Add wallet schema
+- [x] Add wallet membership roles
+- [x] Keep legacy single-user data mapped into a default wallet
+- [x] Add current wallet selection
+- [x] Scope core repositories and reporting to the active wallet
+- [x] Add wallet isolation tests for the main expense flows
+- [x] Add migration validation for wallet-owned table defaults
+- [x] Add wallet member roles and wallet activity foundation
+- [x] Add transaction audit fields for collaboration readiness
+- [x] Finish transaction attribution on all write paths
+- [x] Surface member management in the UI
+- [x] Expose wallet activity feed in the app shell
+- [x] Add wallet invitation schema and lifecycle states
+- [x] Add invitation repository scaffolding
+- [x] Centralize collaboration permission checks
+- [x] Add activity hooks for member and budget changes
+- [x] Add invitation management screen
+- [x] Add QR/code export for local invitations
+- [x] Add dashboard member contribution summaries
+- [x] Add invitation acceptance flow
+- [x] Make active wallet visible in dashboard
+- [x] Add wallet-level shared budgets
+- [x] Add wallet goal schema and contribution tracking
+- [x] Add family budget and family financial dashboard summaries
+- [x] Extend permissions for budget and goal access
+- [x] Introduce UI-facing family finance view models
+- [x] Add wallet-goal management screen
+- [x] Add shared-budget management screen
+- [x] Add budget activity detail screen
+- [x] Add wallet allowance schema and payment tracking
+- [x] Add allowance management screen
+- [x] Add allowance detail screen
+- [x] Add allowance summary providers and child spending summary
+- [x] Add allowance characterization tests
+- [x] Add recurring goal schedules
+- [x] Add wallet bill schema and reminders foundation
+- [x] Add family commitment dashboard summary
+- [x] Add family commitments screen
+- [x] Add commitment characterization tests
+- [x] Add wallet-native recurrence service
+- [x] Add goal, allowance, and bill forecast providers
+- [x] Add family automation dashboard section
+- [x] Add family automation characterization tests
+- [x] Add expense split schema
+- [x] Add settlement schema
+- [x] Add member balance provider
+- [x] Add settlement history screen
+- [x] Add balance widget
+- [x] Add split and settlement characterization tests
+- [x] Add split expense editor screen
+- [x] Add split detail screen
+- [x] Add settlement entry screen
+- [x] Add balance widget
+- [x] Add split UI visibility tests
+- [x] Add wallet notifications and action center
+- [x] Add notification preferences
+- [x] Add attention-needed dashboard widget
+- [x] Add notification generation and dismissal tests
+- [x] Add forecast history trends
+- [x] Improve SMS merchant and duplicate detection
+- [x] Add spending insights summaries
+- [x] Validate production-readiness workflows
+- [x] Add release checklist
+- [x] Document forecast persistence tradeoff
+- [x] Add local beta feedback capture
+- [x] Add SMS import quality metrics
+- [x] Surface beta feedback in settings
+- [x] Document analyzer cleanup baseline
+- [x] Remove obvious unused imports from touched files
+- [x] Reduce analyzer warnings to 57
+- [x] Reduce analyzer warnings to 54
+- [x] Add beta metrics dashboard
+- [x] Add friction tracking
+- [x] Add feedback categorization
+- [x] Add SMS accuracy reporting
+- [x] Add feedback review summary
+- [x] Add workflow friction summary
+- [x] Simplify default dashboard
+- [x] Add wallet onboarding banner
+- [x] Add SMS import introduction
+- [x] Improve empty states for family finance screens
+- [x] Add guided wallet creation flow
+- [x] Track onboarding funnel progress
+- [x] Add beta observation dashboard
+- [x] Add beta health score
+- [x] Add public beta checklist
+- [x] Add crash recovery audit coverage
+- [x] Improve first-wallet onboarding copy
+- [x] Clarify invite acceptance preview and invalid-code feedback
+- [x] Clarify SMS setup review-first messaging
+- [x] Clarify backup/export release settings copy
+- [x] Reject malformed invite payloads cleanly
+- [x] Reject malformed SMS bodies explicitly
+- [x] Remove unused default helper imports
+- [x] Replace settings divider opacity accessor
+
+## Next milestone
+
+- [x] Finish wallet-aware cleanup on remaining screens and edge cases
+- [x] Harden wallet switching UX
+- [x] Expand wallet-isolation tests for additional reporting paths
+- [x] Validate migration behavior on older installs
+- [x] Add historical upgrade-path migration tests for schema evolution
+- [x] Enforce permissions for invalid collaboration operations
+- [x] Audit attribution for remaining repository write paths
+- [x] Add in-app beta feedback reporting
+- [x] Track SMS import accept/reject/duplicate metrics
+- [x] Keep performance monitoring documented rather than persisted
+- [ ] Reduce analyzer warning backlog
+- [ ] Replace deprecated APIs in low-risk UI files
+- [ ] Remove dead test infrastructure
+- [ ] Consolidate the dense dashboard summary stack
+- [ ] Improve first-time wallet creation and invite onboarding flow
+- [ ] Reduce SMS import friction during initial setup
+- [ ] Add invite transport when the delivery channel is decided
+- [ ] Add goal editing/removal UI
+- [ ] Add budget activity detail views
+- [ ] Add dedicated goal and budget management screens
+- [ ] Add richer goal archive/history semantics
+- [ ] Add previous-value diffs to budget activity detail
+- [ ] Improve allowance member selection and due-date handling
+- [ ] Add richer allowance history and archive semantics
+- [ ] Expand allowance dashboard widgets
+- [ ] Improve goal schedule editing and forecasting
+- [ ] Add bill payment automation and overdue state transitions
+- [ ] Add richer bill reminder dashboard widgets
+- [ ] Add execution persistence for generated recurrence events
+- [ ] Add stricter bill status refresh automation
+- [ ] Add forecast history and trend views
+- [ ] Add split expense editor UI
+- [ ] Add balance adjustment audit details
+- [ ] Add richer settlement history and filters
+- [ ] Add settlement edit flow
+- [ ] Add before/after audit diffs in UI
+- [ ] Add split and settlement filters
+- [ ] Add richer per-notification actions
+- [ ] Add notification activity mention support
+- [ ] Add notification delivery timing controls
+- [ ] Track forecast accuracy over time
+- [ ] Add stronger anomaly detection
+- [ ] Add deeper bill automation persistence
+- [ ] Add more contextual notification grouping
+- [ ] Continue warning cleanup in legacy UI code
+- [ ] Decide whether forecast history needs persistence after beta feedback
+- [ ] Reassess SMS permission policy before public release
+- [ ] Reduce beta-facing analyzer debt
+- [ ] Polish release settings explanations
+
+## Later milestones
+
+- [ ] Shared family wallet
+- [ ] Invite and join flow
+- [ ] Shared budgets
+- [ ] Shared dashboard per wallet
+- [ ] Wallet switching polish
+
+- [ ] Split expenses
+- [ ] Settle balances between members
+- [ ] Track who paid and who owes
+- [ ] Approval workflow for large purchases
+
+- [x] Children allowance tracking
+- [ ] Family goals
+- [x] Bill reminders
+- [x] Shared notifications
+
+- [ ] Merchant detection improvements
+- [ ] SMS classification quality tuning
+- [ ] Category suggestions
+- [ ] Spending insights
+- [ ] Anomaly detection
+- [x] Forecast trends
+- [x] Beta feedback and SMS quality tracking
+
+- [ ] Business wallets
+- [ ] Team roles
+- [x] Multi-device sync scaffold
+- [ ] Optional cloud backend for collaboration

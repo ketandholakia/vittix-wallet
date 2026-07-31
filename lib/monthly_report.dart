@@ -1,4 +1,4 @@
-import 'package:expense_tracker/transaction.dart';
+import 'package:expense_tracker/features/transactions/domain/transaction.dart';
 
 class MonthlyReport {
   final double totalIncome;

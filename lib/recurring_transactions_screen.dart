@@ -1,13 +1,14 @@
 import 'package:expense_tracker/add_recurring_transaction_screen.dart';
+import 'package:expense_tracker/calendar/subscription_calendar_screen.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/presentation/widgets/empty_state_widget.dart';
 import 'package:expense_tracker/presentation/widgets/shimmer_list.dart';
 import 'package:expense_tracker/recurring_transaction.dart';
-import 'package:expense_tracker/transaction.dart';
+import 'package:expense_tracker/features/transactions/domain/transaction.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class RecurringTransactionsScreen extends ConsumerWidget {
   const RecurringTransactionsScreen({super.key});
@@ -21,6 +22,19 @@ class RecurringTransactionsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recurring Transactions'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calendar_month),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SubscriptionCalendarScreen(),
+                ),
+              );
+            },
+            tooltip: 'Calendar View',
+          ),
+        ],
       ),
       body: StreamBuilder<List<RecurringTransaction>>(
         stream: templatesStream,
@@ -54,7 +68,7 @@ class RecurringTransactionsScreen extends ConsumerWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                   side: BorderSide(
-                    color: Theme.of(context).dividerColor.withOpacity(0.1),
+                    color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Padding(
@@ -62,7 +76,7 @@ class RecurringTransactionsScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: template.category.color.withOpacity(0.2),
+                        backgroundColor: template.category.color.withValues(alpha: 0.2),
                         child: Icon(template.category.icon, color: template.category.color, size: 20),
                       ),
                       const SizedBox(width: 16),

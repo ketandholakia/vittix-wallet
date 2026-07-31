@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart';
 import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/account.dart';
-import 'package:expense_tracker/csv_exporter.dart';
+import 'package:expense_tracker/features/accounts/domain/account.dart';
+import 'package:expense_tracker/core/utils/csv_exporter.dart';
 
 void main() {
   group('CSV Exporter Tests', () {

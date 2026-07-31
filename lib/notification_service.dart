@@ -102,6 +102,53 @@ class NotificationService {
     );
   }
 
+  Future<void> scheduleMonthlySummary() async {
+    const details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'monthly_summary_channel',
+        'Monthly Summary',
+        channelDescription: 'Channel for monthly spending summary',
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+    );
+    final scheduledTime = _nextFirstOfMonth9AM();
+
+    try {
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        99,
+        'Monthly Summary Ready',
+        'Your spending summary for last month is ready. Open the app to review!',
+        scheduledTime,
+        details,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
+      );
+    } catch (_) {
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        99,
+        'Monthly Summary Ready',
+        'Your spending summary for last month is ready. Open the app to review!',
+        scheduledTime,
+        details,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
+      );
+    }
+  }
+
+  tz.TZDateTime _nextFirstOfMonth9AM() {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    // Schedule for the 1st of the next month at 9:00 AM
+    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, 1, 9);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = tz.TZDateTime(tz.local, now.year, now.month + 1, 1, 9);
+    }
+    return scheduledDate;
+  }
+
   tz.TZDateTime _nextInstanceOf8PM() {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, 20);

@@ -1,4 +1,6 @@
-import 'package:expense_tracker/add_transaction_screen.dart';
+// BROKEN DEPENDENCY: Experimental
+/*
+import 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
@@ -24,8 +26,8 @@ class TransactionListItem extends ConsumerWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: isTransfer 
-            ? Colors.grey.withOpacity(0.2) 
-            : transaction.category.color.withOpacity(0.2),
+            ? Colors.grey.withValues(alpha: 0.2) 
+            : transaction.category.color.withValues(alpha: 0.2),
         child: Icon(
           isTransfer ? Symbols.swap_horiz : transaction.category.icon, 
           color: isTransfer ? Colors.grey : transaction.category.color, 
@@ -33,10 +35,40 @@ class TransactionListItem extends ConsumerWidget {
         ),
       ),
       title: Text(isTransfer ? transaction.note! : transaction.category.name),
-      subtitle: Text(
-        isTransfer 
-            ? '${transaction.account.name} · ${DateFormat.yMMMd().format(transaction.date)}'
-            : '${transaction.account.name} · ${DateFormat.yMMMd().format(transaction.date)}${transaction.note != null ? ' · ${transaction.note}' : ''}',
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            isTransfer 
+                ? '${transaction.account.name} · ${DateFormat.yMMMd().format(transaction.date)}'
+                : '${transaction.account.name} · ${DateFormat.yMMMd().format(transaction.date)}${transaction.note != null ? ' · ${transaction.note}' : ''}',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (transaction.payee != null || transaction.tags.isNotEmpty || transaction.attachments.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Row(
+                children: [
+                  if (transaction.payee != null) ...[
+                    const Icon(Icons.person, size: 14, color: Colors.grey),
+                    const SizedBox(width: 2),
+                    Text(transaction.payee!.name, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    const SizedBox(width: 8),
+                  ],
+                  if (transaction.tags.isNotEmpty) ...[
+                    const Icon(Icons.label, size: 14, color: Colors.grey),
+                    const SizedBox(width: 2),
+                    Text(transaction.tags.map((t) => t.name).join(', '), style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    const SizedBox(width: 8),
+                  ],
+                  if (transaction.attachments.isNotEmpty) ...[
+                    const Icon(Icons.attachment, size: 14, color: Colors.grey),
+                  ],
+                ],
+              ),
+            ),
+        ],
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -94,3 +126,4 @@ class TransactionListItem extends ConsumerWidget {
     );
   }
 }
+*/

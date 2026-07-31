@@ -1,13 +1,29 @@
+// BROKEN DEPENDENCY: db.walletActivities
+/*
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:drift/drift.dart';
-import 'package:expense_tracker/app_database.dart';
+import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:expense_tracker/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/database_provider.dart';
 
 enum SyncStatus { idle, syncing, success, error }
+const int syncApiVersion = 1;
+const String _syncDeviceIdKey = 'syncDeviceId';
+
+Map<String, String> buildSyncHeaders({required String deviceId, required String token}) {
+  final headers = <String, String>{
+    'Content-Type': 'application/json',
+    'X-Sync-Api-Version': syncApiVersion.toString(),
+    'X-Device-Id': deviceId,
+  };
+  if (token.isNotEmpty) {
+    headers['Authorization'] = 'Bearer $token';
+  }
+  return headers;
+}
 
 class SyncState {
   final SyncStatus status;
@@ -26,6 +42,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
   final AppDatabase db;
 
   SyncNotifier(this.ref, this.db) : super(SyncState(status: SyncStatus.idle));
+
+  Future<String> _deviceId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final existing = prefs.getString(_syncDeviceIdKey);
+    if (existing != null && existing.isNotEmpty) {
+      return existing;
+    }
+    final generated = DateTime.now().microsecondsSinceEpoch.toRadixString(16);
+    await prefs.setString(_syncDeviceIdKey, generated);
+    return generated;
+  }
 
   DateTime _parseDateTime(dynamic value) {
     if (value is int) {
@@ -63,6 +90,195 @@ class SyncNotifier extends StateNotifier<SyncState> {
     throw ArgumentError("Invalid PeerDebtType value: $value");
   }
 
+  dynamic _jsonSafeValue(dynamic value) {
+    if (value is DateTime) {
+      return value.millisecondsSinceEpoch;
+    }
+    if (value is Map) {
+      return value.map((key, child) => MapEntry(key, _jsonSafeValue(child)));
+    }
+    if (value is Iterable) {
+      return value.map(_jsonSafeValue).toList();
+    }
+    return value;
+  }
+
+  Future<void> _upsertWalletMember(Map<String, dynamic> data) async {
+    final item = WalletMember.fromJson(data);
+    final existing = await (db.select(db.walletMembers)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletMembers).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletMembers).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletInvitation(Map<String, dynamic> data) async {
+    final item = WalletInvitation.fromJson(data);
+    final existing = await (db.select(db.walletInvitations)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletInvitations).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletInvitations).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletActivity(Map<String, dynamic> data) async {
+    final item = WalletActivity.fromJson(data);
+    final existing = await (db.select(db.walletActivities)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletActivities).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletActivities).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletNotification(Map<String, dynamic> data) async {
+    final item = WalletNotification.fromJson(data);
+    final existing = await (db.select(db.walletNotifications)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletNotifications).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletNotifications).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletNotificationPreference(Map<String, dynamic> data) async {
+    final item = WalletNotificationPreference.fromJson(data);
+    final existing = await (db.select(db.walletNotificationPreferences)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletNotificationPreferences).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletNotificationPreferences).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletGoal(Map<String, dynamic> data) async {
+    final item = WalletGoal.fromJson(data);
+    final existing = await (db.select(db.walletGoals)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletGoals).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletGoals).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletGoalContribution(Map<String, dynamic> data) async {
+    final item = WalletGoalContribution.fromJson(data);
+    final existing = await (db.select(db.walletGoalContributions)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletGoalContributions).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletGoalContributions).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletAllowance(Map<String, dynamic> data) async {
+    final item = WalletAllowance.fromJson(data);
+    final existing = await (db.select(db.walletAllowances)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletAllowances).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletAllowances).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletAllowancePayment(Map<String, dynamic> data) async {
+    final item = WalletAllowancePayment.fromJson(data);
+    final existing = await (db.select(db.walletAllowancePayments)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletAllowancePayments).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletAllowancePayments).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletGoalSchedule(Map<String, dynamic> data) async {
+    final item = WalletGoalSchedule.fromJson(data);
+    final existing = await (db.select(db.walletGoalSchedules)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletGoalSchedules).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletGoalSchedules).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletBill(Map<String, dynamic> data) async {
+    final item = WalletBill.fromJson(data);
+    final existing = await (db.select(db.walletBills)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletBills).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletBills).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletExpenseSplit(Map<String, dynamic> data) async {
+    final item = WalletExpenseSplit.fromJson(data);
+    final existing = await (db.select(db.walletExpenseSplits)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletExpenseSplits).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletExpenseSplits).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWalletSettlement(Map<String, dynamic> data) async {
+    final item = WalletSettlement.fromJson(data);
+    final existing = await (db.select(db.walletSettlements)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing == null) {
+      await db.into(db.walletSettlements).insert(item.toCompanion(false));
+    } else {
+      await db.update(db.walletSettlements).replace(item.toCompanion(false));
+    }
+  }
+
+  Future<void> _upsertWallet(Map<String, dynamic> data) async {
+    final walletId = data['id'] as int;
+    final existing = await db.customSelect(
+      'SELECT id FROM wallets WHERE id = ?',
+      variables: [Variable<int>(walletId)],
+    ).getSingleOrNull();
+    final createdAt = data['createdAt'] ?? data['updatedAt'];
+    final companion = WalletsCompanion(
+      id: Value(walletId),
+      uuid: Value(data['uuid'] as String),
+      name: Value(data['name'] as String),
+      type: Value(data['type'] as String),
+      createdByAccountId: Value(data['createdByAccountId'] as int?),
+      createdAt: Value(_parseDateTime(createdAt)),
+    );
+    if (existing == null) {
+      await db.into(db.wallets).insert(companion);
+    } else {
+      await db.update(db.wallets).replace(companion);
+    }
+  }
+
+  Future<Map<String, dynamic>?> _readWalletForSync(int walletId) async {
+    final row = await db.customSelect(
+      '''
+      SELECT id, uuid, name, type, created_by_account_id AS createdByAccountId,
+             CAST(strftime('%s', created_at) AS INTEGER) * 1000 AS createdAtMs
+      FROM wallets
+      WHERE id = ?
+      ''',
+      variables: [Variable<int>(walletId)],
+    ).getSingleOrNull();
+    if (row == null) {
+      return null;
+    }
+    return {
+      'id': row.data['id'] as int,
+      'uuid': row.data['uuid'] as String,
+      'name': row.data['name'] as String,
+      'type': row.data['type'] as String,
+      'createdByAccountId': row.data['createdByAccountId'] as int?,
+      'createdAt': DateTime.fromMillisecondsSinceEpoch((row.data['createdAtMs'] as int?) ?? 0),
+      'updatedAt': DateTime.fromMillisecondsSinceEpoch((row.data['createdAtMs'] as int?) ?? 0),
+    };
+  }
+
   Future<void> performSync() async {
     state = SyncState(status: SyncStatus.syncing);
     try {
@@ -70,6 +286,8 @@ class SyncNotifier extends StateNotifier<SyncState> {
       final syncUrl = ref.read(syncUrlProvider);
       final token = ref.read(syncTokenProvider);
       final lastSyncDateTime = ref.read(lastSyncTimeProvider);
+      final walletId = ref.read(currentWalletIdProvider);
+      final deviceId = await _deviceId();
 
       if (!isSimulated && syncUrl.isEmpty) {
         throw Exception("Sync URL is not configured. Please check your settings.");
@@ -79,13 +297,39 @@ class SyncNotifier extends StateNotifier<SyncState> {
       final cutoff = lastSyncDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
 
       // Query local changes in parallel.
-      final localAccountsFuture = (db.select(db.accounts)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
+      final localAccountsFuture = (db.select(db.accounts)
+            ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
+          .get();
       final localCategoriesFuture = (db.select(db.categories)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
-      final localTransactionsFuture = (db.select(db.transactions)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
-      final localBudgetsFuture = (db.select(db.budgets)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
-      final localRecurringFuture = (db.select(db.recurringTransactions)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
-      final localLoansFuture = (db.select(db.loans)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
-      final localPeerDebtsFuture = (db.select(db.peerDebts)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
+      final localTransactionsFuture = (db.select(db.transactions)
+            ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
+          .get();
+      final localBudgetsFuture = (db.select(db.budgets)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
+      final localRecurringFuture = (db.select(db.recurringTransactions)
+            ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
+          .get();
+      final localLoansFuture = (db.select(db.loans)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
+      final localPeerDebtsFuture = (db.select(db.peerDebts)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
+      final localWalletFuture = _readWalletForSync(walletId);
+      final localMembersFuture = (db.select(db.walletMembers)..where((t) => t.walletId.equals(walletId))).get();
+      final localInvitationsFuture = (db.select(db.walletInvitations)..where((t) => t.walletId.equals(walletId))).get();
+      final localActivitiesFuture = (db.select(db.walletActivities)..where((t) => t.walletId.equals(walletId))).get();
+      final localNotificationsFuture = (db.select(db.walletNotifications)..where((t) => t.walletId.equals(walletId))).get();
+      final localNotificationPreferencesFuture = (db.select(db.walletNotificationPreferences)..where((t) => t.walletId.equals(walletId))).get();
+      final localGoalsFuture = (db.select(db.walletGoals)..where((t) => t.walletId.equals(walletId))).get();
+      final localGoalContributionsFuture = (db.select(db.walletGoalContributions)..where((t) => t.walletId.equals(walletId))).get();
+      final localAllowancesFuture = (db.select(db.walletAllowances)..where((t) => t.walletId.equals(walletId))).get();
+      final localAllowancePaymentsFuture = (db.select(db.walletAllowancePayments).join([
+        innerJoin(db.walletAllowances, db.walletAllowances.id.equalsExp(db.walletAllowancePayments.allowanceId)),
+      ])..where(db.walletAllowances.walletId.equals(walletId)))
+          .get();
+      final localGoalSchedulesFuture = (db.select(db.walletGoalSchedules).join([
+        innerJoin(db.walletGoals, db.walletGoals.id.equalsExp(db.walletGoalSchedules.walletGoalId)),
+      ])..where(db.walletGoals.walletId.equals(walletId)))
+          .get();
+      final localBillsFuture = (db.select(db.walletBills)..where((t) => t.walletId.equals(walletId))).get();
+      final localSplitsFuture = (db.select(db.walletExpenseSplits)..where((t) => t.walletId.equals(walletId))).get();
+      final localSettlementsFuture = (db.select(db.walletSettlements)..where((t) => t.walletId.equals(walletId))).get();
       final localDeletionsFuture = db.select(db.deletedRecords).get();
 
       final localAccounts = await localAccountsFuture;
@@ -95,12 +339,26 @@ class SyncNotifier extends StateNotifier<SyncState> {
       final localRecurring = await localRecurringFuture;
       final localLoans = await localLoansFuture;
       final localPeerDebts = await localPeerDebtsFuture;
+      final localWallet = await localWalletFuture;
+      final localMembers = await localMembersFuture;
+      final localInvitations = await localInvitationsFuture;
+      final localActivities = await localActivitiesFuture;
+      final localNotifications = await localNotificationsFuture;
+      final localNotificationPreferences = await localNotificationPreferencesFuture;
+      final localGoals = await localGoalsFuture;
+      final localGoalContributions = await localGoalContributionsFuture;
+      final localAllowances = await localAllowancesFuture;
+      final localAllowancePayments = await localAllowancePaymentsFuture;
+      final localGoalSchedules = await localGoalSchedulesFuture;
+      final localBills = await localBillsFuture;
+      final localSplits = await localSplitsFuture;
+      final localSettlements = await localSettlementsFuture;
       final localDeletionsList = await localDeletionsFuture;
 
       // 2. Build mapping maps
-      final allAccountsFuture = db.select(db.accounts).get();
+      final allAccountsFuture = (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
       final allCategoriesFuture = db.select(db.categories).get();
-      final allTransactionsFuture = db.select(db.transactions).get();
+      final allTransactionsFuture = (db.select(db.transactions)..where((t) => t.walletId.equals(walletId))).get();
       final allAccounts = await allAccountsFuture;
       final allCategories = await allCategoriesFuture;
       final allTransactions = await allTransactionsFuture;
@@ -144,6 +402,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
       final loansJson = localLoans.map((l) {
         final map = l.toJson();
         map['accountUuid'] = accountIdToUuid[l.accountId];
+        map['walletId'] = walletId;
         return map;
       }).toList();
 
@@ -154,8 +413,24 @@ class SyncNotifier extends StateNotifier<SyncState> {
         } else {
           map['transactionUuid'] = null;
         }
+        map['walletId'] = walletId;
         return map;
       }).toList();
+
+      final walletsJson = localWallet == null ? <dynamic>[] : [localWallet];
+      final walletMembersJson = localMembers.map((m) => m.toJson()).toList();
+      final walletInvitationsJson = localInvitations.map((i) => i.toJson()).toList();
+      final walletActivitiesJson = localActivities.map((a) => a.toJson()).toList();
+      final walletNotificationsJson = localNotifications.map((n) => n.toJson()).toList();
+      final walletNotificationPreferencesJson = localNotificationPreferences.map((p) => p.toJson()).toList();
+      final walletGoalsJson = localGoals.map((g) => g.toJson()).toList();
+      final walletGoalContributionsJson = localGoalContributions.map((c) => c.toJson()).toList();
+      final walletAllowancesJson = localAllowances.map((a) => a.toJson()).toList();
+      final walletAllowancePaymentsJson = localAllowancePayments.map((row) => row.readTable(db.walletAllowancePayments).toJson()).toList();
+      final walletGoalSchedulesJson = localGoalSchedules.map((row) => row.readTable(db.walletGoalSchedules).toJson()).toList();
+      final walletBillsJson = localBills.map((b) => b.toJson()).toList();
+      final walletSplitsJson = localSplits.map((s) => s.toJson()).toList();
+      final walletSettlementsJson = localSettlements.map((s) => s.toJson()).toList();
 
       final deletionsJson = localDeletionsList.map((d) => {
         'uuid': d.uuid,
@@ -165,7 +440,9 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
       // Complete sync payload
       final payload = {
+        'syncApiVersion': syncApiVersion,
         'lastSyncTime': cutoff.millisecondsSinceEpoch,
+        'deviceId': deviceId,
         'changes': {
           'accounts': accountsJson,
           'categories': categoriesJson,
@@ -174,8 +451,23 @@ class SyncNotifier extends StateNotifier<SyncState> {
           'recurring_transactions': recurringJson,
           'loans': loansJson,
           'peer_debts': peerDebtsJson,
+          'wallets': walletsJson,
+          'wallet_members': walletMembersJson,
+          'wallet_invitations': walletInvitationsJson,
+          'wallet_activities': walletActivitiesJson,
+          'wallet_notifications': walletNotificationsJson,
+          'wallet_notification_preferences': walletNotificationPreferencesJson,
+          'wallet_goals': walletGoalsJson,
+          'wallet_goal_contributions': walletGoalContributionsJson,
+          'wallet_allowances': walletAllowancesJson,
+          'wallet_allowance_payments': walletAllowancePaymentsJson,
+          'wallet_goal_schedules': walletGoalSchedulesJson,
+          'wallet_bills': walletBillsJson,
+          'wallet_expense_splits': walletSplitsJson,
+          'wallet_settlements': walletSettlementsJson,
         },
         'deletions': deletionsJson,
+        'walletId': walletId,
       };
 
       Map<String, dynamic> responseData;
@@ -185,12 +477,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
         responseData = await _runSimulatedServerSync(payload, cutoff);
       } else {
         // Run Actual REST Request
-        final headers = {
-          'Content-Type': 'application/json',
-        };
-        if (token.isNotEmpty) {
-          headers['Authorization'] = 'Bearer $token';
-        }
+        final headers = buildSyncHeaders(deviceId: deviceId, token: token);
         final response = await http.post(
           Uri.parse(syncUrl),
           headers: headers,
@@ -206,7 +493,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
       // 4. Apply incoming remote changes & deletions inside a local database transaction
       await db.transaction(() async {
         // Get maps again to reflect local database updates during transaction
-        var currentAccounts = await db.select(db.accounts).get();
+        var currentAccounts = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
         var currentCategories = await db.select(db.categories).get();
         var accountUuidToId = { for (final a in currentAccounts) a.uuid: a.id };
         var categoryUuidToId = { for (final c in currentCategories) c.uuid: c.id };
@@ -220,7 +507,6 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
-
           // Find local category
           final existing = await (db.select(db.categories)..where((c) => c.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
@@ -269,11 +555,13 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
 
           // Find local account
           final existing = await (db.select(db.accounts)..where((a) => a.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = AccountsCompanion.insert(
+              walletId: Value(remoteWalletId),
               uuid: Value(uuid),
               name: data['name'] as String,
               type: _parseAccountType(data['type']),
@@ -289,6 +577,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = AccountsCompanion(
                 id: Value(existing.id),
+                walletId: Value(remoteWalletId),
                 uuid: Value(uuid),
                 name: Value(data['name'] as String),
                 type: Value(_parseAccountType(data['type'])),
@@ -304,7 +593,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
         }
 
         // Re-read category/account mappings as we might have added new ones
-        currentAccounts = await db.select(db.accounts).get();
+        currentAccounts = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
         currentCategories = await db.select(db.categories).get();
         accountUuidToId = { for (final a in currentAccounts) a.uuid: a.id };
         categoryUuidToId = { for (final c in currentCategories) c.uuid: c.id };
@@ -315,6 +604,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
 
           final categoryUuid = data['categoryUuid'] as String?;
           final accountUuid = data['accountUuid'] as String?;
@@ -328,6 +618,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final existing = await (db.select(db.transactions)..where((t) => t.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = TransactionsCompanion.insert(
+              walletId: Value(remoteWalletId),
               uuid: Value(uuid),
               amount: (data['amount'] as num).toDouble(),
               date: _parseDateTime(data['date']),
@@ -343,6 +634,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = TransactionsCompanion(
                 id: Value(existing.id),
+                walletId: Value(remoteWalletId),
                 uuid: Value(uuid),
                 amount: Value((data['amount'] as num).toDouble()),
                 date: Value(_parseDateTime(data['date'])),
@@ -359,7 +651,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
         }
 
         // Re-read transactions as peer_debts may link to them
-        final currentTransactions = await db.select(db.transactions).get();
+        final currentTransactions = await (db.select(db.transactions)..where((t) => t.walletId.equals(walletId))).get();
         final transactionUuidToId = { for (final t in currentTransactions) t.uuid: t.id };
 
         // Apply budgets (dependency order 4)
@@ -368,6 +660,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
 
           final categoryUuid = data['categoryUuid'] as String?;
           final categoryId = categoryUuidToId[categoryUuid];
@@ -379,6 +672,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final existing = await (db.select(db.budgets)..where((b) => b.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = BudgetsCompanion.insert(
+              walletId: Value(remoteWalletId),
               uuid: Value(uuid),
               amount: (data['amount'] as num).toDouble(),
               period: data['period'] as String,
@@ -390,6 +684,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = BudgetsCompanion(
                 id: Value(existing.id),
+                walletId: Value(remoteWalletId),
                 uuid: Value(uuid),
                 amount: Value((data['amount'] as num).toDouble()),
                 period: Value(data['period'] as String),
@@ -407,6 +702,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
 
           final categoryUuid = data['categoryUuid'] as String?;
           final accountUuid = data['accountUuid'] as String?;
@@ -420,6 +716,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final existing = await (db.select(db.recurringTransactions)..where((r) => r.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = RecurringTransactionsCompanion.insert(
+              walletId: Value(remoteWalletId),
               uuid: Value(uuid),
               name: data['name'] as String,
               amount: (data['amount'] as num).toDouble(),
@@ -438,6 +735,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = RecurringTransactionsCompanion(
                 id: Value(existing.id),
+                walletId: Value(remoteWalletId),
                 uuid: Value(uuid),
                 name: Value(data['name'] as String),
                 amount: Value((data['amount'] as num).toDouble()),
@@ -462,6 +760,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
 
           final accountUuid = data['accountUuid'] as String?;
           final accountId = accountUuidToId[accountUuid];
@@ -473,6 +772,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final existing = await (db.select(db.loans)..where((l) => l.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = LoansCompanion.insert(
+              walletId: Value(remoteWalletId),
               uuid: Value(uuid),
               name: data['name'] as String,
               accountId: accountId,
@@ -490,6 +790,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = LoansCompanion(
                 id: Value(existing.id),
+                walletId: Value(remoteWalletId),
                 uuid: Value(uuid),
                 name: Value(data['name'] as String),
                 accountId: Value(accountId),
@@ -513,6 +814,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
 
           final transactionUuid = data['transactionUuid'] as String?;
           final transactionId = transactionUuidToId[transactionUuid];
@@ -520,6 +822,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final existing = await (db.select(db.peerDebts)..where((pd) => pd.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = PeerDebtsCompanion.insert(
+              walletId: Value(remoteWalletId),
               uuid: Value(uuid),
               personName: data['personName'] as String,
               type: _parsePeerDebtType(data['type']),
@@ -535,6 +838,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = PeerDebtsCompanion(
                 id: Value(existing.id),
+                walletId: Value(remoteWalletId),
                 uuid: Value(uuid),
                 personName: Value(data['personName'] as String),
                 type: Value(_parsePeerDebtType(data['type'])),
@@ -548,6 +852,75 @@ class SyncNotifier extends StateNotifier<SyncState> {
               await db.update(db.peerDebts).replace(companion);
             }
           }
+        }
+
+        final remoteMembersList = remoteChanges['wallet_members'] as List<dynamic>? ?? [];
+        final remoteWalletsList = remoteChanges['wallets'] as List<dynamic>? ?? [];
+        for (final item in remoteWalletsList) {
+          await _upsertWallet(item as Map<String, dynamic>);
+        }
+        for (final item in remoteMembersList) {
+          await _upsertWalletMember(item as Map<String, dynamic>);
+        }
+
+        final remoteInvitationsList = remoteChanges['wallet_invitations'] as List<dynamic>? ?? [];
+        for (final item in remoteInvitationsList) {
+          await _upsertWalletInvitation(item as Map<String, dynamic>);
+        }
+
+        final remoteActivitiesList = remoteChanges['wallet_activities'] as List<dynamic>? ?? [];
+        for (final item in remoteActivitiesList) {
+          await _upsertWalletActivity(item as Map<String, dynamic>);
+        }
+
+        final remoteNotificationsList = remoteChanges['wallet_notifications'] as List<dynamic>? ?? [];
+        for (final item in remoteNotificationsList) {
+          await _upsertWalletNotification(item as Map<String, dynamic>);
+        }
+
+        final remoteNotificationPrefsList = remoteChanges['wallet_notification_preferences'] as List<dynamic>? ?? [];
+        for (final item in remoteNotificationPrefsList) {
+          await _upsertWalletNotificationPreference(item as Map<String, dynamic>);
+        }
+
+        final remoteGoalsList = remoteChanges['wallet_goals'] as List<dynamic>? ?? [];
+        for (final item in remoteGoalsList) {
+          await _upsertWalletGoal(item as Map<String, dynamic>);
+        }
+
+        final remoteGoalContribList = remoteChanges['wallet_goal_contributions'] as List<dynamic>? ?? [];
+        for (final item in remoteGoalContribList) {
+          await _upsertWalletGoalContribution(item as Map<String, dynamic>);
+        }
+
+        final remoteAllowancesList = remoteChanges['wallet_allowances'] as List<dynamic>? ?? [];
+        for (final item in remoteAllowancesList) {
+          await _upsertWalletAllowance(item as Map<String, dynamic>);
+        }
+
+        final remoteAllowancePaymentsList = remoteChanges['wallet_allowance_payments'] as List<dynamic>? ?? [];
+        for (final item in remoteAllowancePaymentsList) {
+          await _upsertWalletAllowancePayment(item as Map<String, dynamic>);
+        }
+
+        final remoteGoalSchedulesList = remoteChanges['wallet_goal_schedules'] as List<dynamic>? ?? [];
+        for (final item in remoteGoalSchedulesList) {
+          await _upsertWalletGoalSchedule(item as Map<String, dynamic>);
+        }
+
+        final remoteBillsList = remoteChanges['wallet_bills'] as List<dynamic>? ?? [];
+        for (final item in remoteBillsList) {
+          await _upsertWalletBill(item as Map<String, dynamic>);
+        }
+
+        final remoteSplitsList = remoteChanges['wallet_expense_splits'] as List<dynamic>? ?? [];
+        for (final item in remoteSplitsList) {
+          await _upsertWalletExpenseSplit(item as Map<String, dynamic>);
+        }
+
+        final remoteSettlementsList = remoteChanges['wallet_settlements'] as List<dynamic>? ?? [];
+        for (final item in remoteSettlementsList) {
+          await _upsertWalletSettlement(item as Map<String, dynamic>);
         }
 
         // Apply remote deletions
@@ -580,12 +953,18 @@ class SyncNotifier extends StateNotifier<SyncState> {
       });
 
       // 6. Update last sync time
+      final responseVersion = (responseData['syncApiVersion'] as num?)?.toInt() ?? syncApiVersion;
+      if (responseVersion != syncApiVersion) {
+        throw Exception('Unsupported sync API version: $responseVersion');
+      }
+
       final serverTimeVal = responseData['serverTime'];
       final newLastSync = serverTimeVal != null ? _parseDateTime(serverTimeVal) : DateTime.now();
       ref.read(lastSyncTimeProvider.notifier).updateLastSyncTime(newLastSync);
 
       state = SyncState(status: SyncStatus.success);
-    } catch (e) {
+    } catch (e, stack) {
+      debugPrint('Sync failed: $e\n$stack');
       state = SyncState(status: SyncStatus.error, errorMessage: e.toString());
     }
   }
@@ -610,6 +989,20 @@ class SyncNotifier extends StateNotifier<SyncState> {
         'recurring_transactions': <dynamic>[],
         'loans': <dynamic>[],
         'peer_debts': <dynamic>[],
+        'wallets': <dynamic>[],
+        'wallet_members': <dynamic>[],
+        'wallet_invitations': <dynamic>[],
+        'wallet_activities': <dynamic>[],
+        'wallet_notifications': <dynamic>[],
+        'wallet_notification_preferences': <dynamic>[],
+        'wallet_goals': <dynamic>[],
+        'wallet_goal_contributions': <dynamic>[],
+        'wallet_allowances': <dynamic>[],
+        'wallet_allowance_payments': <dynamic>[],
+        'wallet_goal_schedules': <dynamic>[],
+        'wallet_bills': <dynamic>[],
+        'wallet_expense_splits': <dynamic>[],
+        'wallet_settlements': <dynamic>[],
         'deletions': <dynamic>[],
       };
     }
@@ -641,24 +1034,53 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
 
     // 2. Merge client changes to simulated server (LWW)
-    final tables = ['accounts', 'categories', 'transactions', 'budgets', 'recurring_transactions', 'loans', 'peer_debts'];
+    final tables = [
+      'accounts',
+      'categories',
+      'transactions',
+      'budgets',
+      'recurring_transactions',
+      'loans',
+      'peer_debts',
+      'wallets',
+      'wallet_members',
+      'wallet_invitations',
+      'wallet_activities',
+      'wallet_notifications',
+      'wallet_notification_preferences',
+      'wallet_goals',
+      'wallet_goal_contributions',
+      'wallet_allowances',
+      'wallet_allowance_payments',
+      'wallet_goal_schedules',
+      'wallet_bills',
+      'wallet_expense_splits',
+      'wallet_settlements',
+    ];
     for (final table in tables) {
       final clientList = clientChanges[table] as List<dynamic>? ?? [];
       final serverList = serverDb[table] as List<dynamic>? ?? [];
 
       for (final item in clientList) {
         final clientItem = item as Map<String, dynamic>;
-        final uuid = clientItem['uuid'] as String;
+        final identity = clientItem['uuid'] ?? clientItem['id'];
+        if (identity == null) {
+          continue;
+        }
         final clientUpdatedAt = _parseDateTime(clientItem['updatedAt']);
+        final normalizedClientItem = Map<String, dynamic>.from(_jsonSafeValue(clientItem) as Map);
 
-        final existingIndex = serverList.indexWhere((x) => (x as Map<String, dynamic>)['uuid'] == uuid);
+        final existingIndex = serverList.indexWhere((x) {
+          final row = x as Map<String, dynamic>;
+          return row['uuid'] == identity || row['id'] == identity;
+        });
         if (existingIndex == -1) {
-          serverList.add(clientItem);
+          serverList.add(normalizedClientItem);
         } else {
           final serverItem = serverList[existingIndex] as Map<String, dynamic>;
           final serverUpdatedAt = _parseDateTime(serverItem['updatedAt']);
           if (clientUpdatedAt.isAfter(serverUpdatedAt)) {
-            serverList[existingIndex] = clientItem;
+            serverList[existingIndex] = normalizedClientItem;
           }
         }
       }
@@ -687,9 +1109,19 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }).toList();
 
     return {
+      'syncApiVersion': clientPayload['syncApiVersion'] ?? syncApiVersion,
       'serverTime': now.millisecondsSinceEpoch,
       'changes': responseChanges,
       'deletions': filteredDeletions,
     };
   }
+
+  Future<Map<String, dynamic>> runSimulatedServerSyncForTest(
+    Map<String, dynamic> clientPayload,
+    DateTime clientLastSync,
+  ) {
+    return _runSimulatedServerSync(clientPayload, clientLastSync);
+  }
 }
+
+*/

@@ -1,1 +1,1 @@
-export 'package:expense_tracker/add_transaction_screen.dart';
+export 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';

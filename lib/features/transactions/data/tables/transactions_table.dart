@@ -1,0 +1,28 @@
+import 'package:drift/drift.dart';
+import 'package:expense_tracker/core/database/database_enums.dart';
+import '../../../../features/accounts/data/tables/accounts_table.dart';
+import '../../../../features/categories/data/tables/categories_table.dart';
+import 'package:uuid/uuid.dart';
+
+@DataClassName('Transaction')
+class Transactions extends Table {
+  IntColumn get walletId => integer().withDefault(const Constant(1))();
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
+  RealColumn get amount => real()();
+  DateTimeColumn get date => dateTime()();
+  TextColumn get note => text().nullable()();
+
+  // Enum for transaction type
+  TextColumn get type => text().map(const EnumNameConverter(TransactionType.values))();
+
+  // Foreign key to Categories table
+  IntColumn get categoryId => integer().references(Categories, #id, onDelete: KeyAction.cascade)();
+
+  // Foreign key to Accounts table
+  IntColumn get accountId => integer().references(Accounts, #id, onDelete: KeyAction.restrict)();
+
+  // Timestamps
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+}
