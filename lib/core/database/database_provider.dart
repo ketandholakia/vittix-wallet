@@ -1,11 +1,6 @@
-import 'dart:io';
-
-import 'package:expense_tracker/data/local/app_database.dart';
-import 'package:expense_tracker/features/family/data/family_automation_service.dart';
-import 'package:expense_tracker/features/notifications/data/notification_center_service.dart';
+import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:expense_tracker/sms/data/sms_parsing_dao.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 // A provider for the AppDatabase instance.
 // We use a singleton pattern here to ensure only one database instance is created.
@@ -42,23 +37,17 @@ final recurringTransactionDaoProvider = Provider<RecurringTransactionDao>((ref) 
   return ref.watch(databaseProvider).recurringTransactionDao;
 });
 
-/*
 final walletDaoProvider = Provider<WalletDao>((ref) {
   return ref.watch(databaseProvider).walletDao;
 });
-*/
 
-/*
 final goalDaoProvider = Provider<GoalDao>((ref) {
   return ref.watch(databaseProvider).goalDao;
 });
-*/
 
-/*
 final allowanceDaoProvider = Provider<AllowanceDao>((ref) {
   return ref.watch(databaseProvider).allowanceDao;
 });
-*/
 
 /*
 /*
@@ -74,61 +63,41 @@ final settlementDaoProvider = Provider<SettlementDao>((ref) {
 */
 */
 
-/*
 final notificationDaoProvider = Provider<NotificationDao>((ref) {
   return ref.watch(databaseProvider).notificationDao;
 });
-*/
 
-/*
 final notificationPreferenceDaoProvider = Provider<NotificationPreferenceDao>((ref) {
   return ref.watch(databaseProvider).notificationPreferenceDao;
 });
-*/
 
-/*
 final feedbackDaoProvider = Provider<FeedbackDao>((ref) {
   return ref.watch(databaseProvider).feedbackDao;
 });
-*/
 
-/*
 final smsImportMetricsDaoProvider = Provider<SmsImportMetricsDao>((ref) {
   return ref.watch(databaseProvider).smsImportMetricsDao;
 });
-*/
 
-/*
-/*
 final smsParsingDaoProvider = Provider<SmsParsingDao>((ref) {
   return ref.watch(databaseProvider).smsParsingDao;
 });
-*/
 
-/*
 final payeeDaoProvider = Provider<PayeeDao>((ref) {
   return ref.watch(databaseProvider).payeeDao;
 });
-*/
 
-/*
 final tagDaoProvider = Provider<TagDao>((ref) {
   return ref.watch(databaseProvider).tagDao;
 });
-*/
-*/
 
-/*
 final transactionTagDaoProvider = Provider<TransactionTagDao>((ref) {
   return ref.watch(databaseProvider).transactionTagDao;
 });
-*/
 
-/*
 final attachmentDaoProvider = Provider<AttachmentDao>((ref) {
   return ref.watch(databaseProvider).attachmentDao;
 });
-*/
 
 /*
 final familyAutomationServiceProvider = Provider<FamilyAutomationService>((ref) {

@@ -1,5 +1,4 @@
-// BROKEN DEPENDENCY: smsParsingDao
-/*
+
 import 'package:expense_tracker/core/database/app_database.dart' hide Column, Category;
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
@@ -169,5 +168,3 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
     );
   }
 }
-
-*/

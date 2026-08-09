@@ -13471,6 +13471,421 @@ class RecurringTransactionsCompanion
   }
 }
 
+class $SmsImportMetricsTable extends SmsImportMetrics
+    with TableInfo<$SmsImportMetricsTable, SmsImportMetric> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SmsImportMetricsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _walletIdMeta = const VerificationMeta(
+    'walletId',
+  );
+  @override
+  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+    'wallet_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _acceptedImportsMeta = const VerificationMeta(
+    'acceptedImports',
+  );
+  @override
+  late final GeneratedColumn<int> acceptedImports = GeneratedColumn<int>(
+    'accepted_imports',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _rejectedImportsMeta = const VerificationMeta(
+    'rejectedImports',
+  );
+  @override
+  late final GeneratedColumn<int> rejectedImports = GeneratedColumn<int>(
+    'rejected_imports',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _duplicateDetectionsMeta =
+      const VerificationMeta('duplicateDetections');
+  @override
+  late final GeneratedColumn<int> duplicateDetections = GeneratedColumn<int>(
+    'duplicate_detections',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now(),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    walletId,
+    acceptedImports,
+    rejectedImports,
+    duplicateDetections,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sms_import_metrics';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SmsImportMetric> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('wallet_id')) {
+      context.handle(
+        _walletIdMeta,
+        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_walletIdMeta);
+    }
+    if (data.containsKey('accepted_imports')) {
+      context.handle(
+        _acceptedImportsMeta,
+        acceptedImports.isAcceptableOrUnknown(
+          data['accepted_imports']!,
+          _acceptedImportsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('rejected_imports')) {
+      context.handle(
+        _rejectedImportsMeta,
+        rejectedImports.isAcceptableOrUnknown(
+          data['rejected_imports']!,
+          _rejectedImportsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('duplicate_detections')) {
+      context.handle(
+        _duplicateDetectionsMeta,
+        duplicateDetections.isAcceptableOrUnknown(
+          data['duplicate_detections']!,
+          _duplicateDetectionsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SmsImportMetric map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SmsImportMetric(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      walletId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wallet_id'],
+      )!,
+      acceptedImports: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}accepted_imports'],
+      )!,
+      rejectedImports: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rejected_imports'],
+      )!,
+      duplicateDetections: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duplicate_detections'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SmsImportMetricsTable createAlias(String alias) {
+    return $SmsImportMetricsTable(attachedDatabase, alias);
+  }
+}
+
+class SmsImportMetric extends DataClass implements Insertable<SmsImportMetric> {
+  final int id;
+  final int walletId;
+  final int acceptedImports;
+  final int rejectedImports;
+  final int duplicateDetections;
+  final DateTime updatedAt;
+  const SmsImportMetric({
+    required this.id,
+    required this.walletId,
+    required this.acceptedImports,
+    required this.rejectedImports,
+    required this.duplicateDetections,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['wallet_id'] = Variable<int>(walletId);
+    map['accepted_imports'] = Variable<int>(acceptedImports);
+    map['rejected_imports'] = Variable<int>(rejectedImports);
+    map['duplicate_detections'] = Variable<int>(duplicateDetections);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  SmsImportMetricsCompanion toCompanion(bool nullToAbsent) {
+    return SmsImportMetricsCompanion(
+      id: Value(id),
+      walletId: Value(walletId),
+      acceptedImports: Value(acceptedImports),
+      rejectedImports: Value(rejectedImports),
+      duplicateDetections: Value(duplicateDetections),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory SmsImportMetric.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SmsImportMetric(
+      id: serializer.fromJson<int>(json['id']),
+      walletId: serializer.fromJson<int>(json['walletId']),
+      acceptedImports: serializer.fromJson<int>(json['acceptedImports']),
+      rejectedImports: serializer.fromJson<int>(json['rejectedImports']),
+      duplicateDetections: serializer.fromJson<int>(
+        json['duplicateDetections'],
+      ),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'walletId': serializer.toJson<int>(walletId),
+      'acceptedImports': serializer.toJson<int>(acceptedImports),
+      'rejectedImports': serializer.toJson<int>(rejectedImports),
+      'duplicateDetections': serializer.toJson<int>(duplicateDetections),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  SmsImportMetric copyWith({
+    int? id,
+    int? walletId,
+    int? acceptedImports,
+    int? rejectedImports,
+    int? duplicateDetections,
+    DateTime? updatedAt,
+  }) => SmsImportMetric(
+    id: id ?? this.id,
+    walletId: walletId ?? this.walletId,
+    acceptedImports: acceptedImports ?? this.acceptedImports,
+    rejectedImports: rejectedImports ?? this.rejectedImports,
+    duplicateDetections: duplicateDetections ?? this.duplicateDetections,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  SmsImportMetric copyWithCompanion(SmsImportMetricsCompanion data) {
+    return SmsImportMetric(
+      id: data.id.present ? data.id.value : this.id,
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
+      acceptedImports: data.acceptedImports.present
+          ? data.acceptedImports.value
+          : this.acceptedImports,
+      rejectedImports: data.rejectedImports.present
+          ? data.rejectedImports.value
+          : this.rejectedImports,
+      duplicateDetections: data.duplicateDetections.present
+          ? data.duplicateDetections.value
+          : this.duplicateDetections,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SmsImportMetric(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('acceptedImports: $acceptedImports, ')
+          ..write('rejectedImports: $rejectedImports, ')
+          ..write('duplicateDetections: $duplicateDetections, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    walletId,
+    acceptedImports,
+    rejectedImports,
+    duplicateDetections,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SmsImportMetric &&
+          other.id == this.id &&
+          other.walletId == this.walletId &&
+          other.acceptedImports == this.acceptedImports &&
+          other.rejectedImports == this.rejectedImports &&
+          other.duplicateDetections == this.duplicateDetections &&
+          other.updatedAt == this.updatedAt);
+}
+
+class SmsImportMetricsCompanion extends UpdateCompanion<SmsImportMetric> {
+  final Value<int> id;
+  final Value<int> walletId;
+  final Value<int> acceptedImports;
+  final Value<int> rejectedImports;
+  final Value<int> duplicateDetections;
+  final Value<DateTime> updatedAt;
+  const SmsImportMetricsCompanion({
+    this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
+    this.acceptedImports = const Value.absent(),
+    this.rejectedImports = const Value.absent(),
+    this.duplicateDetections = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  SmsImportMetricsCompanion.insert({
+    this.id = const Value.absent(),
+    required int walletId,
+    this.acceptedImports = const Value.absent(),
+    this.rejectedImports = const Value.absent(),
+    this.duplicateDetections = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : walletId = Value(walletId);
+  static Insertable<SmsImportMetric> custom({
+    Expression<int>? id,
+    Expression<int>? walletId,
+    Expression<int>? acceptedImports,
+    Expression<int>? rejectedImports,
+    Expression<int>? duplicateDetections,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (walletId != null) 'wallet_id': walletId,
+      if (acceptedImports != null) 'accepted_imports': acceptedImports,
+      if (rejectedImports != null) 'rejected_imports': rejectedImports,
+      if (duplicateDetections != null)
+        'duplicate_detections': duplicateDetections,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  SmsImportMetricsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? walletId,
+    Value<int>? acceptedImports,
+    Value<int>? rejectedImports,
+    Value<int>? duplicateDetections,
+    Value<DateTime>? updatedAt,
+  }) {
+    return SmsImportMetricsCompanion(
+      id: id ?? this.id,
+      walletId: walletId ?? this.walletId,
+      acceptedImports: acceptedImports ?? this.acceptedImports,
+      rejectedImports: rejectedImports ?? this.rejectedImports,
+      duplicateDetections: duplicateDetections ?? this.duplicateDetections,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (walletId.present) {
+      map['wallet_id'] = Variable<int>(walletId.value);
+    }
+    if (acceptedImports.present) {
+      map['accepted_imports'] = Variable<int>(acceptedImports.value);
+    }
+    if (rejectedImports.present) {
+      map['rejected_imports'] = Variable<int>(rejectedImports.value);
+    }
+    if (duplicateDetections.present) {
+      map['duplicate_detections'] = Variable<int>(duplicateDetections.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SmsImportMetricsCompanion(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('acceptedImports: $acceptedImports, ')
+          ..write('rejectedImports: $rejectedImports, ')
+          ..write('duplicateDetections: $duplicateDetections, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -14904,6 +15319,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PayeesTable payees = $PayeesTable(this);
   late final $RecurringTransactionsTable recurringTransactions =
       $RecurringTransactionsTable(this);
+  late final $SmsImportMetricsTable smsImportMetrics = $SmsImportMetricsTable(
+    this,
+  );
   late final $TagsTable tags = $TagsTable(this);
   late final $TransactionsTable transactions = $TransactionsTable(this);
   late final $UnrecognizedSmsEntriesTable unrecognizedSmsEntries =
@@ -14925,6 +15343,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final AllowanceDao allowanceDao = AllowanceDao(this as AppDatabase);
   late final GoalDao goalDao = GoalDao(this as AppDatabase);
   late final PayeeDao payeeDao = PayeeDao(this as AppDatabase);
+  late final SmsParsingDao smsParsingDao = SmsParsingDao(this as AppDatabase);
+  late final SmsImportMetricsDao smsImportMetricsDao = SmsImportMetricsDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -14955,6 +15377,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     merchantMappings,
     payees,
     recurringTransactions,
+    smsImportMetrics,
     tags,
     transactions,
     unrecognizedSmsEntries,
@@ -21689,6 +22112,231 @@ typedef $$RecurringTransactionsTableProcessedTableManager =
       RecurringTransactionDb,
       PrefetchHooks Function()
     >;
+typedef $$SmsImportMetricsTableCreateCompanionBuilder =
+    SmsImportMetricsCompanion Function({
+      Value<int> id,
+      required int walletId,
+      Value<int> acceptedImports,
+      Value<int> rejectedImports,
+      Value<int> duplicateDetections,
+      Value<DateTime> updatedAt,
+    });
+typedef $$SmsImportMetricsTableUpdateCompanionBuilder =
+    SmsImportMetricsCompanion Function({
+      Value<int> id,
+      Value<int> walletId,
+      Value<int> acceptedImports,
+      Value<int> rejectedImports,
+      Value<int> duplicateDetections,
+      Value<DateTime> updatedAt,
+    });
+
+class $$SmsImportMetricsTableFilterComposer
+    extends Composer<_$AppDatabase, $SmsImportMetricsTable> {
+  $$SmsImportMetricsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get acceptedImports => $composableBuilder(
+    column: $table.acceptedImports,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rejectedImports => $composableBuilder(
+    column: $table.rejectedImports,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get duplicateDetections => $composableBuilder(
+    column: $table.duplicateDetections,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SmsImportMetricsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SmsImportMetricsTable> {
+  $$SmsImportMetricsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get acceptedImports => $composableBuilder(
+    column: $table.acceptedImports,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rejectedImports => $composableBuilder(
+    column: $table.rejectedImports,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get duplicateDetections => $composableBuilder(
+    column: $table.duplicateDetections,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SmsImportMetricsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SmsImportMetricsTable> {
+  $$SmsImportMetricsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get walletId =>
+      $composableBuilder(column: $table.walletId, builder: (column) => column);
+
+  GeneratedColumn<int> get acceptedImports => $composableBuilder(
+    column: $table.acceptedImports,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get rejectedImports => $composableBuilder(
+    column: $table.rejectedImports,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get duplicateDetections => $composableBuilder(
+    column: $table.duplicateDetections,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$SmsImportMetricsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SmsImportMetricsTable,
+          SmsImportMetric,
+          $$SmsImportMetricsTableFilterComposer,
+          $$SmsImportMetricsTableOrderingComposer,
+          $$SmsImportMetricsTableAnnotationComposer,
+          $$SmsImportMetricsTableCreateCompanionBuilder,
+          $$SmsImportMetricsTableUpdateCompanionBuilder,
+          (
+            SmsImportMetric,
+            BaseReferences<
+              _$AppDatabase,
+              $SmsImportMetricsTable,
+              SmsImportMetric
+            >,
+          ),
+          SmsImportMetric,
+          PrefetchHooks Function()
+        > {
+  $$SmsImportMetricsTableTableManager(
+    _$AppDatabase db,
+    $SmsImportMetricsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SmsImportMetricsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SmsImportMetricsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SmsImportMetricsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> walletId = const Value.absent(),
+                Value<int> acceptedImports = const Value.absent(),
+                Value<int> rejectedImports = const Value.absent(),
+                Value<int> duplicateDetections = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => SmsImportMetricsCompanion(
+                id: id,
+                walletId: walletId,
+                acceptedImports: acceptedImports,
+                rejectedImports: rejectedImports,
+                duplicateDetections: duplicateDetections,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int walletId,
+                Value<int> acceptedImports = const Value.absent(),
+                Value<int> rejectedImports = const Value.absent(),
+                Value<int> duplicateDetections = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => SmsImportMetricsCompanion.insert(
+                id: id,
+                walletId: walletId,
+                acceptedImports: acceptedImports,
+                rejectedImports: rejectedImports,
+                duplicateDetections: duplicateDetections,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SmsImportMetricsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SmsImportMetricsTable,
+      SmsImportMetric,
+      $$SmsImportMetricsTableFilterComposer,
+      $$SmsImportMetricsTableOrderingComposer,
+      $$SmsImportMetricsTableAnnotationComposer,
+      $$SmsImportMetricsTableCreateCompanionBuilder,
+      $$SmsImportMetricsTableUpdateCompanionBuilder,
+      (
+        SmsImportMetric,
+        BaseReferences<_$AppDatabase, $SmsImportMetricsTable, SmsImportMetric>,
+      ),
+      SmsImportMetric,
+      PrefetchHooks Function()
+    >;
 typedef $$TagsTableCreateCompanionBuilder =
     TagsCompanion Function({
       Value<int> id,
@@ -22489,6 +23137,8 @@ class $AppDatabaseManager {
       $$PayeesTableTableManager(_db, _db.payees);
   $$RecurringTransactionsTableTableManager get recurringTransactions =>
       $$RecurringTransactionsTableTableManager(_db, _db.recurringTransactions);
+  $$SmsImportMetricsTableTableManager get smsImportMetrics =>
+      $$SmsImportMetricsTableTableManager(_db, _db.smsImportMetrics);
   $$TagsTableTableManager get tags => $$TagsTableTableManager(_db, _db.tags);
   $$TransactionsTableTableManager get transactions =>
       $$TransactionsTableTableManager(_db, _db.transactions);

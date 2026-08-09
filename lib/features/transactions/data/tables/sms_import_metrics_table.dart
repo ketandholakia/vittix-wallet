@@ -1,5 +1,4 @@
-// BROKEN DEPENDENCY: SmsImportMetrics
-/*
+
 import 'package:drift/drift.dart';
 import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
@@ -13,5 +12,3 @@ class SmsImportMetrics extends Table {
   IntColumn get duplicateDetections => integer().withDefault(const Constant(0))();
   DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
 }
-
-*/

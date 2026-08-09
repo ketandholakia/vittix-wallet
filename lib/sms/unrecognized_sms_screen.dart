@@ -1,5 +1,4 @@
-// BROKEN DEPENDENCY: smsParsingDao
-/*
+
 import 'package:expense_tracker/core/database/app_database.dart' hide Column, AccountType;
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
@@ -149,5 +148,3 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
     );
   }
 }
-
-*/

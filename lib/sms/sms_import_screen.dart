@@ -1,5 +1,4 @@
-// BROKEN DEPENDENCY: smsParsingDao
-/*
+
 import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/categories/domain/category.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
@@ -407,5 +406,3 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
     );
   }
 }
-
-*/

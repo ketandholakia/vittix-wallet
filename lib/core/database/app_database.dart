@@ -40,11 +40,13 @@ import 'package:expense_tracker/features/transactions/data/tables/expense_split_
 import 'package:expense_tracker/features/transactions/data/tables/merchant_mappings_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/payees_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/recurring_transactions_table.dart';
-// sms_import_metrics_table.dart is commented out - class unavailable
+import 'package:expense_tracker/features/transactions/data/tables/sms_import_metrics_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/tags_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/transactions_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/unrecognized_sms_table.dart';
 import 'package:expense_tracker/features/debts/data/debts_dao.dart';
+import 'package:expense_tracker/sms/data/sms_parsing_dao.dart';
+import 'package:expense_tracker/sms/data/sms_import_metrics_dao.dart';
 part 'app_database.g.dart';
 
 
@@ -461,8 +463,8 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
 // --- DATABASE CLASS ---
 
 @DriftDatabase(
-  tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, Tags, Transactions, UnrecognizedSmsEntries],
-  daos: [CategoryDao, AccountDao, TransactionDao, BudgetDao, RecurringTransactionDao, DebtsDao, WalletDao, TransactionTagDao, AttachmentDao, AllowanceDao, GoalDao, PayeeDao],
+  tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, SmsImportMetrics, Tags, Transactions, UnrecognizedSmsEntries],
+  daos: [CategoryDao, AccountDao, TransactionDao, BudgetDao, RecurringTransactionDao, DebtsDao, WalletDao, TransactionTagDao, AttachmentDao, AllowanceDao, GoalDao, PayeeDao, SmsParsingDao, SmsImportMetricsDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
