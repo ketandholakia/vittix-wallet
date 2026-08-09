@@ -1,1 +1,1 @@
-export 'package:expense_tracker/spending_insights_widget.dart';
+export 'package:expense_tracker/features/reports/presentation/spending_insights_widget.dart';

@@ -1,1 +1,1 @@
-export 'package:expense_tracker/add_recurring.dart';
+export 'package:expense_tracker/features/recurring/domain/usecases/add_recurring.dart';

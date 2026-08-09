@@ -1,8 +1,8 @@
 import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/category.dart';
-import 'package:expense_tracker/payee.dart';
-import 'package:expense_tracker/tag.dart';
-import 'package:expense_tracker/attachment.dart';
+import 'package:expense_tracker/features/categories/domain/category.dart';
+import 'package:expense_tracker/core/domain/payee.dart';
+import 'package:expense_tracker/core/domain/tag.dart';
+import 'package:expense_tracker/core/domain/attachment.dart';
 
 enum TransactionType {
   income,

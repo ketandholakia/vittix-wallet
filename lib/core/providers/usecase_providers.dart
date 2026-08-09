@@ -1,11 +1,11 @@
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
-import 'package:expense_tracker/add_account.dart';
-import 'package:expense_tracker/delete_account.dart';
-import 'package:expense_tracker/update_account.dart';
-import 'package:expense_tracker/watch_accounts_with_balance.dart';
-import 'package:expense_tracker/watch_all_accounts.dart';
+import 'package:expense_tracker/features/accounts/domain/usecases/add_account.dart';
+import 'package:expense_tracker/features/accounts/domain/usecases/delete_account.dart';
+import 'package:expense_tracker/features/accounts/domain/usecases/update_account.dart';
+import 'package:expense_tracker/features/accounts/domain/usecases/watch_accounts_with_balance.dart';
+import 'package:expense_tracker/features/accounts/domain/usecases/watch_all_accounts.dart';
 import 'package:expense_tracker/domain/usecases/category/add_category.dart';
 import 'package:expense_tracker/domain/usecases/category/delete_category.dart';
 import 'package:expense_tracker/domain/usecases/category/update_category.dart';

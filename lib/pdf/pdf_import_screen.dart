@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/category.dart';
+import 'package:expense_tracker/features/categories/domain/category.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;

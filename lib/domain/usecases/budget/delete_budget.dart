@@ -1,1 +1,1 @@
-export 'package:expense_tracker/delete_budget.dart';
+export 'package:expense_tracker/features/budgets/domain/usecases/delete_budget.dart';

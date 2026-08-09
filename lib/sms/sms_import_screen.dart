@@ -1,11 +1,11 @@
 // BROKEN DEPENDENCY: smsParsingDao
 /*
 import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/category.dart';
+import 'package:expense_tracker/features/categories/domain/category.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/recurring_transaction.dart';
+import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
 import 'package:expense_tracker/sms/sms_transaction_parser.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/core/database/app_database.dart' hide Column, Category, Account, AccountType;

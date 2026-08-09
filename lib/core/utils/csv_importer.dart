@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/accounts/domain/account_repository.dart';
-import 'package:expense_tracker/category.dart';
-import 'package:expense_tracker/category_repository.dart';
+import 'package:expense_tracker/features/categories/domain/category.dart';
+import 'package:expense_tracker/features/categories/data/category_repository.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart';
 import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
 import 'package:flutter/material.dart';

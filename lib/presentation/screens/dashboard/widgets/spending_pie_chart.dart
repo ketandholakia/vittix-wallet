@@ -1,1 +1,1 @@
-export 'package:expense_tracker/spending_pie_chart.dart';
+export 'package:expense_tracker/features/reports/presentation/spending_pie_chart.dart';

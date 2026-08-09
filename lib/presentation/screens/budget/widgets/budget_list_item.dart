@@ -1,1 +1,1 @@
-export 'package:expense_tracker/budget_list_item.dart';
+export 'package:expense_tracker/features/budgets/presentation/budget_list_item.dart';

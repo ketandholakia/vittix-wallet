@@ -13,7 +13,7 @@ import 'package:expense_tracker/presentation/widgets/transaction_list_item.dart'
 import 'package:expense_tracker/presentation/widgets/shimmer_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:expense_tracker/app_drawer.dart';
+import 'package:expense_tracker/core/presentation/app_drawer.dart';
 import 'package:intl/intl.dart';
 import 'package:grouped_list/grouped_list.dart';
 

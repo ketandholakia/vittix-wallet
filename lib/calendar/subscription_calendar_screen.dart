@@ -1,4 +1,4 @@
-import 'package:expense_tracker/recurring_transaction.dart';
+import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/core/database/app_database.dart' hide Column;

@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/database/app_database.dart' hide Column;
 import 'package:expense_tracker/features/debts/data/debts_dao.dart';
 import 'package:expense_tracker/features/debts/data/tables/peer_debts_table.dart';
-import 'package:expense_tracker/database_provider.dart';
+import 'package:expense_tracker/core/database/database_provider.dart';
 import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/features/debts/presentation/debts_overview_widget.dart';

@@ -2,7 +2,7 @@ import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/transfer_form_screen.dart';
+import 'package:expense_tracker/features/transactions/presentation/transfer_form_screen.dart';
 import 'package:expense_tracker/features/transactions/presentation/transaction_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

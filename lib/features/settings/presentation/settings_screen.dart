@@ -3,13 +3,13 @@
 import 'dart:io';
 
 import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
-import 'package:expense_tracker/category_screen.dart';
+import 'package:expense_tracker/features/categories/presentation/category_screen.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/core/utils/csv_exporter.dart';
 import 'package:expense_tracker/features/security/presentation/lock_screen.dart';
-import 'package:expense_tracker/recurring_transactions_screen.dart';
+import 'package:expense_tracker/features/recurring/presentation/recurring_transactions_screen.dart';
 import 'package:expense_tracker/sms/sms_import_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:expense_tracker/sync_service.dart';
+import 'package:expense_tracker/features/sync/data/sync_service.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});

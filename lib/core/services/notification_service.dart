@@ -1,1 +1,1 @@
-export 'package:expense_tracker/notification_service.dart';
+export 'package:expense_tracker/features/notifications/data/notification_service.dart';

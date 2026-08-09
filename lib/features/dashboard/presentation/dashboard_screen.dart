@@ -1,33 +1,33 @@
 // BROKEN DEPENDENCY: Experimental
 /*
 import 'package:expense_tracker/features/accounts/presentation/accounts_overview_widget.dart';
-import 'package:expense_tracker/attention_needed_widget.dart';
-import 'package:expense_tracker/beta_metrics_widget.dart';
-import 'package:expense_tracker/brand_assets.dart';
-import 'package:expense_tracker/budget_overview_widget.dart';
+import 'package:expense_tracker/core/domain/attention_needed_widget.dart';
+import 'package:expense_tracker/features/settings/presentation/beta_metrics_widget.dart';
+import 'package:expense_tracker/core/domain/brand_assets.dart';
+import 'package:expense_tracker/features/budgets/presentation/budget_overview_widget.dart';
 import 'package:expense_tracker/debts_overview_widget.dart';
 import 'package:expense_tracker/core/providers/dashboard_providers.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
-import 'package:expense_tracker/dashboard_shimmer.dart';
-import 'package:expense_tracker/family_automation_dashboard.dart';
-import 'package:expense_tracker/family_financial_summary_widget.dart';
-import 'package:expense_tracker/family_goal_summary_widget.dart';
-import 'package:expense_tracker/forecast_history_widget.dart';
+import 'package:expense_tracker/core/presentation/dashboard_shimmer.dart';
+import 'package:expense_tracker/features/family/domain/family_automation_dashboard.dart';
+import 'package:expense_tracker/features/family/presentation/family_financial_summary_widget.dart';
+import 'package:expense_tracker/features/family/presentation/family_goal_summary_widget.dart';
+import 'package:expense_tracker/core/domain/forecast_history_widget.dart';
 import 'package:expense_tracker/presentation/screens/dashboard/widgets/dashboard_header.dart';
 import 'package:expense_tracker/presentation/screens/dashboard/widgets/recent_transactions_list.dart';
 import 'package:expense_tracker/presentation/screens/dashboard/widgets/assets_overview_widget.dart';
 import 'package:expense_tracker/presentation/screens/dashboard/customize_dashboard_screen.dart';
 import 'package:expense_tracker/presentation/widgets/error_display_widget.dart';
-import 'package:expense_tracker/spending_insights_summary_widget.dart';
-import 'package:expense_tracker/quick_add_widget.dart';
-import 'package:expense_tracker/spending_streak_widget.dart';
-import 'package:expense_tracker/wallet_activity_feed.dart';
-import 'package:expense_tracker/wallet_member_summary_widget.dart';
+import 'package:expense_tracker/features/reports/presentation/spending_insights_summary_widget.dart';
+import 'package:expense_tracker/features/transactions/presentation/quick_add_widget.dart';
+import 'package:expense_tracker/features/reports/presentation/spending_streak_widget.dart';
+import 'package:expense_tracker/features/family/domain/wallet_activity_feed.dart';
+import 'package:expense_tracker/features/family/presentation/wallet_member_summary_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:expense_tracker/app_drawer.dart';
+import 'package:expense_tracker/core/presentation/app_drawer.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});

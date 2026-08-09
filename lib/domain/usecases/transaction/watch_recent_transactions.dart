@@ -1,1 +1,1 @@
-export 'package:expense_tracker/watch_recent_transactions.dart';
+export 'package:expense_tracker/features/transactions/domain/usecases/watch_recent_transactions.dart';

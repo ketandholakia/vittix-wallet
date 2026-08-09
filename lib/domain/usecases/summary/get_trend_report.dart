@@ -1,1 +1,1 @@
-export 'package:expense_tracker/get_trend_report.dart';
+export 'package:expense_tracker/features/reports/domain/usecases/get_trend_report.dart';

@@ -1,8 +1,8 @@
 import 'package:expense_tracker/features/security/presentation/app_lock_wrapper.dart';
-import 'package:expense_tracker/brand_assets.dart';
+import 'package:expense_tracker/core/domain/brand_assets.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
-import 'package:expense_tracker/main_screen.dart';
-import 'package:expense_tracker/notification_provider.dart';
+import 'package:expense_tracker/core/presentation/main_screen.dart';
+import 'package:expense_tracker/features/notifications/data/notification_provider.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:flutter/material.dart';

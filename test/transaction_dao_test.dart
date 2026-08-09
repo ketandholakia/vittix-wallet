@@ -1,7 +1,7 @@
 import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:drift/native.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/default_accounts.dart';
+import 'package:expense_tracker/features/accounts/domain/default_accounts.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -8,8 +8,8 @@ import 'package:drift/native.dart';
 import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:expense_tracker/default_accounts.dart';
-import 'package:expense_tracker/default_categories.dart';
+import 'package:expense_tracker/features/accounts/domain/default_accounts.dart';
+import 'package:expense_tracker/core/database/default_categories.dart';
 import 'package:path/path.dart' as p;
 
 // Import the generated part file

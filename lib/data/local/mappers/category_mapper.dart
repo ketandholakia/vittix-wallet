@@ -1,1 +1,1 @@
-export 'package:expense_tracker/category_mapper.dart';
+export 'package:expense_tracker/features/categories/data/category_mapper.dart';

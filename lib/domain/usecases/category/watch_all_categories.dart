@@ -1,1 +1,1 @@
-export 'package:expense_tracker/watch_all_categories.dart';
+export 'package:expense_tracker/features/categories/domain/usecases/watch_all_categories.dart';

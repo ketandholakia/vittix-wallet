@@ -1,1 +1,1 @@
-export 'package:expense_tracker/add_transaction.dart';
+export 'package:expense_tracker/features/transactions/domain/usecases/add_transaction.dart';

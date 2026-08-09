@@ -8,7 +8,7 @@ import 'package:expense_tracker/features/accounts/domain/account_repository.dart
 import 'package:expense_tracker/data/repositories/budget_repository_impl.dart';
 import 'package:expense_tracker/domain/repositories/budget_repository.dart';
 import 'package:expense_tracker/domain/repositories/recurring_transaction_repository.dart';
-import 'package:expense_tracker/recurring_transaction_repository_impl.dart';
+import 'package:expense_tracker/features/recurring/data/recurring_transaction_repository_impl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 

@@ -5,7 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:expense_tracker/budget_repository.dart' as _i2;
+import 'package:expense_tracker/features/budgets/data/budget_repository.dart' as _i2;
 import 'package:expense_tracker/domain/entities/budget.dart' as _i4;
 import 'package:expense_tracker/domain/entities/transaction.dart' as _i6;
 import 'package:expense_tracker/domain/entities/trend_data_point.dart' as _i7;

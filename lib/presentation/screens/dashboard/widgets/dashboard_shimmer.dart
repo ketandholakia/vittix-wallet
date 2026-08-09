@@ -1,1 +1,1 @@
-export 'package:expense_tracker/dashboard_shimmer.dart';
+export 'package:expense_tracker/core/presentation/dashboard_shimmer.dart';

@@ -1,1 +1,1 @@
-export 'package:expense_tracker/database_provider.dart';
+export 'package:expense_tracker/core/database/database_provider.dart';

@@ -1,1 +1,1 @@
-export 'package:expense_tracker/get_budget_status.dart';
+export 'package:expense_tracker/features/budgets/domain/usecases/get_budget_status.dart';
