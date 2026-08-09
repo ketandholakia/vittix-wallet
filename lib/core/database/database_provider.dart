@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:expense_tracker/sms/data/sms_import_metrics_dao.dart';
 import 'package:expense_tracker/sms/data/sms_parsing_dao.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -63,6 +64,7 @@ final settlementDaoProvider = Provider<SettlementDao>((ref) {
 */
 */
 
+/*
 final notificationDaoProvider = Provider<NotificationDao>((ref) {
   return ref.watch(databaseProvider).notificationDao;
 });
@@ -74,6 +76,7 @@ final notificationPreferenceDaoProvider = Provider<NotificationPreferenceDao>((r
 final feedbackDaoProvider = Provider<FeedbackDao>((ref) {
   return ref.watch(databaseProvider).feedbackDao;
 });
+*/
 
 final smsImportMetricsDaoProvider = Provider<SmsImportMetricsDao>((ref) {
   return ref.watch(databaseProvider).smsImportMetricsDao;
@@ -87,6 +90,7 @@ final payeeDaoProvider = Provider<PayeeDao>((ref) {
   return ref.watch(databaseProvider).payeeDao;
 });
 
+/*
 final tagDaoProvider = Provider<TagDao>((ref) {
   return ref.watch(databaseProvider).tagDao;
 });
@@ -98,6 +102,7 @@ final transactionTagDaoProvider = Provider<TransactionTagDao>((ref) {
 final attachmentDaoProvider = Provider<AttachmentDao>((ref) {
   return ref.watch(databaseProvider).attachmentDao;
 });
+*/
 
 /*
 final familyAutomationServiceProvider = Provider<FamilyAutomationService>((ref) {
