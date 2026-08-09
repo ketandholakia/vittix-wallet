@@ -44,6 +44,23 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
     _loadKnownHashes();
   }
 
+  Account _guessAccount(PdfTransactionCandidate candidate, List<Account> accounts) {
+    if (candidate.selectedAccountId != null) {
+      return accounts.firstWhere((a) => a.id == candidate.selectedAccountId, orElse: () => accounts.first);
+    }
+    final hint = candidate.accountHint;
+    if (hint != null && hint.isNotEmpty) {
+      final hintLower = hint.toLowerCase().replaceAll('xx', '');
+      final digits = RegExp(r'\d+').firstMatch(hintLower)?.group(0);
+      for (final a in accounts) {
+        final nameLower = a.name.toLowerCase();
+        if (digits != null && nameLower.contains(digits)) return a;
+        if (hintLower.isNotEmpty && nameLower.contains(hintLower)) return a;
+      }
+    }
+    return accounts.firstWhere((a) => a.type == AccountType.cash, orElse: () => accounts.first);
+  }
+
   Future<void> _loadKnownHashes() async {
     final prefs = await SharedPreferences.getInstance();
     final importedHashes = prefs.getStringList('pdf_imported_hashes') ?? <String>[];
@@ -146,10 +163,6 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
     final importedHashes = prefs.getStringList('pdf_imported_hashes') ?? <String>[];
 
     final categoryByName = {for (final c in categories) c.name.toLowerCase(): c};
-    final cashAccount = accounts.firstWhere(
-      (account) => account.type == AccountType.cash,
-      orElse: () => accounts.first,
-    );
 
     int savedCount = 0;
     
@@ -167,7 +180,7 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
         note: '[PDF] ${candidate.merchant}',
         type: candidate.type,
         category: category,
-        account: cashAccount,
+        account: _guessAccount(candidate, accounts),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -340,10 +353,7 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
                                       ),
                                       const SizedBox(height: 8),
                                       DropdownButtonFormField<Account>(
-                                        initialValue: accounts.firstWhere(
-                                          (a) => a.type == AccountType.cash,
-                                          orElse: () => accounts.first,
-                                        ),
+                                        initialValue: _guessAccount(candidate, accounts),
                                         decoration: const InputDecoration(labelText: 'Account'),
                                         items: accounts
                                             .map(
@@ -353,7 +363,12 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
                                               ),
                                             )
                                             .toList(),
-                                        onChanged: (_) {},
+                                        onChanged: (value) {
+                                          if (value == null) return;
+                                          setState(() {
+                                            _candidates[index] = candidate.copyWith(selectedAccountId: value.id);
+                                          });
+                                        },
                                       ),
                                     ],
                                   ),

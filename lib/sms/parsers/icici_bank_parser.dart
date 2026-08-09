@@ -61,7 +61,7 @@ class IciciBankParser extends BankSmsParser {
         RegExp(r'towards\s+([^.\n]+?)(?:\s+from|\s+A/c|\s+UMRN|\s+ID:|\s+Alert:|\s*\.|$)', caseSensitive: false),
         RegExp(r'for\s+([^.\n]+?)(?:\s+mandate|\s+will\s+be|\s+subscription|\s+ID:|\s+Act:|\s*\.|$)', caseSensitive: false),
       ],
-      RegExp(r'Info:?\s*([^\.\n]+)', caseSensitive: false), // ICICI often uses Info: <merchant>
+      RegExp(r'Info:?\s*([^\.\n]+?)(?:\s+Ref|\s+UPI|\s+on|\.|$)', caseSensitive: false), // ICICI often uses Info: <merchant>
       RegExp(r'to\s+([^.\n]+?)(?:\.|\s+UPI|\s+Ref)', caseSensitive: false),
       RegExp(r'at\s+([^.\n]+?)(?:\.|\s+on|\s+Ref)', caseSensitive: false),
     ];

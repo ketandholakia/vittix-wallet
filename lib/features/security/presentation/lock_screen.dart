@@ -164,7 +164,7 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
   }
 
   void _processFullPin() {
-    final storedHash = ref.read(pinHashProvider);
+    final storedHash = ref.read(pinHashProvider).value;
 
     switch (widget.mode) {
       case LockScreenMode.unlock:

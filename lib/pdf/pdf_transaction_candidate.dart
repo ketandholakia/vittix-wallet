@@ -7,6 +7,7 @@ class PdfTransactionCandidate {
   final DateTime date;
   final String? accountHint;
   final String? suggestedCategoryName;
+  final int? selectedAccountId;
   final bool isSelected;
   final double confidence;
   final String sourceFile; // e.g., "GPay PDF"
@@ -19,6 +20,7 @@ class PdfTransactionCandidate {
     required this.date,
     this.accountHint,
     this.suggestedCategoryName,
+    this.selectedAccountId,
     this.isSelected = true,
     this.confidence = 1.0,
     required this.sourceFile,
@@ -32,6 +34,7 @@ class PdfTransactionCandidate {
     DateTime? date,
     String? accountHint,
     String? suggestedCategoryName,
+    int? selectedAccountId,
     bool? isSelected,
     double? confidence,
     String? sourceFile,
@@ -44,6 +47,7 @@ class PdfTransactionCandidate {
       date: date ?? this.date,
       accountHint: accountHint ?? this.accountHint,
       suggestedCategoryName: suggestedCategoryName ?? this.suggestedCategoryName,
+      selectedAccountId: selectedAccountId ?? this.selectedAccountId,
       isSelected: isSelected ?? this.isSelected,
       confidence: confidence ?? this.confidence,
       sourceFile: sourceFile ?? this.sourceFile,

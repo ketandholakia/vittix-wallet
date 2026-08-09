@@ -17,6 +17,7 @@ class SmsTransactionCandidate {
   final DateTime date;
   final String? accountHint;
   final String? suggestedCategoryName;
+  final int? selectedAccountId;
   final bool isSelected;
   final double confidence;
   final bool isRecurringSetup;
@@ -34,6 +35,7 @@ class SmsTransactionCandidate {
     required this.isSelected,
     this.accountHint,
     this.suggestedCategoryName,
+    this.selectedAccountId,
     required this.confidence,
     this.isRecurringSetup = false,
     this.recurringIntervalHint,
@@ -46,6 +48,7 @@ class SmsTransactionCandidate {
     DateTime? date,
     String? accountHint,
     String? suggestedCategoryName,
+    int? selectedAccountId,
     bool? isSelected,
     bool? isRecurringSetup,
     String? recurringIntervalHint,
@@ -61,6 +64,7 @@ class SmsTransactionCandidate {
       date: date ?? this.date,
       accountHint: accountHint ?? this.accountHint,
       suggestedCategoryName: suggestedCategoryName ?? this.suggestedCategoryName,
+      selectedAccountId: selectedAccountId ?? this.selectedAccountId,
       isSelected: isSelected ?? this.isSelected,
       confidence: confidence,
       isRecurringSetup: isRecurringSetup ?? this.isRecurringSetup,
@@ -122,25 +126,25 @@ class SmsTransactionParser {
     RegExp(r'(\s+LTD\.?|\s+LIMITED)$', caseSensitive: false),
   ];
 
-  static const _expenseKeywords = [
-    'debited',
-    'spent',
-    'withdrawn',
-    'paid',
-    'purchase',
-    'payment',
-    'deducted',
-    'dr',
-    'pos',
+  static final List<RegExp> _expenseKeywords = [
+    RegExp(r'debited', caseSensitive: false),
+    RegExp(r'spent', caseSensitive: false),
+    RegExp(r'withdrawn', caseSensitive: false),
+    RegExp(r'paid', caseSensitive: false),
+    RegExp(r'purchase', caseSensitive: false),
+    RegExp(r'payment', caseSensitive: false),
+    RegExp(r'deducted', caseSensitive: false),
+    RegExp(r'\bdr\b', caseSensitive: false),
+    RegExp(r'\bpos\b', caseSensitive: false),
   ];
 
-  static const _incomeKeywords = [
-    'credited',
-    'received',
-    'refund',
-    'salary',
-    'deposit',
-    'cr',
+  static final List<RegExp> _incomeKeywords = [
+    RegExp(r'credited', caseSensitive: false),
+    RegExp(r'received', caseSensitive: false),
+    RegExp(r'refund', caseSensitive: false),
+    RegExp(r'salary', caseSensitive: false),
+    RegExp(r'deposit', caseSensitive: false),
+    RegExp(r'\bcr\b', caseSensitive: false),
   ];
 
   static final Map<RegExp, String> _categoryHints = {
@@ -185,7 +189,7 @@ class SmsTransactionParser {
       }
     }
 
-    final keywordsMatch = _expenseKeywords.any(normalized.contains) || _incomeKeywords.any(normalized.contains);
+    final keywordsMatch = _expenseKeywords.any((r) => r.hasMatch(normalized)) || _incomeKeywords.any((r) => r.hasMatch(normalized));
     if (!keywordsMatch) return null;
 
     final amount = _extractAmount(trimmedBody);
@@ -228,8 +232,8 @@ class SmsTransactionParser {
   }
 
   domain.TransactionType _inferType(String normalized) {
-    final hasDebit = _expenseKeywords.any(normalized.contains);
-    final hasCredit = _incomeKeywords.any(normalized.contains);
+    final hasDebit = _expenseKeywords.any((r) => r.hasMatch(normalized));
+    final hasCredit = _incomeKeywords.any((r) => r.hasMatch(normalized));
     if (hasCredit && !hasDebit) return domain.TransactionType.income;
     return domain.TransactionType.expense;
   }

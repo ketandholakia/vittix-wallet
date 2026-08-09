@@ -9,7 +9,7 @@ class SbiBankParser extends BankSmsParser {
   @override
   bool canHandle(String sender, String body) {
     final s = sender.toUpperCase();
-    return s.contains('SBI') && (s.contains('INB') || s.contains('PSG') || s.contains('UPI') || s.contains('SBI'));
+    return s.contains('SBIINB') || s.contains('SBIPSG') || s.contains('SBIUPI') || s.contains('SBICRD');
   }
 
   @override

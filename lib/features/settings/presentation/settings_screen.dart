@@ -1,5 +1,3 @@
-// BROKEN DEPENDENCY: Experimental
-/*
 import 'dart:io';
 
 import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
@@ -221,7 +219,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   value: isPinEnabled,
                   onChanged: (value) async {
                     if (value) {
-                      final newPin = await if (mounted) Navigator.of(context).push<String>(
+                      final newPin = await Navigator.of(context).push<String>(
                         MaterialPageRoute(
                           builder: (_) => LockScreen(
                             mode: LockScreenMode.setup,
@@ -235,13 +233,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ref.read(pinHashProvider.notifier).updatePinHash(hashed);
                         ref.read(pinLockEnabledProvider.notifier).updatePinLockEnabled(true);
                         if (mounted) {
-                          if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('PIN Lock enabled successfully')),
                           );
                         }
                       }
                     } else {
-                      final verifiedPin = await if (mounted) Navigator.of(context).push<String>(
+                      final verifiedPin = await Navigator.of(context).push<String>(
                         MaterialPageRoute(
                           builder: (_) => LockScreen(
                             mode: LockScreenMode.verify,
@@ -255,7 +253,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ref.read(pinHashProvider.notifier).updatePinHash(null);
                         ref.read(biometricsEnabledProvider.notifier).updateBiometricsEnabled(false);
                         if (mounted) {
-                          if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('PIN Lock disabled')),
                           );
                         }
@@ -271,7 +269,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     subtitle: const Text('Update your 4-digit security PIN'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () async {
-                      final verifiedPin = await if (mounted) Navigator.of(context).push<String>(
+                      final verifiedPin = await Navigator.of(context).push<String>(
                         MaterialPageRoute(
                           builder: (_) => LockScreen(
                             mode: LockScreenMode.verify,
@@ -283,7 +281,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       if (verifiedPin == null) return;
 
                       if (!mounted) return;
-                      final newPin = await if (mounted) Navigator.of(context).push<String>(
+                      final newPin = await Navigator.of(context).push<String>(
                         MaterialPageRoute(
                           builder: (_) => LockScreen(
                             mode: LockScreenMode.setup,
@@ -296,7 +294,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         final hashed = hashPin(newPin);
                         ref.read(pinHashProvider.notifier).updatePinHash(hashed);
                         if (mounted) {
-                          if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('PIN changed successfully')),
                           );
                         }
@@ -632,5 +630,4 @@ class _SettingsCard extends StatelessWidget {
     );
   }
 }
-
-*/
+
