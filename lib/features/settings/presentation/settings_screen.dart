@@ -432,8 +432,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: const Text('Save a backup of your database'),
               onTap: () async {
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
-                final File? dbFile = null; // ref.read(databaseFileProvider).value;
-                if (dbFile == null) {
+                final dbFolder = await getApplicationDocumentsDirectory();
+                final dbFile = File(p.join(dbFolder.path, 'db.sqlite'));
+                
+                if (!await dbFile.exists()) {
                   scaffoldMessenger.showSnackBar(
                     const SnackBar(content: Text('Database file not found!')),
                   );
