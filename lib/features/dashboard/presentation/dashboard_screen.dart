@@ -1,13 +1,13 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
+import 'package:expense_tracker/features/settings/presentation/guided_onboarding_screen.dart' as expense_tracker_guided_onboarding;
 import 'package:expense_tracker/features/accounts/presentation/accounts_overview_widget.dart';
 import 'package:expense_tracker/core/domain/attention_needed_widget.dart';
 import 'package:expense_tracker/features/settings/presentation/beta_metrics_widget.dart';
 import 'package:expense_tracker/core/domain/brand_assets.dart';
 import 'package:expense_tracker/features/budgets/presentation/budget_overview_widget.dart';
-import 'package:expense_tracker/debts_overview_widget.dart';
 import 'package:expense_tracker/core/providers/dashboard_providers.dart';
-import 'package:expense_tracker/core/providers/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/core/presentation/dashboard_shimmer.dart';
 import 'package:expense_tracker/features/family/domain/family_automation_dashboard.dart';
 import 'package:expense_tracker/features/family/presentation/family_financial_summary_widget.dart';
@@ -91,21 +91,40 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
                 onSelected: (value) {
-                  ref.read(currentWalletIdProvider.notifier).selectWallet(value);
+                  if (value == -1) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const expense_tracker_guided_onboarding.GuidedOnboardingScreen()));
+                  } else {
+                    ref.read(currentWalletIdProvider.notifier).selectWallet(value);
+                  }
                 },
-                itemBuilder: (context) => wallets
-                    .map(
-                      (walletItem) => PopupMenuItem<int>(
-                        value: walletItem.id,
-                        child: Row(
-                          children: [
-                            Expanded(child: Text(walletItem.name)),
-                            if (walletItem.id == currentWalletId) const Icon(Icons.check, size: 18),
-                          ],
+                itemBuilder: (context) {
+                  final items = wallets
+                      .map(
+                        (walletItem) => PopupMenuItem<int>(
+                          value: walletItem.id,
+                          child: Row(
+                            children: [
+                              Expanded(child: Text(walletItem.name)),
+                              if (walletItem.id == currentWalletId) const Icon(Icons.check, size: 18),
+                            ],
+                          ),
                         ),
+                      )
+                      .toList();
+                  items.add(
+                    const PopupMenuItem<int>(
+                      value: -1,
+                      child: Row(
+                        children: [
+                          Icon(Icons.add),
+                          SizedBox(width: 8),
+                          Text('Create new wallet'),
+                        ],
                       ),
-                    )
-                    .toList(),
+                    ),
+                  );
+                  return items;
+                },
               ),
               loading: () => const SizedBox.shrink(),
               error: (error, stackTrace) => const SizedBox.shrink(),
@@ -164,14 +183,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   'attention_needed': const AttentionNeededWidget(),
                   'family_automation': const FamilyAutomationDashboard(),
                   'budget_overview': const BudgetOverviewWidget(),
-                  'debts_overview': const DebtsOverviewWidget(),
+                  'debts_overview': SizedBox.shrink(),
                   'wallet_member_summary': const WalletMemberSummaryWidget(),
                   'family_financial_summary': const FamilyFinancialSummaryWidget(),
                   'forecast_history': const ForecastHistoryWidget(),
                   'family_goal_summary': const FamilyGoalSummaryWidget(),
                   'spending_insights_summary': const SpendingInsightsSummaryWidget(),
                   'beta_metrics': const BetaMetricsWidget(),
-                  'wallet_activity_feed': const WalletActivityFeed(),
+                  'wallet_activity_feed': SizedBox.shrink(),
                 };
 
                 final visibleWidgets = widgetsOrder
@@ -226,4 +245,3 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 }
 
-*/

@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/features/budgets/presentation/budget_form_dialog.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/budget.dart';
@@ -69,4 +69,3 @@ class BudgetScreen extends ConsumerWidget {
     );
   }
 }
-*/

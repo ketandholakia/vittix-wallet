@@ -36,7 +36,7 @@ final budgetRepositoryProvider = Provider<BudgetRepository>((ref) {
 final accountRepositoryProvider = Provider<AccountRepository>((ref) {
   final dao = ref.watch(accountDaoProvider);
   final walletId = ref.watch(currentWalletIdProvider);
-  return AccountRepositoryImpl(dao, walletId);
+  return AccountRepositoryImpl(dao);
 });
 
 final recurringTransactionRepositoryProvider = Provider<RecurringTransactionRepository>((ref) {

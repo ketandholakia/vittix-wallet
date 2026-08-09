@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/core/database/app_database.dart';
 
 class WalletMemberBalance {
@@ -84,4 +84,3 @@ class FamilySettlementService {
   }
 }
 
-*/

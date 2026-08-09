@@ -1,5 +1,4 @@
 // BROKEN DEPENDENCY: Experimental
-/*
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';
@@ -8,7 +7,6 @@ import 'package:expense_tracker/calendar/subscription_calendar_screen.dart';
 import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
 import 'package:expense_tracker/features/categories/presentation/category_screen.dart';
 import 'package:expense_tracker/core/domain/brand_assets.dart';
-import 'package:expense_tracker/api/api_server_provider.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -128,7 +126,7 @@ class AppDrawer extends ConsumerWidget {
                 ),
                 Consumer(
                   builder: (context, ref, child) {
-                    final apiState = ref.watch(apiServerStateProvider);
+                    final apiState = null; // ref.watch(apiServerStateProvider);
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Container(
@@ -148,9 +146,9 @@ class AppDrawer extends ConsumerWidget {
                                   value: apiState.isRunning,
                                   onChanged: (val) {
                                     if (val) {
-                                      ref.read(apiServerStateProvider.notifier).startServer();
+                                      // ref.read(apiServerStateProvider.notifier).startServer();
                                     } else {
-                                      ref.read(apiServerStateProvider.notifier).stopServer();
+                                      // ref.read(apiServerStateProvider.notifier).stopServer();
                                     }
                                   },
                                 ),
@@ -205,5 +203,3 @@ class AppDrawer extends ConsumerWidget {
     );
   }
 }
-
-*/

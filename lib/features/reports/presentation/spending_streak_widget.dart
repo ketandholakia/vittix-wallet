@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/core/providers/dashboard_providers.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
@@ -145,4 +145,3 @@ class SpendingStreakWidget extends ConsumerWidget {
   }
 }
 
-*/

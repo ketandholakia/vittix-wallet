@@ -3,6 +3,114 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
+mixin _$WalletDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $WalletMembersTable get walletMembers => attachedDatabase.walletMembers;
+  $WalletInvitationsTable get walletInvitations =>
+      attachedDatabase.walletInvitations;
+  $WalletSettlementsTable get walletSettlements =>
+      attachedDatabase.walletSettlements;
+  $WalletExpenseSplitsTable get walletExpenseSplits =>
+      attachedDatabase.walletExpenseSplits;
+  $WalletExpenseSplitMembersTable get walletExpenseSplitMembers =>
+      attachedDatabase.walletExpenseSplitMembers;
+  WalletDaoManager get managers => WalletDaoManager(this);
+}
+
+class WalletDaoManager {
+  final _$WalletDaoMixin _db;
+  WalletDaoManager(this._db);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$WalletMembersTableTableManager get walletMembers =>
+      $$WalletMembersTableTableManager(_db.attachedDatabase, _db.walletMembers);
+  $$WalletInvitationsTableTableManager get walletInvitations =>
+      $$WalletInvitationsTableTableManager(
+        _db.attachedDatabase,
+        _db.walletInvitations,
+      );
+  $$WalletSettlementsTableTableManager get walletSettlements =>
+      $$WalletSettlementsTableTableManager(
+        _db.attachedDatabase,
+        _db.walletSettlements,
+      );
+  $$WalletExpenseSplitsTableTableManager get walletExpenseSplits =>
+      $$WalletExpenseSplitsTableTableManager(
+        _db.attachedDatabase,
+        _db.walletExpenseSplits,
+      );
+  $$WalletExpenseSplitMembersTableTableManager get walletExpenseSplitMembers =>
+      $$WalletExpenseSplitMembersTableTableManager(
+        _db.attachedDatabase,
+        _db.walletExpenseSplitMembers,
+      );
+}
+
+mixin _$PayeeDaoMixin on DatabaseAccessor<AppDatabase> {
+  $TagsTable get tags => attachedDatabase.tags;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  PayeeDaoManager get managers => PayeeDaoManager(this);
+}
+
+class PayeeDaoManager {
+  final _$PayeeDaoMixin _db;
+  PayeeDaoManager(this._db);
+  $$TagsTableTableManager get tags =>
+      $$TagsTableTableManager(_db.attachedDatabase, _db.tags);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+}
+
+mixin _$TransactionTagDaoMixin on DatabaseAccessor<AppDatabase> {
+  $TagsTable get tags => attachedDatabase.tags;
+  TransactionTagDaoManager get managers => TransactionTagDaoManager(this);
+}
+
+class TransactionTagDaoManager {
+  final _$TransactionTagDaoMixin _db;
+  TransactionTagDaoManager(this._db);
+  $$TagsTableTableManager get tags =>
+      $$TagsTableTableManager(_db.attachedDatabase, _db.tags);
+}
+
+mixin _$AttachmentDaoMixin on DatabaseAccessor<AppDatabase> {
+  $AttachmentsTable get attachments => attachedDatabase.attachments;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  AttachmentDaoManager get managers => AttachmentDaoManager(this);
+}
+
+class AttachmentDaoManager {
+  final _$AttachmentDaoMixin _db;
+  AttachmentDaoManager(this._db);
+  $$AttachmentsTableTableManager get attachments =>
+      $$AttachmentsTableTableManager(_db.attachedDatabase, _db.attachments);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+}
+
+mixin _$AllowanceDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletAllowancesTable get walletAllowances =>
+      attachedDatabase.walletAllowances;
+  $WalletAllowancePaymentsTable get walletAllowancePayments =>
+      attachedDatabase.walletAllowancePayments;
+  AllowanceDaoManager get managers => AllowanceDaoManager(this);
+}
+
+class AllowanceDaoManager {
+  final _$AllowanceDaoMixin _db;
+  AllowanceDaoManager(this._db);
+  $$WalletAllowancesTableTableManager get walletAllowances =>
+      $$WalletAllowancesTableTableManager(
+        _db.attachedDatabase,
+        _db.walletAllowances,
+      );
+  $$WalletAllowancePaymentsTableTableManager get walletAllowancePayments =>
+      $$WalletAllowancePaymentsTableTableManager(
+        _db.attachedDatabase,
+        _db.walletAllowancePayments,
+      );
+}
+
 mixin _$CategoryDaoMixin on DatabaseAccessor<AppDatabase> {
   $CategoriesTable get categories => attachedDatabase.categories;
   $AccountsTable get accounts => attachedDatabase.accounts;
@@ -14809,6 +14917,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final RecurringTransactionDao recurringTransactionDao =
       RecurringTransactionDao(this as AppDatabase);
   late final DebtsDao debtsDao = DebtsDao(this as AppDatabase);
+  late final WalletDao walletDao = WalletDao(this as AppDatabase);
+  late final TransactionTagDao transactionTagDao = TransactionTagDao(
+    this as AppDatabase,
+  );
+  late final AttachmentDao attachmentDao = AttachmentDao(this as AppDatabase);
+  late final AllowanceDao allowanceDao = AllowanceDao(this as AppDatabase);
+  late final GoalDao goalDao = GoalDao(this as AppDatabase);
+  late final PayeeDao payeeDao = PayeeDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -22380,5 +22496,31 @@ class $AppDatabaseManager {
       $$UnrecognizedSmsEntriesTableTableManager(
         _db,
         _db.unrecognizedSmsEntries,
+      );
+}
+
+mixin _$GoalDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletGoalsTable get walletGoals => attachedDatabase.walletGoals;
+  $WalletGoalContributionsTable get walletGoalContributions =>
+      attachedDatabase.walletGoalContributions;
+  $WalletGoalSchedulesTable get walletGoalSchedules =>
+      attachedDatabase.walletGoalSchedules;
+  GoalDaoManager get managers => GoalDaoManager(this);
+}
+
+class GoalDaoManager {
+  final _$GoalDaoMixin _db;
+  GoalDaoManager(this._db);
+  $$WalletGoalsTableTableManager get walletGoals =>
+      $$WalletGoalsTableTableManager(_db.attachedDatabase, _db.walletGoals);
+  $$WalletGoalContributionsTableTableManager get walletGoalContributions =>
+      $$WalletGoalContributionsTableTableManager(
+        _db.attachedDatabase,
+        _db.walletGoalContributions,
+      );
+  $$WalletGoalSchedulesTableTableManager get walletGoalSchedules =>
+      $$WalletGoalSchedulesTableTableManager(
+        _db.attachedDatabase,
+        _db.walletGoalSchedules,
       );
 }

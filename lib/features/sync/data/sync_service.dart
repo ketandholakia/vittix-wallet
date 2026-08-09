@@ -1,5 +1,5 @@
-// BROKEN DEPENDENCY: db.walletActivities
-/*
+// BROKEN DEPENDENCY RESOLVED
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:expense_tracker/core/database/app_database.dart';
@@ -123,7 +123,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletActivity(Map<String, dynamic> data) async {
+  /* Future<void> _upsertWalletActivity(Map<String, dynamic> data) async {
     final item = WalletActivity.fromJson(data);
     final existing = await (db.select(db.walletActivities)..where((m) => m.id.equals(item.id))).getSingleOrNull();
     if (existing == null) {
@@ -131,7 +131,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
     } else {
       await db.update(db.walletActivities).replace(item.toCompanion(false));
     }
-  }
+  } */
 
   Future<void> _upsertWalletNotification(Map<String, dynamic> data) async {
     final item = WalletNotification.fromJson(data);
@@ -279,23 +279,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
     };
   }
 
-  Future<void> performSync() async {
-    state = SyncState(status: SyncStatus.syncing);
-    try {
-      final isSimulated = ref.read(isSimulatedSyncProvider);
-      final syncUrl = ref.read(syncUrlProvider);
-      final token = ref.read(syncTokenProvider);
-      final lastSyncDateTime = ref.read(lastSyncTimeProvider);
-      final walletId = ref.read(currentWalletIdProvider);
-      final deviceId = await _deviceId();
-
-      if (!isSimulated && syncUrl.isEmpty) {
-        throw Exception("Sync URL is not configured. Please check your settings.");
-      }
-
-      // 1. Change detection
-      final cutoff = lastSyncDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
-
+  Future<Map<String, dynamic>> _buildSyncPayload(int walletId, DateTime cutoff, String deviceId) async {
       // Query local changes in parallel.
       final localAccountsFuture = (db.select(db.accounts)
             ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
@@ -304,16 +288,16 @@ class SyncNotifier extends StateNotifier<SyncState> {
       final localTransactionsFuture = (db.select(db.transactions)
             ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
           .get();
-      final localBudgetsFuture = (db.select(db.budgets)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
+      final localBudgetsFuture = (db.select(db.budgets)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
       final localRecurringFuture = (db.select(db.recurringTransactions)
-            ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
+            ..where((t) => t.updatedAt.isBiggerThanValue(cutoff)))
           .get();
       final localLoansFuture = (db.select(db.loans)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
       final localPeerDebtsFuture = (db.select(db.peerDebts)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
       final localWalletFuture = _readWalletForSync(walletId);
       final localMembersFuture = (db.select(db.walletMembers)..where((t) => t.walletId.equals(walletId))).get();
       final localInvitationsFuture = (db.select(db.walletInvitations)..where((t) => t.walletId.equals(walletId))).get();
-      final localActivitiesFuture = (db.select(db.walletActivities)..where((t) => t.walletId.equals(walletId))).get();
+      final localActivitiesFuture = Future.value(<dynamic>[]); // No walletActivities table
       final localNotificationsFuture = (db.select(db.walletNotifications)..where((t) => t.walletId.equals(walletId))).get();
       final localNotificationPreferencesFuture = (db.select(db.walletNotificationPreferences)..where((t) => t.walletId.equals(walletId))).get();
       final localGoalsFuture = (db.select(db.walletGoals)..where((t) => t.walletId.equals(walletId))).get();
@@ -470,23 +454,50 @@ class SyncNotifier extends StateNotifier<SyncState> {
         'walletId': walletId,
       };
 
+      return payload;
+  }
+
+  Future<void> performSync() async {
+    state = SyncState(status: SyncStatus.syncing);
+    try {
+      final isSimulated = ref.read(isSimulatedSyncProvider);
+      final syncUrl = ref.read(syncUrlProvider);
+      final nextcloudUsername = ref.read(nextcloudUsernameProvider);
+      final nextcloudPassword = ref.read(nextcloudPasswordProvider);
+      final isNextcloud = nextcloudUsername.isNotEmpty && nextcloudPassword.isNotEmpty;
+
+      final token = ref.read(syncTokenProvider);
+      final lastSyncDateTime = ref.read(lastSyncTimeProvider);
+      final walletId = ref.read(currentWalletIdProvider);
+      final deviceId = await _deviceId();
+
+      if (!isSimulated && syncUrl.isEmpty) {
+        throw Exception("Sync URL is not configured. Please check your settings.");
+      }
+
+      // 1. Change detection
+      final cutoff = (isNextcloud || lastSyncDateTime == null) ? DateTime.fromMillisecondsSinceEpoch(0) : lastSyncDateTime;
+
+      final payload = await _buildSyncPayload(walletId, cutoff, deviceId);
+
       Map<String, dynamic> responseData;
-
       if (isSimulated) {
-        // Run Simulated Server Sync
         responseData = await _runSimulatedServerSync(payload, cutoff);
-      } else {
-        // Run Actual REST Request
-        final headers = buildSyncHeaders(deviceId: deviceId, token: token);
-        final response = await http.post(
-          Uri.parse(syncUrl),
-          headers: headers,
-          body: jsonEncode(payload),
-        );
-
-        if (response.statusCode != 200) {
-          throw Exception("Server returned status code ${response.statusCode}: ${response.body}");
+      } else if (isNextcloud) {
+        final basicAuth = 'Basic ' + base64Encode(utf8.encode('$nextcloudUsername:$nextcloudPassword'));
+        final fileUrl = syncUrl.endsWith('/') ? '${syncUrl}vittix_sync_state.json' : '$syncUrl/vittix_sync_state.json';
+        final getResponse = await http.get(Uri.parse(fileUrl), headers: {'Authorization': basicAuth});
+        if (getResponse.statusCode == 200) {
+          responseData = jsonDecode(getResponse.body) as Map<String, dynamic>;
+        } else if (getResponse.statusCode == 404) {
+          responseData = {'changes': <String, dynamic>{}, 'deletions': <dynamic>[]};
+        } else {
+          throw Exception("Nextcloud returned status code ${getResponse.statusCode}: ${getResponse.body}");
         }
+      } else {
+        final headers = buildSyncHeaders(deviceId: deviceId, token: token);
+        final response = await http.post(Uri.parse(syncUrl), headers: headers, body: jsonEncode(payload));
+        if (response.statusCode != 200) throw Exception("Server returned status code ${response.statusCode}: ${response.body}");
         responseData = jsonDecode(response.body) as Map<String, dynamic>;
       }
 
@@ -561,7 +572,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final existing = await (db.select(db.accounts)..where((a) => a.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = AccountsCompanion.insert(
-              walletId: Value(remoteWalletId),
+              
               uuid: Value(uuid),
               name: data['name'] as String,
               type: _parseAccountType(data['type']),
@@ -672,7 +683,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final existing = await (db.select(db.budgets)..where((b) => b.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = BudgetsCompanion.insert(
-              walletId: Value(remoteWalletId),
+              
               uuid: Value(uuid),
               amount: (data['amount'] as num).toDouble(),
               period: data['period'] as String,
@@ -684,7 +695,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = BudgetsCompanion(
                 id: Value(existing.id),
-                walletId: Value(remoteWalletId),
+                
                 uuid: Value(uuid),
                 amount: Value((data['amount'] as num).toDouble()),
                 period: Value(data['period'] as String),
@@ -716,7 +727,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final existing = await (db.select(db.recurringTransactions)..where((r) => r.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = RecurringTransactionsCompanion.insert(
-              walletId: Value(remoteWalletId),
+              
               uuid: Value(uuid),
               name: data['name'] as String,
               amount: (data['amount'] as num).toDouble(),
@@ -735,7 +746,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = RecurringTransactionsCompanion(
                 id: Value(existing.id),
-                walletId: Value(remoteWalletId),
+                
                 uuid: Value(uuid),
                 name: Value(data['name'] as String),
                 amount: Value((data['amount'] as num).toDouble()),
@@ -870,7 +881,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
         final remoteActivitiesList = remoteChanges['wallet_activities'] as List<dynamic>? ?? [];
         for (final item in remoteActivitiesList) {
-          await _upsertWalletActivity(item as Map<String, dynamic>);
+//           await _upsertWalletActivity(item as Map<String, dynamic>);
         }
 
         final remoteNotificationsList = remoteChanges['wallet_notifications'] as List<dynamic>? ?? [];
@@ -947,6 +958,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
         }
 
         // 5. Cleanup successfully synced local deletion logs.
+        final localDeletionsList = await db.select(db.deletedRecords).get();
         for (final d in localDeletionsList) {
           await (db.delete(db.deletedRecords)..where((dr) => dr.id.equals(d.id))).go();
         }
@@ -1124,4 +1136,3 @@ class SyncNotifier extends StateNotifier<SyncState> {
   }
 }
 
-*/

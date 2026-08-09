@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/features/family/data/family_automation_service.dart';
 
@@ -86,4 +86,3 @@ class NotificationCenterService {
   }
 }
 
-*/

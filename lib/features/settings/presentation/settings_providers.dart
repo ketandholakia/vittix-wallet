@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
@@ -9,6 +10,10 @@ import 'package:expense_tracker/core/providers/database_provider.dart';
 
 final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) {
   return SharedPreferences.getInstance();
+});
+
+final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
+  return const FlutterSecureStorage();
 });
 
 final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
@@ -152,27 +157,15 @@ class BiometricsEnabledNotifier extends StateNotifier<bool> {
 
 
 
-final appLockStateProvider = StateNotifierProvider<AppLockNotifier, bool>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  final initiallyEnabled = prefs?.getBool('isPinLockEnabled') ?? false;
-  return AppLockNotifier(initiallyEnabled);
-});
 
-class AppLockNotifier extends StateNotifier<bool> {
-  AppLockNotifier(super.initiallyLocked);
-
-  void lock() {
-    state = true;
-  }
-
-  void unlock() {
-    state = false;
-  }
-}
 
 String hashPin(String pin) {
-  final bytes = utf8.encode(pin);
-  final digest = sha256.convert(bytes);
+  const salt = 'vittix_wallet_salt_!@#';
+  var bytes = utf8.encode(pin + salt);
+  var digest = sha256.convert(bytes);
+  for (int i = 0; i < 10000; i++) {
+    digest = sha256.convert(digest.bytes);
+  }
   return digest.toString();
 }
 
@@ -202,6 +195,46 @@ class SyncTokenNotifier extends StateNotifier<String> {
   SyncTokenNotifier(this._prefs) : super(_prefs?.getString(_key) ?? '');
   void updateSyncToken(String value) {
     _prefs?.setString(_key, value);
+    state = value;
+  }
+}
+
+final nextcloudUsernameProvider = StateNotifierProvider<NextcloudUsernameNotifier, String>((ref) {
+  final secureStorage = ref.watch(secureStorageProvider);
+  return NextcloudUsernameNotifier(secureStorage);
+});
+
+class NextcloudUsernameNotifier extends StateNotifier<String> {
+  final FlutterSecureStorage _storage;
+  static const _key = 'nextcloudUsername';
+  NextcloudUsernameNotifier(this._storage) : super('') {
+    _load();
+  }
+  Future<void> _load() async {
+    state = await _storage.read(key: _key) ?? '';
+  }
+  Future<void> updateUsername(String value) async {
+    await _storage.write(key: _key, value: value);
+    state = value;
+  }
+}
+
+final nextcloudPasswordProvider = StateNotifierProvider<NextcloudPasswordNotifier, String>((ref) {
+  final secureStorage = ref.watch(secureStorageProvider);
+  return NextcloudPasswordNotifier(secureStorage);
+});
+
+class NextcloudPasswordNotifier extends StateNotifier<String> {
+  final FlutterSecureStorage _storage;
+  static const _key = 'nextcloudPassword';
+  NextcloudPasswordNotifier(this._storage) : super('') {
+    _load();
+  }
+  Future<void> _load() async {
+    state = await _storage.read(key: _key) ?? '';
+  }
+  Future<void> updatePassword(String value) async {
+    await _storage.write(key: _key, value: value);
     state = value;
   }
 }
@@ -287,20 +320,16 @@ class CurrentWalletIdNotifier extends StateNotifier<int> {
   }
 }
 
-/*
 final availableWalletsProvider = StreamProvider<List<Wallet>>((ref) {
   final db = ref.watch(databaseProvider);
   return db.select(db.wallets).watch();
 });
-*/
 
-/*
 final currentWalletProvider = StreamProvider<Wallet?>((ref) {
   final db = ref.watch(databaseProvider);
   final id = ref.watch(currentWalletIdProvider);
   return (db.select(db.wallets)..where((w) => w.id.equals(id))).watchSingleOrNull();
 });
-*/
 
 final dashboardWidgetsOrderProvider = StateNotifierProvider<DashboardWidgetsOrderNotifier, List<String>>((ref) {
   final prefs = ref.watch(sharedPreferencesProvider).asData?.value;

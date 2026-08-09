@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/core/providers/dashboard_providers.dart';
 import 'package:expense_tracker/presentation/screens/reports/category_report_screen.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
@@ -132,4 +132,3 @@ class ReportsScreen extends ConsumerWidget {
     );
   }
 }
-*/

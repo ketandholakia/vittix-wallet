@@ -1,7 +1,8 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:expense_tracker/features/security/data/secure_storage_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart' hide secureStorageProvider;
 
 // Provides the asynchronously loaded PIN hash from secure storage.
 final pinHashProvider = StateNotifierProvider<PinHashNotifier, AsyncValue<String?>>((ref) {

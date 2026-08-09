@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:flutter/material.dart';
@@ -67,4 +67,3 @@ class _MetricCard extends StatelessWidget {
   }
 }
 
-*/

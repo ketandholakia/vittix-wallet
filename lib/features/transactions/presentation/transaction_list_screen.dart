@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';
 import 'package:expense_tracker/receipt/receipt_scanner_screen.dart' as expense_tracker;
 import 'package:expense_tracker/core/providers/repository_providers.dart';
@@ -815,4 +815,3 @@ class _TransactionListScreenState
   }
 }
 
-*/

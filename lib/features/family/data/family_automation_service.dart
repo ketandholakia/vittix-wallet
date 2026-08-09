@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/core/database/app_database.dart';
 
 class RecurrenceOccurrence {
@@ -177,4 +177,3 @@ class FamilyAutomationService {
   }
 }
 
-*/

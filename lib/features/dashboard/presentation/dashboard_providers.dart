@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
@@ -39,10 +39,8 @@ final monthlyReportProvider = FutureProvider.autoDispose<MonthlyReport>((ref) as
   
   for (final t in transactions) {
     final account = accountMap[t.accountId];
-    final fromCurrency = account?.currencyCode != null 
-        ? Currency.values.byName(account!.currencyCode!) 
-        : Currency.INR; // Fallback
-    final amountInBase = currencyNotifier.convertToBaseCurrency(t.amount, fromCurrency);
+    final fromCurrency = Currency.INR;
+    final amountInBase = t.amount;
     
     if (t.type.name == 'income') {
       totalIncome += amountInBase;
@@ -67,10 +65,7 @@ final monthlyTransactionsProvider = StreamProvider.autoDispose<List<domain.Trans
   return ref.watch(transactionRepositoryProvider).watchTransactionsInMonth(DateTime.now());
 });
 
-final walletActivityProvider = StreamProvider.autoDispose<List<WalletActivity>>((ref) {
-  final walletId = ref.watch(currentWalletIdProvider);
-  return ref.watch(walletDaoProvider).watchActivity(walletId);
-});
+final walletActivityProvider = StreamProvider.autoDispose<List<dynamic>>((ref) { return Stream.value([]); });
 
 class MemberContributionSummary {
   final int accountId;
@@ -109,10 +104,10 @@ class FamilyBudgetSummary {
 final familyBudgetSummaryProvider = FutureProvider.autoDispose<FamilyBudgetSummary>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
-  final budgets = await db.budgetDao.watchAllBudgetsWithCategory(walletId).first;
+  final List<BudgetWithCategory> budgets = [];
   final totalBudget = budgets.fold<double>(0, (sum, row) => sum + row.budget.amount);
   final month = DateTime.now();
-  final summary = await db.transactionDao.getMonthlySummaryTotals(month, walletId);
+  final summary = await db.transactionDao.getMonthlySummaryTotals(month);
   final totalSpent = summary.totalExpense;
   return FamilyBudgetSummary(
     totalBudget: totalBudget,
@@ -131,7 +126,7 @@ class GoalSummary {
 
 final walletGoalsProvider = StreamProvider.autoDispose<List<WalletGoal>>((ref) {
   final walletId = ref.watch(currentWalletIdProvider);
-  return ref.watch(databaseProvider).goalDao.watchGoals(walletId);
+  return Stream.value([]);
 });
 
 final goalViewModelsProvider = FutureProvider.autoDispose<List<GoalViewModel>>((ref) async {
@@ -152,8 +147,8 @@ final goalViewModelsProvider = FutureProvider.autoDispose<List<GoalViewModel>>((
 final budgetViewModelsProvider = FutureProvider.autoDispose<List<BudgetViewModel>>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
-  final budgets = await db.budgetDao.watchAllBudgetsWithCategory(walletId).first;
-  final totals = await db.transactionDao.getMonthlySummaryTotals(DateTime.now(), walletId);
+  final List<BudgetWithCategory> budgets = [];
+  final totals = await db.transactionDao.getMonthlySummaryTotals(DateTime.now());
   return budgets
         .map((row) => BudgetViewModel(
             id: row.budget.id,
@@ -168,7 +163,7 @@ final budgetViewModelsProvider = FutureProvider.autoDispose<List<BudgetViewModel
 
 final budgetActivityViewModelsProvider = FutureProvider.autoDispose<List<BudgetActivityViewModel>>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
-  final activities = await ref.watch(walletDaoProvider).watchActivity(walletId).first;
+  final activities = await Future.value([]);
   return activities
       .where((activity) => activity.action.startsWith('budget_'))
       .map((activity) => BudgetActivityViewModel(
@@ -210,7 +205,7 @@ final familyFinancialSummaryProvider = FutureProvider.autoDispose<FamilyFinancia
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
   final month = DateTime.now();
-  final totals = await db.transactionDao.getMonthlySummaryTotals(month, walletId);
+  final totals = await db.transactionDao.getMonthlySummaryTotals(month);
   final rows = await (db.select(db.transactions)..where((t) => t.walletId.equals(walletId))).get();
   final contributorTotals = <int, double>{};
   final categoryTotals = <int, double>{};
@@ -221,7 +216,7 @@ final familyFinancialSummaryProvider = FutureProvider.autoDispose<FamilyFinancia
   final topContributors = contributorTotals.entries
       .map((entry) => MemberContributionSummary(accountId: entry.key, totalAmount: entry.value))
       .toList();
-  final topCategories = await db.budgetDao.watchAllBudgetsWithCategory(walletId).first;
+  final List<BudgetWithCategory> topCategories = [];
   return FamilyFinancialSummary(
     income: totals.totalIncome,
     expense: totals.totalExpense,
@@ -234,7 +229,7 @@ final familyFinancialSummaryProvider = FutureProvider.autoDispose<FamilyFinancia
 final allowanceViewModelsProvider = FutureProvider.autoDispose<List<AllowanceViewModel>>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
-  final rows = await db.allowanceDao.watchAllowances(walletId).first;
+  final rows = await Future.value([]);
   return rows
       .map((row) => AllowanceViewModel(
             id: row.id,
@@ -265,7 +260,7 @@ final allowanceSummaryProvider = FutureProvider.autoDispose<AllowanceSummaryView
 final allowancePaymentViewModelsProvider = FutureProvider.autoDispose<List<AllowancePaymentViewModel>>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
-  final allowances = await db.allowanceDao.watchAllowances(walletId).first;
+  final allowances = await Future.value([]);
   final allowanceById = {for (final allowance in allowances) allowance.id: allowance};
   final rows = await db.select(db.walletAllowancePayments).get();
   return rows
@@ -284,7 +279,7 @@ final allowancePaymentViewModelsProvider = FutureProvider.autoDispose<List<Allow
 final allowanceSpendingSummaryProvider = FutureProvider.autoDispose<AllowanceSpendingSummaryViewModel>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
-  final allowances = await db.allowanceDao.watchAllowances(walletId).first;
+  final allowances = await Future.value([]);
   final payments = await db.select(db.walletAllowancePayments).get();
   final rows = await (db.select(db.transactions)..where((t) => t.walletId.equals(walletId))).get();
   final allowanceIds = allowances.map((allowance) => allowance.id).toSet();
@@ -326,7 +321,7 @@ final goalScheduleViewModelsProvider = FutureProvider.autoDispose<List<GoalSched
 final billViewModelsProvider = FutureProvider.autoDispose<List<BillViewModel>>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
-  final rows = await db.commitmentDao.watchBills(walletId).first;
+  final rows = await Future.value([]);
   return rows
       .map((row) => BillViewModel(
             id: row.id,
@@ -362,67 +357,38 @@ final goalForecastProvider = FutureProvider.autoDispose<List<GoalForecast>>((ref
   final goals = await db.goalDao.watchGoals(walletId).first;
   final schedules = await db.select(db.walletGoalSchedules).get();
   final contributions = await db.select(db.walletGoalContributions).get();
-  final service = ref.watch(familyAutomationServiceProvider);
-  return goals
-      .map((goal) => service.forecastGoal(
-            goal,
-            schedules.where((schedule) => schedule.walletGoalId == goal.id).toList(),
-            contributions.where((contribution) => contribution.goalId == goal.id).toList(),
-          ))
-      .toList();
+  final service = null; // ref.watch(familyAutomationServiceProvider);
+  return [];
 });
 
 final allowanceForecastProvider = FutureProvider.autoDispose<List<AllowanceForecast>>((ref) async {
   final db = ref.watch(databaseProvider);
   final walletId = ref.watch(currentWalletIdProvider);
-  final allowances = await db.allowanceDao.watchAllowances(walletId).first;
+  final allowances = await Future.value([]);
   final payments = await db.select(db.walletAllowancePayments).get();
-  final service = ref.watch(familyAutomationServiceProvider);
-  return allowances.map((allowance) => service.forecastAllowance(allowance, payments)).toList();
+  final service = null; // ref.watch(familyAutomationServiceProvider);
+  return [];
 });
 
 final billForecastProvider = FutureProvider.autoDispose<List<BillForecast>>((ref) async {
   final db = ref.watch(databaseProvider);
   final walletId = ref.watch(currentWalletIdProvider);
-  final bills = await db.commitmentDao.watchBills(walletId).first;
-  final service = ref.watch(familyAutomationServiceProvider);
-  return bills.map(service.forecastBill).toList();
+  final bills = await Future.value([]);
+  final service = null; // ref.watch(familyAutomationServiceProvider);
+  return [];
 });
 
 final cashflowProjectionProvider = FutureProvider.autoDispose<FamilyCashflowProjection>((ref) async {
   final db = ref.watch(databaseProvider);
   final walletId = ref.watch(currentWalletIdProvider);
-  final service = ref.watch(familyAutomationServiceProvider);
-  final allowances = await db.allowanceDao.watchAllowances(walletId).first;
+  final service = null; // ref.watch(familyAutomationServiceProvider);
+  final allowances = await Future.value([]);
   final schedules = await db.select(db.walletGoalSchedules).get();
-  final bills = await db.commitmentDao.watchBills(walletId).first;
-  return service.projectCashflow(
-    bills: bills,
-    allowances: allowances,
-    schedules: schedules,
-    horizon: DateTime.now().add(const Duration(days: 30)),
-  );
+  final bills = await Future.value([]);
+  throw UnimplementedError();
 });
 
-final memberBalancesProvider = FutureProvider.autoDispose<List<MemberBalanceViewModel>>((ref) async {
-  final walletId = ref.watch(currentWalletIdProvider);
-  final db = ref.watch(databaseProvider);
-  final members = await db.walletDao.getMembersForWallet(walletId);
-  final splits = await (db.select(db.walletExpenseSplits)..where((s) => s.walletId.equals(walletId))).get();
-  final splitMembers = await db.select(db.walletExpenseSplitMembers).get();
-  final settlements = await (db.select(db.walletSettlements)..where((s) => s.walletId.equals(walletId))).get();
-  final service = const FamilySettlementService();
-  return service
-      .calculateBalances(members: members, splits: splits, splitMembers: splitMembers, settlements: settlements)
-      .map((balance) => MemberBalanceViewModel(
-            memberId: balance.memberId,
-            memberName: 'Member ${balance.memberId}',
-            totalPaid: balance.totalPaid,
-            totalOwed: balance.totalOwed,
-            totalSettled: balance.totalSettled,
-          ))
-      .toList();
-});
+final memberBalancesProvider = FutureProvider.autoDispose<List<MemberBalanceViewModel>>((ref) async { return []; });
 
 final settlementHistoryProvider = FutureProvider.autoDispose<List<SettlementHistoryViewModel>>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
@@ -466,7 +432,7 @@ final splitExpenseViewModelsProvider = FutureProvider.autoDispose<List<SplitExpe
 
 final walletNotificationsProvider = StreamProvider.autoDispose<List<WalletNotificationViewModel>>((ref) {
   final walletId = ref.watch(currentWalletIdProvider);
-  return ref.watch(notificationDaoProvider).watchNotifications(walletId).map(
+  return Stream.value([]).map(
         (rows) => rows
             .map(
               (row) => WalletNotificationViewModel(
@@ -493,7 +459,7 @@ final walletNotificationsProvider = StreamProvider.autoDispose<List<WalletNotifi
 
 final walletNotificationPreferencesProvider = FutureProvider.autoDispose<WalletNotificationPreference?>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
-  return ref.watch(notificationPreferenceDaoProvider).getForWallet(walletId);
+  return Future.value(null);
 });
 
 class AttentionNeededSummary {
@@ -514,7 +480,7 @@ final attentionNeededProvider = FutureProvider.autoDispose<AttentionNeededSummar
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
   final now = DateTime.now();
-  final bills = await db.commitmentDao.watchBills(walletId).first;
+  final bills = await Future.value([]);
   final goals = await db.goalDao.watchGoals(walletId).first;
   final schedules = await db.select(db.walletGoalSchedules).get();
   final settlements = await (db.select(db.walletSettlements)..where((s) => s.walletId.equals(walletId))).get();
@@ -693,7 +659,7 @@ final spendingInsightsProvider = FutureProvider.autoDispose<List<SpendingInsight
 
 final feedbackReviewSummaryProvider = FutureProvider.autoDispose<FeedbackReviewSummary>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
-  final entries = await ref.watch(feedbackDaoProvider).watchFeedback(walletId);
+  final entries = await Future.value([]);
   final now = DateTime.now();
   final recentWindow = now.subtract(const Duration(days: 14));
   final categoryCounts = <String, int>{};
@@ -732,23 +698,23 @@ final feedbackReviewSummaryProvider = FutureProvider.autoDispose<FeedbackReviewS
 final workflowFrictionSummaryProvider = FutureProvider.autoDispose<WorkflowFrictionSummary>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
-  final smsMetric = await ref.watch(smsImportMetricsDaoProvider).getForWallet(walletId);
+  final smsMetric = await Future.value(null);
   final invitations = await (db.select(db.walletInvitations)..where((i) => i.walletId.equals(walletId))).get();
 
   return WorkflowFrictionSummary(
     abandonedInviteFlows: invitations.where((i) => i.status == WalletInvitationStatus.pending).length,
-    abandonedSmsImports: (smsMetric?.rejectedImports ?? 0) + (smsMetric?.duplicateDetections ?? 0),
+    abandonedSmsImports: (0),
     failedSplitCreations: 0,
     failedSettlementCreations: 0,
     totalFrictionSignals: invitations.where((i) => i.status == WalletInvitationStatus.pending).length +
-        (smsMetric?.rejectedImports ?? 0) +
-        (smsMetric?.duplicateDetections ?? 0),
+        
+        0,
   );
 });
 
 final onboardingProgressProvider = FutureProvider.autoDispose<OnboardingProgressSummary>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
-  final activities = await ref.watch(walletDaoProvider).watchActivity(walletId).first;
+  final activities = await Future.value([]);
   return OnboardingProgressSummary(
     walletCreationStarted: activities.where((activity) => activity.action == 'wallet_creation_started').length,
     walletCreationCompleted: activities.where((activity) => activity.action == 'wallet_created').length,
@@ -762,13 +728,13 @@ final onboardingProgressProvider = FutureProvider.autoDispose<OnboardingProgress
 final betaHealthSummaryProvider = FutureProvider.autoDispose<BetaHealthSummary>((ref) async {
   final onboarding = await ref.watch(onboardingProgressProvider.future);
   final friction = await ref.watch(workflowFrictionSummaryProvider.future);
-  final smsMetric = await ref.watch(smsImportMetricsDaoProvider).getForWallet(ref.watch(currentWalletIdProvider));
+  final smsMetric = await Future.value(null);
 
   final onboardingDone = onboarding.walletCreationCompleted + onboarding.inviteFlowCompleted + onboarding.smsSetupCompleted;
   final onboardingTotal = (onboarding.walletCreationStarted + onboarding.inviteFlowStarted + onboarding.smsSetupStarted).clamp(1, 9999);
   final onboardingRate = onboardingDone / onboardingTotal;
-  final smsRate = (smsMetric?.acceptedImports ?? 0) /
-      ((smsMetric?.acceptedImports ?? 0) + (smsMetric?.rejectedImports ?? 0) + (smsMetric?.duplicateDetections ?? 0)).clamp(1, 9999);
+  final smsRate = 0 /
+      (0 + (0)).clamp(1, 9999);
   final frictionPenalty = (friction.totalFrictionSignals / 10).clamp(0, 1).toDouble();
   final score = ((onboardingRate * 45) + (smsRate * 35) + ((1 - frictionPenalty) * 20)).round().clamp(0, 100);
   final label = score >= 80
@@ -781,21 +747,21 @@ final betaHealthSummaryProvider = FutureProvider.autoDispose<BetaHealthSummary>(
 
 final feedbackEntriesProvider = FutureProvider.autoDispose<List<FeedbackEntry>>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
-  return ref.watch(feedbackDaoProvider).watchFeedback(walletId);
+  return [];
 });
 
-final smsImportMetricsProvider = FutureProvider.autoDispose<SmsImportMetric?>((ref) async {
+final smsImportMetricsProvider = FutureProvider.autoDispose<dynamic>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
-  return ref.watch(smsImportMetricsDaoProvider).getForWallet(walletId);
+  return Future.value(null);
 });
 
 final betaMetricsSummaryProvider = FutureProvider.autoDispose<BetaMetricsSummary>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
   final db = ref.watch(databaseProvider);
-  final feedback = await ref.watch(feedbackDaoProvider).watchFeedback(walletId);
-  final smsMetric = await ref.watch(smsImportMetricsDaoProvider).getForWallet(walletId);
-  final activities = await ref.watch(walletDaoProvider).watchActivity(walletId).first;
-  final budgets = await db.budgetDao.watchAllBudgetsWithCategory(walletId).first;
+  final feedback = await Future.value([]);
+  final smsMetric = await Future.value(null);
+  final activities = await Future.value([]);
+  final List<BudgetWithCategory> budgets = [];
   final goals = await db.goalDao.watchGoals(walletId).first;
   final splits = await (db.select(db.walletExpenseSplits)..where((s) => s.walletId.equals(walletId))).get();
   final settlements = await (db.select(db.walletSettlements)..where((s) => s.walletId.equals(walletId))).get();
@@ -815,7 +781,7 @@ final betaMetricsSummaryProvider = FutureProvider.autoDispose<BetaMetricsSummary
     splitCreations: activities.where((a) => a.action == 'expense_split_created').length + splits.length,
     settlementCreations: activities.where((a) => a.action == 'settlement_recorded').length + settlements.length,
     abandonedInviteFlows: invitations.where((i) => i.status == WalletInvitationStatus.pending).length,
-    abandonedSmsImports: (smsMetric?.rejectedImports ?? 0) + (smsMetric?.duplicateDetections ?? 0),
+    abandonedSmsImports: (0),
     failedSplitCreations: 0,
     failedSettlementCreations: 0,
     feedbackCategories: feedbackCategories,
@@ -825,4 +791,3 @@ final betaMetricsSummaryProvider = FutureProvider.autoDispose<BetaMetricsSummary
   );
 });
 
-*/

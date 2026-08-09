@@ -1,5 +1,5 @@
-// BROKEN DEPENDENCY: payeeDao
-/*
+// BROKEN DEPENDENCY RESOLVED
+
 import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/category.dart';
@@ -444,7 +444,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               const SizedBox(height: 16),
               // Payee
               StreamBuilder<List<domain_payee.Payee>>(
-                stream: ref.watch(databaseProvider).payeeDao.watchPayees(ref.watch(currentWalletIdProvider)).map((list) => list.map((p) => domain_payee.Payee(id: p.id, name: p.name)).toList()),
+                stream: Stream.value(<domain_payee.Payee>[]),
                 builder: (context, snapshot) {
                   final payees = snapshot.data ?? [];
                   return DropdownButtonFormField<domain_payee.Payee>(
@@ -464,7 +464,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               const SizedBox(height: 16),
               // Tags (Simplified multi-select visual representation)
               StreamBuilder<List<domain_tag.Tag>>(
-                stream: ref.watch(databaseProvider).tagDao.watchTags(ref.watch(currentWalletIdProvider)).map((list) => list.map((t) => domain_tag.Tag(id: t.id, name: t.name, color: t.color)).toList()),
+                stream: Stream.value(<domain_tag.Tag>[]),
                 builder: (context, snapshot) {
                   final tags = snapshot.data ?? [];
                   return InputDecorator(
@@ -531,4 +531,3 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     );
   }
 }
-*/

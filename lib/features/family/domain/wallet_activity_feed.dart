@@ -1,5 +1,6 @@
-// BROKEN DEPENDENCY: Experimental
 /*
+// BROKEN DEPENDENCY: Experimental
+
 import 'package:expense_tracker/core/database/app_database.dart' as db;
 import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
 import 'package:flutter/material.dart';
@@ -53,5 +54,6 @@ class WalletActivityFeed extends ConsumerWidget {
     );
   }
 }
+
 
 */

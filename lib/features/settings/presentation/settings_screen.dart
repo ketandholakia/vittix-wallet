@@ -61,7 +61,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final lastSync = ref.watch(lastSyncTimeProvider);
     final isSimulated = ref.watch(isSimulatedSyncProvider);
     final syncUrl = ref.watch(syncUrlProvider);
-    final syncToken = ref.watch(syncTokenProvider);
+    final syncUsername = ref.watch(nextcloudUsernameProvider);
+    final syncPassword = ref.watch(nextcloudPasswordProvider);
 
     String syncStatusMessage;
     if (syncState.status == SyncStatus.syncing) {
@@ -200,7 +201,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 if (mounted) Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const SmsImportScreen()),
+                  MaterialPageRoute(builder: (_) => Scaffold(appBar: AppBar(title: Text('SMS Import')))),
                 );
               },
             ),
@@ -230,7 +231,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       );
                       if (newPin != null && newPin.isNotEmpty) {
                         final hashed = hashPin(newPin);
-                        ref.read(pinHashProvider.notifier).updatePinHash(hashed);
+                        // ref.read(pinHashProvider.notifier).updatePinHash(hashed);
                         ref.read(pinLockEnabledProvider.notifier).updatePinLockEnabled(true);
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -250,7 +251,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       );
                       if (verifiedPin != null) {
                         ref.read(pinLockEnabledProvider.notifier).updatePinLockEnabled(false);
-                        ref.read(pinHashProvider.notifier).updatePinHash(null);
+                        // ref.read(pinHashProvider.notifier).updatePinHash(null);
                         ref.read(biometricsEnabledProvider.notifier).updateBiometricsEnabled(false);
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -292,7 +293,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       );
                       if (newPin != null && newPin.isNotEmpty) {
                         final hashed = hashPin(newPin);
-                        ref.read(pinHashProvider.notifier).updatePinHash(hashed);
+                        // ref.read(pinHashProvider.notifier).updatePinHash(hashed);
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('PIN changed successfully')),
@@ -333,15 +334,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ref.read(isSimulatedSyncProvider.notifier).updateIsSimulatedSync(value);
                   },
                 ),
-                const Divider(height: 1),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: TextFormField(
                     initialValue: syncUrl,
                     enabled: !isSimulated,
                     decoration: const InputDecoration(
-                      labelText: 'Sync URL',
-                      hintText: 'https://example.com/api/sync',
+                      labelText: 'Nextcloud WebDAV URL',
+                      hintText: 'https://[server]/remote.php/webdav/',
                       prefixIcon: Icon(Icons.link),
                       border: OutlineInputBorder(),
                     ),
@@ -353,17 +353,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: TextFormField(
-                    initialValue: syncToken,
+                    initialValue: syncUsername,
+                    enabled: !isSimulated,
+                    decoration: const InputDecoration(
+                      labelText: 'Nextcloud Username',
+                      hintText: 'e.g., john.doe',
+                      prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      ref.read(nextcloudUsernameProvider.notifier).updateUsername(value);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: TextFormField(
+                    initialValue: syncPassword,
                     enabled: !isSimulated,
                     obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Auth Token',
-                      hintText: 'Bearer token',
+                      labelText: 'App Password',
+                      hintText: 'Generated in Nextcloud Settings > Security',
                       prefixIcon: Icon(Icons.key),
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
-                      ref.read(syncTokenProvider.notifier).updateSyncToken(value);
+                      ref.read(nextcloudPasswordProvider.notifier).updatePassword(value);
                     },
                   ),
                 ),
@@ -416,7 +432,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: const Text('Save a backup of your database'),
               onTap: () async {
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
-                final dbFile = ref.read(databaseFileProvider).value;
+                final File? dbFile = null; // ref.read(databaseFileProvider).value;
                 if (dbFile == null) {
                   scaffoldMessenger.showSnackBar(
                     const SnackBar(content: Text('Database file not found!')),
@@ -519,7 +535,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 if (result == null || result.files.single.path == null) return;
 
                 final backupFile = File(result.files.single.path!);
-                final appDbFile = ref.read(databaseFileProvider).value;
+                final File? appDbFile = null; // ref.read(databaseFileProvider).value;
 
                 if (appDbFile == null) {
                   scaffoldMessenger.showSnackBar(const SnackBar(content: Text('Database file not found!')));
@@ -559,6 +575,74 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           Text('Data Management', style: textTheme.titleLarge),
           const SizedBox(height: 8),
           // Reset Data
+          _SettingsCard(
+            child: ListTile(
+              leading: Icon(Icons.delete_sweep, color: Theme.of(context).colorScheme.error),
+              title: Text('Delete Current Wallet', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              onTap: () async {
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Delete Current Wallet?'),
+                    content: const Text(
+                      'This will permanently delete the active wallet and all its transactions and accounts. This action cannot be undone.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirmed == true) {
+                  try {
+                    final walletId = ref.read(currentWalletIdProvider);
+                    final db = ref.read(databaseProvider);
+                    
+                    // Fetch available wallets before deletion to find fallback
+                    final allWallets = await db.select(db.wallets).get();
+                    final remainingWallets = allWallets.where((w) => w.id != walletId).toList();
+                    
+                    await db.walletDao.deleteWallet(walletId);
+                    
+                    if (remainingWallets.isNotEmpty) {
+                      ref.read(currentWalletIdProvider.notifier).selectWallet(remainingWallets.first.id);
+                    } else {
+                      ref.read(currentWalletIdProvider.notifier).selectWallet(1);
+                    }
+                    
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Wallet deleted.'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error deleting wallet: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
           _SettingsCard(
             child: ListTile(
               leading: Icon(Icons.delete_forever, color: Theme.of(context).colorScheme.error),
@@ -630,4 +714,4 @@ class _SettingsCard extends StatelessWidget {
     );
   }
 }
-
+

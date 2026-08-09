@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart';
@@ -126,4 +126,3 @@ class TransactionListItem extends ConsumerWidget {
     );
   }
 }
-*/

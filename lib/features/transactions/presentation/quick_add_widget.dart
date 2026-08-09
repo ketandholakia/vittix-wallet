@@ -1,5 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
-/*
+
 import 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
 import 'package:flutter/material.dart';
@@ -69,4 +69,3 @@ class QuickAddWidget extends StatelessWidget {
   }
 }
 
-*/

@@ -1,5 +1,4 @@
 // BROKEN DEPENDENCY: Experimental
-/*
 import 'package:expense_tracker/features/budgets/presentation/budget_screen.dart';
 import 'package:expense_tracker/features/dashboard/presentation/dashboard_screen.dart';
 import 'package:expense_tracker/features/reports/presentation/reports_screen.dart';
@@ -137,5 +136,3 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 }
-
-*/

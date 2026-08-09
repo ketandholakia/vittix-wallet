@@ -66,34 +66,60 @@ part 'app_database.g.dart';
 
 // --- DAOs (Data Access Objects) ---
 
-/*
-@DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
+@DriftAccessor(tables: [Wallets, WalletMembers, WalletInvitations, WalletSettlements, WalletExpenseSplits, WalletExpenseSplitMembers])
 class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
   WalletDao(AppDatabase db) : super(db);
   Future<List<dynamic>> getMembersForWallet(int id) async => [];
   Future<void> insertActivity(dynamic activity) async {}
+  Future<void> logOnboardingActivity({required int walletId, required String action}) async {}
+  Future<void> logWalletCreated({required int walletId, required String walletType}) async {}
+  
+  Future<void> deleteWallet(int walletId) async {
+    await transaction(() async {
+      final db = attachedDatabase;
+      final tables = [
+        'transactions', 'accounts', 'peer_debts', 'loans', 'notifications',
+        'payees', 'tags', 'bills', 'wallet_members', 'wallet_invitations',
+        'wallet_settlements', 'wallet_expense_splits', 'wallet_allowances',
+        'wallet_goals', 'goal_contributions', 'merchant_mappings',
+        'unrecognized_sms', 'sms_import_metrics', 'feedback', 'notification_preferences',
+      ];
+      for (final table in tables) {
+        try {
+          await db.customStatement('DELETE FROM $table WHERE wallet_id = ?', [walletId]);
+        } catch (_) {}
+      }
+      await db.customStatement('DELETE FROM wallets WHERE id = ?', [walletId]);
+      db.notifyUpdates(db.allTables.map((t) => TableUpdate(t.actualTableName)).toSet());
+    });
+  }
 }
-*/
-/*
-@DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
+
+@DriftAccessor(tables: [Tags, Transactions])
+
+@DriftAccessor(tables: [Payees])
+class PayeeDao extends DatabaseAccessor<AppDatabase> with _$PayeeDaoMixin {
+  PayeeDao(AppDatabase db) : super(db);
+  Stream<List<Payee>> watchPayees() => select(attachedDatabase.payees).watch();
+  Future<int> insertPayee(Insertable<Payee> payee) => into(attachedDatabase.payees).insert(payee);
+}
+
+@DriftAccessor(tables: [Tags])
 class TransactionTagDao extends DatabaseAccessor<AppDatabase> with _$TransactionTagDaoMixin {
   TransactionTagDao(AppDatabase db) : super(db);
   Future<void> setTagsForTransaction(int txId, List<int> tags) async {}
 }
-*/
-/*
-@DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
+
+@DriftAccessor(tables: [Attachments, Transactions])
 class AttachmentDao extends DatabaseAccessor<AppDatabase> with _$AttachmentDaoMixin {
   AttachmentDao(AppDatabase db) : super(db);
   Future<void> insertAttachment(dynamic a) async {}
 }
-*/
-/*
-@DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
+
+@DriftAccessor(tables: [WalletAllowances, WalletAllowancePayments])
 class AllowanceDao extends DatabaseAccessor<AppDatabase> with _$AllowanceDaoMixin {
   AllowanceDao(AppDatabase db) : super(db);
 }
-*/
 
 
 @DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
@@ -436,7 +462,7 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
 
 @DriftDatabase(
   tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, Tags, Transactions, UnrecognizedSmsEntries],
-  daos: [CategoryDao, AccountDao, TransactionDao, BudgetDao, RecurringTransactionDao, DebtsDao],
+  daos: [CategoryDao, AccountDao, TransactionDao, BudgetDao, RecurringTransactionDao, DebtsDao, WalletDao, TransactionTagDao, AttachmentDao, AllowanceDao, GoalDao, PayeeDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -547,15 +573,14 @@ class AppDatabase extends _$AppDatabase {
   }
 }
 
-/*
-@DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
+@DriftAccessor(tables: [WalletGoals, WalletGoalContributions, WalletGoalSchedules])
 class GoalDao extends DatabaseAccessor<AppDatabase> with _$GoalDaoMixin {
   GoalDao(AppDatabase db) : super(db);
 
-  Stream<List<WalletGoal>> watchGoals(int walletId) {
-    return (select(walletGoals)..where((g) => g.walletId.equals(walletId))..orderBy([(g) => OrderingTerm.desc(g.updatedAt)])).watch();
+  Stream<List<dynamic>> watchGoals(int walletId) {
+    return Stream.empty(); // Placeholder
   }
-  */
+}
 
 
 LazyDatabase _openConnection() {
