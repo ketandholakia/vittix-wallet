@@ -103,13 +103,22 @@ class InvalidActiveWalletException implements Exception {
 class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
   WalletDao(AppDatabase db) : super(db);
 
-  Future<WalletRole?> getRoleInWallet(int walletId, {int? actorAccountId}) async {
-    if (actorAccountId == null) return null;
+  Future<WalletRole?> getRoleInWallet(
+    int walletId, {
+    int? actorAccountId,
+    int? actorUserId,
+  }) async {
+    if (actorAccountId == null && actorUserId == null) return null;
     final query = select(walletMembers)
       ..where((m) =>
           m.walletId.equals(walletId) &
-          m.accountId.equals(actorAccountId) &
-          m.isActive.equals(true));
+          m.isActive.equals(true) &
+          // A7 step 3: prefer the real identity when supplied, otherwise fall
+          // back to the legacy money-account path until every call site has
+          // been migrated.
+          (actorUserId != null
+              ? m.userId.equals(actorUserId)
+              : m.accountId.equals(actorAccountId!)));
     final list = await query.get();
     return list.isEmpty ? null : list.first.role;
   }
@@ -118,10 +127,15 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     required int walletId,
     required bool Function(WalletPermissionService service, WalletRole? role) permissionCheck,
     int? actorAccountId,
+    int? actorUserId,
     String actionName = 'this operation',
   }) async {
-    if (actorAccountId == null) return;
-    final role = await getRoleInWallet(walletId, actorAccountId: actorAccountId);
+    if (actorAccountId == null && actorUserId == null) return;
+    final role = await getRoleInWallet(
+      walletId,
+      actorAccountId: actorAccountId,
+      actorUserId: actorUserId,
+    );
     const service = WalletPermissionService();
     if (!permissionCheck(service, role)) {
       throw WalletPermissionDeniedException(
@@ -130,12 +144,16 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     }
   }
 
-  Future<bool> isWalletValid(int walletId, {int? actorAccountId}) async {
+  Future<bool> isWalletValid(int walletId, {int? actorAccountId, int? actorUserId}) async {
     final wallet = await (select(wallets)..where((w) => w.id.equals(walletId))).getSingleOrNull();
     if (wallet == null) return false;
 
-    if (actorAccountId != null) {
-      final role = await getRoleInWallet(walletId, actorAccountId: actorAccountId);
+    if (actorAccountId != null || actorUserId != null) {
+      final role = await getRoleInWallet(
+        walletId,
+        actorAccountId: actorAccountId,
+        actorUserId: actorUserId,
+      );
       if (role == null) return false;
     } else {
       final members = await getMembersForWallet(walletId);
