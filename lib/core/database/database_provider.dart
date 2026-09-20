@@ -96,6 +96,10 @@ final feedbackDaoProvider = Provider<FeedbackDao>((ref) {
 });
 */
 
+final userDaoProvider = Provider<UserDao>((ref) {
+  return ref.watch(databaseProvider).userDao;
+});
+
 final smsImportMetricsDaoProvider = Provider<SmsImportMetricsDao>((ref) {
   return ref.watch(databaseProvider).smsImportMetricsDao;
 });

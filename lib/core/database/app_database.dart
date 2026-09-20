@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:expense_tracker/features/accounts/domain/default_accounts.dart';
+import 'package:expense_tracker/features/users/data/tables/users_table.dart';
 import 'package:expense_tracker/core/database/database_encryption.dart';
 import 'package:expense_tracker/core/database/sqlcipher_loader.dart';
 import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
@@ -1153,6 +1154,54 @@ class AttachmentDao extends DatabaseAccessor<AppDatabase> with _$AttachmentDaoMi
   Future<void> insertAttachment(dynamic a) async {}
 }
 
+@DriftAccessor(tables: [Users])
+class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
+  UserDao(AppDatabase db) : super(db);
+
+  /// Users are global: one person can belong to several wallets.
+  Stream<List<User>> watchAllUsers() =>
+      (select(users)..orderBy([(u) => OrderingTerm.asc(u.displayName)])).watch();
+
+  Future<List<User>> getAllUsers() =>
+      (select(users)..orderBy([(u) => OrderingTerm.asc(u.displayName)])).get();
+
+  Future<User?> getUserById(int id) =>
+      (select(users)..where((u) => u.id.equals(id))).getSingleOrNull();
+
+  Future<User?> getUserByUuid(String uuid) =>
+      (select(users)..where((u) => u.uuid.equals(uuid))).getSingleOrNull();
+
+  Future<int> insertUser(UsersCompanion user) => into(users).insert(user);
+
+  /// Finds an existing user with [displayName] or creates one, so callers do
+  /// not have to care whether the identity already exists.
+  Future<User> findOrCreateUser(String displayName, {String? email}) async {
+    final trimmed = displayName.trim();
+    final existing = await (select(users)
+          ..where((u) => u.displayName.equals(trimmed))
+          ..limit(1))
+        .getSingleOrNull();
+    if (existing != null) return existing;
+
+    final id = await insertUser(UsersCompanion.insert(
+      displayName: trimmed,
+      email: Value(email),
+    ));
+    return (await getUserById(id))!;
+  }
+
+  Future<bool> updateUser(UsersCompanion user) async {
+    if (!user.id.present) return false;
+    final updated = await (update(users)
+          ..where((u) => u.id.equals(user.id.value)))
+        .write(user.copyWith(updatedAt: Value(DateTime.now())));
+    return updated > 0;
+  }
+
+  Future<int> deleteUser(int id) =>
+      (delete(users)..where((u) => u.id.equals(id))).go();
+}
+
 @DriftAccessor(tables: [WalletAllowances, WalletAllowancePayments])
 class AllowanceDao extends DatabaseAccessor<AppDatabase> with _$AllowanceDaoMixin {
   AllowanceDao(AppDatabase db) : super(db);
@@ -1927,8 +1976,8 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
 // --- DATABASE CLASS ---
 
 @DriftDatabase(
-  tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, SmsImportMetrics, Tags, Transactions, UnrecognizedSmsEntries, WalletActivities],
-  daos: [CategoryDao, AccountDao, TransactionDao, BudgetDao, RecurringTransactionDao, DebtsDao, WalletDao, TransactionTagDao, AttachmentDao, AllowanceDao, GoalDao, BillDao, PayeeDao, SmsParsingDao, SmsImportMetricsDao],
+  tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, SmsImportMetrics, Tags, Transactions, UnrecognizedSmsEntries, WalletActivities, Users],
+  daos: [CategoryDao, AccountDao, TransactionDao, BudgetDao, RecurringTransactionDao, DebtsDao, WalletDao, TransactionTagDao, AttachmentDao, AllowanceDao, GoalDao, BillDao, PayeeDao, SmsParsingDao, SmsImportMetricsDao, UserDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -1936,7 +1985,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   Future<int> insertDeletedRecord(String uuid, String tableName) {
     /* return into(deletedRecords).insert(
