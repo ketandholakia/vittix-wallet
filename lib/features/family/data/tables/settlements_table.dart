@@ -3,11 +3,13 @@ import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
 import 'package:expense_tracker/features/family/data/tables/wallet_members_table.dart';
 import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
+import 'package:uuid/uuid.dart';
 
 @DataClassName('WalletSettlement')
 class WalletSettlements extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get walletId => integer().references(Wallets, #id, onDelete: KeyAction.cascade)();
+  TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   IntColumn get payerMemberId => integer().references(WalletMembers, #id, onDelete: KeyAction.cascade)();
   IntColumn get receiverMemberId => integer().references(WalletMembers, #id, onDelete: KeyAction.cascade)();
   RealColumn get amount => real()();

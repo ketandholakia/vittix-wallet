@@ -4,7 +4,6 @@ import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/category.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/core/database/database_provider.dart';
 import 'package:expense_tracker/core/domain/payee.dart' as domain_payee;
 import 'package:expense_tracker/core/domain/tag.dart' as domain_tag;
 import 'package:expense_tracker/core/domain/attachment.dart' as domain_attachment;
@@ -13,6 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:expense_tracker/receipt/receipt_scanner_screen.dart';
+import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
   final domain.Transaction? existingTransaction;
@@ -229,6 +230,34 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     }
   }
 
+  /// Opens the receipt scanner and, if a receipt is parsed, prefills this
+  /// manual entry form with the extracted amount, merchant and type.
+  Future<void> _scanReceipt() async {
+    final candidate = await Navigator.of(context).push<PdfTransactionCandidate>(
+      MaterialPageRoute(
+        builder: (_) => const ReceiptScannerScreen(returnResult: true),
+      ),
+    );
+    if (candidate == null || !mounted) return;
+
+    setState(() {
+      if (candidate.amount > 0) {
+        _amountController.text = _amountFormatter.formatDouble(candidate.amount);
+      }
+      if (candidate.merchant.isNotEmpty) {
+        _noteController.text = candidate.merchant;
+      }
+      _selectedType = candidate.type;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Receipt scanned. Review the details and save.'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final categories = ref.watch(watchAllCategoriesUseCaseProvider).call();
@@ -263,7 +292,25 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 4),
+
+              // Small link to scan a receipt instead of typing the details.
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: _scanReceipt,
+                  icon: const Icon(Icons.document_scanner_outlined, size: 16),
+                  label: const Text('Scan Receipt'),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    minimumSize: const Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                    textStyle: const TextStyle(fontSize: 13),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
 
               // Amount
               TextFormField(
@@ -292,26 +339,44 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   final accountList = snapshot.data!;
+                  
+                  if (accountList.isEmpty) {
+                    return DropdownButtonFormField<Account>(
+                      value: null,
+                      decoration: const InputDecoration(
+                        labelText: 'Account',
+                        prefixIcon: Icon(Icons.account_balance_wallet_outlined),
+                      ),
+                      items: const [],
+                      onChanged: null,
+                      validator: (value) => 'Please create an account first.',
+                    );
+                  }
+
                   if (_selectedAccount == null) {
                     final lastId = ref.read(lastSelectedAccountIdProvider);
                     if (lastId != null) {
-                      try {
-                        _selectedAccount = accountList.firstWhere((a) => a.id == lastId);
-                      } catch (e) {
-                        _selectedAccount = accountList.firstWhere(
-                          (a) => a.type == AccountType.cash,
-                          orElse: () => accountList.first,
-                        );
-                      }
-                    } else {
-                      _selectedAccount = accountList.firstWhere(
-                        (a) => a.type == AccountType.cash,
-                        orElse: () => accountList.first,
-                      );
+                      _selectedAccount = accountList.where((a) => a.id == lastId).firstOrNull;
+                    }
+                    if (_selectedAccount == null) {
+                      _selectedAccount = accountList.where((a) => a.type == AccountType.cash).firstOrNull ?? accountList.first;
                     }
                   }
+                  
+                  // Ensure selected account is actually in the list, otherwise use the first available
+                  Account? accountDropdownValue = _selectedAccount;
+                  if (accountDropdownValue != null) {
+                    accountDropdownValue = accountList.where((a) => a.id == accountDropdownValue!.id).firstOrNull;
+                    if (accountDropdownValue == null) {
+                      // If the selected account is not in the current list, append it so the dropdown doesn't crash, or reset it.
+                      accountDropdownValue = accountList.first;
+                      // Don't modify _selectedAccount during build in a way that breaks state, 
+                      // but for safety, we just use the first item as the selected value for the UI.
+                    }
+                  }
+
                   return DropdownButtonFormField<Account>(
-                    value: _selectedAccount,
+                    value: accountDropdownValue,
                     decoration: const InputDecoration(
                       labelText: 'Account',
                       prefixIcon: Icon(Icons.account_balance_wallet_outlined),
@@ -343,6 +408,17 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   final rawCategories = snapshot.data!;
+                  
+                  if (rawCategories.isEmpty) {
+                    return DropdownButtonFormField<Category>(
+                      value: null,
+                      decoration: const InputDecoration(labelText: 'Category', prefixIcon: Icon(Icons.category)),
+                      items: const [],
+                      onChanged: null,
+                      validator: (value) => 'Please create a category first.',
+                    );
+                  }
+                  
                   // Flatten categories hierarchically
                   final topLevel = rawCategories.where((c) => c.parentId == null).toList();
                   final categoryList = <Category>[];
@@ -361,19 +437,16 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   if (_selectedCategory == null && !_isEditing) {
                     final lastId = ref.read(lastSelectedCategoryIdProvider);
                     if (lastId != null) {
-                      try {
-                        _selectedCategory = categoryList.firstWhere((c) => c.id == lastId);
-                      } catch (e) {
-                        // ignore
-                      }
+                      _selectedCategory = categoryList.where((c) => c.id == lastId).firstOrNull;
                     }
                   }
 
                   if (_selectedCategory != null) {
-                    dropdownValue = categoryList.firstWhere(
-                      (c) => c.id == _selectedCategory!.id,
-                      orElse: () => _selectedCategory!,
-                    );
+                    dropdownValue = categoryList.where((c) => c.id == _selectedCategory!.id).firstOrNull;
+                    if (dropdownValue == null && categoryList.isNotEmpty) {
+                      // Fallback if the selected category is not in the list
+                      dropdownValue = categoryList.first;
+                    }
                   }
 
                   return DropdownButtonFormField<Category>(
@@ -447,8 +520,14 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 stream: Stream.value(<domain_payee.Payee>[]),
                 builder: (context, snapshot) {
                   final payees = snapshot.data ?? [];
+                  
+                  domain_payee.Payee? payeeDropdownValue = _selectedPayee;
+                  if (payeeDropdownValue != null && !payees.any((p) => p.id == payeeDropdownValue!.id)) {
+                    payeeDropdownValue = null;
+                  }
+
                   return DropdownButtonFormField<domain_payee.Payee>(
-                    value: _selectedPayee,
+                    value: payeeDropdownValue,
                     decoration: const InputDecoration(labelText: 'Payee (Optional)', prefixIcon: Icon(Icons.person)),
                     items: [
                       const DropdownMenuItem(value: null, child: Text('None')),

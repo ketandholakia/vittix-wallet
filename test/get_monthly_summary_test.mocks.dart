@@ -80,9 +80,24 @@ class MockTransactionRepository extends _i1.Mock
           as _i3.Future<(double, double)>);
 
   @override
-  _i3.Future<void> addTransaction(_i4.Transaction? transaction) =>
+  _i3.Future<_i4.Transaction?> getTransactionById(int? id) =>
       (super.noSuchMethod(
-            Invocation.method(#addTransaction, [transaction]),
+            Invocation.method(#getTransactionById, [id]),
+            returnValue: _i3.Future<_i4.Transaction?>.value(),
+          )
+          as _i3.Future<_i4.Transaction?>);
+
+  @override
+  _i3.Future<void> addTransaction(
+    _i4.Transaction? transaction, {
+    String? source = 'user',
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #addTransaction,
+              [transaction],
+              {#source: source},
+            ),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )

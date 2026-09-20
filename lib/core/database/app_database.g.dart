@@ -14,6 +14,10 @@ mixin _$WalletDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.walletExpenseSplits;
   $WalletExpenseSplitMembersTable get walletExpenseSplitMembers =>
       attachedDatabase.walletExpenseSplitMembers;
+  $PeerDebtsTable get peerDebts => attachedDatabase.peerDebts;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  $WalletActivitiesTable get walletActivities =>
+      attachedDatabase.walletActivities;
   WalletDaoManager get managers => WalletDaoManager(this);
 }
 
@@ -43,6 +47,15 @@ class WalletDaoManager {
       $$WalletExpenseSplitMembersTableTableManager(
         _db.attachedDatabase,
         _db.walletExpenseSplitMembers,
+      );
+  $$PeerDebtsTableTableManager get peerDebts =>
+      $$PeerDebtsTableTableManager(_db.attachedDatabase, _db.peerDebts);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$WalletActivitiesTableTableManager get walletActivities =>
+      $$WalletActivitiesTableTableManager(
+        _db.attachedDatabase,
+        _db.walletActivities,
       );
 }
 
@@ -109,6 +122,18 @@ class AllowanceDaoManager {
         _db.attachedDatabase,
         _db.walletAllowancePayments,
       );
+}
+
+mixin _$BillDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletBillsTable get walletBills => attachedDatabase.walletBills;
+  BillDaoManager get managers => BillDaoManager(this);
+}
+
+class BillDaoManager {
+  final _$BillDaoMixin _db;
+  BillDaoManager(this._db);
+  $$WalletBillsTableTableManager get walletBills =>
+      $$WalletBillsTableTableManager(_db.attachedDatabase, _db.walletBills);
 }
 
 mixin _$CategoryDaoMixin on DatabaseAccessor<AppDatabase> {
@@ -1681,6 +1706,18 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _walletIdMeta = const VerificationMeta(
+    'walletId',
+  );
+  @override
+  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+    'wallet_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
   static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   @override
   late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
@@ -1735,6 +1772,7 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    walletId,
     uuid,
     amount,
     period,
@@ -1755,6 +1793,12 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('wallet_id')) {
+      context.handle(
+        _walletIdMeta,
+        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
+      );
     }
     if (data.containsKey('uuid')) {
       context.handle(
@@ -1805,6 +1849,10 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      walletId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wallet_id'],
+      )!,
       uuid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uuid'],
@@ -1836,6 +1884,7 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
 
 class Budget extends DataClass implements Insertable<Budget> {
   final int id;
+  final int walletId;
   final String uuid;
   final double amount;
   final String period;
@@ -1843,6 +1892,7 @@ class Budget extends DataClass implements Insertable<Budget> {
   final DateTime updatedAt;
   const Budget({
     required this.id,
+    required this.walletId,
     required this.uuid,
     required this.amount,
     required this.period,
@@ -1853,6 +1903,7 @@ class Budget extends DataClass implements Insertable<Budget> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['wallet_id'] = Variable<int>(walletId);
     map['uuid'] = Variable<String>(uuid);
     map['amount'] = Variable<double>(amount);
     map['period'] = Variable<String>(period);
@@ -1864,6 +1915,7 @@ class Budget extends DataClass implements Insertable<Budget> {
   BudgetsCompanion toCompanion(bool nullToAbsent) {
     return BudgetsCompanion(
       id: Value(id),
+      walletId: Value(walletId),
       uuid: Value(uuid),
       amount: Value(amount),
       period: Value(period),
@@ -1879,6 +1931,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Budget(
       id: serializer.fromJson<int>(json['id']),
+      walletId: serializer.fromJson<int>(json['walletId']),
       uuid: serializer.fromJson<String>(json['uuid']),
       amount: serializer.fromJson<double>(json['amount']),
       period: serializer.fromJson<String>(json['period']),
@@ -1891,6 +1944,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'walletId': serializer.toJson<int>(walletId),
       'uuid': serializer.toJson<String>(uuid),
       'amount': serializer.toJson<double>(amount),
       'period': serializer.toJson<String>(period),
@@ -1901,6 +1955,7 @@ class Budget extends DataClass implements Insertable<Budget> {
 
   Budget copyWith({
     int? id,
+    int? walletId,
     String? uuid,
     double? amount,
     String? period,
@@ -1908,6 +1963,7 @@ class Budget extends DataClass implements Insertable<Budget> {
     DateTime? updatedAt,
   }) => Budget(
     id: id ?? this.id,
+    walletId: walletId ?? this.walletId,
     uuid: uuid ?? this.uuid,
     amount: amount ?? this.amount,
     period: period ?? this.period,
@@ -1917,6 +1973,7 @@ class Budget extends DataClass implements Insertable<Budget> {
   Budget copyWithCompanion(BudgetsCompanion data) {
     return Budget(
       id: data.id.present ? data.id.value : this.id,
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
       uuid: data.uuid.present ? data.uuid.value : this.uuid,
       amount: data.amount.present ? data.amount.value : this.amount,
       period: data.period.present ? data.period.value : this.period,
@@ -1931,6 +1988,7 @@ class Budget extends DataClass implements Insertable<Budget> {
   String toString() {
     return (StringBuffer('Budget(')
           ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
           ..write('uuid: $uuid, ')
           ..write('amount: $amount, ')
           ..write('period: $period, ')
@@ -1942,12 +2000,13 @@ class Budget extends DataClass implements Insertable<Budget> {
 
   @override
   int get hashCode =>
-      Object.hash(id, uuid, amount, period, categoryId, updatedAt);
+      Object.hash(id, walletId, uuid, amount, period, categoryId, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Budget &&
           other.id == this.id &&
+          other.walletId == this.walletId &&
           other.uuid == this.uuid &&
           other.amount == this.amount &&
           other.period == this.period &&
@@ -1957,6 +2016,7 @@ class Budget extends DataClass implements Insertable<Budget> {
 
 class BudgetsCompanion extends UpdateCompanion<Budget> {
   final Value<int> id;
+  final Value<int> walletId;
   final Value<String> uuid;
   final Value<double> amount;
   final Value<String> period;
@@ -1964,6 +2024,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
   final Value<DateTime> updatedAt;
   const BudgetsCompanion({
     this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
     this.uuid = const Value.absent(),
     this.amount = const Value.absent(),
     this.period = const Value.absent(),
@@ -1972,6 +2033,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
   });
   BudgetsCompanion.insert({
     this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
     this.uuid = const Value.absent(),
     required double amount,
     required String period,
@@ -1982,6 +2044,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
        categoryId = Value(categoryId);
   static Insertable<Budget> custom({
     Expression<int>? id,
+    Expression<int>? walletId,
     Expression<String>? uuid,
     Expression<double>? amount,
     Expression<String>? period,
@@ -1990,6 +2053,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (walletId != null) 'wallet_id': walletId,
       if (uuid != null) 'uuid': uuid,
       if (amount != null) 'amount': amount,
       if (period != null) 'period': period,
@@ -2000,6 +2064,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
 
   BudgetsCompanion copyWith({
     Value<int>? id,
+    Value<int>? walletId,
     Value<String>? uuid,
     Value<double>? amount,
     Value<String>? period,
@@ -2008,6 +2073,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
   }) {
     return BudgetsCompanion(
       id: id ?? this.id,
+      walletId: walletId ?? this.walletId,
       uuid: uuid ?? this.uuid,
       amount: amount ?? this.amount,
       period: period ?? this.period,
@@ -2021,6 +2087,9 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (walletId.present) {
+      map['wallet_id'] = Variable<int>(walletId.value);
     }
     if (uuid.present) {
       map['uuid'] = Variable<String>(uuid.value);
@@ -2044,6 +2113,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
   String toString() {
     return (StringBuffer('BudgetsCompanion(')
           ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
           ..write('uuid: $uuid, ')
           ..write('amount: $amount, ')
           ..write('period: $period, ')
@@ -3952,8 +4022,7 @@ class $PeerDebtsTable extends PeerDebts
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(1),
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   @override
@@ -4088,6 +4157,8 @@ class $PeerDebtsTable extends PeerDebts
         _walletIdMeta,
         walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
       );
+    } else if (isInserting) {
+      context.missing(_walletIdMeta);
     }
     if (data.containsKey('uuid')) {
       context.handle(
@@ -4443,7 +4514,7 @@ class PeerDebtsCompanion extends UpdateCompanion<PeerDebtDb> {
   });
   PeerDebtsCompanion.insert({
     this.id = const Value.absent(),
-    this.walletId = const Value.absent(),
+    required int walletId,
     this.uuid = const Value.absent(),
     required String personName,
     required PeerDebtType type,
@@ -4453,7 +4524,8 @@ class PeerDebtsCompanion extends UpdateCompanion<PeerDebtDb> {
     this.isSettled = const Value.absent(),
     this.transactionId = const Value.absent(),
     this.updatedAt = const Value.absent(),
-  }) : personName = Value(personName),
+  }) : walletId = Value(walletId),
+       personName = Value(personName),
        type = Value(type),
        amount = Value(amount),
        date = Value(date);
@@ -5723,6 +5795,16 @@ class $WalletSettlementsTable extends WalletSettlements
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+    'uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: () => const Uuid().v4(),
+  );
   static const VerificationMeta _payerMemberIdMeta = const VerificationMeta(
     'payerMemberId',
   );
@@ -5802,6 +5884,7 @@ class $WalletSettlementsTable extends WalletSettlements
   List<GeneratedColumn> get $columns => [
     id,
     walletId,
+    uuid,
     payerMemberId,
     receiverMemberId,
     amount,
@@ -5832,6 +5915,12 @@ class $WalletSettlementsTable extends WalletSettlements
       );
     } else if (isInserting) {
       context.missing(_walletIdMeta);
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+        _uuidMeta,
+        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
+      );
     }
     if (data.containsKey('payer_member_id')) {
       context.handle(
@@ -5910,6 +5999,10 @@ class $WalletSettlementsTable extends WalletSettlements
         DriftSqlType.int,
         data['${effectivePrefix}wallet_id'],
       )!,
+      uuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}uuid'],
+      )!,
       payerMemberId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}payer_member_id'],
@@ -5951,6 +6044,7 @@ class WalletSettlement extends DataClass
     implements Insertable<WalletSettlement> {
   final int id;
   final int walletId;
+  final String uuid;
   final int payerMemberId;
   final int receiverMemberId;
   final double amount;
@@ -5961,6 +6055,7 @@ class WalletSettlement extends DataClass
   const WalletSettlement({
     required this.id,
     required this.walletId,
+    required this.uuid,
     required this.payerMemberId,
     required this.receiverMemberId,
     required this.amount,
@@ -5974,6 +6069,7 @@ class WalletSettlement extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['wallet_id'] = Variable<int>(walletId);
+    map['uuid'] = Variable<String>(uuid);
     map['payer_member_id'] = Variable<int>(payerMemberId);
     map['receiver_member_id'] = Variable<int>(receiverMemberId);
     map['amount'] = Variable<double>(amount);
@@ -5992,6 +6088,7 @@ class WalletSettlement extends DataClass
     return WalletSettlementsCompanion(
       id: Value(id),
       walletId: Value(walletId),
+      uuid: Value(uuid),
       payerMemberId: Value(payerMemberId),
       receiverMemberId: Value(receiverMemberId),
       amount: Value(amount),
@@ -6014,6 +6111,7 @@ class WalletSettlement extends DataClass
     return WalletSettlement(
       id: serializer.fromJson<int>(json['id']),
       walletId: serializer.fromJson<int>(json['walletId']),
+      uuid: serializer.fromJson<String>(json['uuid']),
       payerMemberId: serializer.fromJson<int>(json['payerMemberId']),
       receiverMemberId: serializer.fromJson<int>(json['receiverMemberId']),
       amount: serializer.fromJson<double>(json['amount']),
@@ -6029,6 +6127,7 @@ class WalletSettlement extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'walletId': serializer.toJson<int>(walletId),
+      'uuid': serializer.toJson<String>(uuid),
       'payerMemberId': serializer.toJson<int>(payerMemberId),
       'receiverMemberId': serializer.toJson<int>(receiverMemberId),
       'amount': serializer.toJson<double>(amount),
@@ -6042,6 +6141,7 @@ class WalletSettlement extends DataClass
   WalletSettlement copyWith({
     int? id,
     int? walletId,
+    String? uuid,
     int? payerMemberId,
     int? receiverMemberId,
     double? amount,
@@ -6052,6 +6152,7 @@ class WalletSettlement extends DataClass
   }) => WalletSettlement(
     id: id ?? this.id,
     walletId: walletId ?? this.walletId,
+    uuid: uuid ?? this.uuid,
     payerMemberId: payerMemberId ?? this.payerMemberId,
     receiverMemberId: receiverMemberId ?? this.receiverMemberId,
     amount: amount ?? this.amount,
@@ -6066,6 +6167,7 @@ class WalletSettlement extends DataClass
     return WalletSettlement(
       id: data.id.present ? data.id.value : this.id,
       walletId: data.walletId.present ? data.walletId.value : this.walletId,
+      uuid: data.uuid.present ? data.uuid.value : this.uuid,
       payerMemberId: data.payerMemberId.present
           ? data.payerMemberId.value
           : this.payerMemberId,
@@ -6089,6 +6191,7 @@ class WalletSettlement extends DataClass
     return (StringBuffer('WalletSettlement(')
           ..write('id: $id, ')
           ..write('walletId: $walletId, ')
+          ..write('uuid: $uuid, ')
           ..write('payerMemberId: $payerMemberId, ')
           ..write('receiverMemberId: $receiverMemberId, ')
           ..write('amount: $amount, ')
@@ -6104,6 +6207,7 @@ class WalletSettlement extends DataClass
   int get hashCode => Object.hash(
     id,
     walletId,
+    uuid,
     payerMemberId,
     receiverMemberId,
     amount,
@@ -6118,6 +6222,7 @@ class WalletSettlement extends DataClass
       (other is WalletSettlement &&
           other.id == this.id &&
           other.walletId == this.walletId &&
+          other.uuid == this.uuid &&
           other.payerMemberId == this.payerMemberId &&
           other.receiverMemberId == this.receiverMemberId &&
           other.amount == this.amount &&
@@ -6130,6 +6235,7 @@ class WalletSettlement extends DataClass
 class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
   final Value<int> id;
   final Value<int> walletId;
+  final Value<String> uuid;
   final Value<int> payerMemberId;
   final Value<int> receiverMemberId;
   final Value<double> amount;
@@ -6140,6 +6246,7 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
   const WalletSettlementsCompanion({
     this.id = const Value.absent(),
     this.walletId = const Value.absent(),
+    this.uuid = const Value.absent(),
     this.payerMemberId = const Value.absent(),
     this.receiverMemberId = const Value.absent(),
     this.amount = const Value.absent(),
@@ -6151,6 +6258,7 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
   WalletSettlementsCompanion.insert({
     this.id = const Value.absent(),
     required int walletId,
+    this.uuid = const Value.absent(),
     required int payerMemberId,
     required int receiverMemberId,
     required double amount,
@@ -6165,6 +6273,7 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
   static Insertable<WalletSettlement> custom({
     Expression<int>? id,
     Expression<int>? walletId,
+    Expression<String>? uuid,
     Expression<int>? payerMemberId,
     Expression<int>? receiverMemberId,
     Expression<double>? amount,
@@ -6176,6 +6285,7 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (walletId != null) 'wallet_id': walletId,
+      if (uuid != null) 'uuid': uuid,
       if (payerMemberId != null) 'payer_member_id': payerMemberId,
       if (receiverMemberId != null) 'receiver_member_id': receiverMemberId,
       if (amount != null) 'amount': amount,
@@ -6190,6 +6300,7 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
   WalletSettlementsCompanion copyWith({
     Value<int>? id,
     Value<int>? walletId,
+    Value<String>? uuid,
     Value<int>? payerMemberId,
     Value<int>? receiverMemberId,
     Value<double>? amount,
@@ -6201,6 +6312,7 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
     return WalletSettlementsCompanion(
       id: id ?? this.id,
       walletId: walletId ?? this.walletId,
+      uuid: uuid ?? this.uuid,
       payerMemberId: payerMemberId ?? this.payerMemberId,
       receiverMemberId: receiverMemberId ?? this.receiverMemberId,
       amount: amount ?? this.amount,
@@ -6219,6 +6331,9 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
     }
     if (walletId.present) {
       map['wallet_id'] = Variable<int>(walletId.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
     }
     if (payerMemberId.present) {
       map['payer_member_id'] = Variable<int>(payerMemberId.value);
@@ -6249,6 +6364,7 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
     return (StringBuffer('WalletSettlementsCompanion(')
           ..write('id: $id, ')
           ..write('walletId: $walletId, ')
+          ..write('uuid: $uuid, ')
           ..write('payerMemberId: $payerMemberId, ')
           ..write('receiverMemberId: $receiverMemberId, ')
           ..write('amount: $amount, ')
@@ -6679,6 +6795,17 @@ class $WalletInvitationsTable extends WalletInvitations
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _tokenMeta = const VerificationMeta('token');
+  @override
+  late final GeneratedColumn<String> token = GeneratedColumn<String>(
+    'token',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+    clientDefault: () => const Uuid().v4(),
+  );
   static const VerificationMeta _walletIdMeta = const VerificationMeta(
     'walletId',
   );
@@ -6769,6 +6896,7 @@ class $WalletInvitationsTable extends WalletInvitations
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    token,
     walletId,
     invitedByAccountId,
     accountId,
@@ -6792,6 +6920,12 @@ class $WalletInvitationsTable extends WalletInvitations
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('token')) {
+      context.handle(
+        _tokenMeta,
+        token.isAcceptableOrUnknown(data['token']!, _tokenMeta),
+      );
     }
     if (data.containsKey('wallet_id')) {
       context.handle(
@@ -6852,6 +6986,10 @@ class $WalletInvitationsTable extends WalletInvitations
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      token: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}token'],
+      )!,
       walletId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}wallet_id'],
@@ -6905,6 +7043,7 @@ class $WalletInvitationsTable extends WalletInvitations
 class WalletInvitation extends DataClass
     implements Insertable<WalletInvitation> {
   final int id;
+  final String token;
   final int walletId;
   final int? invitedByAccountId;
   final int accountId;
@@ -6915,6 +7054,7 @@ class WalletInvitation extends DataClass
   final DateTime? respondedAt;
   const WalletInvitation({
     required this.id,
+    required this.token,
     required this.walletId,
     this.invitedByAccountId,
     required this.accountId,
@@ -6928,6 +7068,7 @@ class WalletInvitation extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['token'] = Variable<String>(token);
     map['wallet_id'] = Variable<int>(walletId);
     if (!nullToAbsent || invitedByAccountId != null) {
       map['invited_by_account_id'] = Variable<int>(invitedByAccountId);
@@ -6956,6 +7097,7 @@ class WalletInvitation extends DataClass
   WalletInvitationsCompanion toCompanion(bool nullToAbsent) {
     return WalletInvitationsCompanion(
       id: Value(id),
+      token: Value(token),
       walletId: Value(walletId),
       invitedByAccountId: invitedByAccountId == null && nullToAbsent
           ? const Value.absent()
@@ -6980,6 +7122,7 @@ class WalletInvitation extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WalletInvitation(
       id: serializer.fromJson<int>(json['id']),
+      token: serializer.fromJson<String>(json['token']),
       walletId: serializer.fromJson<int>(json['walletId']),
       invitedByAccountId: serializer.fromJson<int?>(json['invitedByAccountId']),
       accountId: serializer.fromJson<int>(json['accountId']),
@@ -6999,6 +7142,7 @@ class WalletInvitation extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'token': serializer.toJson<String>(token),
       'walletId': serializer.toJson<int>(walletId),
       'invitedByAccountId': serializer.toJson<int?>(invitedByAccountId),
       'accountId': serializer.toJson<int>(accountId),
@@ -7016,6 +7160,7 @@ class WalletInvitation extends DataClass
 
   WalletInvitation copyWith({
     int? id,
+    String? token,
     int? walletId,
     Value<int?> invitedByAccountId = const Value.absent(),
     int? accountId,
@@ -7026,6 +7171,7 @@ class WalletInvitation extends DataClass
     Value<DateTime?> respondedAt = const Value.absent(),
   }) => WalletInvitation(
     id: id ?? this.id,
+    token: token ?? this.token,
     walletId: walletId ?? this.walletId,
     invitedByAccountId: invitedByAccountId.present
         ? invitedByAccountId.value
@@ -7040,6 +7186,7 @@ class WalletInvitation extends DataClass
   WalletInvitation copyWithCompanion(WalletInvitationsCompanion data) {
     return WalletInvitation(
       id: data.id.present ? data.id.value : this.id,
+      token: data.token.present ? data.token.value : this.token,
       walletId: data.walletId.present ? data.walletId.value : this.walletId,
       invitedByAccountId: data.invitedByAccountId.present
           ? data.invitedByAccountId.value
@@ -7059,6 +7206,7 @@ class WalletInvitation extends DataClass
   String toString() {
     return (StringBuffer('WalletInvitation(')
           ..write('id: $id, ')
+          ..write('token: $token, ')
           ..write('walletId: $walletId, ')
           ..write('invitedByAccountId: $invitedByAccountId, ')
           ..write('accountId: $accountId, ')
@@ -7074,6 +7222,7 @@ class WalletInvitation extends DataClass
   @override
   int get hashCode => Object.hash(
     id,
+    token,
     walletId,
     invitedByAccountId,
     accountId,
@@ -7088,6 +7237,7 @@ class WalletInvitation extends DataClass
       identical(this, other) ||
       (other is WalletInvitation &&
           other.id == this.id &&
+          other.token == this.token &&
           other.walletId == this.walletId &&
           other.invitedByAccountId == this.invitedByAccountId &&
           other.accountId == this.accountId &&
@@ -7100,6 +7250,7 @@ class WalletInvitation extends DataClass
 
 class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
   final Value<int> id;
+  final Value<String> token;
   final Value<int> walletId;
   final Value<int?> invitedByAccountId;
   final Value<int> accountId;
@@ -7110,6 +7261,7 @@ class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
   final Value<DateTime?> respondedAt;
   const WalletInvitationsCompanion({
     this.id = const Value.absent(),
+    this.token = const Value.absent(),
     this.walletId = const Value.absent(),
     this.invitedByAccountId = const Value.absent(),
     this.accountId = const Value.absent(),
@@ -7121,6 +7273,7 @@ class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
   });
   WalletInvitationsCompanion.insert({
     this.id = const Value.absent(),
+    this.token = const Value.absent(),
     required int walletId,
     this.invitedByAccountId = const Value.absent(),
     required int accountId,
@@ -7135,6 +7288,7 @@ class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
        role = Value(role);
   static Insertable<WalletInvitation> custom({
     Expression<int>? id,
+    Expression<String>? token,
     Expression<int>? walletId,
     Expression<int>? invitedByAccountId,
     Expression<int>? accountId,
@@ -7146,6 +7300,7 @@ class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (token != null) 'token': token,
       if (walletId != null) 'wallet_id': walletId,
       if (invitedByAccountId != null)
         'invited_by_account_id': invitedByAccountId,
@@ -7160,6 +7315,7 @@ class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
 
   WalletInvitationsCompanion copyWith({
     Value<int>? id,
+    Value<String>? token,
     Value<int>? walletId,
     Value<int?>? invitedByAccountId,
     Value<int>? accountId,
@@ -7171,6 +7327,7 @@ class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
   }) {
     return WalletInvitationsCompanion(
       id: id ?? this.id,
+      token: token ?? this.token,
       walletId: walletId ?? this.walletId,
       invitedByAccountId: invitedByAccountId ?? this.invitedByAccountId,
       accountId: accountId ?? this.accountId,
@@ -7187,6 +7344,9 @@ class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (token.present) {
+      map['token'] = Variable<String>(token.value);
     }
     if (walletId.present) {
       map['wallet_id'] = Variable<int>(walletId.value);
@@ -7223,6 +7383,7 @@ class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
   String toString() {
     return (StringBuffer('WalletInvitationsCompanion(')
           ..write('id: $id, ')
+          ..write('token: $token, ')
           ..write('walletId: $walletId, ')
           ..write('invitedByAccountId: $invitedByAccountId, ')
           ..write('accountId: $accountId, ')
@@ -11176,6 +11337,16 @@ class $WalletExpenseSplitsTable extends WalletExpenseSplits
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+    'uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: () => const Uuid().v4(),
+  );
   static const VerificationMeta _transactionIdMeta = const VerificationMeta(
     'transactionId',
   );
@@ -11236,6 +11407,7 @@ class $WalletExpenseSplitsTable extends WalletExpenseSplits
   List<GeneratedColumn> get $columns => [
     id,
     walletId,
+    uuid,
     transactionId,
     paidByMemberId,
     splitMethod,
@@ -11264,6 +11436,12 @@ class $WalletExpenseSplitsTable extends WalletExpenseSplits
       );
     } else if (isInserting) {
       context.missing(_walletIdMeta);
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+        _uuidMeta,
+        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
+      );
     }
     if (data.containsKey('transaction_id')) {
       context.handle(
@@ -11319,6 +11497,10 @@ class $WalletExpenseSplitsTable extends WalletExpenseSplits
         DriftSqlType.int,
         data['${effectivePrefix}wallet_id'],
       )!,
+      uuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}uuid'],
+      )!,
       transactionId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}transaction_id'],
@@ -11359,6 +11541,7 @@ class WalletExpenseSplit extends DataClass
     implements Insertable<WalletExpenseSplit> {
   final int id;
   final int walletId;
+  final String uuid;
   final int transactionId;
   final int paidByMemberId;
   final WalletExpenseSplitMethod splitMethod;
@@ -11367,6 +11550,7 @@ class WalletExpenseSplit extends DataClass
   const WalletExpenseSplit({
     required this.id,
     required this.walletId,
+    required this.uuid,
     required this.transactionId,
     required this.paidByMemberId,
     required this.splitMethod,
@@ -11378,6 +11562,7 @@ class WalletExpenseSplit extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['wallet_id'] = Variable<int>(walletId);
+    map['uuid'] = Variable<String>(uuid);
     map['transaction_id'] = Variable<int>(transactionId);
     map['paid_by_member_id'] = Variable<int>(paidByMemberId);
     {
@@ -11396,6 +11581,7 @@ class WalletExpenseSplit extends DataClass
     return WalletExpenseSplitsCompanion(
       id: Value(id),
       walletId: Value(walletId),
+      uuid: Value(uuid),
       transactionId: Value(transactionId),
       paidByMemberId: Value(paidByMemberId),
       splitMethod: Value(splitMethod),
@@ -11414,6 +11600,7 @@ class WalletExpenseSplit extends DataClass
     return WalletExpenseSplit(
       id: serializer.fromJson<int>(json['id']),
       walletId: serializer.fromJson<int>(json['walletId']),
+      uuid: serializer.fromJson<String>(json['uuid']),
       transactionId: serializer.fromJson<int>(json['transactionId']),
       paidByMemberId: serializer.fromJson<int>(json['paidByMemberId']),
       splitMethod: $WalletExpenseSplitsTable.$convertersplitMethod.fromJson(
@@ -11429,6 +11616,7 @@ class WalletExpenseSplit extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'walletId': serializer.toJson<int>(walletId),
+      'uuid': serializer.toJson<String>(uuid),
       'transactionId': serializer.toJson<int>(transactionId),
       'paidByMemberId': serializer.toJson<int>(paidByMemberId),
       'splitMethod': serializer.toJson<String>(
@@ -11442,6 +11630,7 @@ class WalletExpenseSplit extends DataClass
   WalletExpenseSplit copyWith({
     int? id,
     int? walletId,
+    String? uuid,
     int? transactionId,
     int? paidByMemberId,
     WalletExpenseSplitMethod? splitMethod,
@@ -11450,6 +11639,7 @@ class WalletExpenseSplit extends DataClass
   }) => WalletExpenseSplit(
     id: id ?? this.id,
     walletId: walletId ?? this.walletId,
+    uuid: uuid ?? this.uuid,
     transactionId: transactionId ?? this.transactionId,
     paidByMemberId: paidByMemberId ?? this.paidByMemberId,
     splitMethod: splitMethod ?? this.splitMethod,
@@ -11462,6 +11652,7 @@ class WalletExpenseSplit extends DataClass
     return WalletExpenseSplit(
       id: data.id.present ? data.id.value : this.id,
       walletId: data.walletId.present ? data.walletId.value : this.walletId,
+      uuid: data.uuid.present ? data.uuid.value : this.uuid,
       transactionId: data.transactionId.present
           ? data.transactionId.value
           : this.transactionId,
@@ -11483,6 +11674,7 @@ class WalletExpenseSplit extends DataClass
     return (StringBuffer('WalletExpenseSplit(')
           ..write('id: $id, ')
           ..write('walletId: $walletId, ')
+          ..write('uuid: $uuid, ')
           ..write('transactionId: $transactionId, ')
           ..write('paidByMemberId: $paidByMemberId, ')
           ..write('splitMethod: $splitMethod, ')
@@ -11496,6 +11688,7 @@ class WalletExpenseSplit extends DataClass
   int get hashCode => Object.hash(
     id,
     walletId,
+    uuid,
     transactionId,
     paidByMemberId,
     splitMethod,
@@ -11508,6 +11701,7 @@ class WalletExpenseSplit extends DataClass
       (other is WalletExpenseSplit &&
           other.id == this.id &&
           other.walletId == this.walletId &&
+          other.uuid == this.uuid &&
           other.transactionId == this.transactionId &&
           other.paidByMemberId == this.paidByMemberId &&
           other.splitMethod == this.splitMethod &&
@@ -11518,6 +11712,7 @@ class WalletExpenseSplit extends DataClass
 class WalletExpenseSplitsCompanion extends UpdateCompanion<WalletExpenseSplit> {
   final Value<int> id;
   final Value<int> walletId;
+  final Value<String> uuid;
   final Value<int> transactionId;
   final Value<int> paidByMemberId;
   final Value<WalletExpenseSplitMethod> splitMethod;
@@ -11526,6 +11721,7 @@ class WalletExpenseSplitsCompanion extends UpdateCompanion<WalletExpenseSplit> {
   const WalletExpenseSplitsCompanion({
     this.id = const Value.absent(),
     this.walletId = const Value.absent(),
+    this.uuid = const Value.absent(),
     this.transactionId = const Value.absent(),
     this.paidByMemberId = const Value.absent(),
     this.splitMethod = const Value.absent(),
@@ -11535,6 +11731,7 @@ class WalletExpenseSplitsCompanion extends UpdateCompanion<WalletExpenseSplit> {
   WalletExpenseSplitsCompanion.insert({
     this.id = const Value.absent(),
     required int walletId,
+    this.uuid = const Value.absent(),
     required int transactionId,
     required int paidByMemberId,
     required WalletExpenseSplitMethod splitMethod,
@@ -11547,6 +11744,7 @@ class WalletExpenseSplitsCompanion extends UpdateCompanion<WalletExpenseSplit> {
   static Insertable<WalletExpenseSplit> custom({
     Expression<int>? id,
     Expression<int>? walletId,
+    Expression<String>? uuid,
     Expression<int>? transactionId,
     Expression<int>? paidByMemberId,
     Expression<String>? splitMethod,
@@ -11556,6 +11754,7 @@ class WalletExpenseSplitsCompanion extends UpdateCompanion<WalletExpenseSplit> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (walletId != null) 'wallet_id': walletId,
+      if (uuid != null) 'uuid': uuid,
       if (transactionId != null) 'transaction_id': transactionId,
       if (paidByMemberId != null) 'paid_by_member_id': paidByMemberId,
       if (splitMethod != null) 'split_method': splitMethod,
@@ -11568,6 +11767,7 @@ class WalletExpenseSplitsCompanion extends UpdateCompanion<WalletExpenseSplit> {
   WalletExpenseSplitsCompanion copyWith({
     Value<int>? id,
     Value<int>? walletId,
+    Value<String>? uuid,
     Value<int>? transactionId,
     Value<int>? paidByMemberId,
     Value<WalletExpenseSplitMethod>? splitMethod,
@@ -11577,6 +11777,7 @@ class WalletExpenseSplitsCompanion extends UpdateCompanion<WalletExpenseSplit> {
     return WalletExpenseSplitsCompanion(
       id: id ?? this.id,
       walletId: walletId ?? this.walletId,
+      uuid: uuid ?? this.uuid,
       transactionId: transactionId ?? this.transactionId,
       paidByMemberId: paidByMemberId ?? this.paidByMemberId,
       splitMethod: splitMethod ?? this.splitMethod,
@@ -11593,6 +11794,9 @@ class WalletExpenseSplitsCompanion extends UpdateCompanion<WalletExpenseSplit> {
     }
     if (walletId.present) {
       map['wallet_id'] = Variable<int>(walletId.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
     }
     if (transactionId.present) {
       map['transaction_id'] = Variable<int>(transactionId.value);
@@ -11621,6 +11825,7 @@ class WalletExpenseSplitsCompanion extends UpdateCompanion<WalletExpenseSplit> {
     return (StringBuffer('WalletExpenseSplitsCompanion(')
           ..write('id: $id, ')
           ..write('walletId: $walletId, ')
+          ..write('uuid: $uuid, ')
           ..write('transactionId: $transactionId, ')
           ..write('paidByMemberId: $paidByMemberId, ')
           ..write('splitMethod: $splitMethod, ')
@@ -12724,6 +12929,18 @@ class $RecurringTransactionsTable extends RecurringTransactions
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _walletIdMeta = const VerificationMeta(
+    'walletId',
+  );
+  @override
+  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+    'wallet_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
   static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   @override
   late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
@@ -12864,6 +13081,7 @@ class $RecurringTransactionsTable extends RecurringTransactions
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    walletId,
     uuid,
     name,
     amount,
@@ -12891,6 +13109,12 @@ class $RecurringTransactionsTable extends RecurringTransactions
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('wallet_id')) {
+      context.handle(
+        _walletIdMeta,
+        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
+      );
     }
     if (data.containsKey('uuid')) {
       context.handle(
@@ -12991,6 +13215,10 @@ class $RecurringTransactionsTable extends RecurringTransactions
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      walletId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wallet_id'],
+      )!,
       uuid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uuid'],
@@ -13056,6 +13284,7 @@ class $RecurringTransactionsTable extends RecurringTransactions
 class RecurringTransactionDb extends DataClass
     implements Insertable<RecurringTransactionDb> {
   final int id;
+  final int walletId;
   final String uuid;
   final String name;
   final double amount;
@@ -13070,6 +13299,7 @@ class RecurringTransactionDb extends DataClass
   final DateTime updatedAt;
   const RecurringTransactionDb({
     required this.id,
+    required this.walletId,
     required this.uuid,
     required this.name,
     required this.amount,
@@ -13087,6 +13317,7 @@ class RecurringTransactionDb extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['wallet_id'] = Variable<int>(walletId);
     map['uuid'] = Variable<String>(uuid);
     map['name'] = Variable<String>(name);
     map['amount'] = Variable<double>(amount);
@@ -13111,6 +13342,7 @@ class RecurringTransactionDb extends DataClass
   RecurringTransactionsCompanion toCompanion(bool nullToAbsent) {
     return RecurringTransactionsCompanion(
       id: Value(id),
+      walletId: Value(walletId),
       uuid: Value(uuid),
       name: Value(name),
       amount: Value(amount),
@@ -13135,6 +13367,7 @@ class RecurringTransactionDb extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RecurringTransactionDb(
       id: serializer.fromJson<int>(json['id']),
+      walletId: serializer.fromJson<int>(json['walletId']),
       uuid: serializer.fromJson<String>(json['uuid']),
       name: serializer.fromJson<String>(json['name']),
       amount: serializer.fromJson<double>(json['amount']),
@@ -13158,6 +13391,7 @@ class RecurringTransactionDb extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'walletId': serializer.toJson<int>(walletId),
       'uuid': serializer.toJson<String>(uuid),
       'name': serializer.toJson<String>(name),
       'amount': serializer.toJson<double>(amount),
@@ -13177,6 +13411,7 @@ class RecurringTransactionDb extends DataClass
 
   RecurringTransactionDb copyWith({
     int? id,
+    int? walletId,
     String? uuid,
     String? name,
     double? amount,
@@ -13191,6 +13426,7 @@ class RecurringTransactionDb extends DataClass
     DateTime? updatedAt,
   }) => RecurringTransactionDb(
     id: id ?? this.id,
+    walletId: walletId ?? this.walletId,
     uuid: uuid ?? this.uuid,
     name: name ?? this.name,
     amount: amount ?? this.amount,
@@ -13211,6 +13447,7 @@ class RecurringTransactionDb extends DataClass
   ) {
     return RecurringTransactionDb(
       id: data.id.present ? data.id.value : this.id,
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
       uuid: data.uuid.present ? data.uuid.value : this.uuid,
       name: data.name.present ? data.name.value : this.name,
       amount: data.amount.present ? data.amount.value : this.amount,
@@ -13236,6 +13473,7 @@ class RecurringTransactionDb extends DataClass
   String toString() {
     return (StringBuffer('RecurringTransactionDb(')
           ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
           ..write('uuid: $uuid, ')
           ..write('name: $name, ')
           ..write('amount: $amount, ')
@@ -13255,6 +13493,7 @@ class RecurringTransactionDb extends DataClass
   @override
   int get hashCode => Object.hash(
     id,
+    walletId,
     uuid,
     name,
     amount,
@@ -13273,6 +13512,7 @@ class RecurringTransactionDb extends DataClass
       identical(this, other) ||
       (other is RecurringTransactionDb &&
           other.id == this.id &&
+          other.walletId == this.walletId &&
           other.uuid == this.uuid &&
           other.name == this.name &&
           other.amount == this.amount &&
@@ -13290,6 +13530,7 @@ class RecurringTransactionDb extends DataClass
 class RecurringTransactionsCompanion
     extends UpdateCompanion<RecurringTransactionDb> {
   final Value<int> id;
+  final Value<int> walletId;
   final Value<String> uuid;
   final Value<String> name;
   final Value<double> amount;
@@ -13304,6 +13545,7 @@ class RecurringTransactionsCompanion
   final Value<DateTime> updatedAt;
   const RecurringTransactionsCompanion({
     this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
     this.uuid = const Value.absent(),
     this.name = const Value.absent(),
     this.amount = const Value.absent(),
@@ -13319,6 +13561,7 @@ class RecurringTransactionsCompanion
   });
   RecurringTransactionsCompanion.insert({
     this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
     this.uuid = const Value.absent(),
     required String name,
     required double amount,
@@ -13341,6 +13584,7 @@ class RecurringTransactionsCompanion
        nextDueDate = Value(nextDueDate);
   static Insertable<RecurringTransactionDb> custom({
     Expression<int>? id,
+    Expression<int>? walletId,
     Expression<String>? uuid,
     Expression<String>? name,
     Expression<double>? amount,
@@ -13356,6 +13600,7 @@ class RecurringTransactionsCompanion
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (walletId != null) 'wallet_id': walletId,
       if (uuid != null) 'uuid': uuid,
       if (name != null) 'name': name,
       if (amount != null) 'amount': amount,
@@ -13373,6 +13618,7 @@ class RecurringTransactionsCompanion
 
   RecurringTransactionsCompanion copyWith({
     Value<int>? id,
+    Value<int>? walletId,
     Value<String>? uuid,
     Value<String>? name,
     Value<double>? amount,
@@ -13388,6 +13634,7 @@ class RecurringTransactionsCompanion
   }) {
     return RecurringTransactionsCompanion(
       id: id ?? this.id,
+      walletId: walletId ?? this.walletId,
       uuid: uuid ?? this.uuid,
       name: name ?? this.name,
       amount: amount ?? this.amount,
@@ -13408,6 +13655,9 @@ class RecurringTransactionsCompanion
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (walletId.present) {
+      map['wallet_id'] = Variable<int>(walletId.value);
     }
     if (uuid.present) {
       map['uuid'] = Variable<String>(uuid.value);
@@ -13454,6 +13704,7 @@ class RecurringTransactionsCompanion
   String toString() {
     return (StringBuffer('RecurringTransactionsCompanion(')
           ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
           ..write('uuid: $uuid, ')
           ..write('name: $name, ')
           ..write('amount: $amount, ')
@@ -15275,6 +15526,773 @@ class UnrecognizedSmsEntriesCompanion extends UpdateCompanion<UnrecognizedSms> {
   }
 }
 
+class $WalletActivitiesTable extends WalletActivities
+    with TableInfo<$WalletActivitiesTable, WalletActivity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WalletActivitiesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _walletIdMeta = const VerificationMeta(
+    'walletId',
+  );
+  @override
+  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+    'wallet_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+    'uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: () => const Uuid().v4(),
+  );
+  static const VerificationMeta _actorAccountIdMeta = const VerificationMeta(
+    'actorAccountId',
+  );
+  @override
+  late final GeneratedColumn<int> actorAccountId = GeneratedColumn<int>(
+    'actor_account_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _actorMemberIdMeta = const VerificationMeta(
+    'actorMemberId',
+  );
+  @override
+  late final GeneratedColumn<int> actorMemberId = GeneratedColumn<int>(
+    'actor_member_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+    'action',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 100,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityTypeMeta = const VerificationMeta(
+    'entityType',
+  );
+  @override
+  late final GeneratedColumn<String> entityType = GeneratedColumn<String>(
+    'entity_type',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 100,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityIdMeta = const VerificationMeta(
+    'entityId',
+  );
+  @override
+  late final GeneratedColumn<int> entityId = GeneratedColumn<int>(
+    'entity_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityUuidMeta = const VerificationMeta(
+    'entityUuid',
+  );
+  @override
+  late final GeneratedColumn<String> entityUuid = GeneratedColumn<String>(
+    'entity_uuid',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _detailsMeta = const VerificationMeta(
+    'details',
+  );
+  @override
+  late final GeneratedColumn<String> details = GeneratedColumn<String>(
+    'details',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _metadataMeta = const VerificationMeta(
+    'metadata',
+  );
+  @override
+  late final GeneratedColumn<String> metadata = GeneratedColumn<String>(
+    'metadata',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sourceMeta = const VerificationMeta('source');
+  @override
+  late final GeneratedColumn<String> source = GeneratedColumn<String>(
+    'source',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 50,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now(),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    walletId,
+    uuid,
+    actorAccountId,
+    actorMemberId,
+    action,
+    entityType,
+    entityId,
+    entityUuid,
+    details,
+    metadata,
+    source,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'wallet_activities';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WalletActivity> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('wallet_id')) {
+      context.handle(
+        _walletIdMeta,
+        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_walletIdMeta);
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+        _uuidMeta,
+        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
+      );
+    }
+    if (data.containsKey('actor_account_id')) {
+      context.handle(
+        _actorAccountIdMeta,
+        actorAccountId.isAcceptableOrUnknown(
+          data['actor_account_id']!,
+          _actorAccountIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('actor_member_id')) {
+      context.handle(
+        _actorMemberIdMeta,
+        actorMemberId.isAcceptableOrUnknown(
+          data['actor_member_id']!,
+          _actorMemberIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('action')) {
+      context.handle(
+        _actionMeta,
+        action.isAcceptableOrUnknown(data['action']!, _actionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_actionMeta);
+    }
+    if (data.containsKey('entity_type')) {
+      context.handle(
+        _entityTypeMeta,
+        entityType.isAcceptableOrUnknown(data['entity_type']!, _entityTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityTypeMeta);
+    }
+    if (data.containsKey('entity_id')) {
+      context.handle(
+        _entityIdMeta,
+        entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityIdMeta);
+    }
+    if (data.containsKey('entity_uuid')) {
+      context.handle(
+        _entityUuidMeta,
+        entityUuid.isAcceptableOrUnknown(data['entity_uuid']!, _entityUuidMeta),
+      );
+    }
+    if (data.containsKey('details')) {
+      context.handle(
+        _detailsMeta,
+        details.isAcceptableOrUnknown(data['details']!, _detailsMeta),
+      );
+    }
+    if (data.containsKey('metadata')) {
+      context.handle(
+        _metadataMeta,
+        metadata.isAcceptableOrUnknown(data['metadata']!, _metadataMeta),
+      );
+    }
+    if (data.containsKey('source')) {
+      context.handle(
+        _sourceMeta,
+        source.isAcceptableOrUnknown(data['source']!, _sourceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WalletActivity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WalletActivity(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      walletId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wallet_id'],
+      )!,
+      uuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}uuid'],
+      )!,
+      actorAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}actor_account_id'],
+      ),
+      actorMemberId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}actor_member_id'],
+      ),
+      action: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}action'],
+      )!,
+      entityType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity_type'],
+      )!,
+      entityId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}entity_id'],
+      )!,
+      entityUuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity_uuid'],
+      ),
+      details: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}details'],
+      ),
+      metadata: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}metadata'],
+      ),
+      source: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $WalletActivitiesTable createAlias(String alias) {
+    return $WalletActivitiesTable(attachedDatabase, alias);
+  }
+}
+
+class WalletActivity extends DataClass implements Insertable<WalletActivity> {
+  final int id;
+  final int walletId;
+  final String uuid;
+  final int? actorAccountId;
+  final int? actorMemberId;
+  final String action;
+  final String entityType;
+  final int entityId;
+  final String? entityUuid;
+  final String? details;
+  final String? metadata;
+  final String source;
+  final DateTime createdAt;
+  const WalletActivity({
+    required this.id,
+    required this.walletId,
+    required this.uuid,
+    this.actorAccountId,
+    this.actorMemberId,
+    required this.action,
+    required this.entityType,
+    required this.entityId,
+    this.entityUuid,
+    this.details,
+    this.metadata,
+    required this.source,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['wallet_id'] = Variable<int>(walletId);
+    map['uuid'] = Variable<String>(uuid);
+    if (!nullToAbsent || actorAccountId != null) {
+      map['actor_account_id'] = Variable<int>(actorAccountId);
+    }
+    if (!nullToAbsent || actorMemberId != null) {
+      map['actor_member_id'] = Variable<int>(actorMemberId);
+    }
+    map['action'] = Variable<String>(action);
+    map['entity_type'] = Variable<String>(entityType);
+    map['entity_id'] = Variable<int>(entityId);
+    if (!nullToAbsent || entityUuid != null) {
+      map['entity_uuid'] = Variable<String>(entityUuid);
+    }
+    if (!nullToAbsent || details != null) {
+      map['details'] = Variable<String>(details);
+    }
+    if (!nullToAbsent || metadata != null) {
+      map['metadata'] = Variable<String>(metadata);
+    }
+    map['source'] = Variable<String>(source);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  WalletActivitiesCompanion toCompanion(bool nullToAbsent) {
+    return WalletActivitiesCompanion(
+      id: Value(id),
+      walletId: Value(walletId),
+      uuid: Value(uuid),
+      actorAccountId: actorAccountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorAccountId),
+      actorMemberId: actorMemberId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorMemberId),
+      action: Value(action),
+      entityType: Value(entityType),
+      entityId: Value(entityId),
+      entityUuid: entityUuid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(entityUuid),
+      details: details == null && nullToAbsent
+          ? const Value.absent()
+          : Value(details),
+      metadata: metadata == null && nullToAbsent
+          ? const Value.absent()
+          : Value(metadata),
+      source: Value(source),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory WalletActivity.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WalletActivity(
+      id: serializer.fromJson<int>(json['id']),
+      walletId: serializer.fromJson<int>(json['walletId']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      actorAccountId: serializer.fromJson<int?>(json['actorAccountId']),
+      actorMemberId: serializer.fromJson<int?>(json['actorMemberId']),
+      action: serializer.fromJson<String>(json['action']),
+      entityType: serializer.fromJson<String>(json['entityType']),
+      entityId: serializer.fromJson<int>(json['entityId']),
+      entityUuid: serializer.fromJson<String?>(json['entityUuid']),
+      details: serializer.fromJson<String?>(json['details']),
+      metadata: serializer.fromJson<String?>(json['metadata']),
+      source: serializer.fromJson<String>(json['source']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'walletId': serializer.toJson<int>(walletId),
+      'uuid': serializer.toJson<String>(uuid),
+      'actorAccountId': serializer.toJson<int?>(actorAccountId),
+      'actorMemberId': serializer.toJson<int?>(actorMemberId),
+      'action': serializer.toJson<String>(action),
+      'entityType': serializer.toJson<String>(entityType),
+      'entityId': serializer.toJson<int>(entityId),
+      'entityUuid': serializer.toJson<String?>(entityUuid),
+      'details': serializer.toJson<String?>(details),
+      'metadata': serializer.toJson<String?>(metadata),
+      'source': serializer.toJson<String>(source),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  WalletActivity copyWith({
+    int? id,
+    int? walletId,
+    String? uuid,
+    Value<int?> actorAccountId = const Value.absent(),
+    Value<int?> actorMemberId = const Value.absent(),
+    String? action,
+    String? entityType,
+    int? entityId,
+    Value<String?> entityUuid = const Value.absent(),
+    Value<String?> details = const Value.absent(),
+    Value<String?> metadata = const Value.absent(),
+    String? source,
+    DateTime? createdAt,
+  }) => WalletActivity(
+    id: id ?? this.id,
+    walletId: walletId ?? this.walletId,
+    uuid: uuid ?? this.uuid,
+    actorAccountId: actorAccountId.present
+        ? actorAccountId.value
+        : this.actorAccountId,
+    actorMemberId: actorMemberId.present
+        ? actorMemberId.value
+        : this.actorMemberId,
+    action: action ?? this.action,
+    entityType: entityType ?? this.entityType,
+    entityId: entityId ?? this.entityId,
+    entityUuid: entityUuid.present ? entityUuid.value : this.entityUuid,
+    details: details.present ? details.value : this.details,
+    metadata: metadata.present ? metadata.value : this.metadata,
+    source: source ?? this.source,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  WalletActivity copyWithCompanion(WalletActivitiesCompanion data) {
+    return WalletActivity(
+      id: data.id.present ? data.id.value : this.id,
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
+      uuid: data.uuid.present ? data.uuid.value : this.uuid,
+      actorAccountId: data.actorAccountId.present
+          ? data.actorAccountId.value
+          : this.actorAccountId,
+      actorMemberId: data.actorMemberId.present
+          ? data.actorMemberId.value
+          : this.actorMemberId,
+      action: data.action.present ? data.action.value : this.action,
+      entityType: data.entityType.present
+          ? data.entityType.value
+          : this.entityType,
+      entityId: data.entityId.present ? data.entityId.value : this.entityId,
+      entityUuid: data.entityUuid.present
+          ? data.entityUuid.value
+          : this.entityUuid,
+      details: data.details.present ? data.details.value : this.details,
+      metadata: data.metadata.present ? data.metadata.value : this.metadata,
+      source: data.source.present ? data.source.value : this.source,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletActivity(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('uuid: $uuid, ')
+          ..write('actorAccountId: $actorAccountId, ')
+          ..write('actorMemberId: $actorMemberId, ')
+          ..write('action: $action, ')
+          ..write('entityType: $entityType, ')
+          ..write('entityId: $entityId, ')
+          ..write('entityUuid: $entityUuid, ')
+          ..write('details: $details, ')
+          ..write('metadata: $metadata, ')
+          ..write('source: $source, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    walletId,
+    uuid,
+    actorAccountId,
+    actorMemberId,
+    action,
+    entityType,
+    entityId,
+    entityUuid,
+    details,
+    metadata,
+    source,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WalletActivity &&
+          other.id == this.id &&
+          other.walletId == this.walletId &&
+          other.uuid == this.uuid &&
+          other.actorAccountId == this.actorAccountId &&
+          other.actorMemberId == this.actorMemberId &&
+          other.action == this.action &&
+          other.entityType == this.entityType &&
+          other.entityId == this.entityId &&
+          other.entityUuid == this.entityUuid &&
+          other.details == this.details &&
+          other.metadata == this.metadata &&
+          other.source == this.source &&
+          other.createdAt == this.createdAt);
+}
+
+class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
+  final Value<int> id;
+  final Value<int> walletId;
+  final Value<String> uuid;
+  final Value<int?> actorAccountId;
+  final Value<int?> actorMemberId;
+  final Value<String> action;
+  final Value<String> entityType;
+  final Value<int> entityId;
+  final Value<String?> entityUuid;
+  final Value<String?> details;
+  final Value<String?> metadata;
+  final Value<String> source;
+  final Value<DateTime> createdAt;
+  const WalletActivitiesCompanion({
+    this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.actorAccountId = const Value.absent(),
+    this.actorMemberId = const Value.absent(),
+    this.action = const Value.absent(),
+    this.entityType = const Value.absent(),
+    this.entityId = const Value.absent(),
+    this.entityUuid = const Value.absent(),
+    this.details = const Value.absent(),
+    this.metadata = const Value.absent(),
+    this.source = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  WalletActivitiesCompanion.insert({
+    this.id = const Value.absent(),
+    required int walletId,
+    this.uuid = const Value.absent(),
+    this.actorAccountId = const Value.absent(),
+    this.actorMemberId = const Value.absent(),
+    required String action,
+    required String entityType,
+    required int entityId,
+    this.entityUuid = const Value.absent(),
+    this.details = const Value.absent(),
+    this.metadata = const Value.absent(),
+    required String source,
+    this.createdAt = const Value.absent(),
+  }) : walletId = Value(walletId),
+       action = Value(action),
+       entityType = Value(entityType),
+       entityId = Value(entityId),
+       source = Value(source);
+  static Insertable<WalletActivity> custom({
+    Expression<int>? id,
+    Expression<int>? walletId,
+    Expression<String>? uuid,
+    Expression<int>? actorAccountId,
+    Expression<int>? actorMemberId,
+    Expression<String>? action,
+    Expression<String>? entityType,
+    Expression<int>? entityId,
+    Expression<String>? entityUuid,
+    Expression<String>? details,
+    Expression<String>? metadata,
+    Expression<String>? source,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (walletId != null) 'wallet_id': walletId,
+      if (uuid != null) 'uuid': uuid,
+      if (actorAccountId != null) 'actor_account_id': actorAccountId,
+      if (actorMemberId != null) 'actor_member_id': actorMemberId,
+      if (action != null) 'action': action,
+      if (entityType != null) 'entity_type': entityType,
+      if (entityId != null) 'entity_id': entityId,
+      if (entityUuid != null) 'entity_uuid': entityUuid,
+      if (details != null) 'details': details,
+      if (metadata != null) 'metadata': metadata,
+      if (source != null) 'source': source,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  WalletActivitiesCompanion copyWith({
+    Value<int>? id,
+    Value<int>? walletId,
+    Value<String>? uuid,
+    Value<int?>? actorAccountId,
+    Value<int?>? actorMemberId,
+    Value<String>? action,
+    Value<String>? entityType,
+    Value<int>? entityId,
+    Value<String?>? entityUuid,
+    Value<String?>? details,
+    Value<String?>? metadata,
+    Value<String>? source,
+    Value<DateTime>? createdAt,
+  }) {
+    return WalletActivitiesCompanion(
+      id: id ?? this.id,
+      walletId: walletId ?? this.walletId,
+      uuid: uuid ?? this.uuid,
+      actorAccountId: actorAccountId ?? this.actorAccountId,
+      actorMemberId: actorMemberId ?? this.actorMemberId,
+      action: action ?? this.action,
+      entityType: entityType ?? this.entityType,
+      entityId: entityId ?? this.entityId,
+      entityUuid: entityUuid ?? this.entityUuid,
+      details: details ?? this.details,
+      metadata: metadata ?? this.metadata,
+      source: source ?? this.source,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (walletId.present) {
+      map['wallet_id'] = Variable<int>(walletId.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (actorAccountId.present) {
+      map['actor_account_id'] = Variable<int>(actorAccountId.value);
+    }
+    if (actorMemberId.present) {
+      map['actor_member_id'] = Variable<int>(actorMemberId.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
+    }
+    if (entityType.present) {
+      map['entity_type'] = Variable<String>(entityType.value);
+    }
+    if (entityId.present) {
+      map['entity_id'] = Variable<int>(entityId.value);
+    }
+    if (entityUuid.present) {
+      map['entity_uuid'] = Variable<String>(entityUuid.value);
+    }
+    if (details.present) {
+      map['details'] = Variable<String>(details.value);
+    }
+    if (metadata.present) {
+      map['metadata'] = Variable<String>(metadata.value);
+    }
+    if (source.present) {
+      map['source'] = Variable<String>(source.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletActivitiesCompanion(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('uuid: $uuid, ')
+          ..write('actorAccountId: $actorAccountId, ')
+          ..write('actorMemberId: $actorMemberId, ')
+          ..write('action: $action, ')
+          ..write('entityType: $entityType, ')
+          ..write('entityId: $entityId, ')
+          ..write('entityUuid: $entityUuid, ')
+          ..write('details: $details, ')
+          ..write('metadata: $metadata, ')
+          ..write('source: $source, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -15326,6 +16344,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $TransactionsTable transactions = $TransactionsTable(this);
   late final $UnrecognizedSmsEntriesTable unrecognizedSmsEntries =
       $UnrecognizedSmsEntriesTable(this);
+  late final $WalletActivitiesTable walletActivities = $WalletActivitiesTable(
+    this,
+  );
   late final CategoryDao categoryDao = CategoryDao(this as AppDatabase);
   late final AccountDao accountDao = AccountDao(this as AppDatabase);
   late final TransactionDao transactionDao = TransactionDao(
@@ -15342,6 +16363,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final AttachmentDao attachmentDao = AttachmentDao(this as AppDatabase);
   late final AllowanceDao allowanceDao = AllowanceDao(this as AppDatabase);
   late final GoalDao goalDao = GoalDao(this as AppDatabase);
+  late final BillDao billDao = BillDao(this as AppDatabase);
   late final PayeeDao payeeDao = PayeeDao(this as AppDatabase);
   late final SmsParsingDao smsParsingDao = SmsParsingDao(this as AppDatabase);
   late final SmsImportMetricsDao smsImportMetricsDao = SmsImportMetricsDao(
@@ -15381,6 +16403,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     tags,
     transactions,
     unrecognizedSmsEntries,
+    walletActivities,
   ];
 }
 
@@ -16051,6 +17074,7 @@ typedef $$WalletBillsTableProcessedTableManager =
 typedef $$BudgetsTableCreateCompanionBuilder =
     BudgetsCompanion Function({
       Value<int> id,
+      Value<int> walletId,
       Value<String> uuid,
       required double amount,
       required String period,
@@ -16060,6 +17084,7 @@ typedef $$BudgetsTableCreateCompanionBuilder =
 typedef $$BudgetsTableUpdateCompanionBuilder =
     BudgetsCompanion Function({
       Value<int> id,
+      Value<int> walletId,
       Value<String> uuid,
       Value<double> amount,
       Value<String> period,
@@ -16078,6 +17103,11 @@ class $$BudgetsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get walletId => $composableBuilder(
+    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16121,6 +17151,11 @@ class $$BudgetsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get uuid => $composableBuilder(
     column: $table.uuid,
     builder: (column) => ColumnOrderings(column),
@@ -16158,6 +17193,9 @@ class $$BudgetsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get walletId =>
+      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
@@ -16206,6 +17244,7 @@ class $$BudgetsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int> walletId = const Value.absent(),
                 Value<String> uuid = const Value.absent(),
                 Value<double> amount = const Value.absent(),
                 Value<String> period = const Value.absent(),
@@ -16213,6 +17252,7 @@ class $$BudgetsTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => BudgetsCompanion(
                 id: id,
+                walletId: walletId,
                 uuid: uuid,
                 amount: amount,
                 period: period,
@@ -16222,6 +17262,7 @@ class $$BudgetsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int> walletId = const Value.absent(),
                 Value<String> uuid = const Value.absent(),
                 required double amount,
                 required String period,
@@ -16229,6 +17270,7 @@ class $$BudgetsTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => BudgetsCompanion.insert(
                 id: id,
+                walletId: walletId,
                 uuid: uuid,
                 amount: amount,
                 period: period,
@@ -17166,7 +18208,7 @@ typedef $$LoansTableProcessedTableManager =
 typedef $$PeerDebtsTableCreateCompanionBuilder =
     PeerDebtsCompanion Function({
       Value<int> id,
-      Value<int> walletId,
+      required int walletId,
       Value<String> uuid,
       required String personName,
       required PeerDebtType type,
@@ -17428,7 +18470,7 @@ class $$PeerDebtsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<int> walletId = const Value.absent(),
+                required int walletId,
                 Value<String> uuid = const Value.absent(),
                 required String personName,
                 required PeerDebtType type,
@@ -18055,6 +19097,7 @@ typedef $$WalletSettlementsTableCreateCompanionBuilder =
     WalletSettlementsCompanion Function({
       Value<int> id,
       required int walletId,
+      Value<String> uuid,
       required int payerMemberId,
       required int receiverMemberId,
       required double amount,
@@ -18067,6 +19110,7 @@ typedef $$WalletSettlementsTableUpdateCompanionBuilder =
     WalletSettlementsCompanion Function({
       Value<int> id,
       Value<int> walletId,
+      Value<String> uuid,
       Value<int> payerMemberId,
       Value<int> receiverMemberId,
       Value<double> amount,
@@ -18092,6 +19136,11 @@ class $$WalletSettlementsTableFilterComposer
 
   ColumnFilters<int> get walletId => $composableBuilder(
     column: $table.walletId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+    column: $table.uuid,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18150,6 +19199,11 @@ class $$WalletSettlementsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get payerMemberId => $composableBuilder(
     column: $table.payerMemberId,
     builder: (column) => ColumnOrderings(column),
@@ -18200,6 +19254,9 @@ class $$WalletSettlementsTableAnnotationComposer
 
   GeneratedColumn<int> get walletId =>
       $composableBuilder(column: $table.walletId, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
 
   GeneratedColumn<int> get payerMemberId => $composableBuilder(
     column: $table.payerMemberId,
@@ -18273,6 +19330,7 @@ class $$WalletSettlementsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> walletId = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
                 Value<int> payerMemberId = const Value.absent(),
                 Value<int> receiverMemberId = const Value.absent(),
                 Value<double> amount = const Value.absent(),
@@ -18283,6 +19341,7 @@ class $$WalletSettlementsTableTableManager
               }) => WalletSettlementsCompanion(
                 id: id,
                 walletId: walletId,
+                uuid: uuid,
                 payerMemberId: payerMemberId,
                 receiverMemberId: receiverMemberId,
                 amount: amount,
@@ -18295,6 +19354,7 @@ class $$WalletSettlementsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required int walletId,
+                Value<String> uuid = const Value.absent(),
                 required int payerMemberId,
                 required int receiverMemberId,
                 required double amount,
@@ -18305,6 +19365,7 @@ class $$WalletSettlementsTableTableManager
               }) => WalletSettlementsCompanion.insert(
                 id: id,
                 walletId: walletId,
+                uuid: uuid,
                 payerMemberId: payerMemberId,
                 receiverMemberId: receiverMemberId,
                 amount: amount,
@@ -18554,6 +19615,7 @@ typedef $$WalletsTableProcessedTableManager =
 typedef $$WalletInvitationsTableCreateCompanionBuilder =
     WalletInvitationsCompanion Function({
       Value<int> id,
+      Value<String> token,
       required int walletId,
       Value<int?> invitedByAccountId,
       required int accountId,
@@ -18566,6 +19628,7 @@ typedef $$WalletInvitationsTableCreateCompanionBuilder =
 typedef $$WalletInvitationsTableUpdateCompanionBuilder =
     WalletInvitationsCompanion Function({
       Value<int> id,
+      Value<String> token,
       Value<int> walletId,
       Value<int?> invitedByAccountId,
       Value<int> accountId,
@@ -18587,6 +19650,11 @@ class $$WalletInvitationsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get token => $composableBuilder(
+    column: $table.token,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18651,6 +19719,11 @@ class $$WalletInvitationsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get token => $composableBuilder(
+    column: $table.token,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get walletId => $composableBuilder(
     column: $table.walletId,
     builder: (column) => ColumnOrderings(column),
@@ -18703,6 +19776,9 @@ class $$WalletInvitationsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get token =>
+      $composableBuilder(column: $table.token, builder: (column) => column);
 
   GeneratedColumn<int> get walletId =>
       $composableBuilder(column: $table.walletId, builder: (column) => column);
@@ -18774,6 +19850,7 @@ class $$WalletInvitationsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<String> token = const Value.absent(),
                 Value<int> walletId = const Value.absent(),
                 Value<int?> invitedByAccountId = const Value.absent(),
                 Value<int> accountId = const Value.absent(),
@@ -18784,6 +19861,7 @@ class $$WalletInvitationsTableTableManager
                 Value<DateTime?> respondedAt = const Value.absent(),
               }) => WalletInvitationsCompanion(
                 id: id,
+                token: token,
                 walletId: walletId,
                 invitedByAccountId: invitedByAccountId,
                 accountId: accountId,
@@ -18796,6 +19874,7 @@ class $$WalletInvitationsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<String> token = const Value.absent(),
                 required int walletId,
                 Value<int?> invitedByAccountId = const Value.absent(),
                 required int accountId,
@@ -18806,6 +19885,7 @@ class $$WalletInvitationsTableTableManager
                 Value<DateTime?> respondedAt = const Value.absent(),
               }) => WalletInvitationsCompanion.insert(
                 id: id,
+                token: token,
                 walletId: walletId,
                 invitedByAccountId: invitedByAccountId,
                 accountId: accountId,
@@ -20874,6 +21954,7 @@ typedef $$WalletExpenseSplitsTableCreateCompanionBuilder =
     WalletExpenseSplitsCompanion Function({
       Value<int> id,
       required int walletId,
+      Value<String> uuid,
       required int transactionId,
       required int paidByMemberId,
       required WalletExpenseSplitMethod splitMethod,
@@ -20884,6 +21965,7 @@ typedef $$WalletExpenseSplitsTableUpdateCompanionBuilder =
     WalletExpenseSplitsCompanion Function({
       Value<int> id,
       Value<int> walletId,
+      Value<String> uuid,
       Value<int> transactionId,
       Value<int> paidByMemberId,
       Value<WalletExpenseSplitMethod> splitMethod,
@@ -20907,6 +21989,11 @@ class $$WalletExpenseSplitsTableFilterComposer
 
   ColumnFilters<int> get walletId => $composableBuilder(
     column: $table.walletId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+    column: $table.uuid,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -20960,6 +22047,11 @@ class $$WalletExpenseSplitsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get transactionId => $composableBuilder(
     column: $table.transactionId,
     builder: (column) => ColumnOrderings(column),
@@ -21000,6 +22092,9 @@ class $$WalletExpenseSplitsTableAnnotationComposer
 
   GeneratedColumn<int> get walletId =>
       $composableBuilder(column: $table.walletId, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
 
   GeneratedColumn<int> get transactionId => $composableBuilder(
     column: $table.transactionId,
@@ -21071,6 +22166,7 @@ class $$WalletExpenseSplitsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> walletId = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
                 Value<int> transactionId = const Value.absent(),
                 Value<int> paidByMemberId = const Value.absent(),
                 Value<WalletExpenseSplitMethod> splitMethod =
@@ -21080,6 +22176,7 @@ class $$WalletExpenseSplitsTableTableManager
               }) => WalletExpenseSplitsCompanion(
                 id: id,
                 walletId: walletId,
+                uuid: uuid,
                 transactionId: transactionId,
                 paidByMemberId: paidByMemberId,
                 splitMethod: splitMethod,
@@ -21090,6 +22187,7 @@ class $$WalletExpenseSplitsTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required int walletId,
+                Value<String> uuid = const Value.absent(),
                 required int transactionId,
                 required int paidByMemberId,
                 required WalletExpenseSplitMethod splitMethod,
@@ -21098,6 +22196,7 @@ class $$WalletExpenseSplitsTableTableManager
               }) => WalletExpenseSplitsCompanion.insert(
                 id: id,
                 walletId: walletId,
+                uuid: uuid,
                 transactionId: transactionId,
                 paidByMemberId: paidByMemberId,
                 splitMethod: splitMethod,
@@ -21743,6 +22842,7 @@ typedef $$PayeesTableProcessedTableManager =
 typedef $$RecurringTransactionsTableCreateCompanionBuilder =
     RecurringTransactionsCompanion Function({
       Value<int> id,
+      Value<int> walletId,
       Value<String> uuid,
       required String name,
       required double amount,
@@ -21759,6 +22859,7 @@ typedef $$RecurringTransactionsTableCreateCompanionBuilder =
 typedef $$RecurringTransactionsTableUpdateCompanionBuilder =
     RecurringTransactionsCompanion Function({
       Value<int> id,
+      Value<int> walletId,
       Value<String> uuid,
       Value<String> name,
       Value<double> amount,
@@ -21784,6 +22885,11 @@ class $$RecurringTransactionsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get walletId => $composableBuilder(
+    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -21863,6 +22969,11 @@ class $$RecurringTransactionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get uuid => $composableBuilder(
     column: $table.uuid,
     builder: (column) => ColumnOrderings(column),
@@ -21935,6 +23046,9 @@ class $$RecurringTransactionsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get walletId =>
+      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
@@ -22026,6 +23140,7 @@ class $$RecurringTransactionsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int> walletId = const Value.absent(),
                 Value<String> uuid = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<double> amount = const Value.absent(),
@@ -22040,6 +23155,7 @@ class $$RecurringTransactionsTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => RecurringTransactionsCompanion(
                 id: id,
+                walletId: walletId,
                 uuid: uuid,
                 name: name,
                 amount: amount,
@@ -22056,6 +23172,7 @@ class $$RecurringTransactionsTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int> walletId = const Value.absent(),
                 Value<String> uuid = const Value.absent(),
                 required String name,
                 required double amount,
@@ -22070,6 +23187,7 @@ class $$RecurringTransactionsTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => RecurringTransactionsCompanion.insert(
                 id: id,
+                walletId: walletId,
                 uuid: uuid,
                 name: name,
                 amount: amount,
@@ -23070,6 +24188,366 @@ typedef $$UnrecognizedSmsEntriesTableProcessedTableManager =
       UnrecognizedSms,
       PrefetchHooks Function()
     >;
+typedef $$WalletActivitiesTableCreateCompanionBuilder =
+    WalletActivitiesCompanion Function({
+      Value<int> id,
+      required int walletId,
+      Value<String> uuid,
+      Value<int?> actorAccountId,
+      Value<int?> actorMemberId,
+      required String action,
+      required String entityType,
+      required int entityId,
+      Value<String?> entityUuid,
+      Value<String?> details,
+      Value<String?> metadata,
+      required String source,
+      Value<DateTime> createdAt,
+    });
+typedef $$WalletActivitiesTableUpdateCompanionBuilder =
+    WalletActivitiesCompanion Function({
+      Value<int> id,
+      Value<int> walletId,
+      Value<String> uuid,
+      Value<int?> actorAccountId,
+      Value<int?> actorMemberId,
+      Value<String> action,
+      Value<String> entityType,
+      Value<int> entityId,
+      Value<String?> entityUuid,
+      Value<String?> details,
+      Value<String?> metadata,
+      Value<String> source,
+      Value<DateTime> createdAt,
+    });
+
+class $$WalletActivitiesTableFilterComposer
+    extends Composer<_$AppDatabase, $WalletActivitiesTable> {
+  $$WalletActivitiesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get actorAccountId => $composableBuilder(
+    column: $table.actorAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get actorMemberId => $composableBuilder(
+    column: $table.actorMemberId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get action => $composableBuilder(
+    column: $table.action,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entityType => $composableBuilder(
+    column: $table.entityType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entityUuid => $composableBuilder(
+    column: $table.entityUuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get details => $composableBuilder(
+    column: $table.details,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get metadata => $composableBuilder(
+    column: $table.metadata,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WalletActivitiesTableOrderingComposer
+    extends Composer<_$AppDatabase, $WalletActivitiesTable> {
+  $$WalletActivitiesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get actorAccountId => $composableBuilder(
+    column: $table.actorAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get actorMemberId => $composableBuilder(
+    column: $table.actorMemberId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get action => $composableBuilder(
+    column: $table.action,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entityType => $composableBuilder(
+    column: $table.entityType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entityUuid => $composableBuilder(
+    column: $table.entityUuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get details => $composableBuilder(
+    column: $table.details,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get metadata => $composableBuilder(
+    column: $table.metadata,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WalletActivitiesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WalletActivitiesTable> {
+  $$WalletActivitiesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get walletId =>
+      $composableBuilder(column: $table.walletId, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
+
+  GeneratedColumn<int> get actorAccountId => $composableBuilder(
+    column: $table.actorAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get actorMemberId => $composableBuilder(
+    column: $table.actorMemberId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get action =>
+      $composableBuilder(column: $table.action, builder: (column) => column);
+
+  GeneratedColumn<String> get entityType => $composableBuilder(
+    column: $table.entityType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get entityId =>
+      $composableBuilder(column: $table.entityId, builder: (column) => column);
+
+  GeneratedColumn<String> get entityUuid => $composableBuilder(
+    column: $table.entityUuid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get details =>
+      $composableBuilder(column: $table.details, builder: (column) => column);
+
+  GeneratedColumn<String> get metadata =>
+      $composableBuilder(column: $table.metadata, builder: (column) => column);
+
+  GeneratedColumn<String> get source =>
+      $composableBuilder(column: $table.source, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$WalletActivitiesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WalletActivitiesTable,
+          WalletActivity,
+          $$WalletActivitiesTableFilterComposer,
+          $$WalletActivitiesTableOrderingComposer,
+          $$WalletActivitiesTableAnnotationComposer,
+          $$WalletActivitiesTableCreateCompanionBuilder,
+          $$WalletActivitiesTableUpdateCompanionBuilder,
+          (
+            WalletActivity,
+            BaseReferences<
+              _$AppDatabase,
+              $WalletActivitiesTable,
+              WalletActivity
+            >,
+          ),
+          WalletActivity,
+          PrefetchHooks Function()
+        > {
+  $$WalletActivitiesTableTableManager(
+    _$AppDatabase db,
+    $WalletActivitiesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WalletActivitiesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WalletActivitiesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WalletActivitiesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> walletId = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                Value<int?> actorAccountId = const Value.absent(),
+                Value<int?> actorMemberId = const Value.absent(),
+                Value<String> action = const Value.absent(),
+                Value<String> entityType = const Value.absent(),
+                Value<int> entityId = const Value.absent(),
+                Value<String?> entityUuid = const Value.absent(),
+                Value<String?> details = const Value.absent(),
+                Value<String?> metadata = const Value.absent(),
+                Value<String> source = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => WalletActivitiesCompanion(
+                id: id,
+                walletId: walletId,
+                uuid: uuid,
+                actorAccountId: actorAccountId,
+                actorMemberId: actorMemberId,
+                action: action,
+                entityType: entityType,
+                entityId: entityId,
+                entityUuid: entityUuid,
+                details: details,
+                metadata: metadata,
+                source: source,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int walletId,
+                Value<String> uuid = const Value.absent(),
+                Value<int?> actorAccountId = const Value.absent(),
+                Value<int?> actorMemberId = const Value.absent(),
+                required String action,
+                required String entityType,
+                required int entityId,
+                Value<String?> entityUuid = const Value.absent(),
+                Value<String?> details = const Value.absent(),
+                Value<String?> metadata = const Value.absent(),
+                required String source,
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => WalletActivitiesCompanion.insert(
+                id: id,
+                walletId: walletId,
+                uuid: uuid,
+                actorAccountId: actorAccountId,
+                actorMemberId: actorMemberId,
+                action: action,
+                entityType: entityType,
+                entityId: entityId,
+                entityUuid: entityUuid,
+                details: details,
+                metadata: metadata,
+                source: source,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WalletActivitiesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WalletActivitiesTable,
+      WalletActivity,
+      $$WalletActivitiesTableFilterComposer,
+      $$WalletActivitiesTableOrderingComposer,
+      $$WalletActivitiesTableAnnotationComposer,
+      $$WalletActivitiesTableCreateCompanionBuilder,
+      $$WalletActivitiesTableUpdateCompanionBuilder,
+      (
+        WalletActivity,
+        BaseReferences<_$AppDatabase, $WalletActivitiesTable, WalletActivity>,
+      ),
+      WalletActivity,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -23147,6 +24625,8 @@ class $AppDatabaseManager {
         _db,
         _db.unrecognizedSmsEntries,
       );
+  $$WalletActivitiesTableTableManager get walletActivities =>
+      $$WalletActivitiesTableTableManager(_db, _db.walletActivities);
 }
 
 mixin _$GoalDaoMixin on DatabaseAccessor<AppDatabase> {

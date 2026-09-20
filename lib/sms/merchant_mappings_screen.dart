@@ -58,7 +58,7 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
                     IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () async {
-                        await dao.deleteMerchantMapping(mapping.id);
+                        await dao.deleteMerchantMapping(mapping.id, authorizedWalletId: currentWalletId);
                         setState(() {});
                       },
                     ),
@@ -145,6 +145,7 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
                           cleanName: cleanNameController.text,
                           defaultCategoryId: drift.Value(selectedCategoryId),
                         ),
+                        authorizedWalletId: currentWalletId,
                       );
                     } else {
                       await dao.updateMerchantMapping(
@@ -153,6 +154,7 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
                           cleanName: cleanNameController.text,
                           defaultCategoryId: drift.Value(selectedCategoryId),
                         ),
+                        authorizedWalletId: currentWalletId,
                       );
                     }
                     if (context.mounted) Navigator.pop(context);

@@ -97,9 +97,23 @@
 - [x] Reject malformed SMS bodies explicitly
 - [x] Remove unused default helper imports
 - [x] Replace settings divider opacity accessor
+- [x] P0-1 Budget Wallet Isolation (walletId added to schema v7, BudgetDao/Repository isolation, cross-wallet guards, automated test suite)
+- [x] P0-2 TransactionDao Wallet Isolation (TransactionDao/Repository/Provider isolation, cross-wallet update/delete guards, automated test suite)
+- [x] P0-3 deleteWallet() Cleanup Completeness (inventory audit of 26 wallet-owned/child tables, subquery child deletion, exact SQLite table names, atomic Drift transaction, automated test suite)
+- [x] P0-4 Last-Owner Protection (COUNT(owners) >= 1 invariant, LastOwnerException guards in WalletDao, UI error handling, automated test suite)
+- [x] P0-5 Service/Repository RBAC Enforcement (RBAC checks below UI at DAO/repository level, WalletPermissionDeniedException, target wallet scoping, cross-wallet isolation, automated test suite)
+- [x] P0-6 Active-Wallet Validation & Startup Integrity (SQLite existence, active state, active membership validation, CurrentWalletIdNotifier validation & revalidation, elimination of walletId = 1 fallbacks, automated test suite)
+- [x] P1-1 Account Wallet Isolation & RBAC (AccountDao/Repository wallet isolation, WHERE id = ? AND wallet_id = ? predicates, WalletPermissionService.canManageAccounts, cross-wallet guards, automated test suite)
+- [x] P1-2 Goals, Bills & Allowances Wallet Isolation & RBAC (GoalDao/BillDao/AllowanceDao & Repository wallet isolation, atomic SQL predicates, child ownership subqueries, WalletPermissionService rules, automated test suite)
+- [x] P1-3 Sync Service RBAC & Wallet Isolation (SyncService authorization boundary, target wallet & actor membership validation, payload hijack & child entity protection, Drift transaction failure atomicity, automated test suite)
+- [x] P2-1 Recurring Transactions Wallet Isolation & RBAC (recurring transaction wallet ownership, DAO isolation, repository RBAC, account-wallet validation, generated transaction wallet integrity, wallet deletion cleanup, Sync Service recurring-transaction hardening, active-wallet integration, tests)
+- [x] P2-2 Splits & Settlements Wallet Isolation & RBAC (peer_debts wallet FK hardening, schema v8→v9 migration with deterministic backfill, splits/settlements/peer-debts wallet-scoped DAO with RBAC, cross-wallet reference validation, split member parent-owned model, sync deletion protection, dashboard wallet isolation, wallet deletion integrity, 46 new tests)
+- [x] P2-5 Invitation Security & Wallet Isolation Hardening (Cryptographic token generation for wallet invitations, token-gated invitation acceptance, atomic state transitions, strict target account validation, cross-wallet isolation for invitation operations, actor-bound audit logging, 12 new tests)
+- [x] P2-3 Activity Audit Trail Wallet Isolation & RBAC (WalletActivities schema v10, wallet-scoped activity DAO with RBAC, append-only enforcement, actor identity via FKs, cross-wallet isolation, wallet deletion cascade, sync local-only, 12 new tests)
+- [x] P2-3A Audit Event Wiring & Atomicity (audit events wired into Transaction, Account, Budget, Recurring Transaction, Split, Settlement, PeerDebt, Membership, Invitation mutations; atomic transaction + audit; source classification for recurring generation; no sensitive data in audit metadata; 18 new tests)
+- [x] P2-4 SMS Import Wallet Isolation & Security Hardening (SmsParsingDao strict ownership predicates & RBAC; SMS transaction audit source: 'import' with suppressed actor; raw SMS privacy fix in transaction notes, audit, and sync; stable wallet context & pre-validation in SmsImportScreen; 35 new security/privacy/isolation tests)
 
 ## Next milestone
-
 - [x] Finish wallet-aware cleanup on remaining screens and edge cases
 - [x] Harden wallet switching UX
 - [x] Expand wallet-isolation tests for additional reporting paths

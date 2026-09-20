@@ -104,8 +104,8 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
                                               createdAt: DateTime.now(),
                                               updatedAt: DateTime.now(),
                                             );
-                                            await ref.read(addTransactionUseCaseProvider).call(transaction);
-                                            await dao.markSmsResolved(item.id);
+                                            await ref.read(addTransactionUseCaseProvider).call(transaction, source: 'import');
+                                            await dao.markSmsResolved(item.id, authorizedWalletId: currentWalletId);
                                             if (context.mounted) {
                                               Navigator.pop(context);
                                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Transaction saved!')));
@@ -131,7 +131,7 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
                           ),
                           TextButton(
                             onPressed: () async {
-                              await dao.markSmsResolved(item.id);
+                              await dao.markSmsResolved(item.id, authorizedWalletId: currentWalletId);
                             },
                             child: const Text('Mark Resolved'),
                           ),

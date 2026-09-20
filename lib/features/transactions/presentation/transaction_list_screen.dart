@@ -1,7 +1,6 @@
 // BROKEN DEPENDENCY: Experimental
 
 import 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';
-import 'package:expense_tracker/receipt/receipt_scanner_screen.dart' as expense_tracker;
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/domain/entities/category.dart';
@@ -746,37 +745,10 @@ class _TransactionListScreenState
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (ctx) => SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.edit),
-                    title: const Text('Manual Entry'),
-                    onTap: () {
-                      Navigator.pop(ctx);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) => const AddTransactionScreen()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.document_scanner),
-                    title: const Text('Scan Receipt'),
-                    onTap: () {
-                      Navigator.pop(ctx);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) => const expense_tracker.ReceiptScannerScreen()),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
+          // Manual entry is the default add flow. Receipt scanning is offered
+          // as a small link inside the manual entry form itself.
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const AddTransactionScreen()),
           );
         },
         child: const Icon(Icons.add),

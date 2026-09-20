@@ -2,6 +2,7 @@ import 'package:expense_tracker/domain/entities/category.dart';
 
 class Budget {
   final int id;
+  final int walletId;
   final double amount;
   final String period; // e.g., "2024-07"
   final Category category;
@@ -10,6 +11,7 @@ class Budget {
 
   Budget({
     required this.id,
+    this.walletId = 0,
     required this.amount,
     required this.period,
     required this.category,

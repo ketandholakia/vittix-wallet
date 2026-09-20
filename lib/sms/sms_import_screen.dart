@@ -59,8 +59,21 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
       _candidates.clear();
       _duplicateDetections = 0;
       _rejectedImports = 0;
+
+      // Capture wallet context once at the start of the operation.
+      final walletId = ref.read(currentWalletIdProvider);
+
+      final isWalletValid = await ref.read(walletDaoProvider).isWalletValid(walletId);
+      if (!isWalletValid) {
+        setState(() {
+          _loading = false;
+          _error = 'Invalid or unauthorized wallet context.';
+        });
+        return;
+      }
+
       await ref.read(walletDaoProvider).logOnboardingActivity(
-            walletId: ref.read(currentWalletIdProvider),
+            walletId: walletId,
             action: 'sms_setup_started',
           );
       final granted = await AndroidSMSReader.requestPermissions();
@@ -85,8 +98,7 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
       final liveQueue = await _pullCapturedSms();
       final sources = <dynamic>[...liveQueue, ...inbox];
       
-      final currentWalletId = ref.read(currentWalletIdProvider);
-      final mappings = await ref.read(smsParsingDaoProvider).getMerchantMappings(currentWalletId);
+      final mappings = await ref.read(smsParsingDaoProvider).getMerchantMappings(walletId);
       final categories = await ref.read(watchAllCategoriesUseCaseProvider).call().first;
       final categoryById = {for (final c in categories) c.id: c};
 
@@ -128,11 +140,12 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
           try {
             await ref.read(smsParsingDaoProvider).insertUnrecognizedSms(
               UnrecognizedSmsEntriesCompanion.insert(
-                walletId: currentWalletId,
+                walletId: walletId,
                 smsBody: body,
                 sender: sender,
                 receivedAt: date,
               ),
+              authorizedWalletId: walletId,
             );
           } catch (_) {
             // Ignore constraint errors (e.g., if we re-import without resolving)
@@ -144,7 +157,7 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
         _loading = false;
       });
       await ref.read(walletDaoProvider).logOnboardingActivity(
-            walletId: ref.read(currentWalletIdProvider),
+            walletId: walletId,
             action: 'sms_setup_completed',
           );
     } catch (e) {
@@ -169,6 +182,19 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
   }
 
   Future<void> _saveSelected() async {
+    // Capture wallet context once for the entire save operation.
+    final walletId = ref.read(currentWalletIdProvider);
+
+    final isWalletValid = await ref.read(walletDaoProvider).isWalletValid(walletId);
+    if (!isWalletValid) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cannot save: Invalid or unauthorized wallet context.')),
+        );
+      }
+      return;
+    }
+
     final categories = await ref.read(watchAllCategoriesUseCaseProvider).call().first;
     final accounts = await ref.read(watchAllAccountsUseCaseProvider).call().first;
     final prefs = await SharedPreferences.getInstance();
@@ -195,11 +221,12 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
         );
         await ref.read(addRecurringUseCaseProvider).call(recurringTransaction);
       } else {
+        // Privacy: only include the merchant name, NOT the raw SMS body.
         final transaction = domain.Transaction(
           id: 0,
           amount: candidate.amount,
           date: candidate.date,
-          note: '[SMS] ${candidate.merchant} - ${candidate.body}',
+          note: '[SMS] ${candidate.merchant}',
           type: candidate.type,
           category: category,
           account: _guessAccount(candidate, accounts),
@@ -207,20 +234,22 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
           updatedAt: DateTime.now(),
         );
 
-        await ref.read(addTransactionUseCaseProvider).call(transaction);
+        // Audit: source = 'import' (not 'user') for SMS-imported transactions.
+        // The 'import' source suppresses actor attribution per P2-3A convention.
+        await ref.read(addTransactionUseCaseProvider).call(transaction, source: 'import');
       }
       importedHashes.add(candidate.smsHash);
     }
 
     await prefs.setStringList('sms_imported_hashes', importedHashes);
     await ref.read(smsImportMetricsDaoProvider).record(
-          walletId: ref.read(currentWalletIdProvider),
+          walletId: walletId,
           acceptedImports: _candidates.where((c) => c.isSelected).length,
           rejectedImports: _rejectedImports,
           duplicateDetections: _duplicateDetections,
         );
     await ref.read(walletDaoProvider).logOnboardingActivity(
-          walletId: ref.read(currentWalletIdProvider),
+          walletId: walletId,
           action: 'sms_import_completed',
         );
     if (mounted) {

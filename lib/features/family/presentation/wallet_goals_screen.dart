@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/database/app_database.dart' as db;
 import 'package:expense_tracker/core/providers/dashboard_providers.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
+import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/features/family/domain/family_finance_models.dart';
 import 'package:expense_tracker/features/family/domain/wallet_permissions.dart';
@@ -71,10 +72,9 @@ class WalletGoalsScreen extends ConsumerWidget {
             onPressed: () async {
               final value = double.tryParse(amount.text) ?? 0;
               if (value > 0) {
-                await ref.read(goalDaoProvider).addContribution(
+                await ref.read(goalRepositoryProvider).addContribution(
                       db.WalletGoalContributionsCompanion.insert(walletId: walletId, goalId: goal.id, amount: value),
                     );
-                await ref.read(goalDaoProvider).logGoalActivity(walletId: walletId, action: 'goal_contribution', goalId: goal.id);
               }
               if (context.mounted) m.Navigator.pop(context);
             },
@@ -103,7 +103,7 @@ class WalletGoalsScreen extends ConsumerWidget {
           m.TextButton(onPressed: () => m.Navigator.pop(context), child: const m.Text('Cancel')),
           m.FilledButton(
             onPressed: () async {
-              await ref.read(goalDaoProvider).updateGoal(
+              await ref.read(goalRepositoryProvider).updateGoal(
                     db.WalletGoalsCompanion(
                       id: db.Value(goal.id),
                       walletId: db.Value(walletId),
@@ -113,7 +113,6 @@ class WalletGoalsScreen extends ConsumerWidget {
                       targetDate: db.Value(goal.targetDate),
                     ),
                   );
-              await ref.read(goalDaoProvider).logGoalActivity(walletId: walletId, action: 'goal_updated', goalId: goal.id);
               if (context.mounted) m.Navigator.pop(context);
             },
             child: const m.Text('Save'),
@@ -124,10 +123,10 @@ class WalletGoalsScreen extends ConsumerWidget {
   }
 
   Future<void> _archive(WidgetRef ref, int id) async {
-    await ref.read(goalDaoProvider).deleteGoal(id);
+    await ref.read(goalRepositoryProvider).deleteGoal(id);
   }
 
   Future<void> _delete(WidgetRef ref, int id) async {
-    await ref.read(goalDaoProvider).deleteGoal(id);
+    await ref.read(goalRepositoryProvider).deleteGoal(id);
   }
 }

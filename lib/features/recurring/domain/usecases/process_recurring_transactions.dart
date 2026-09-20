@@ -38,7 +38,7 @@ class ProcessRecurringTransactions {
           updatedAt: DateTime.now(),
         );
 
-        await addTransactionUseCase.call(transaction);
+        await addTransactionUseCase.call(transaction, source: 'recurring');
 
         // Advance to next occurrence
         final lastGen = currentDueDate;
@@ -47,6 +47,7 @@ class ProcessRecurringTransactions {
         // Update the template state locally
         final updatedTemplate = RecurringTransaction(
           id: template.id,
+          walletId: template.walletId,
           name: template.name,
           amount: template.amount,
           type: template.type,

@@ -7,6 +7,7 @@ extension BudgetWithCategoryMapper on db.BudgetWithCategory {
   domain.Budget toDomain() {
     return domain.Budget(
       id: budget.id,
+      walletId: budget.walletId,
       amount: budget.amount,
       period: budget.period,
       category: category.toDomain(),
@@ -17,9 +18,10 @@ extension BudgetWithCategoryMapper on db.BudgetWithCategory {
 }
 
 extension BudgetDomainMapper on domain.Budget {
-  db.BudgetsCompanion toCompanion() {
+  db.BudgetsCompanion toCompanion([int? overrideWalletId]) {
     return db.BudgetsCompanion(
-      id: Value(id),
+      id: id > 0 ? Value(id) : const Value.absent(),
+      walletId: Value(overrideWalletId ?? walletId),
       amount: Value(amount),
       period: Value(period),
       categoryId: Value(category.id),

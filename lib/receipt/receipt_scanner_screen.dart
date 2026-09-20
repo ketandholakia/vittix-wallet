@@ -10,7 +10,13 @@ import 'package:expense_tracker/features/transactions/presentation/add_transacti
 import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
 
 class ReceiptScannerScreen extends ConsumerStatefulWidget {
-  const ReceiptScannerScreen({super.key});
+  /// When true, the parsed candidate is returned to the caller via
+  /// [Navigator.pop] instead of pushing a new AddTransactionScreen.
+  /// Used by the manual entry form's "Scan Receipt" link so the scan can
+  /// prefill the form the user is already on.
+  final bool returnResult;
+
+  const ReceiptScannerScreen({super.key, this.returnResult = false});
 
   @override
   ConsumerState<ReceiptScannerScreen> createState() => _ReceiptScannerScreenState();
@@ -59,17 +65,22 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
         _isProcessing = false;
       });
 
-      // Navigate to AddTransactionScreen with the parsed data
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AddTransactionScreen(
-            initialAmount: candidate.amount,
-            initialMerchant: candidate.merchant,
-            initialType: candidate.type,
+      if (widget.returnResult) {
+        // Hand the parsed data back to the caller (e.g. the manual entry form).
+        Navigator.pop(context, candidate);
+      } else {
+        // Navigate to AddTransactionScreen with the parsed data
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddTransactionScreen(
+              initialAmount: candidate.amount,
+              initialMerchant: candidate.merchant,
+              initialType: candidate.type,
+            ),
           ),
-        ),
-      );
+        );
+      }
 
     } catch (e) {
       if (!mounted) return;

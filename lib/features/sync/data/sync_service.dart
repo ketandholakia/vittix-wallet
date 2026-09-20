@@ -43,6 +43,24 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
   SyncNotifier(this.ref, this.db) : super(SyncState(status: SyncStatus.idle));
 
+  Future<void> _validateSyncAuthorization(int walletId, {int? actorAccountId}) async {
+    final isValid = await db.walletDao.isWalletValid(walletId, actorAccountId: actorAccountId);
+    if (!isValid) {
+      throw WalletPermissionDeniedException(
+        'Cannot sync wallet: Wallet $walletId does not exist or user lacks active membership.',
+      );
+    }
+
+    if (actorAccountId != null) {
+      await db.walletDao.checkPermission(
+        walletId: walletId,
+        permissionCheck: (s, r) => s.canSynchronizeWallet(r),
+        actorAccountId: actorAccountId,
+        actionName: 'synchronize data',
+      );
+    }
+  }
+
   Future<String> _deviceId() async {
     final prefs = await SharedPreferences.getInstance();
     final existing = prefs.getString(_syncDeviceIdKey);
@@ -103,9 +121,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
     return value;
   }
 
-  Future<void> _upsertWalletMember(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletMember(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletMember.fromJson(data);
+    if (item.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet member sync payload rejected (${item.walletId} != $targetWalletId)',
+      );
+    }
     final existing = await (db.select(db.walletMembers)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing != null && existing.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException('Cross-wallet member mutation rejected for member ${item.id}');
+    }
     if (existing == null) {
       await db.into(db.walletMembers).insert(item.toCompanion(false));
     } else {
@@ -113,9 +139,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletInvitation(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletInvitation(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletInvitation.fromJson(data);
+    if (item.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet invitation sync payload rejected (${item.walletId} != $targetWalletId)',
+      );
+    }
     final existing = await (db.select(db.walletInvitations)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing != null && existing.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException('Cross-wallet invitation mutation rejected for invitation ${item.id}');
+    }
     if (existing == null) {
       await db.into(db.walletInvitations).insert(item.toCompanion(false));
     } else {
@@ -123,19 +157,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  /* Future<void> _upsertWalletActivity(Map<String, dynamic> data) async {
-    final item = WalletActivity.fromJson(data);
-    final existing = await (db.select(db.walletActivities)..where((m) => m.id.equals(item.id))).getSingleOrNull();
-    if (existing == null) {
-      await db.into(db.walletActivities).insert(item.toCompanion(false));
-    } else {
-      await db.update(db.walletActivities).replace(item.toCompanion(false));
-    }
-  } */
-
-  Future<void> _upsertWalletNotification(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletNotification(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletNotification.fromJson(data);
+    if (item.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet notification sync payload rejected (${item.walletId} != $targetWalletId)',
+      );
+    }
     final existing = await (db.select(db.walletNotifications)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing != null && existing.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException('Cross-wallet notification mutation rejected for notification ${item.id}');
+    }
     if (existing == null) {
       await db.into(db.walletNotifications).insert(item.toCompanion(false));
     } else {
@@ -143,9 +175,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletNotificationPreference(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletNotificationPreference(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletNotificationPreference.fromJson(data);
+    if (item.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet notification preference sync payload rejected (${item.walletId} != $targetWalletId)',
+      );
+    }
     final existing = await (db.select(db.walletNotificationPreferences)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing != null && existing.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException('Cross-wallet notification preference mutation rejected for pref ${item.id}');
+    }
     if (existing == null) {
       await db.into(db.walletNotificationPreferences).insert(item.toCompanion(false));
     } else {
@@ -153,9 +193,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletGoal(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletGoal(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletGoal.fromJson(data);
+    if (item.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet goal sync payload rejected (${item.walletId} != $targetWalletId)',
+      );
+    }
     final existing = await (db.select(db.walletGoals)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing != null && existing.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException('Cross-wallet goal mutation rejected for goal ${item.id}');
+    }
     if (existing == null) {
       await db.into(db.walletGoals).insert(item.toCompanion(false));
     } else {
@@ -163,8 +211,14 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletGoalContribution(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletGoalContribution(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletGoalContribution.fromJson(data);
+    final parentGoal = await (db.select(db.walletGoals)..where((g) => g.id.equals(item.goalId))).getSingleOrNull();
+    if (parentGoal == null || parentGoal.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet goal contribution parent rejected for goal ${item.goalId}',
+      );
+    }
     final existing = await (db.select(db.walletGoalContributions)..where((m) => m.id.equals(item.id))).getSingleOrNull();
     if (existing == null) {
       await db.into(db.walletGoalContributions).insert(item.toCompanion(false));
@@ -173,9 +227,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletAllowance(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletAllowance(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletAllowance.fromJson(data);
+    if (item.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet allowance sync payload rejected (${item.walletId} != $targetWalletId)',
+      );
+    }
     final existing = await (db.select(db.walletAllowances)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing != null && existing.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException('Cross-wallet allowance mutation rejected for allowance ${item.id}');
+    }
     if (existing == null) {
       await db.into(db.walletAllowances).insert(item.toCompanion(false));
     } else {
@@ -183,8 +245,14 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletAllowancePayment(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletAllowancePayment(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletAllowancePayment.fromJson(data);
+    final parentAllowance = await (db.select(db.walletAllowances)..where((a) => a.id.equals(item.allowanceId))).getSingleOrNull();
+    if (parentAllowance == null || parentAllowance.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet allowance payment parent rejected for allowance ${item.allowanceId}',
+      );
+    }
     final existing = await (db.select(db.walletAllowancePayments)..where((m) => m.id.equals(item.id))).getSingleOrNull();
     if (existing == null) {
       await db.into(db.walletAllowancePayments).insert(item.toCompanion(false));
@@ -193,8 +261,14 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletGoalSchedule(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletGoalSchedule(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletGoalSchedule.fromJson(data);
+    final parentGoal = await (db.select(db.walletGoals)..where((g) => g.id.equals(item.walletGoalId))).getSingleOrNull();
+    if (parentGoal == null || parentGoal.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet goal schedule parent rejected for goal ${item.walletGoalId}',
+      );
+    }
     final existing = await (db.select(db.walletGoalSchedules)..where((m) => m.id.equals(item.id))).getSingleOrNull();
     if (existing == null) {
       await db.into(db.walletGoalSchedules).insert(item.toCompanion(false));
@@ -203,9 +277,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletBill(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletBill(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletBill.fromJson(data);
+    if (item.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet bill sync payload rejected (${item.walletId} != $targetWalletId)',
+      );
+    }
     final existing = await (db.select(db.walletBills)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing != null && existing.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException('Cross-wallet bill mutation rejected for bill ${item.id}');
+    }
     if (existing == null) {
       await db.into(db.walletBills).insert(item.toCompanion(false));
     } else {
@@ -213,9 +295,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletExpenseSplit(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletExpenseSplit(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletExpenseSplit.fromJson(data);
+    if (item.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet split sync payload rejected (${item.walletId} != $targetWalletId)',
+      );
+    }
     final existing = await (db.select(db.walletExpenseSplits)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing != null && existing.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException('Cross-wallet split mutation rejected for split ${item.id}');
+    }
     if (existing == null) {
       await db.into(db.walletExpenseSplits).insert(item.toCompanion(false));
     } else {
@@ -223,9 +313,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWalletSettlement(Map<String, dynamic> data) async {
+  Future<void> _upsertWalletSettlement(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletSettlement.fromJson(data);
+    if (item.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet settlement sync payload rejected (${item.walletId} != $targetWalletId)',
+      );
+    }
     final existing = await (db.select(db.walletSettlements)..where((m) => m.id.equals(item.id))).getSingleOrNull();
+    if (existing != null && existing.walletId != targetWalletId) {
+      throw WalletPermissionDeniedException('Cross-wallet settlement mutation rejected for settlement ${item.id}');
+    }
     if (existing == null) {
       await db.into(db.walletSettlements).insert(item.toCompanion(false));
     } else {
@@ -233,8 +331,13 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
-  Future<void> _upsertWallet(Map<String, dynamic> data) async {
+  Future<void> _upsertWallet(Map<String, dynamic> data, int targetWalletId) async {
     final walletId = data['id'] as int;
+    if (walletId != targetWalletId) {
+      throw WalletPermissionDeniedException(
+        'Cross-wallet sync payload wallet mismatch ($walletId != $targetWalletId)',
+      );
+    }
     final existing = await db.customSelect(
       'SELECT id FROM wallets WHERE id = ?',
       variables: [Variable<int>(walletId)],
@@ -279,185 +382,190 @@ class SyncNotifier extends StateNotifier<SyncState> {
     };
   }
 
-  Future<Map<String, dynamic>> _buildSyncPayload(int walletId, DateTime cutoff, String deviceId) async {
-      // Query local changes in parallel.
-      final localAccountsFuture = (db.select(db.accounts)
-            ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
-          .get();
-      final localCategoriesFuture = (db.select(db.categories)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
-      final localTransactionsFuture = (db.select(db.transactions)
-            ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
-          .get();
-      final localBudgetsFuture = (db.select(db.budgets)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
-      final localRecurringFuture = (db.select(db.recurringTransactions)
-            ..where((t) => t.updatedAt.isBiggerThanValue(cutoff)))
-          .get();
-      final localLoansFuture = (db.select(db.loans)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
-      final localPeerDebtsFuture = (db.select(db.peerDebts)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
-      final localWalletFuture = _readWalletForSync(walletId);
-      final localMembersFuture = (db.select(db.walletMembers)..where((t) => t.walletId.equals(walletId))).get();
-      final localInvitationsFuture = (db.select(db.walletInvitations)..where((t) => t.walletId.equals(walletId))).get();
-      final localActivitiesFuture = Future.value(<dynamic>[]); // No walletActivities table
-      final localNotificationsFuture = (db.select(db.walletNotifications)..where((t) => t.walletId.equals(walletId))).get();
-      final localNotificationPreferencesFuture = (db.select(db.walletNotificationPreferences)..where((t) => t.walletId.equals(walletId))).get();
-      final localGoalsFuture = (db.select(db.walletGoals)..where((t) => t.walletId.equals(walletId))).get();
-      final localGoalContributionsFuture = (db.select(db.walletGoalContributions)..where((t) => t.walletId.equals(walletId))).get();
-      final localAllowancesFuture = (db.select(db.walletAllowances)..where((t) => t.walletId.equals(walletId))).get();
-      final localAllowancePaymentsFuture = (db.select(db.walletAllowancePayments).join([
-        innerJoin(db.walletAllowances, db.walletAllowances.id.equalsExp(db.walletAllowancePayments.allowanceId)),
-      ])..where(db.walletAllowances.walletId.equals(walletId)))
-          .get();
-      final localGoalSchedulesFuture = (db.select(db.walletGoalSchedules).join([
-        innerJoin(db.walletGoals, db.walletGoals.id.equalsExp(db.walletGoalSchedules.walletGoalId)),
-      ])..where(db.walletGoals.walletId.equals(walletId)))
-          .get();
-      final localBillsFuture = (db.select(db.walletBills)..where((t) => t.walletId.equals(walletId))).get();
-      final localSplitsFuture = (db.select(db.walletExpenseSplits)..where((t) => t.walletId.equals(walletId))).get();
-      final localSettlementsFuture = (db.select(db.walletSettlements)..where((t) => t.walletId.equals(walletId))).get();
-      final localDeletionsFuture = db.select(db.deletedRecords).get();
+  Future<Map<String, dynamic>> _buildSyncPayload(int walletId, DateTime cutoff, String deviceId, {int? actorAccountId}) async {
+    await _validateSyncAuthorization(walletId, actorAccountId: actorAccountId);
 
-      final localAccounts = await localAccountsFuture;
-      final localCategories = await localCategoriesFuture;
-      final localTransactions = await localTransactionsFuture;
-      final localBudgets = await localBudgetsFuture;
-      final localRecurring = await localRecurringFuture;
-      final localLoans = await localLoansFuture;
-      final localPeerDebts = await localPeerDebtsFuture;
-      final localWallet = await localWalletFuture;
-      final localMembers = await localMembersFuture;
-      final localInvitations = await localInvitationsFuture;
-      final localActivities = await localActivitiesFuture;
-      final localNotifications = await localNotificationsFuture;
-      final localNotificationPreferences = await localNotificationPreferencesFuture;
-      final localGoals = await localGoalsFuture;
-      final localGoalContributions = await localGoalContributionsFuture;
-      final localAllowances = await localAllowancesFuture;
-      final localAllowancePayments = await localAllowancePaymentsFuture;
-      final localGoalSchedules = await localGoalSchedulesFuture;
-      final localBills = await localBillsFuture;
-      final localSplits = await localSplitsFuture;
-      final localSettlements = await localSettlementsFuture;
-      final localDeletionsList = await localDeletionsFuture;
+    // Query local changes in parallel.
+    final localAccountsFuture = (db.select(db.accounts)
+          ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
+        .get();
+    final localCategoriesFuture = (db.select(db.categories)..where((t) => t.updatedAt.isBiggerThanValue(cutoff))).get();
+    final localTransactionsFuture = (db.select(db.transactions)
+          ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
+        .get();
+    final localBudgetsFuture = (db.select(db.budgets)
+          ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
+        .get();
+    final localRecurringFuture = (db.select(db.recurringTransactions)
+          ..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff)))
+        .get();
+    final localLoansFuture = (db.select(db.loans)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
+    final localPeerDebtsFuture = (db.select(db.peerDebts)..where((t) => t.walletId.equals(walletId) & t.updatedAt.isBiggerThanValue(cutoff))).get();
+    final localWalletFuture = _readWalletForSync(walletId);
+    final localMembersFuture = (db.select(db.walletMembers)..where((t) => t.walletId.equals(walletId))).get();
+    final localInvitationsFuture = (db.select(db.walletInvitations)..where((t) => t.walletId.equals(walletId))).get();
+    final localActivitiesFuture = (db.select(db.walletActivities)..where((t) => t.walletId.equals(walletId))).get();
+    final localNotificationsFuture = (db.select(db.walletNotifications)..where((t) => t.walletId.equals(walletId))).get();
+    final localNotificationPreferencesFuture = (db.select(db.walletNotificationPreferences)..where((t) => t.walletId.equals(walletId))).get();
+    final localGoalsFuture = (db.select(db.walletGoals)..where((t) => t.walletId.equals(walletId))).get();
+    final localGoalContributionsFuture = (db.select(db.walletGoalContributions)..where((t) => t.walletId.equals(walletId))).get();
+    final localAllowancesFuture = (db.select(db.walletAllowances)..where((t) => t.walletId.equals(walletId))).get();
+    final localAllowancePaymentsFuture = (db.select(db.walletAllowancePayments).join([
+      innerJoin(db.walletAllowances, db.walletAllowances.id.equalsExp(db.walletAllowancePayments.allowanceId)),
+    ])..where(db.walletAllowances.walletId.equals(walletId)))
+        .get();
+    final localGoalSchedulesFuture = (db.select(db.walletGoalSchedules).join([
+      innerJoin(db.walletGoals, db.walletGoals.id.equalsExp(db.walletGoalSchedules.walletGoalId)),
+    ])..where(db.walletGoals.walletId.equals(walletId)))
+        .get();
+    final localBillsFuture = (db.select(db.walletBills)..where((t) => t.walletId.equals(walletId))).get();
+    final localSplitsFuture = (db.select(db.walletExpenseSplits)..where((t) => t.walletId.equals(walletId))).get();
+    final localSettlementsFuture = (db.select(db.walletSettlements)..where((t) => t.walletId.equals(walletId))).get();
+    final localDeletionsFuture = db.select(db.deletedRecords).get();
 
-      // 2. Build mapping maps
-      final allAccountsFuture = (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
-      final allCategoriesFuture = db.select(db.categories).get();
-      final allTransactionsFuture = (db.select(db.transactions)..where((t) => t.walletId.equals(walletId))).get();
-      final allAccounts = await allAccountsFuture;
-      final allCategories = await allCategoriesFuture;
-      final allTransactions = await allTransactionsFuture;
-      final accountIdToUuid = { for (final a in allAccounts) a.id: a.uuid };
-      final categoryIdToUuid = { for (final c in allCategories) c.id: c.uuid };
-      final transactionIdToUuid = { for (final t in allTransactions) t.id: t.uuid };
+    final localAccounts = await localAccountsFuture;
+    final localCategories = await localCategoriesFuture;
+    final localTransactions = await localTransactionsFuture;
+    final localBudgets = await localBudgetsFuture;
+    final localRecurring = await localRecurringFuture;
+    final localLoans = await localLoansFuture;
+    final localPeerDebts = await localPeerDebtsFuture;
+    final localWallet = await localWalletFuture;
+    final localMembers = await localMembersFuture;
+    final localInvitations = await localInvitationsFuture;
+    final localActivities = await localActivitiesFuture;
+    final localNotifications = await localNotificationsFuture;
+    final localNotificationPreferences = await localNotificationPreferencesFuture;
+    final localGoals = await localGoalsFuture;
+    final localGoalContributions = await localGoalContributionsFuture;
+    final localAllowances = await localAllowancesFuture;
+    final localAllowancePayments = await localAllowancePaymentsFuture;
+    final localGoalSchedules = await localGoalSchedulesFuture;
+    final localBills = await localBillsFuture;
+    final localSplits = await localSplitsFuture;
+    final localSettlements = await localSettlementsFuture;
+    final localDeletionsList = await localDeletionsFuture;
 
-      // 3. Serialize local changes
-      final accountsJson = localAccounts.map((a) => a.toJson()).toList();
-      
-      final categoriesJson = localCategories.map((c) {
-        final map = c.toJson();
-        if (c.parentId != null) {
-          map['parentUuid'] = categoryIdToUuid[c.parentId];
-        } else {
-          map['parentUuid'] = null;
-        }
-        return map;
-      }).toList();
+    // 2. Build mapping maps
+    final allAccountsFuture = (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
+    final allCategoriesFuture = db.select(db.categories).get();
+    final allTransactionsFuture = (db.select(db.transactions)..where((t) => t.walletId.equals(walletId))).get();
+    final allAccounts = await allAccountsFuture;
+    final allCategories = await allCategoriesFuture;
+    final allTransactions = await allTransactionsFuture;
+    final accountIdToUuid = { for (final a in allAccounts) a.id: a.uuid };
+    final categoryIdToUuid = { for (final c in allCategories) c.id: c.uuid };
+    final transactionIdToUuid = { for (final t in allTransactions) t.id: t.uuid };
 
-      final transactionsJson = localTransactions.map((t) {
-        final map = t.toJson();
-        map['categoryUuid'] = categoryIdToUuid[t.categoryId];
-        map['accountUuid'] = accountIdToUuid[t.accountId];
-        return map;
-      }).toList();
+    // 3. Serialize local changes
+    final accountsJson = localAccounts.map((a) => a.toJson()).toList();
 
-      final budgetsJson = localBudgets.map((b) {
-        final map = b.toJson();
-        map['categoryUuid'] = categoryIdToUuid[b.categoryId];
-        return map;
-      }).toList();
+    final categoriesJson = localCategories.map((c) {
+      final map = c.toJson();
+      if (c.parentId != null) {
+        map['parentUuid'] = categoryIdToUuid[c.parentId];
+      } else {
+        map['parentUuid'] = null;
+      }
+      return map;
+    }).toList();
 
-      final recurringJson = localRecurring.map((r) {
-        final map = r.toJson();
-        map['categoryUuid'] = categoryIdToUuid[r.categoryId];
-        map['accountUuid'] = accountIdToUuid[r.accountId];
-        return map;
-      }).toList();
+    final transactionsJson = localTransactions.map((t) {
+      final map = t.toJson();
+      map['categoryUuid'] = categoryIdToUuid[t.categoryId];
+      map['accountUuid'] = accountIdToUuid[t.accountId];
+      return map;
+    }).toList();
 
-      final loansJson = localLoans.map((l) {
-        final map = l.toJson();
-        map['accountUuid'] = accountIdToUuid[l.accountId];
-        map['walletId'] = walletId;
-        return map;
-      }).toList();
+    final budgetsJson = localBudgets.map((b) {
+      final map = b.toJson();
+      map['categoryUuid'] = categoryIdToUuid[b.categoryId];
+      return map;
+    }).toList();
 
-      final peerDebtsJson = localPeerDebts.map((pd) {
-        final map = pd.toJson();
-        if (pd.transactionId != null) {
-          map['transactionUuid'] = transactionIdToUuid[pd.transactionId];
-        } else {
-          map['transactionUuid'] = null;
-        }
-        map['walletId'] = walletId;
-        return map;
-      }).toList();
+    final recurringJson = localRecurring.map((r) {
+      final map = r.toJson();
+      map['categoryUuid'] = categoryIdToUuid[r.categoryId];
+      map['accountUuid'] = accountIdToUuid[r.accountId];
+      map['walletId'] = walletId;
+      return map;
+    }).toList();
 
-      final walletsJson = localWallet == null ? <dynamic>[] : [localWallet];
-      final walletMembersJson = localMembers.map((m) => m.toJson()).toList();
-      final walletInvitationsJson = localInvitations.map((i) => i.toJson()).toList();
-      final walletActivitiesJson = localActivities.map((a) => a.toJson()).toList();
-      final walletNotificationsJson = localNotifications.map((n) => n.toJson()).toList();
-      final walletNotificationPreferencesJson = localNotificationPreferences.map((p) => p.toJson()).toList();
-      final walletGoalsJson = localGoals.map((g) => g.toJson()).toList();
-      final walletGoalContributionsJson = localGoalContributions.map((c) => c.toJson()).toList();
-      final walletAllowancesJson = localAllowances.map((a) => a.toJson()).toList();
-      final walletAllowancePaymentsJson = localAllowancePayments.map((row) => row.readTable(db.walletAllowancePayments).toJson()).toList();
-      final walletGoalSchedulesJson = localGoalSchedules.map((row) => row.readTable(db.walletGoalSchedules).toJson()).toList();
-      final walletBillsJson = localBills.map((b) => b.toJson()).toList();
-      final walletSplitsJson = localSplits.map((s) => s.toJson()).toList();
-      final walletSettlementsJson = localSettlements.map((s) => s.toJson()).toList();
+    final loansJson = localLoans.map((l) {
+      final map = l.toJson();
+      map['accountUuid'] = accountIdToUuid[l.accountId];
+      map['walletId'] = walletId;
+      return map;
+    }).toList();
 
-      final deletionsJson = localDeletionsList.map((d) => {
-        'uuid': d.uuid,
-        'tableName': d.deletedTable,
-        'deletedAt': d.deletedAt.millisecondsSinceEpoch,
-      }).toList();
+    final peerDebtsJson = localPeerDebts.map((pd) {
+      final map = pd.toJson();
+      if (pd.transactionId != null) {
+        map['transactionUuid'] = transactionIdToUuid[pd.transactionId];
+      } else {
+        map['transactionUuid'] = null;
+      }
+      map['walletId'] = walletId;
+      return map;
+    }).toList();
 
-      // Complete sync payload
-      final payload = {
-        'syncApiVersion': syncApiVersion,
-        'lastSyncTime': cutoff.millisecondsSinceEpoch,
-        'deviceId': deviceId,
-        'changes': {
-          'accounts': accountsJson,
-          'categories': categoriesJson,
-          'transactions': transactionsJson,
-          'budgets': budgetsJson,
-          'recurring_transactions': recurringJson,
-          'loans': loansJson,
-          'peer_debts': peerDebtsJson,
-          'wallets': walletsJson,
-          'wallet_members': walletMembersJson,
-          'wallet_invitations': walletInvitationsJson,
-          'wallet_activities': walletActivitiesJson,
-          'wallet_notifications': walletNotificationsJson,
-          'wallet_notification_preferences': walletNotificationPreferencesJson,
-          'wallet_goals': walletGoalsJson,
-          'wallet_goal_contributions': walletGoalContributionsJson,
-          'wallet_allowances': walletAllowancesJson,
-          'wallet_allowance_payments': walletAllowancePaymentsJson,
-          'wallet_goal_schedules': walletGoalSchedulesJson,
-          'wallet_bills': walletBillsJson,
-          'wallet_expense_splits': walletSplitsJson,
-          'wallet_settlements': walletSettlementsJson,
-        },
-        'deletions': deletionsJson,
-        'walletId': walletId,
-      };
+    final walletsJson = localWallet == null ? <dynamic>[] : [localWallet];
+    final walletMembersJson = localMembers.map((m) => m.toJson()).toList();
+    final walletInvitationsJson = localInvitations.map((i) => i.toJson()).toList();
+    final walletActivitiesJson = localActivities.map((a) => a.toJson()).toList();
+    final walletNotificationsJson = localNotifications.map((n) => n.toJson()).toList();
+    final walletNotificationPreferencesJson = localNotificationPreferences.map((p) => p.toJson()).toList();
+    final walletGoalsJson = localGoals.map((g) => g.toJson()).toList();
+    final walletGoalContributionsJson = localGoalContributions.map((c) => c.toJson()).toList();
+    final walletAllowancesJson = localAllowances.map((a) => a.toJson()).toList();
+    final walletAllowancePaymentsJson = localAllowancePayments.map((row) => row.readTable(db.walletAllowancePayments).toJson()).toList();
+    final walletGoalSchedulesJson = localGoalSchedules.map((row) => row.readTable(db.walletGoalSchedules).toJson()).toList();
+    final walletBillsJson = localBills.map((b) => b.toJson()).toList();
+    final walletSplitsJson = localSplits.map((s) => s.toJson()).toList();
+    final walletSettlementsJson = localSettlements.map((s) => s.toJson()).toList();
 
-      return payload;
+    final deletionsJson = localDeletionsList.map((d) => {
+      'uuid': d.uuid,
+      'tableName': d.deletedTable,
+      'deletedAt': d.deletedAt.millisecondsSinceEpoch,
+    }).toList();
+
+    // Complete sync payload
+    final payload = {
+      'syncApiVersion': syncApiVersion,
+      'lastSyncTime': cutoff.millisecondsSinceEpoch,
+      'deviceId': deviceId,
+      'changes': {
+        'accounts': accountsJson,
+        'categories': categoriesJson,
+        'transactions': transactionsJson,
+        'budgets': budgetsJson,
+        'recurring_transactions': recurringJson,
+        'loans': loansJson,
+        'peer_debts': peerDebtsJson,
+        'wallets': walletsJson,
+        'wallet_members': walletMembersJson,
+        'wallet_invitations': walletInvitationsJson,
+        'wallet_activities': walletActivitiesJson,
+        'wallet_notifications': walletNotificationsJson,
+        'wallet_notification_preferences': walletNotificationPreferencesJson,
+        'wallet_goals': walletGoalsJson,
+        'wallet_goal_contributions': walletGoalContributionsJson,
+        'wallet_allowances': walletAllowancesJson,
+        'wallet_allowance_payments': walletAllowancePaymentsJson,
+        'wallet_goal_schedules': walletGoalSchedulesJson,
+        'wallet_bills': walletBillsJson,
+        'wallet_expense_splits': walletSplitsJson,
+        'wallet_settlements': walletSettlementsJson,
+      },
+      'deletions': deletionsJson,
+      'walletId': walletId,
+    };
+
+    return payload;
   }
 
-  Future<void> performSync() async {
+  Future<void> performSync({int? targetWalletId, int? actorAccountId}) async {
     state = SyncState(status: SyncStatus.syncing);
     try {
       final isSimulated = ref.read(isSimulatedSyncProvider);
@@ -468,7 +576,10 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
       final token = ref.read(syncTokenProvider);
       final lastSyncDateTime = ref.read(lastSyncTimeProvider);
-      final walletId = ref.read(currentWalletIdProvider);
+      final int walletId = targetWalletId ?? ref.read(currentWalletIdProvider);
+
+      await _validateSyncAuthorization(walletId, actorAccountId: actorAccountId);
+
       final deviceId = await _deviceId();
 
       if (!isSimulated && syncUrl.isEmpty) {
@@ -478,7 +589,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
       // 1. Change detection
       final cutoff = (isNextcloud || lastSyncDateTime == null) ? DateTime.fromMillisecondsSinceEpoch(0) : lastSyncDateTime;
 
-      final payload = await _buildSyncPayload(walletId, cutoff, deviceId);
+      final payload = await _buildSyncPayload(walletId, cutoff, deviceId, actorAccountId: actorAccountId);
 
       Map<String, dynamic> responseData;
       if (isSimulated) {
@@ -501,8 +612,17 @@ class SyncNotifier extends StateNotifier<SyncState> {
         responseData = jsonDecode(response.body) as Map<String, dynamic>;
       }
 
+      if (responseData.containsKey('walletId') && responseData['walletId'] != null) {
+        final payloadWalletId = (responseData['walletId'] as num).toInt();
+        if (payloadWalletId != walletId) {
+          throw WalletPermissionDeniedException('Remote sync payload walletId mismatch ($payloadWalletId != $walletId).');
+        }
+      }
+
       // 4. Apply incoming remote changes & deletions inside a local database transaction
       await db.transaction(() async {
+        await _validateSyncAuthorization(walletId, actorAccountId: actorAccountId);
+
         // Get maps again to reflect local database updates during transaction
         var currentAccounts = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
         var currentCategories = await db.select(db.categories).get();
@@ -567,12 +687,18 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
+          if (remoteWalletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet account payload rejected ($remoteWalletId != $walletId)');
+          }
 
           // Find local account
           final existing = await (db.select(db.accounts)..where((a) => a.uuid.equals(uuid))).getSingleOrNull();
+          if (existing != null && existing.walletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet account mutation rejected for uuid $uuid');
+          }
           if (existing == null) {
             final companion = AccountsCompanion.insert(
-              
+              walletId: Value(remoteWalletId),
               uuid: Value(uuid),
               name: data['name'] as String,
               type: _parseAccountType(data['type']),
@@ -616,6 +742,14 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
+          if (remoteWalletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet transaction payload rejected ($remoteWalletId != $walletId)');
+          }
+
+          final existing = await (db.select(db.transactions)..where((t) => t.uuid.equals(uuid))).getSingleOrNull();
+          if (existing != null && existing.walletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet transaction mutation rejected for uuid $uuid');
+          }
 
           final categoryUuid = data['categoryUuid'] as String?;
           final accountUuid = data['accountUuid'] as String?;
@@ -626,7 +760,6 @@ class SyncNotifier extends StateNotifier<SyncState> {
             continue;
           }
 
-          final existing = await (db.select(db.transactions)..where((t) => t.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = TransactionsCompanion.insert(
               walletId: Value(remoteWalletId),
@@ -672,6 +805,14 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
+          if (remoteWalletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet budget payload rejected ($remoteWalletId != $walletId)');
+          }
+
+          final existing = await (db.select(db.budgets)..where((b) => b.uuid.equals(uuid))).getSingleOrNull();
+          if (existing != null && existing.walletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet budget mutation rejected for uuid $uuid');
+          }
 
           final categoryUuid = data['categoryUuid'] as String?;
           final categoryId = categoryUuidToId[categoryUuid];
@@ -680,10 +821,9 @@ class SyncNotifier extends StateNotifier<SyncState> {
             continue;
           }
 
-          final existing = await (db.select(db.budgets)..where((b) => b.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = BudgetsCompanion.insert(
-              
+              walletId: Value(remoteWalletId),
               uuid: Value(uuid),
               amount: (data['amount'] as num).toDouble(),
               period: data['period'] as String,
@@ -695,7 +835,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = BudgetsCompanion(
                 id: Value(existing.id),
-                
+                walletId: Value(remoteWalletId),
                 uuid: Value(uuid),
                 amount: Value((data['amount'] as num).toDouble()),
                 period: Value(data['period'] as String),
@@ -715,6 +855,11 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final updatedAt = _parseDateTime(data['updatedAt']);
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
 
+          // Reject cross-wallet payloads
+          if (remoteWalletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet recurring transaction payload rejected ($remoteWalletId != $walletId)');
+          }
+
           final categoryUuid = data['categoryUuid'] as String?;
           final accountUuid = data['accountUuid'] as String?;
           final categoryId = categoryUuidToId[categoryUuid];
@@ -725,9 +870,15 @@ class SyncNotifier extends StateNotifier<SyncState> {
           }
 
           final existing = await (db.select(db.recurringTransactions)..where((r) => r.uuid.equals(uuid))).getSingleOrNull();
+
+          // Reject UUID hijacking: existing record belongs to a different wallet
+          if (existing != null && existing.walletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet recurring transaction mutation rejected for uuid $uuid');
+          }
+
           if (existing == null) {
             final companion = RecurringTransactionsCompanion.insert(
-              
+              walletId: Value(remoteWalletId),
               uuid: Value(uuid),
               name: data['name'] as String,
               amount: (data['amount'] as num).toDouble(),
@@ -746,7 +897,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
             if (updatedAt.isAfter(existing.updatedAt)) {
               final companion = RecurringTransactionsCompanion(
                 id: Value(existing.id),
-                
+                walletId: Value(remoteWalletId),
                 uuid: Value(uuid),
                 name: Value(data['name'] as String),
                 amount: Value((data['amount'] as num).toDouble()),
@@ -772,6 +923,14 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
+          if (remoteWalletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet loan payload rejected ($remoteWalletId != $walletId)');
+          }
+
+          final existing = await (db.select(db.loans)..where((l) => l.uuid.equals(uuid))).getSingleOrNull();
+          if (existing != null && existing.walletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet loan mutation rejected for uuid $uuid');
+          }
 
           final accountUuid = data['accountUuid'] as String?;
           final accountId = accountUuidToId[accountUuid];
@@ -780,7 +939,6 @@ class SyncNotifier extends StateNotifier<SyncState> {
             continue;
           }
 
-          final existing = await (db.select(db.loans)..where((l) => l.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = LoansCompanion.insert(
               walletId: Value(remoteWalletId),
@@ -826,14 +984,21 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
+          if (remoteWalletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet peer debt payload rejected ($remoteWalletId != $walletId)');
+          }
+
+          final existing = await (db.select(db.peerDebts)..where((pd) => pd.uuid.equals(uuid))).getSingleOrNull();
+          if (existing != null && existing.walletId != walletId) {
+            throw WalletPermissionDeniedException('Cross-wallet peer debt mutation rejected for uuid $uuid');
+          }
 
           final transactionUuid = data['transactionUuid'] as String?;
           final transactionId = transactionUuidToId[transactionUuid];
 
-          final existing = await (db.select(db.peerDebts)..where((pd) => pd.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
             final companion = PeerDebtsCompanion.insert(
-              walletId: Value(remoteWalletId),
+              walletId: remoteWalletId,
               uuid: Value(uuid),
               personName: data['personName'] as String,
               type: _parsePeerDebtType(data['type']),
@@ -868,92 +1033,139 @@ class SyncNotifier extends StateNotifier<SyncState> {
         final remoteMembersList = remoteChanges['wallet_members'] as List<dynamic>? ?? [];
         final remoteWalletsList = remoteChanges['wallets'] as List<dynamic>? ?? [];
         for (final item in remoteWalletsList) {
-          await _upsertWallet(item as Map<String, dynamic>);
+          await _upsertWallet(item as Map<String, dynamic>, walletId);
         }
         for (final item in remoteMembersList) {
-          await _upsertWalletMember(item as Map<String, dynamic>);
+          await _upsertWalletMember(item as Map<String, dynamic>, walletId);
         }
 
         final remoteInvitationsList = remoteChanges['wallet_invitations'] as List<dynamic>? ?? [];
         for (final item in remoteInvitationsList) {
-          await _upsertWalletInvitation(item as Map<String, dynamic>);
-        }
-
-        final remoteActivitiesList = remoteChanges['wallet_activities'] as List<dynamic>? ?? [];
-        for (final item in remoteActivitiesList) {
-//           await _upsertWalletActivity(item as Map<String, dynamic>);
+          await _upsertWalletInvitation(item as Map<String, dynamic>, walletId);
         }
 
         final remoteNotificationsList = remoteChanges['wallet_notifications'] as List<dynamic>? ?? [];
         for (final item in remoteNotificationsList) {
-          await _upsertWalletNotification(item as Map<String, dynamic>);
+          await _upsertWalletNotification(item as Map<String, dynamic>, walletId);
         }
 
         final remoteNotificationPrefsList = remoteChanges['wallet_notification_preferences'] as List<dynamic>? ?? [];
         for (final item in remoteNotificationPrefsList) {
-          await _upsertWalletNotificationPreference(item as Map<String, dynamic>);
+          await _upsertWalletNotificationPreference(item as Map<String, dynamic>, walletId);
         }
 
         final remoteGoalsList = remoteChanges['wallet_goals'] as List<dynamic>? ?? [];
         for (final item in remoteGoalsList) {
-          await _upsertWalletGoal(item as Map<String, dynamic>);
+          await _upsertWalletGoal(item as Map<String, dynamic>, walletId);
         }
 
         final remoteGoalContribList = remoteChanges['wallet_goal_contributions'] as List<dynamic>? ?? [];
         for (final item in remoteGoalContribList) {
-          await _upsertWalletGoalContribution(item as Map<String, dynamic>);
+          await _upsertWalletGoalContribution(item as Map<String, dynamic>, walletId);
         }
 
         final remoteAllowancesList = remoteChanges['wallet_allowances'] as List<dynamic>? ?? [];
         for (final item in remoteAllowancesList) {
-          await _upsertWalletAllowance(item as Map<String, dynamic>);
+          await _upsertWalletAllowance(item as Map<String, dynamic>, walletId);
         }
 
         final remoteAllowancePaymentsList = remoteChanges['wallet_allowance_payments'] as List<dynamic>? ?? [];
         for (final item in remoteAllowancePaymentsList) {
-          await _upsertWalletAllowancePayment(item as Map<String, dynamic>);
+          await _upsertWalletAllowancePayment(item as Map<String, dynamic>, walletId);
         }
 
         final remoteGoalSchedulesList = remoteChanges['wallet_goal_schedules'] as List<dynamic>? ?? [];
         for (final item in remoteGoalSchedulesList) {
-          await _upsertWalletGoalSchedule(item as Map<String, dynamic>);
+          await _upsertWalletGoalSchedule(item as Map<String, dynamic>, walletId);
         }
 
         final remoteBillsList = remoteChanges['wallet_bills'] as List<dynamic>? ?? [];
         for (final item in remoteBillsList) {
-          await _upsertWalletBill(item as Map<String, dynamic>);
+          await _upsertWalletBill(item as Map<String, dynamic>, walletId);
         }
 
         final remoteSplitsList = remoteChanges['wallet_expense_splits'] as List<dynamic>? ?? [];
         for (final item in remoteSplitsList) {
-          await _upsertWalletExpenseSplit(item as Map<String, dynamic>);
+          await _upsertWalletExpenseSplit(item as Map<String, dynamic>, walletId);
         }
 
         final remoteSettlementsList = remoteChanges['wallet_settlements'] as List<dynamic>? ?? [];
         for (final item in remoteSettlementsList) {
-          await _upsertWalletSettlement(item as Map<String, dynamic>);
+          await _upsertWalletSettlement(item as Map<String, dynamic>, walletId);
         }
 
-        // Apply remote deletions
+        // Apply remote deletions with cross-wallet checks
         for (final item in remoteDeletions) {
           final del = item as Map<String, dynamic>;
           final uuid = del['uuid'] as String;
           final tableName = del['tableName'] as String;
 
           if (tableName == 'accounts') {
-            await (db.delete(db.accounts)..where((a) => a.uuid.equals(uuid))).go();
+            final target = await (db.select(db.accounts)..where((a) => a.uuid.equals(uuid))).getSingleOrNull();
+            if (target != null) {
+              if (target.walletId != walletId) {
+                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for account $uuid');
+              }
+              await (db.delete(db.accounts)..where((a) => a.uuid.equals(uuid))).go();
+            }
           } else if (tableName == 'categories') {
             await (db.delete(db.categories)..where((c) => c.uuid.equals(uuid))).go();
           } else if (tableName == 'transactions') {
-            await (db.delete(db.transactions)..where((t) => t.uuid.equals(uuid))).go();
+            final target = await (db.select(db.transactions)..where((t) => t.uuid.equals(uuid))).getSingleOrNull();
+            if (target != null) {
+              if (target.walletId != walletId) {
+                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for transaction $uuid');
+              }
+              await (db.delete(db.transactions)..where((t) => t.uuid.equals(uuid))).go();
+            }
           } else if (tableName == 'budgets') {
-            await (db.delete(db.budgets)..where((b) => b.uuid.equals(uuid))).go();
+            final target = await (db.select(db.budgets)..where((b) => b.uuid.equals(uuid))).getSingleOrNull();
+            if (target != null) {
+              if (target.walletId != walletId) {
+                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for budget $uuid');
+              }
+              await (db.delete(db.budgets)..where((b) => b.uuid.equals(uuid))).go();
+            }
           } else if (tableName == 'recurring_transactions') {
-            await (db.delete(db.recurringTransactions)..where((r) => r.uuid.equals(uuid))).go();
+            final target = await (db.select(db.recurringTransactions)..where((r) => r.uuid.equals(uuid))).getSingleOrNull();
+            if (target != null) {
+              if (target.walletId != walletId) {
+                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for recurring transaction $uuid');
+              }
+              await (db.delete(db.recurringTransactions)..where((r) => r.uuid.equals(uuid))).go();
+            }
           } else if (tableName == 'loans') {
-            await (db.delete(db.loans)..where((l) => l.uuid.equals(uuid))).go();
+            final target = await (db.select(db.loans)..where((l) => l.uuid.equals(uuid))).getSingleOrNull();
+            if (target != null) {
+              if (target.walletId != walletId) {
+                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for loan $uuid');
+              }
+              await (db.delete(db.loans)..where((l) => l.uuid.equals(uuid))).go();
+            }
           } else if (tableName == 'peer_debts') {
-            await (db.delete(db.peerDebts)..where((pd) => pd.uuid.equals(uuid))).go();
+            final target = await (db.select(db.peerDebts)..where((pd) => pd.uuid.equals(uuid))).getSingleOrNull();
+            if (target != null) {
+              if (target.walletId != walletId) {
+                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for peer debt $uuid');
+              }
+              await (db.delete(db.peerDebts)..where((pd) => pd.uuid.equals(uuid))).go();
+            }
+          } else if (tableName == 'wallet_expense_splits') {
+            final target = await (db.select(db.walletExpenseSplits)..where((s) => s.uuid.equals(uuid))).getSingleOrNull();
+            if (target != null) {
+              if (target.walletId != walletId) {
+                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for split $uuid');
+              }
+              await (db.delete(db.walletExpenseSplits)..where((s) => s.uuid.equals(uuid))).go();
+            }
+          } else if (tableName == 'wallet_settlements') {
+            final target = await (db.select(db.walletSettlements)..where((s) => s.uuid.equals(uuid))).getSingleOrNull();
+            if (target != null) {
+              if (target.walletId != walletId) {
+                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for settlement $uuid');
+              }
+              await (db.delete(db.walletSettlements)..where((s) => s.uuid.equals(uuid))).go();
+            }
           }
         }
 
@@ -978,6 +1190,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
     } catch (e, stack) {
       debugPrint('Sync failed: $e\n$stack');
       state = SyncState(status: SyncStatus.error, errorMessage: e.toString());
+      rethrow;
     }
   }
 

@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 @DataClassName('PeerDebtDb')
 class PeerDebts extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get walletId => integer().withDefault(const Constant(1))();
+  IntColumn get walletId => integer().references(Wallets, #id, onDelete: KeyAction.cascade)();
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   TextColumn get personName => text().withLength(min: 1, max: 100)();
   IntColumn get type => intEnum<PeerDebtType>()();

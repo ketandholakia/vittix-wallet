@@ -78,6 +78,7 @@ void main() {
       // Insert Peer Debt
       final debtId = await db.into(db.peerDebts).insert(
         PeerDebtsCompanion.insert(
+          walletId: 1,
           uuid: const Value('peer-debt-uuid-1'),
           personName: 'Dave',
           type: PeerDebtType.lent,

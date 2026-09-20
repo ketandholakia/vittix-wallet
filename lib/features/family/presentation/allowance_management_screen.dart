@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/database/app_database.dart' as db;
 import 'package:expense_tracker/core/providers/dashboard_providers.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
+import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/features/family/domain/family_allowance_models.dart';
 import 'package:expense_tracker/features/family/domain/wallet_permissions.dart';
@@ -85,7 +86,7 @@ class AllowanceManagementScreen extends ConsumerWidget {
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           FilledButton(
             onPressed: () async {
-              await ref.read(allowanceDaoProvider).insertAllowance(
+              await ref.read(allowanceRepositoryProvider).addAllowance(
                     db.WalletAllowancesCompanion.insert(
                       walletId: walletId,
                       memberId: int.tryParse(memberId.text) ?? 1,
@@ -114,7 +115,7 @@ class AllowanceManagementScreen extends ConsumerWidget {
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           FilledButton(
             onPressed: () async {
-              await ref.read(allowanceDaoProvider).updateAllowance(
+              await ref.read(allowanceRepositoryProvider).updateAllowance(
                     db.WalletAllowancesCompanion(
                       id: db.Value(allowance.id),
                       walletId: db.Value(walletId),
@@ -135,7 +136,7 @@ class AllowanceManagementScreen extends ConsumerWidget {
   }
 
   Future<void> _toggle(WidgetRef ref, int walletId, AllowanceViewModel allowance, bool active) async {
-    await ref.read(allowanceDaoProvider).updateAllowance(
+    await ref.read(allowanceRepositoryProvider).updateAllowance(
           db.WalletAllowancesCompanion(
             id: db.Value(allowance.id),
             walletId: db.Value(walletId),
@@ -149,7 +150,7 @@ class AllowanceManagementScreen extends ConsumerWidget {
   }
 
   Future<void> _delete(WidgetRef ref, int id) async {
-    await ref.read(allowanceDaoProvider).deleteAllowance(id);
+    await ref.read(allowanceRepositoryProvider).deleteAllowance(id);
   }
 
   Future<void> _recordPayment(BuildContext context, WidgetRef ref, AllowanceViewModel allowance) async {
@@ -170,7 +171,7 @@ class AllowanceManagementScreen extends ConsumerWidget {
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           FilledButton(
             onPressed: () async {
-              await ref.read(allowanceDaoProvider).insertPayment(
+              await ref.read(allowanceRepositoryProvider).addPayment(
                     db.WalletAllowancePaymentsCompanion.insert(
                       allowanceId: allowance.id,
                       memberId: allowance.memberId,

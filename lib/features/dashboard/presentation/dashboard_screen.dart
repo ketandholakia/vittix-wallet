@@ -57,7 +57,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget build(BuildContext context) {
     final monthlyReportAsync = ref.watch(monthlyReportProvider);
     final recentTransactionsAsync = ref.watch(recentTransactionsProvider);
-    final currentWalletAsync = ref.watch(currentWalletProvider);
     final walletsAsync = ref.watch(availableWalletsProvider);
     final currentWalletId = ref.watch(currentWalletIdProvider);
 
@@ -67,8 +66,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         title: const BrandLogo(size: 28, showWordmark: true),
         actions: [
           walletsAsync.when(
-            data: (wallets) => currentWalletAsync.when(
-              data: (wallet) => PopupMenuButton<int>(
+            data: (wallets) {
+              final wallet = wallets.where((w) => w.id == currentWalletId).firstOrNull;
+              return PopupMenuButton<int>(
                 tooltip: 'Switch wallet',
                 icon: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -125,10 +125,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   );
                   return items;
                 },
-              ),
-              loading: () => const SizedBox.shrink(),
-              error: (error, stackTrace) => const SizedBox.shrink(),
-            ),
+              );
+            },
             loading: () => const SizedBox.shrink(),
             error: (error, stackTrace) => const SizedBox.shrink(),
           ),

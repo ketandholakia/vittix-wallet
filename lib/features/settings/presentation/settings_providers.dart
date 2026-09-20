@@ -305,17 +305,53 @@ class LastSelectedCategoryIdNotifier extends StateNotifier<int?> {
 
 final currentWalletIdProvider = StateNotifierProvider<CurrentWalletIdNotifier, int>((ref) {
   final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return CurrentWalletIdNotifier(prefs);
+  final walletDao = ref.watch(walletDaoProvider);
+  return CurrentWalletIdNotifier(prefs, walletDao);
 });
 
 class CurrentWalletIdNotifier extends StateNotifier<int> {
   final SharedPreferences? _prefs;
+  final WalletDao? _walletDao;
   static const _key = 'currentWalletId';
   
-  CurrentWalletIdNotifier(this._prefs) : super(_prefs?.getInt(_key) ?? 1);
-  
-  void selectWallet(int value) {
-    _prefs?.setInt(_key, value);
+  CurrentWalletIdNotifier(this._prefs, [this._walletDao]) : super(_prefs?.getInt(_key) ?? 1) {
+    _validateAndRestore();
+  }
+
+  Future<void> _validateAndRestore({int? actorAccountId}) async {
+    if (_walletDao == null) return;
+    try {
+      final storedId = _prefs?.getInt(_key);
+      final validId = await _walletDao!.validateActiveWallet(storedId, actorAccountId: actorAccountId);
+      if (validId != null) {
+        if (state != validId) {
+          state = validId;
+        }
+        await _prefs?.setInt(_key, validId);
+      } else {
+        await _prefs?.remove(_key);
+        state = 0;
+      }
+    } catch (_) {}
+  }
+
+  Future<bool> selectWallet(int value, {int? actorAccountId}) async {
+    if (_walletDao != null) {
+      final isValid = await _walletDao!.isWalletValid(value, actorAccountId: actorAccountId);
+      if (!isValid) {
+        debugPrint('Warning: Wallet $value does not have active membership, but allowing selection anyway.');
+      }
+    }
+    await _prefs?.setInt(_key, value);
+    state = value;
+    return true;
+  }
+
+  Future<void> revalidate({int? actorAccountId}) async {
+    await _validateAndRestore(actorAccountId: actorAccountId);
+  }
+
+  void forceSetStateForTest(int value) {
     state = value;
   }
 }

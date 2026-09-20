@@ -1175,6 +1175,7 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
     if (!_formKey.currentState!.validate()) return;
 
     final db = ref.read(databaseProvider);
+    final walletId = ref.read(currentWalletIdProvider);
     final String name = _nameController.text.trim();
     final double amount = double.parse(_amountController.text);
     final String note = _noteController.text.trim();
@@ -1212,7 +1213,7 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
       // Create Peer Debt entry
       await db.into(db.peerDebts).insert(
         PeerDebtsCompanion.insert(
-          
+          walletId: walletId,
           personName: name,
           type: _debtType,
           amount: amount,

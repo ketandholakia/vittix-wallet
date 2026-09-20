@@ -50,6 +50,10 @@ final allowanceDaoProvider = Provider<AllowanceDao>((ref) {
   return ref.watch(databaseProvider).allowanceDao;
 });
 
+final billDaoProvider = Provider<BillDao>((ref) {
+  return ref.watch(databaseProvider).billDao;
+});
+
 /*
 /*
 final commitmentDaoProvider = Provider<CommitmentDao>((ref) {

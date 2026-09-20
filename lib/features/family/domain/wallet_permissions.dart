@@ -43,6 +43,22 @@ class WalletPermissionService {
     return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
   }
 
+  bool canManageRecurringTransactions(WalletRole? role) {
+    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+  }
+
+  bool canViewRecurringTransactions(WalletRole? role) {
+    return role != null;
+  }
+
+  bool canManageAccounts(WalletRole? role) {
+    return role == WalletRole.owner || role == WalletRole.admin;
+  }
+
+  bool canViewAccounts(WalletRole? role) {
+    return role != null;
+  }
+
   bool canManageBudgets(WalletRole? role) {
     return role == WalletRole.owner || role == WalletRole.admin;
   }
@@ -59,12 +75,20 @@ class WalletPermissionService {
     return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
   }
 
+  bool canViewGoals(WalletRole? role) {
+    return role != null;
+  }
+
   bool canManageAllowances(WalletRole? role) {
     return role == WalletRole.owner || role == WalletRole.admin;
   }
 
   bool canViewOwnAllowance(WalletRole? role) {
     return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+  }
+
+  bool canViewAllowances(WalletRole? role) {
+    return role != null;
   }
 
   bool canManageBillsAndSchedules(WalletRole? role) {
@@ -75,12 +99,24 @@ class WalletPermissionService {
     return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
   }
 
+  bool canViewBills(WalletRole? role) {
+    return role != null;
+  }
+
   bool canManageSettlements(WalletRole? role) {
     return role == WalletRole.owner || role == WalletRole.admin;
   }
 
   bool canCreateSplits(WalletRole? role) {
     return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+  }
+
+  bool canManageDebts(WalletRole? role) {
+    return role == WalletRole.owner || role == WalletRole.admin;
+  }
+
+  bool canManageMerchantMappings(WalletRole? role) {
+    return role == WalletRole.owner || role == WalletRole.admin;
   }
 
   bool canDeleteWallet(WalletRole? role) {
@@ -93,6 +129,18 @@ class WalletPermissionService {
 
   bool canViewActivity(WalletRole? role) {
     return role != null;
+  }
+
+  bool canCreateActivity(WalletRole? role) {
+    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+  }
+
+  bool canViewAllActivity(WalletRole? role) {
+    return role == WalletRole.owner || role == WalletRole.admin;
+  }
+
+  bool canSynchronizeWallet(WalletRole? role) {
+    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
   }
 }
 

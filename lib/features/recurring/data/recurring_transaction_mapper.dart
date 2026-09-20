@@ -9,6 +9,7 @@ extension RecurringWithDetailsMapper on db.RecurringTransactionWithDetails {
   RecurringTransaction toDomain() {
     return RecurringTransaction(
       id: template.id,
+      walletId: template.walletId,
       name: template.name,
       amount: template.amount,
       type: TransactionType.values.byName(template.type.name),
@@ -24,9 +25,10 @@ extension RecurringWithDetailsMapper on db.RecurringTransactionWithDetails {
 }
 
 extension RecurringDomainMapper on RecurringTransaction {
-  db.RecurringTransactionsCompanion toCompanion() {
+  db.RecurringTransactionsCompanion toCompanion({int? overrideWalletId}) {
     return db.RecurringTransactionsCompanion(
       id: Value(id),
+      walletId: Value(overrideWalletId ?? walletId),
       name: Value(name),
       amount: Value(amount),
       type: Value(db.TransactionType.values.byName(type.name)),

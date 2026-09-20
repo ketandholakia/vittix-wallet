@@ -64,3 +64,37 @@ app.*.map.json
 # .env files
 .env
 .env.*
+
+# ---------------------------------------------------------------------------
+# Project-specific extras (Vittix Wallet)
+# ---------------------------------------------------------------------------
+
+# Packaged archives / distributables that can land at repo root
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.apk
+*.aab
+*.ipa
+
+# Raw analyzer / tooling dumps at repo root
+analyze.txt
+analyze*.txt
+
+# Gradle / Android tooling caches
+**/.gradle/
+**/.cxx/
+**/android/local.properties
+
+# OS junk
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Editor / VCS leftovers
+*.orig
+*.rej
+*.bak
+*.tmp

@@ -7,7 +7,8 @@ abstract class TransactionRepository {
   Stream<List<Transaction>> watchAllTransactions();
   Future<List<TrendDataPoint>> getMonthlyTrend(int months);
   Future<(double totalIncome, double totalExpense)> getMonthlySummaryTotals(DateTime month);
-  Future<void> addTransaction(Transaction transaction);
+  Future<Transaction?> getTransactionById(int id);
+  Future<void> addTransaction(Transaction transaction, {String source = 'user'});
   Future<void> updateTransaction(Transaction transaction);
   Future<void> deleteTransaction(int id);
 }

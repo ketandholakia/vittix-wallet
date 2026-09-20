@@ -20,6 +20,7 @@ extension RecurringIntervalX on RecurringInterval {
 
 class RecurringTransaction {
   final int id;
+  final int walletId;
   final String name;
   final double amount;
   final TransactionType type;
@@ -33,6 +34,7 @@ class RecurringTransaction {
 
   RecurringTransaction({
     required this.id,
+    this.walletId = 0,
     required this.name,
     required this.amount,
     required this.type,

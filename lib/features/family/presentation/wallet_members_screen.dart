@@ -40,23 +40,31 @@ class WalletMembersScreen extends ConsumerWidget {
                                 if (value == null) return;
                                 final walletId = ref.read(currentWalletIdProvider);
                                 final previousRole = member.role;
-                                await ref.read(walletDaoProvider).updateMember(
-                                      WalletMembersCompanion(
-                                        id: Value(member.id),
-                                        walletId: Value(walletId),
-                                        accountId: Value(member.accountId),
-                                        role: Value(value),
-                                        joinedAt: Value(member.joinedAt),
-                                        isActive: Value(member.isActive),
-                                      ),
+                                try {
+                                  await ref.read(walletDaoProvider).updateMember(
+                                        WalletMembersCompanion(
+                                          id: Value(member.id),
+                                          walletId: Value(walletId),
+                                          accountId: Value(member.accountId),
+                                          role: Value(value),
+                                          joinedAt: Value(member.joinedAt),
+                                          isActive: Value(member.isActive),
+                                        ),
+                                      );
+                                  await ref.read(walletDaoProvider).logRoleChanged(
+                                        walletId: walletId,
+                                        accountId: member.accountId,
+                                        oldRole: previousRole,
+                                        newRole: value,
+                                      );
+                                  ref.invalidate(currentWalletMembersProvider);
+                                } on LastOwnerException catch (e) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.message)),
                                     );
-                                await ref.read(walletDaoProvider).logRoleChanged(
-                                      walletId: walletId,
-                                      accountId: member.accountId,
-                                      oldRole: previousRole,
-                                      newRole: value,
-                                    );
-                                ref.invalidate(currentWalletMembersProvider);
+                                  }
+                                }
                               }
                             : null,
                         items: WalletRole.values
@@ -67,13 +75,21 @@ class WalletMembersScreen extends ConsumerWidget {
                         onPressed: canManage && permissions.canRemoveMembers(roleAsync.asData?.value)
                             ? () async {
                                 final walletId = ref.read(currentWalletIdProvider);
-                                await ref.read(walletDaoProvider).deactivateMember(walletId, member.accountId);
-                                await ref.read(walletDaoProvider).logMemberRemoved(
-                                      walletId: walletId,
-                                      accountId: member.accountId,
-                                      actorAccountId: null,
+                                try {
+                                  await ref.read(walletDaoProvider).deactivateMember(walletId, member.accountId);
+                                  await ref.read(walletDaoProvider).logMemberRemoved(
+                                        walletId: walletId,
+                                        accountId: member.accountId,
+                                        actorAccountId: null,
+                                      );
+                                  ref.invalidate(currentWalletMembersProvider);
+                                } on LastOwnerException catch (e) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.message)),
                                     );
-                                ref.invalidate(currentWalletMembersProvider);
+                                  }
+                                }
                               }
                             : null,
                         icon: const Icon(Icons.remove_circle_outline),

@@ -59,7 +59,29 @@ Collaboration hardening added the production-readiness checks for the boundary:
 
 Shared family wallet work extends the local-first model with wallet-native family finance features:
 
-- budgets remain wallet-owned and use wallet transactions for usage calculations
+- budgets are now strictly wallet-owned records (`budgets.walletId` FK referencing `wallets.id` with `ON DELETE CASCADE`, schema v7 migration)
+- budget DAO, repository, use cases, and providers are wallet-scoped; cross-wallet mutation is prevented at repository/DAO level
+- automated tests in `test/budget_wallet_isolation_test.dart` verify budget wallet ownership, read isolation, cross-wallet update/delete protection, wallet switching, legacy migration defaults (`walletId = 1`), and FK cascade deletion
+- Wallet Architecture Audit status:
+  - P0-1 Budget wallet isolation: PASS
+  - P0-2 TransactionDao wallet isolation: PASS
+  - P0-3 deleteWallet() cleanup completeness: PASS
+  - P0-4 Last-owner protection: PASS
+  - P0-5 Service/repository RBAC enforcement: PASS
+  - P0-6 Active-wallet startup validation: PASS
+  - P1-1 Account wallet isolation & RBAC: PASS
+  - P1-2 Goals/Bills/Allowances RBAC: PASS
+  - P1-3 Sync Service RBAC: PASS
+  - P2-1 Recurring Transactions Wallet Isolation & RBAC: PASS
+  - P2-2 Splits & Settlements Wallet Isolation & RBAC: PASS
+  - P2-3 Activity Audit Trail Wallet Isolation & RBAC: PASS
+- goals, bills, and allowances wallet isolation and RBAC are now fully enforced across DAOs (`GoalDao`, `BillDao`, `AllowanceDao`), Repositories (`GoalRepositoryImpl`, `BillRepositoryImpl`, `AllowanceRepositoryImpl`), and Providers using `WalletPermissionService`, atomic SQL predicates (`WHERE id = ? AND wallet_id = ?`), child entity ownership subqueries, and verified via `test/deferred_domains_wallet_isolation_test.dart`
+- account wallet isolation and RBAC is now fully enforced across `AccountDao`, `AccountRepositoryImpl`, and providers using `WalletPermissionService.canManageAccounts`, atomic SQL predicates (`WHERE id = ? AND wallet_id = ?`), and verified via `test/account_wallet_isolation_test.dart`
+- active wallet validation is now fully enforced across startup, wallet switching, deletion, and membership deactivation via `WalletDao.validateActiveWallet` and `CurrentWalletIdNotifier`, with zero hardcoded fallbacks to `walletId = 1` and complete automated test coverage in `test/active_wallet_validation_test.dart`
+- wallet service/repository RBAC is now enforced below the UI layer at the service/repository/DAO boundary (`WalletPermissionDeniedException`, `checkPermission`), keeping existing permission semantics (`OWNER`, `ADMIN`, `MEMBER`, `VIEWER`), preserving P0-4 last-owner protection, isolating cross-wallet authorization, and verified via `test/wallet_rbac_test.dart`
+- wallet last-owner protection is now enforced below the UI in `WalletDao` (`countActiveOwners`, `LastOwnerException`), guaranteeing that no mutation or deactivation can leave an active wallet without an `OWNER`, with test coverage in `test/wallet_last_owner_test.dart`
+- wallet deletion is now complete, deterministic, and transactional across all 26 wallet-owned/child tables with subquery child cleanup, correct Drift table names, atomic transaction bounds, and verification via `test/wallet_deletion_test.dart`
+- transactions are now fully wallet-isolated at the DAO, repository, and provider levels with cross-wallet update/delete guards and automated test verification in `test/transaction_wallet_isolation_test.dart`
 - goals are now a wallet-scoped entity with contributions, progress, and activity logging
 - family financial summaries are derived from the active wallet only
 - permission checks now distinguish budget and goal management from read-only access
@@ -285,3 +307,147 @@ The app should stay local-first and conservative:
 - never auto-save raw SMS without review
 - keep a manual override on every imported transaction
 - scope shared data through wallets, not ad hoc flags
+
+## Sync Service Security Architecture (P1-3)
+
+The P1-3 Sync Service RBAC & Wallet Isolation milestone completes the wallet authorization boundary across all remote sync write paths:
+
+- **Sync Authorization Boundary**: `SyncNotifier` verifies target wallet validity (`WalletDao.isWalletValid`) and actor permission (`WalletDao.checkPermission` with `canSynchronizeWallet`) prior to reading local data for outgoing payloads or mutating local tables during incoming sync processing.
+- **Payload Trust Policy**: `payload.walletId` is treated as untrusted input. The target `walletId` must match the validated sync target, and the acting user must possess active membership (`isActive == true`) and a non-VIEWER role (`canSynchronizeWallet`).
+- **Entity Hijack Protection**: Incoming changes for `accounts`, `transactions`, `budgets`, `loans`, and `peer_debts` are checked against SQLite to ensure existing local entities belonging to a different wallet cannot be hijacked or updated by incoming cross-wallet payloads.
+- **Child Entity Protection**: Child entities without direct `walletId` columns (`wallet_goal_contributions`, `wallet_goal_schedules`, `wallet_allowance_payments`) validate their parent entity (`goalId`, `walletGoalId`, `allowanceId`) against SQLite to ensure they belong to the target wallet.
+- **Transactional Atomicity**: All sync writes execute inside Drift's `db.transaction(...)`. Any authorization failure, cross-wallet payload detection, or parent mismatch throws a `WalletPermissionDeniedException`, triggering an immediate and complete transaction rollback with 0 partial writes.
+
+## Recurring Transaction Wallet Ownership Architecture (P2-1)
+
+The P2-1 milestone establishes complete wallet ownership and RBAC authorization for recurring transactions:
+
+- **Ownership Hierarchy**: `Wallet → Account → Recurring Transaction → Generated Transaction`. Each recurring transaction has a direct `walletId` FK to `wallets.id` (ON DELETE CASCADE), ensuring wallet deletion cleans up recurring records through direct ownership.
+- **Authorization**: `RecurringTransactionRepositoryImpl` enforces `canManageRecurringTransactions` (OWNER/ADMIN/MEMBER allowed; VIEWER, missing membership, inactive membership denied) via wallet-level `hasActiveMemberWithPermission` check.
+- **Account Validation**: Before create/update, the repository validates `recurring.walletId == account.walletId` by looking up the account's wallet in the database. Cross-wallet account references are rejected even if the caller supplies matching walletId/accountId fields.
+- **Generation Invariant**: `recurring.walletId == account.walletId == generatedTransaction.walletId`. The `ProcessRecurringTransactions` use case preserves the template's walletId in generated domain objects. The generated transaction is created through the transaction repository which enforces its own wallet scoping.
+- **Sync Boundary**: Outgoing sync filters recurring transactions by `walletId` and serializes it. Incoming sync validates `remoteWalletId == walletId` and checks existing record ownership (preventing UUID hijacking). Remote deletions verify wallet ownership before deleting.
+- **Migration Strategy**: Schema v8 adds `wallet_id` column with deterministic backfill from `account_id → accounts.wallet_id`. Orphaned records (unresolvable wallet) fail the migration clearly rather than silently assigning to wallet 1.
+
+## Splits, Settlements, and PeerDebt Wallet Ownership Architecture (P2-2)
+
+The P2-2 milestone completes wallet ownership and RBAC authorization for splits, settlements, and peer debts:
+
+- **Ownership Hierarchy**:
+  - Splits: `Wallet → Split(walletId) → SplitMember(splitId, memberId) → WalletMember(walletId)`. Split members do not carry a direct `walletId` column; ownership is validated through the parent split (parent split belongs to wallet X) and the referenced wallet member (member belongs to wallet X).
+  - Settlements: `Wallet → Settlement(walletId) → WalletMember(payerMemberId) + WalletMember(receiverMemberId)`. Settlements have a direct `walletId` FK and reference two wallet members.
+  - Peer Debts: `Wallet → PeerDebt(walletId) → Transaction(transactionId, walletId)`. Peer debts have a direct `walletId` FK to `wallets.id` (ON DELETE CASCADE) hardened in schema v9.
+
+- **Cross-Wallet Validation Invariants**:
+  - `split.walletId == authorizedWalletId`
+  - `split.transaction.walletId == split.walletId` (transaction reference)
+  - `split.paidByMember.walletId == split.walletId` (paidBy member reference)
+  - `splitMember.parentSplit.walletId == splitMember.member.walletId` (split member cross-ownership)
+  - `settlement.walletId == payerMember.walletId == receiverMember.walletId`
+  - `peerDebt.walletId == authorizedWalletId`
+  - `peerDebt.transaction.walletId == peerDebt.walletId` (when transactionId is set)
+
+- **RBAC Matrix** (enforced at the `WalletDao` boundary via `WalletPermissionService`):
+  - Split creation (`canCreateSplits`): OWNER ✓, ADMIN ✓, MEMBER ✓, VIEWER ✗
+  - Split management (`canManageSettlements`): OWNER ✓, ADMIN ✓, MEMBER ✗, VIEWER ✗
+  - Settlement management (`canManageSettlements`): OWNER ✓, ADMIN ✓, MEMBER ✗, VIEWER ✗
+  - PeerDebt management (`canManageDebts`): OWNER ✓, ADMIN ✓, MEMBER ✗, VIEWER ✗
+  - Decision rationale: MEMBER is allowed to create splits (they can initiate expense sharing) but cannot manage settlements or debts (financial reconciliation is an administrative concern). VIEWER is always denied mutations.
+
+- **Sync Security**:
+  - **Outgoing**: Split, settlement, and PeerDebt queries are wallet-filtered (`WHERE wallet_id = ?`). No Wallet B records are emitted during Wallet A sync.
+  - **Incoming**: `remoteWalletId == authorizedTargetWalletId` is enforced in the upsert helpers. Existing record wallet ownership is checked (UUID hijacking prevention).
+  - **Deletion**: Remote split, settlement, and PeerDebt deletions verify the local record's `walletId` before deleting. Split members are removed via parent-split FK cascade.
+  - **Child Validation**: Split members (no direct `walletId`) are validated through parent split ownership and referenced wallet member ownership.
+  - **Atomicity**: All sync writes execute inside Drift's `db.transaction(...)`. Any authorization failure, cross-wallet detection, or parent mismatch throws `WalletPermissionDeniedException`, triggering immediate and complete transaction rollback.
+
+- **Migration Strategy**: Schema v8 → v9 migration:
+  1. Add `uuid` columns to `wallet_expense_splits` and `wallet_settlements` (backfilled with deterministic UUIDs)
+  2. Backfill `peer_debts.wallet_id` deterministically from `peer_debts.transaction_id → transactions.wallet_id`
+  3. Identify orphaned peer debts (NULL wallet_id or wallet_id referencing non-existent wallet) and fail the migration with a descriptive error listing orphan UUIDs
+  4. Recreate `peer_debts` table with `wallet_id` FK to `wallets(id) ON DELETE CASCADE` (NOT NULL, no DEFAULT)
+  5. Migration is all-or-nothing: any failure rolls back the entire transaction
+
+- **Split Member Ownership Model**: The preferred parent-owned model is used. Split members do not carry a direct `walletId` column; ownership is derived from the parent split. This avoids redundant ownership state and keeps the invariant `Split.walletId == SplitMember.member.walletId` enforced at the DAO boundary.
+
+## Activity Audit Trail Wallet Ownership Architecture (P2-3)
+
+The P2-3 milestone establishes a first-class, wallet-safe activity audit trail:
+
+- **Ownership Hierarchy**: `Wallet → WalletActivity(walletId) → WalletMember(actorMemberId) + Account(actorAccountId) + Affected Entity(entityType/entityId)`. Every audit event belongs to exactly one wallet (FK to `wallets.id` ON DELETE CASCADE).
+- **Actor Model**: `actorAccountId` (FK to `accounts`, SET NULL) + `actorMemberId` (FK to `wallet_members`, SET NULL) identify who performed the action. The actor is obtained from wallet-scoped context (`checkPermission` with `actorAccountId`); a caller cannot specify a foreign actor for a target wallet.
+- **Append-only**: The DAO exposes only `insertActivity`, `getActivityForWallet`, and `watchActivityForWallet` — no update/delete/upsert methods. Events cannot be modified or deleted through the public API, preventing falsification or hiding of past actions.
+- **RBAC Matrix**:
+  - Create activity (`canCreateActivity`): OWNER ✓, ADMIN ✓, MEMBER ✓, VIEWER ✗
+  - View own/wallet activity (`canViewActivity`): OWNER ✓, ADMIN ✓, MEMBER ✓, VIEWER ✓
+  - View all/admin activity (`canViewAllActivity`): OWNER ✓, ADMIN ✓, MEMBER ✗, VIEWER ✗
+- **Cross-Wallet Invariants**:
+  - `activity.walletId == authorizedWalletId`
+  - `activity.actorMemberId.walletId == activity.walletId`
+  - `activity.entityId/entityType` must resolve to a record in `activity.walletId`
+- **Privacy**: The audit trail records `entityType`/`entityId`/`entityUuid` references plus a human-readable `details` and optional JSON `metadata` — it does NOT store sensitive values (amounts, names, notes, balances). It is a record of *that* an action occurred and *who* did it, not a secondary financial data store.
+- **Sync**: Audit events are wallet-scoped and effectively local-only. The outgoing sync query reads `wallet_activities` for the target wallet (wallet-filtered), but there is no incoming `_upsertWalletActivity` handler — audit events cannot be injected, hijacked, looped, or duplicated via sync.
+- **Member Removal**: Deleting a wallet member sets `actorMemberId`/`actorAccountId` to NULL (FK `SET NULL`), preserving the historical event while losing the live reference. Future work can add an immutable actor-name snapshot for display fallback.
+- **Wallet Deletion**: `wallet_activities` ON DELETE CASCADE (and explicit cleanup in `deleteWallet`) ensures all audit events for a deleted wallet are removed consistently.
+- **Migration Strategy**: Schema v9 → v10 adds the `wallet_activities` table. No backfill needed for a brand-new table; existing attribution fields (e.g., `createdByAccountId` on splits/goals/bills) can later be replayed as synthetic `ACTIVITY_CREATED` events if desired.
+- **Migration Strategy**: Schema v9 → v10 adds the `wallet_activities` table. No backfill needed for a brand-new table; existing attribution fields (e.g., `createdByAccountId` on splits/goals/bills) can later be replayed as synthetic `ACTIVITY_CREATED` events if desired.
+
+### Audit Event Wiring & Atomicity Architecture (P2-3A)
+
+P2-3A extends the P2-3 infrastructure by wiring audit event creation into the application's highest-value business mutation paths with atomic guarantees.
+
+- **Atomicity**: Every audited mutation executes inside a Drift `transaction()` block. The business mutation and audit insertion are committed atomically — if either fails, both are rolled back.
+- **Event Generation Boundary**: Audit events are generated at the repository/DAO layer, not in the UI or providers. This ensures:
+  - All mutation paths (UI, sync, background) produce consistent audit events
+  - Actor identity is not caller-controlled
+  - Business intent is captured at the correct abstraction level
+- **Source Classification**:
+  - `source = 'user'` for normal UI/business mutations (actor identity from authenticated context)
+  - `source = 'recurring'` for recurring transaction generation (actor = null)
+  - `source = 'sync'` available for future sync-applied mutations (actor = null)
+  - `source = 'migration'` available for data import (actor = null)
+- **Actor Identity**: Actor `actorAccountId` is injected via repository constructor from application context, not per-call. Background operations use `source != 'user'` which suppresses actor attribution.
+- **Duplicate Prevention**: Each business operation produces exactly one audit event. Event generation is centralized in the repository layer — no multiple callers can create duplicate events for a single operation.
+- **Sensitive Data**: Audit events store only entity references (`entityType`, `entityId`, `entityUuid`) and optional human-readable `details`. No financial values (amounts, balances, notes) or PII are stored. The audit trail is NOT a secondary financial data store.
+- **Covered Entities**: Transaction, Account, Budget, Recurring Transaction, Split, Settlement, PeerDebt, WalletMember, WalletInvitation
+- **Deferred Entities**: Goal, Bill, Allowance (can be wired in future milestones without architectural changes)
+- **Wallet Isolation**: All audit events inherit wallet ownership from the business entity being audited. Cross-wallet audit event creation is prevented by the repository layer using the same wallet-scoped context as the business mutation.
+
+## SMS Import Wallet Isolation & Security Architecture (P2-4)
+
+The P2-4 milestone closes identified wallet-isolation, authorization, audit-attribution, privacy, and wallet-context gaps in the SMS import workflow while preserving the sound existing architecture (device-local capture, non-synced SMS tables, wallet-scoped transaction creation, cascading wallet deletion).
+
+- **Data Flow Boundary**:
+  ```text
+  SmsCaptureReceiver (device-local, background)
+      ↓
+  SmsCaptureStore (SharedPreferences queue)
+      ↓
+  USER OPENS IMPORT UI (SmsImportScreen)
+      ↓
+  PARSE & REVIEW (SmsTransactionParser + MerchantMappings)
+      ↓
+  TRANSACTION CREATION (TransactionRepositoryImpl with source: 'import')
+  ```
+- **Wallet Isolation Guarantees**:
+  - **Unrecognized SMS**: `markSmsResolved` and `deleteUnrecognizedSms` enforce conditional predicates `WHERE id = ? AND wallet_id = ?`. Cross-wallet mutation attempts return 0 rows affected without modifying the target wallet's record.
+  - **Merchant Mappings**: `insertMerchantMapping`, `updateMerchantMapping`, and `deleteMerchantMapping` enforce target wallet validation and conditional predicates (`WHERE id = ? AND wallet_id = ?`). A Wallet A caller cannot insert, update, or delete Wallet B merchant mappings even with knowledge of the ID.
+  - **Account Fallback & Target**: Transaction creation during import enforces `import.walletId == selectedAccount.walletId == createdTransaction.walletId`. If an invalid or foreign account is provided, `TransactionRepositoryImpl` rejects or scopes the account fallback to the import wallet.
+- **Role-Based Access Control (RBAC)**:
+  - Enforced at the DAO layer (`SmsParsingDao`) using `WalletDao.checkPermission`:
+    - Merchant Mapping Management (`canManageMerchantMappings`): `OWNER` ✓, `ADMIN` ✓, `MEMBER` ✗, `VIEWER` ✗
+    - Missing membership, inactive membership, or invalid wallet context is strictly denied (`WalletPermissionDeniedException`).
+- **Audit Source & Actor Attribution**:
+  - SMS-derived transactions are passed with `source: 'import'`.
+  - `TransactionRepositoryImpl` sets `effectiveActor = null` for non-`user` sources, preventing automated background or SMS import operations from falsely attributing mutations to the active user.
+  - Audit event produced: `TRANSACTION_CREATED` with `source: 'import'`, `actorAccountId: null`, and entity ID matching the created transaction.
+- **Privacy Boundary & Sync Invariants**:
+  - **Transaction Notes**: Raw SMS message bodies (including OTPs, bank reference numbers, balances, account numbers, and phone numbers) are stripped before creating transactions. Notes are formatted as `[SMS] Merchant Name` (or `[AI] Merchant Name`).
+  - **Sync Payload**: Transaction sync serializes `note: '[SMS] Merchant Name'`. No raw SMS text is serialized into sync.
+  - **Table Exclusion**: `unrecognized_sms_entries`, `sms_import_metrics`, and `merchant_mappings` remain excluded from `_buildSyncPayload`.
+- **Stable Wallet Context**:
+  - Active wallet context (`currentWalletIdProvider`) is captured once at the start of an import operation in `SmsImportScreen`.
+  - Pre-operation wallet validation (`WalletDao.isWalletValid`) verifies wallet existence and membership before scanning or writing financial records.
+- **Deferred Limitations**:
+  - **Device-Wide Deduplication**: `sms_imported_hashes` stored in SharedPreferences remains device-local. Duplicate SMS imported on a second device is a recognized product limitation.
+  - **Merchant Mapping Sync**: Merchant mappings remain device-local. Cloud sync for merchant mappings is deferred to future releases.

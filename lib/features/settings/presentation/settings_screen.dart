@@ -610,17 +610,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     final walletId = ref.read(currentWalletIdProvider);
                     final db = ref.read(databaseProvider);
                     
-                    // Fetch available wallets before deletion to find fallback
-                    final allWallets = await db.select(db.wallets).get();
-                    final remainingWallets = allWallets.where((w) => w.id != walletId).toList();
-                    
                     await db.walletDao.deleteWallet(walletId);
-                    
-                    if (remainingWallets.isNotEmpty) {
-                      ref.read(currentWalletIdProvider.notifier).selectWallet(remainingWallets.first.id);
-                    } else {
-                      ref.read(currentWalletIdProvider.notifier).selectWallet(1);
-                    }
+                    await ref.read(currentWalletIdProvider.notifier).revalidate();
                     
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
