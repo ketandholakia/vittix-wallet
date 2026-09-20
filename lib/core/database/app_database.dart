@@ -9,6 +9,9 @@ import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:expense_tracker/features/accounts/domain/default_accounts.dart';
+import 'package:expense_tracker/core/database/database_encryption.dart';
+import 'package:expense_tracker/core/database/sqlcipher_loader.dart';
+import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
 import 'package:expense_tracker/core/database/default_categories.dart';
 import 'package:path/path.dart' as p;
 
@@ -1522,6 +1525,41 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   // Add
+  /// Moves every transaction from one category to another.
+  ///
+  /// Deleting a category must never orphan its history (the lists inner-join
+  /// categories, so orphaned rows silently vanish from the UI while still
+  /// counting in balances) nor erase it (`transactions.categoryId` cascades if
+  /// foreign keys are ever enabled). Callers reassign first, then delete.
+  Future<int> reassignTransactionsForCategory(
+    int fromCategoryId,
+    int toCategoryId, [
+    int? walletId,
+  ]) {
+    final query = update(transactions)
+      ..where((t) => t.categoryId.equals(fromCategoryId));
+    if (walletId != null) {
+      query.where((t) => t.walletId.equals(walletId));
+    }
+    return query.write(TransactionsCompanion(categoryId: Value(toCategoryId)));
+  }
+
+  /// Moves every transaction from one account to another. Accounts use
+  /// `restrict` on delete, so this is what lets an account be removed without
+  /// rejecting the delete or losing its history.
+  Future<int> reassignTransactionsForAccount(
+    int fromAccountId,
+    int toAccountId, [
+    int? walletId,
+  ]) {
+    final query = update(transactions)
+      ..where((t) => t.accountId.equals(fromAccountId));
+    if (walletId != null) {
+      query.where((t) => t.walletId.equals(walletId));
+    }
+    return query.write(TransactionsCompanion(accountId: Value(toAccountId)));
+  }
+
   Future<int> insertTransaction(Insertable<Transaction> transaction, [int? walletId]) {
     if (walletId != null && transaction is TransactionsCompanion) {
       transaction = transaction.copyWith(walletId: Value(walletId));
@@ -1673,7 +1711,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       ..where(
         transactions.type.equalsValue(TransactionType.income) &
             transactions.date.isBiggerOrEqualValue(firstDay) &
-            transactions.date.isSmallerThanValue(nextMonthStart),
+            transactions.date.isSmallerThanValue(nextMonthStart) &
+            transactions.transferGroupId.isNull(),
       );
     if (walletId != null) {
       incomeQuery.where(transactions.walletId.equals(walletId));
@@ -1685,7 +1724,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       ..where(
         transactions.type.equalsValue(TransactionType.expense) &
             transactions.date.isBiggerOrEqualValue(firstDay) &
-            transactions.date.isSmallerThanValue(nextMonthStart),
+            transactions.date.isSmallerThanValue(nextMonthStart) &
+            transactions.transferGroupId.isNull(),
       );
     if (walletId != null) {
       expenseQuery.where(transactions.walletId.equals(walletId));
@@ -1894,7 +1934,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   Future<int> insertDeletedRecord(String uuid, String tableName) {
     /* return into(deletedRecords).insert(
@@ -2067,6 +2107,11 @@ class AppDatabase extends _$AppDatabase {
           // P2-5: Add secure token column to WalletInvitations
           await m.addColumn(walletInvitations, walletInvitations.token);
           await customStatement("UPDATE wallet_invitations SET token = lower(hex(randomblob(4))) || '-' || lower(hex(randomblob(2))) || '-4' || substr(lower(hex(randomblob(2))),2) || '-a' || substr(lower(hex(randomblob(2))),2) || '-' || lower(hex(randomblob(6))) WHERE token IS NULL OR token = ''");
+        }
+        if (from < 12) {
+          // A2: link the two legs of a transfer so they can be excluded from
+          // income/expense totals and edited or deleted as a unit.
+          await m.addColumn(transactions, transactions.transferGroupId);
         }
       },
     );
@@ -2279,6 +2324,46 @@ LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, kDatabaseFileName));
-    return NativeDatabase.createInBackground(file);
+
+    // A3: encrypt at rest with a random key held in the platform keystore
+    // (option (a) - the PIN stays a UI gate, so a PIN reset cannot lose data).
+    // Every failure path falls back to plaintext rather than leaving the app
+    // unable to open its own database.
+    String? resolvedKey;
+    try {
+      final store = SecureStorageKeyValueStore();
+      final key = await DatabaseEncryption.getOrCreateKey(store);
+      if (DatabaseEncryption.isPlaintextFile(file)) {
+        final migrated = await DatabaseEncryption.migrateToEncrypted(
+          file: file,
+          base64Key: key,
+        );
+        resolvedKey = migrated ? key : null;
+      } else {
+        resolvedKey = key;
+        // The database is already encrypted and opening fine, so the plaintext
+        // copy from the one-time migration must not be left lying around.
+        await DatabaseEncryption.purgePlaintextBackup(file);
+      }
+    } catch (_) {
+      resolvedKey = null;
+    }
+
+    DatabaseSetup? setup;
+    if (resolvedKey != null) {
+      final key = resolvedKey;
+      setup = (raw) => raw.execute(DatabaseEncryption.pragmaForKey(key));
+    }
+
+    // The loader override must also be applied inside the background isolate:
+    // `open` is per-isolate, and without this drift falls back to the plain
+    // libsqlite3.so, which is not bundled when using SQLCipher.
+    return NativeDatabase.createInBackground(
+      file,
+      isolateSetup: () {
+        useSqlCipher();
+      },
+      setup: setup,
+    );
   });
 }

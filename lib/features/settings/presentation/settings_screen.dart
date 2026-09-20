@@ -4,11 +4,13 @@ import 'package:expense_tracker/features/accounts/presentation/account_screen.da
 import 'package:expense_tracker/features/categories/presentation/category_screen.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/services/backup_service.dart';
+import 'package:expense_tracker/features/security/data/pin_hasher.dart';
 import 'package:expense_tracker/features/settings/presentation/auto_backup_screen.dart';
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/core/utils/csv_exporter.dart';
 import 'package:expense_tracker/features/security/presentation/lock_screen.dart';
+import 'package:expense_tracker/features/security/presentation/security_providers.dart';
 import 'package:expense_tracker/features/recurring/presentation/recurring_transactions_screen.dart';
 import 'package:expense_tracker/sms/sms_import_screen.dart';
 import 'package:file_picker/file_picker.dart';
@@ -237,8 +239,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                       );
                       if (newPin != null && newPin.isNotEmpty) {
-                        final hashed = hashPin(newPin);
-                        // ref.read(pinHashProvider.notifier).updatePinHash(hashed);
+                        // Persist the PIN under the v2 PBKDF2 scheme. Previously the
+                        // hash was computed and discarded, so no PIN was stored.
+                        final hashed = await PinHasher.hash(newPin);
+                        await ref.read(pinHashProvider.notifier).updatePinHash(hashed);
                         ref.read(pinLockEnabledProvider.notifier).updatePinLockEnabled(true);
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -299,8 +303,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                       );
                       if (newPin != null && newPin.isNotEmpty) {
-                        final hashed = hashPin(newPin);
-                        // ref.read(pinHashProvider.notifier).updatePinHash(hashed);
+                        final hashed = await PinHasher.hash(newPin);
+                        await ref.read(pinHashProvider.notifier).updatePinHash(hashed);
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('PIN changed successfully')),

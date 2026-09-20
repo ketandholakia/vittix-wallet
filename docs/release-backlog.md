@@ -12,9 +12,9 @@ Effort: **S** ≈ hours, **M** ≈ 1-3 days, **L** ≈ 1-2 weeks+.
 | # | Item | Verified state in code | Effort | Depends on |
 |---|------|------------------------|--------|------------|
 | A1 | **Backup & restore** | ✅ **Done.** VACUUM INTO snapshots; optional AES-256-GCM container (PBKDF2-HMAC-SHA256, passphrase in secure storage); automatic backup at app start with interval, folder choice and 5-file retention; import validates (SQLite header, integrity_check, schema version), swaps the file in and reloads providers without an app restart. | M | - |
-| A2 | **Real transfers** | `transfer_form_screen.dart` does two independent `addTransaction` calls, no DB transaction; the legs are linked only by a `[Transfer]` note prefix; summaries do not exclude transfers. | M | A6 (for exactness) |
-| A3 | **Data-at-rest encryption** | DB is plain `NativeDatabase`; PIN = 4 digits, **static salt in source**, 10k SHA-256 rounds, no attempt limit/lockout. | L | - |
-| A4 | **Safe deletion flows** | `deleteCategory` is an unguarded DELETE (`app_database.dart:1341`). No `PRAGMA foreign_keys` **anywhere** in `lib/`, so all `cascade`/`restrict` are inert. `transactions.categoryId` is `onDelete: cascade` → naive FK enablement would erase transactions. | M | - |
+| A2 | **Real transfers** | ✅ **Core done.** Transactions carry a nullable `transferGroupId` (schema v12); both legs are written in a single DB transaction with a shared group id (`addTransfer`), and transfers are excluded from monthly income/expense totals. Remaining: edit/delete both legs together from the list UI. | M | - |
+| A3 | **Data-at-rest encryption** | ✅ **Done.** Database encrypted with SQLCipher: random 256-bit key generated once and held in the platform keystore (option (a) - PIN is a UI gate, so a PIN reset cannot lose data). Existing plaintext databases are re-encrypted in place on first launch, keeping a `.premigration.bak`; every failure path falls back to plaintext rather than bricking the app. PIN hardening: PBKDF2-HMAC-SHA256, per-PIN salt, iteration count in the hash, legacy v1 still verifies and upgrades, progressive lockout after 5 free attempts. Verified on device: the DB header is no longer SQLite magic and the app runs. **Maintenance risk:** `sqlcipher_flutter_libs` is pinned to 0.6.0 (0.7.0 is an EOL no-op stub) and needs a Gradle `compileSdk` subproject override; the forward path is `sqlite3` v3, currently blocked by `mediapipe_genai` pinning `native_toolchain_c ^0.3.3`. | L | - |
+| A4 | **Safe deletion flows** | **Part 1 done.** Data layer can now reassign before deleting: `reassignTransactionsForCategory` / `reassignTransactionsForAccount` (wallet-scoped) move history instead of orphaning it (the lists inner-join categories, so orphans vanish from the UI while still counting in balances) or erasing it (`categoryId` cascades if FKs are enabled). Remaining: the "reassign to..." UI on category/account delete, keep-or-remove prompt for recurring rules, and the `PRAGMA foreign_keys` enablement (only safe once deletion always reassigns). | M | - |
 | A5 | **Release infrastructure** | ✅ `INTERNET` + `allowBackup="false"` added to the main manifest. Still open: package name is `com.example.expense_tracker`, debug-keystore signing, no `dataExtractionRules`, no privacy screen, no Play SMS declaration. | S-M | - |
 | A6 | **Integer money + rounding policy** | 22 `real()` columns. No rounding/remainder handling for splits at all. | L | - |
 | A7 | **User identity for collaboration** | No users/profiles table. `WalletMembers.accountId` references money accounts. | L | - |
@@ -78,4 +78,7 @@ Effort: **S** ≈ hours, **M** ≈ 1-3 days, **L** ≈ 1-2 weeks+.
 - `INTERNET` + `allowBackup="false"` in the main Android manifest.
 - Working backup + validated restore (core/services/backup_service.dart, A1) - with tests.
 - Encrypted + automatic backups and restart-free restore (A1) - with 11 tests.
-- Full suite 325 pass / 1 pre-existing failure.
+- Real transfers: atomic pair + report exclusion (A2) - with 3 tests.
+- PIN hardening: PBKDF2 hashing, legacy upgrade, attempt lockout (A3 part 1) - with 10 tests.
+- PIN-hardening + prepared DB-encryption helpers (A3 part 1) - with 18 tests.
+- Full suite 348 pass / 1 pre-existing failure.

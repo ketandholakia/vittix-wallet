@@ -4,6 +4,7 @@ import 'package:expense_tracker/data/local/mappers/transaction_mapper.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart';
 import 'package:expense_tracker/domain/entities/trend_data_point.dart';
 import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {
   final db.TransactionDao _transactionDao;
@@ -88,6 +89,44 @@ class TransactionRepositoryImpl implements TransactionRepository {
           entityId: id,
           entityUuid: existing.uuid,
           source: 'user',
+        );
+      }
+    });
+  }
+
+  @override
+  Future<void> addTransfer(
+    Transaction outgoing,
+    Transaction incoming, {
+    String source = 'user',
+  }) async {
+    await _walletDao?.checkPermission(
+      walletId: walletId,
+      permissionCheck: (s, r) => s.canAddTransactions(r),
+      actorAccountId: actorAccountId,
+      actionName: 'add transfers',
+    );
+
+    final database = _transactionDao.attachedDatabase;
+    final groupId = const Uuid().v4();
+    final now = DateTime.now();
+
+    // Both legs are written in one transaction, so a crash can no longer leave
+    // money debited from one account without being credited to the other.
+    await database.transaction(() async {
+      for (final leg in [outgoing, incoming]) {
+        final companion = leg.toCompanion().copyWith(
+          id: const Value.absent(),
+          walletId: Value(walletId),
+          transferGroupId: Value(groupId),
+          createdAt: Value(now),
+          updatedAt: Value(now),
+        );
+        final id = await _transactionDao.insertTransaction(companion, walletId);
+        await _insertAuditEvent(
+          action: 'TRANSFER_CREATED',
+          entityId: id,
+          source: source,
         );
       }
     });

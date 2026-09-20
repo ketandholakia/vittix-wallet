@@ -14534,6 +14534,17 @@ class $TransactionsTable extends Transactions
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _transferGroupIdMeta = const VerificationMeta(
+    'transferGroupId',
+  );
+  @override
+  late final GeneratedColumn<String> transferGroupId = GeneratedColumn<String>(
+    'transfer_group_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -14569,6 +14580,7 @@ class $TransactionsTable extends Transactions
     type,
     categoryId,
     accountId,
+    transferGroupId,
     createdAt,
     updatedAt,
   ];
@@ -14637,6 +14649,15 @@ class $TransactionsTable extends Transactions
     } else if (isInserting) {
       context.missing(_accountIdMeta);
     }
+    if (data.containsKey('transfer_group_id')) {
+      context.handle(
+        _transferGroupIdMeta,
+        transferGroupId.isAcceptableOrUnknown(
+          data['transfer_group_id']!,
+          _transferGroupIdMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -14696,6 +14717,10 @@ class $TransactionsTable extends Transactions
         DriftSqlType.int,
         data['${effectivePrefix}account_id'],
       )!,
+      transferGroupId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transfer_group_id'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -14726,6 +14751,11 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   final TransactionType type;
   final int categoryId;
   final int accountId;
+
+  /// Groups the two legs of a transfer. Both rows share one value, which is
+  /// what makes a transfer first-class: it can be excluded from income/expense
+  /// reporting and edited or deleted as a unit. Null for ordinary entries.
+  final String? transferGroupId;
   final DateTime createdAt;
   final DateTime updatedAt;
   const Transaction({
@@ -14738,6 +14768,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     required this.type,
     required this.categoryId,
     required this.accountId,
+    this.transferGroupId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -14759,6 +14790,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     }
     map['category_id'] = Variable<int>(categoryId);
     map['account_id'] = Variable<int>(accountId);
+    if (!nullToAbsent || transferGroupId != null) {
+      map['transfer_group_id'] = Variable<String>(transferGroupId);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -14775,6 +14809,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       type: Value(type),
       categoryId: Value(categoryId),
       accountId: Value(accountId),
+      transferGroupId: transferGroupId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(transferGroupId),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -14797,6 +14834,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       ),
       categoryId: serializer.fromJson<int>(json['categoryId']),
       accountId: serializer.fromJson<int>(json['accountId']),
+      transferGroupId: serializer.fromJson<String?>(json['transferGroupId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -14816,6 +14854,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
       ),
       'categoryId': serializer.toJson<int>(categoryId),
       'accountId': serializer.toJson<int>(accountId),
+      'transferGroupId': serializer.toJson<String?>(transferGroupId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -14831,6 +14870,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     TransactionType? type,
     int? categoryId,
     int? accountId,
+    Value<String?> transferGroupId = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => Transaction(
@@ -14843,6 +14883,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     type: type ?? this.type,
     categoryId: categoryId ?? this.categoryId,
     accountId: accountId ?? this.accountId,
+    transferGroupId: transferGroupId.present
+        ? transferGroupId.value
+        : this.transferGroupId,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -14859,6 +14902,9 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           ? data.categoryId.value
           : this.categoryId,
       accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      transferGroupId: data.transferGroupId.present
+          ? data.transferGroupId.value
+          : this.transferGroupId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -14876,6 +14922,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           ..write('type: $type, ')
           ..write('categoryId: $categoryId, ')
           ..write('accountId: $accountId, ')
+          ..write('transferGroupId: $transferGroupId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -14893,6 +14940,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     type,
     categoryId,
     accountId,
+    transferGroupId,
     createdAt,
     updatedAt,
   );
@@ -14909,6 +14957,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           other.type == this.type &&
           other.categoryId == this.categoryId &&
           other.accountId == this.accountId &&
+          other.transferGroupId == this.transferGroupId &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -14923,6 +14972,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<TransactionType> type;
   final Value<int> categoryId;
   final Value<int> accountId;
+  final Value<String?> transferGroupId;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const TransactionsCompanion({
@@ -14935,6 +14985,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     this.type = const Value.absent(),
     this.categoryId = const Value.absent(),
     this.accountId = const Value.absent(),
+    this.transferGroupId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -14948,6 +14999,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     required TransactionType type,
     required int categoryId,
     required int accountId,
+    this.transferGroupId = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : amount = Value(amount),
@@ -14965,6 +15017,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Expression<String>? type,
     Expression<int>? categoryId,
     Expression<int>? accountId,
+    Expression<String>? transferGroupId,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -14978,6 +15031,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       if (type != null) 'type': type,
       if (categoryId != null) 'category_id': categoryId,
       if (accountId != null) 'account_id': accountId,
+      if (transferGroupId != null) 'transfer_group_id': transferGroupId,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -14993,6 +15047,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Value<TransactionType>? type,
     Value<int>? categoryId,
     Value<int>? accountId,
+    Value<String?>? transferGroupId,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
@@ -15006,6 +15061,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       type: type ?? this.type,
       categoryId: categoryId ?? this.categoryId,
       accountId: accountId ?? this.accountId,
+      transferGroupId: transferGroupId ?? this.transferGroupId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -15043,6 +15099,9 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     if (accountId.present) {
       map['account_id'] = Variable<int>(accountId.value);
     }
+    if (transferGroupId.present) {
+      map['transfer_group_id'] = Variable<String>(transferGroupId.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -15064,6 +15123,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
           ..write('type: $type, ')
           ..write('categoryId: $categoryId, ')
           ..write('accountId: $accountId, ')
+          ..write('transferGroupId: $transferGroupId, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -23633,6 +23693,7 @@ typedef $$TransactionsTableCreateCompanionBuilder =
       required TransactionType type,
       required int categoryId,
       required int accountId,
+      Value<String?> transferGroupId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -23647,6 +23708,7 @@ typedef $$TransactionsTableUpdateCompanionBuilder =
       Value<TransactionType> type,
       Value<int> categoryId,
       Value<int> accountId,
+      Value<String?> transferGroupId,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -23703,6 +23765,11 @@ class $$TransactionsTableFilterComposer
 
   ColumnFilters<int> get accountId => $composableBuilder(
     column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get transferGroupId => $composableBuilder(
+    column: $table.transferGroupId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23771,6 +23838,11 @@ class $$TransactionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get transferGroupId => $composableBuilder(
+    column: $table.transferGroupId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -23820,6 +23892,11 @@ class $$TransactionsTableAnnotationComposer
   GeneratedColumn<int> get accountId =>
       $composableBuilder(column: $table.accountId, builder: (column) => column);
 
+  GeneratedColumn<String> get transferGroupId => $composableBuilder(
+    column: $table.transferGroupId,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -23867,6 +23944,7 @@ class $$TransactionsTableTableManager
                 Value<TransactionType> type = const Value.absent(),
                 Value<int> categoryId = const Value.absent(),
                 Value<int> accountId = const Value.absent(),
+                Value<String?> transferGroupId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => TransactionsCompanion(
@@ -23879,6 +23957,7 @@ class $$TransactionsTableTableManager
                 type: type,
                 categoryId: categoryId,
                 accountId: accountId,
+                transferGroupId: transferGroupId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -23893,6 +23972,7 @@ class $$TransactionsTableTableManager
                 required TransactionType type,
                 required int categoryId,
                 required int accountId,
+                Value<String?> transferGroupId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => TransactionsCompanion.insert(
@@ -23905,6 +23985,7 @@ class $$TransactionsTableTableManager
                 type: type,
                 categoryId: categoryId,
                 accountId: accountId,
+                transferGroupId: transferGroupId,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),

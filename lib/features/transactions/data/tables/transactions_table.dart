@@ -22,6 +22,11 @@ class Transactions extends Table {
   // Foreign key to Accounts table
   IntColumn get accountId => integer().references(Accounts, #id, onDelete: KeyAction.restrict)();
 
+  /// Groups the two legs of a transfer. Both rows share one value, which is
+  /// what makes a transfer first-class: it can be excluded from income/expense
+  /// reporting and edited or deleted as a unit. Null for ordinary entries.
+  TextColumn get transferGroupId => text().nullable()();
+
   // Timestamps
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();

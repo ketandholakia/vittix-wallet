@@ -31,7 +31,10 @@ final monthlyReportProvider = FutureProvider.autoDispose<MonthlyReport>((ref) as
         ..where((t) =>
             t.walletId.equals(walletId) &
             t.date.isBiggerOrEqualValue(firstDay) &
-            t.date.isSmallerThanValue(nextMonthStart)))
+            t.date.isSmallerThanValue(nextMonthStart) &
+            // Transfers move money between the user's own accounts, so they
+            // must not inflate income or expense totals.
+            t.transferGroupId.isNull()))
       .get();
       
   final accounts = await db.select(db.accounts).get();

@@ -10,6 +10,7 @@ import 'package:expense_tracker/domain/usecases/category/add_category.dart';
 import 'package:expense_tracker/domain/usecases/category/delete_category.dart';
 import 'package:expense_tracker/domain/usecases/category/update_category.dart';
 import 'package:expense_tracker/domain/usecases/category/watch_all_categories.dart';
+import 'package:expense_tracker/features/transactions/domain/usecases/add_transfer.dart';
 import 'package:expense_tracker/domain/usecases/budget/add_budget.dart';
 import 'package:expense_tracker/domain/usecases/budget/check_budget_thresholds.dart';
 import 'package:expense_tracker/domain/usecases/budget/delete_budget.dart';
@@ -67,6 +68,10 @@ final checkBudgetThresholdsUseCaseProvider = Provider<CheckBudgetThresholds?>((r
 
 final addTransactionUseCaseProvider = Provider<AddTransaction>((ref) {
   return AddTransaction(ref.watch(transactionRepositoryProvider), ref.watch(checkBudgetThresholdsUseCaseProvider));
+});
+
+final addTransferUseCaseProvider = Provider<AddTransfer>((ref) {
+  return AddTransfer(ref.watch(transactionRepositoryProvider));
 });
 
 final updateTransactionUseCaseProvider = Provider<UpdateTransaction>((ref) {

@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:expense_tracker/features/security/data/pin_attempt_limiter.dart';
+import 'package:expense_tracker/features/security/data/pin_hasher.dart';
+import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
 import 'package:expense_tracker/features/security/presentation/security_providers.dart';
 
 enum LockScreenMode { unlock, setup, verify }
@@ -163,18 +166,56 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
     });
   }
 
-  void _processFullPin() {
+  /// Verifies the entered PIN, applying progressive lockout and upgrading a
+  /// legacy v1 hash to v2 on the first successful unlock.
+  Future<void> _processFullPin() async {
     final storedHash = ref.read(pinHashProvider).value;
 
     switch (widget.mode) {
       case LockScreenMode.unlock:
-        if (storedHash != null && hashPin(_inputPin) == storedHash) {
-          HapticFeedback.mediumImpact();
-          ref.read(appLockStateProvider.notifier).unlock();
-          widget.onSuccess?.call(_inputPin);
-        } else {
+      case LockScreenMode.verify:
+        if (storedHash == null) {
           _triggerError('Incorrect PIN');
+          return;
         }
+
+        final limiter = PinAttemptLimiter(SecureStorageKeyValueStore());
+        if (await limiter.isLocked()) {
+          final remaining = await limiter.remainingLockout();
+          if (!mounted) return;
+          _triggerError(
+            'Too many attempts. Try again in ${_formatLockout(remaining)}.',
+          );
+          return;
+        }
+
+        final ok = await PinHasher.verify(_inputPin, storedHash);
+        if (!mounted) return;
+
+        if (!ok) {
+          await limiter.registerFailure();
+          final remaining = await limiter.attemptsRemaining();
+          if (!mounted) return;
+          _triggerError(
+            remaining > 0
+                ? 'Incorrect PIN. $remaining attempt${remaining == 1 ? '' : 's'} left.'
+                : 'Incorrect PIN. Entry temporarily locked.',
+          );
+          return;
+        }
+
+        await limiter.clear();
+        // Transparently move a legacy v1 hash to the stronger v2 scheme.
+        if (PinHasher.needsUpgrade(storedHash)) {
+          final upgraded = await PinHasher.hash(_inputPin);
+          await ref.read(pinHashProvider.notifier).updatePinHash(upgraded);
+        }
+        if (!mounted) return;
+        HapticFeedback.mediumImpact();
+        if (widget.mode == LockScreenMode.unlock) {
+          ref.read(appLockStateProvider.notifier).unlock();
+        }
+        widget.onSuccess?.call(_inputPin);
         break;
 
       case LockScreenMode.setup:
@@ -197,16 +238,15 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
           }
         }
         break;
-
-      case LockScreenMode.verify:
-        if (storedHash != null && hashPin(_inputPin) == storedHash) {
-          HapticFeedback.mediumImpact();
-          widget.onSuccess?.call(_inputPin);
-        } else {
-          _triggerError('Incorrect PIN');
-        }
-        break;
     }
+  }
+
+  String _formatLockout(Duration d) {
+    if (d.inMinutes >= 1) {
+      final minutes = d.inMinutes + (d.inSeconds % 60 > 0 ? 1 : 0);
+      return '$minutes min';
+    }
+    return '${d.inSeconds}s';
   }
 
   Widget _buildDot(int index) {

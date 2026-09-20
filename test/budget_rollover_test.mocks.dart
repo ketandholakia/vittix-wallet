@@ -151,6 +151,23 @@ class MockTransactionRepository extends _i1.Mock
           as _i3.Future<void>);
 
   @override
+  _i3.Future<void> addTransfer(
+    _i6.Transaction? outgoing,
+    _i6.Transaction? incoming, {
+    String? source = 'user',
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #addTransfer,
+              [outgoing, incoming],
+              {#source: source},
+            ),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
   _i3.Future<void> updateTransaction(_i6.Transaction? transaction) =>
       (super.noSuchMethod(
             Invocation.method(#updateTransaction, [transaction]),

@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/database/sqlcipher_loader.dart';
 import 'package:expense_tracker/features/security/presentation/app_lock_wrapper.dart';
 import 'package:expense_tracker/core/domain/brand_assets.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
@@ -11,10 +12,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqlcipher_flutter_libs/sqlcipher_flutter_libs.dart';
 
 Future<void> main() async {
   final startup = Stopwatch()..start();
   WidgetsFlutterBinding.ensureInitialized();
+
+  // A3: load the SQLCipher build before any database is opened. The workaround
+  // needs the Flutter engine (platform channel), so it runs here; the plain
+  // override is also applied inside the database isolate by `_openConnection`.
+  await applyWorkaroundToOpenSqlCipherOnOldAndroidVersions();
+  useSqlCipher();
+
   if (kDebugMode) {
     debugPrint('Flutter binding initialized in ${startup.elapsedMilliseconds}ms');
   }

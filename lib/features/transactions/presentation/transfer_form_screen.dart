@@ -118,8 +118,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
           updatedAt: DateTime.now(),
         );
 
-        await ref.read(addTransactionUseCaseProvider).call(expenseTx);
-        await ref.read(addTransactionUseCaseProvider).call(incomeTx);
+        // 3. Write both legs atomically; they share one transfer group id so
+        // they can be excluded from income/expense reporting later.
+        await ref.read(addTransferUseCaseProvider).call(expenseTx, incomeTx);
 
         if (mounted) {
           Navigator.of(context).pop();
