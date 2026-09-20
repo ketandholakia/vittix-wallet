@@ -95,6 +95,43 @@ void main() {
     );
   });
 
+  test('adding a member records the acting user identity', () async {
+    // A brand new member, added by Asha (an owner) acting as a user.
+    final newAccount = await db.into(db.accounts).insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletId),
+            name: 'Second Account',
+            type: db_enums.AccountType.cash,
+            icon: 0,
+            color: '00FFFF',
+          ),
+        );
+    final newUser = await db.userDao
+        .insertUser(const UsersCompanion(displayName: Value('Ravi')));
+
+    await db.walletDao.insertMember(
+      WalletMembersCompanion.insert(
+        walletId: walletId,
+        accountId: newAccount,
+        role: WalletRole.member,
+        userId: Value(newUser),
+      ),
+      actorUserId: userId,
+    );
+
+    final events = await db.walletDao
+        .getActivityForWallet(walletId, action: 'MEMBER_ADDED');
+
+    // The member being added is Ravi; the actor who added them is Asha.
+    expect(events, isNotEmpty);
+    expect(
+      events.map((e) => e.actorUserId),
+      contains(userId),
+      reason: 'the audit event must be attributed to the acting user',
+    );
+    expect(events.map((e) => e.actorUserId), isNot(contains(newUser)));
+  });
+
   test('a viewer cannot create audit events', () async {
     // A second member, so the wallet keeps an owner.
     final viewerAccount = await db.into(db.accounts).insert(

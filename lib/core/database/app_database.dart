@@ -225,7 +225,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     return list.length;
   }
 
-  Future<int> insertMember(Insertable<WalletMember> member, {int? actorAccountId}) async {
+  Future<int> insertMember(Insertable<WalletMember> member, {int? actorAccountId, int? actorUserId}) async {
     // Resolve wallet/account for the audit event before insert.
     int? memberWalletId;
     int? memberAccountId;
@@ -253,12 +253,13 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         ),
         wid,
         actorAccountId: actorAccountId,
+        actorUserId: actorUserId,
       );
       return id;
     });
   }
 
-  Future<bool> updateMember(Insertable<WalletMember> companion, {int? actorAccountId}) async {
+  Future<bool> updateMember(Insertable<WalletMember> companion, {int? actorAccountId, int? actorUserId}) async {
     return transaction(() async {
       int? memberId;
       if (companion is WalletMember) {
@@ -276,6 +277,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
             walletId: existing.walletId,
             permissionCheck: (s, r) => s.canChangeRoles(r),
             actorAccountId: actorAccountId,
+            actorUserId: actorUserId,
             actionName: 'manage member roles',
           );
 
@@ -292,7 +294,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
             }
 
             if ((newRole != null && newRole != WalletRole.owner) || (newIsActive != null && !newIsActive)) {
-              final actorRole = await getRoleInWallet(existing.walletId, actorAccountId: actorAccountId);
+              final actorRole = await getRoleInWallet(existing.walletId, actorAccountId: actorAccountId, actorUserId: actorUserId);
               if (actorRole != null && actorRole != WalletRole.owner) {
                 throw const WalletPermissionDeniedException('Permission denied: Only wallet owners can demote another owner.');
               }
@@ -328,6 +330,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
             ),
             existing.walletId,
             actorAccountId: actorAccountId,
+            actorUserId: actorUserId,
           );
         }
       }
@@ -336,12 +339,13 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<void> deactivateMember(int walletId, int accountId, {int? actorAccountId}) async {
+  Future<void> deactivateMember(int walletId, int accountId, {int? actorAccountId, int? actorUserId}) async {
     await transaction(() async {
       await checkPermission(
         walletId: walletId,
         permissionCheck: (s, r) => s.canRemoveMembers(r),
         actorAccountId: actorAccountId,
+        actorUserId: actorUserId,
         actionName: 'remove members',
       );
 
@@ -372,6 +376,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         ),
         walletId,
         actorAccountId: actorAccountId,
+        actorUserId: actorUserId,
       );
     });
   }
