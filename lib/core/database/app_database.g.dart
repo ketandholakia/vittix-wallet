@@ -7456,6 +7456,15 @@ class $WalletMembersTable extends WalletMembers
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   late final GeneratedColumnWithTypeConverter<WalletRole, String> role =
       GeneratedColumn<String>(
@@ -7497,6 +7506,7 @@ class $WalletMembersTable extends WalletMembers
     id,
     walletId,
     accountId,
+    userId,
     role,
     joinedAt,
     isActive,
@@ -7532,6 +7542,12 @@ class $WalletMembersTable extends WalletMembers
     } else if (isInserting) {
       context.missing(_accountIdMeta);
     }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
     if (data.containsKey('joined_at')) {
       context.handle(
         _joinedAtMeta,
@@ -7565,6 +7581,10 @@ class $WalletMembersTable extends WalletMembers
         DriftSqlType.int,
         data['${effectivePrefix}account_id'],
       )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}user_id'],
+      ),
       role: $WalletMembersTable.$converterrole.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -7595,6 +7615,15 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
   final int id;
   final int walletId;
   final int accountId;
+
+  /// A7 bridge: the real identity of this member.
+  ///
+  /// `accountId` above is a money container, not a person - that conflation is
+  /// why collaboration could not be built. This column is the successor and is
+  /// nullable so membership rows can carry a user identity while every existing
+  /// `actorAccountId` call site is migrated across. Once step 3 is complete,
+  /// `accountId` can be dropped.
+  final int? userId;
   final WalletRole role;
   final DateTime joinedAt;
   final bool isActive;
@@ -7602,6 +7631,7 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
     required this.id,
     required this.walletId,
     required this.accountId,
+    this.userId,
     required this.role,
     required this.joinedAt,
     required this.isActive,
@@ -7612,6 +7642,9 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
     map['id'] = Variable<int>(id);
     map['wallet_id'] = Variable<int>(walletId);
     map['account_id'] = Variable<int>(accountId);
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<int>(userId);
+    }
     {
       map['role'] = Variable<String>(
         $WalletMembersTable.$converterrole.toSql(role),
@@ -7627,6 +7660,9 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
       id: Value(id),
       walletId: Value(walletId),
       accountId: Value(accountId),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
       role: Value(role),
       joinedAt: Value(joinedAt),
       isActive: Value(isActive),
@@ -7642,6 +7678,7 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
       id: serializer.fromJson<int>(json['id']),
       walletId: serializer.fromJson<int>(json['walletId']),
       accountId: serializer.fromJson<int>(json['accountId']),
+      userId: serializer.fromJson<int?>(json['userId']),
       role: $WalletMembersTable.$converterrole.fromJson(
         serializer.fromJson<String>(json['role']),
       ),
@@ -7656,6 +7693,7 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
       'id': serializer.toJson<int>(id),
       'walletId': serializer.toJson<int>(walletId),
       'accountId': serializer.toJson<int>(accountId),
+      'userId': serializer.toJson<int?>(userId),
       'role': serializer.toJson<String>(
         $WalletMembersTable.$converterrole.toJson(role),
       ),
@@ -7668,6 +7706,7 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
     int? id,
     int? walletId,
     int? accountId,
+    Value<int?> userId = const Value.absent(),
     WalletRole? role,
     DateTime? joinedAt,
     bool? isActive,
@@ -7675,6 +7714,7 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
     id: id ?? this.id,
     walletId: walletId ?? this.walletId,
     accountId: accountId ?? this.accountId,
+    userId: userId.present ? userId.value : this.userId,
     role: role ?? this.role,
     joinedAt: joinedAt ?? this.joinedAt,
     isActive: isActive ?? this.isActive,
@@ -7684,6 +7724,7 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
       id: data.id.present ? data.id.value : this.id,
       walletId: data.walletId.present ? data.walletId.value : this.walletId,
       accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      userId: data.userId.present ? data.userId.value : this.userId,
       role: data.role.present ? data.role.value : this.role,
       joinedAt: data.joinedAt.present ? data.joinedAt.value : this.joinedAt,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
@@ -7696,6 +7737,7 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
           ..write('id: $id, ')
           ..write('walletId: $walletId, ')
           ..write('accountId: $accountId, ')
+          ..write('userId: $userId, ')
           ..write('role: $role, ')
           ..write('joinedAt: $joinedAt, ')
           ..write('isActive: $isActive')
@@ -7705,7 +7747,7 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
 
   @override
   int get hashCode =>
-      Object.hash(id, walletId, accountId, role, joinedAt, isActive);
+      Object.hash(id, walletId, accountId, userId, role, joinedAt, isActive);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -7713,6 +7755,7 @@ class WalletMember extends DataClass implements Insertable<WalletMember> {
           other.id == this.id &&
           other.walletId == this.walletId &&
           other.accountId == this.accountId &&
+          other.userId == this.userId &&
           other.role == this.role &&
           other.joinedAt == this.joinedAt &&
           other.isActive == this.isActive);
@@ -7722,6 +7765,7 @@ class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
   final Value<int> id;
   final Value<int> walletId;
   final Value<int> accountId;
+  final Value<int?> userId;
   final Value<WalletRole> role;
   final Value<DateTime> joinedAt;
   final Value<bool> isActive;
@@ -7729,6 +7773,7 @@ class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
     this.id = const Value.absent(),
     this.walletId = const Value.absent(),
     this.accountId = const Value.absent(),
+    this.userId = const Value.absent(),
     this.role = const Value.absent(),
     this.joinedAt = const Value.absent(),
     this.isActive = const Value.absent(),
@@ -7737,6 +7782,7 @@ class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
     this.id = const Value.absent(),
     required int walletId,
     required int accountId,
+    this.userId = const Value.absent(),
     required WalletRole role,
     this.joinedAt = const Value.absent(),
     this.isActive = const Value.absent(),
@@ -7747,6 +7793,7 @@ class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
     Expression<int>? id,
     Expression<int>? walletId,
     Expression<int>? accountId,
+    Expression<int>? userId,
     Expression<String>? role,
     Expression<DateTime>? joinedAt,
     Expression<bool>? isActive,
@@ -7755,6 +7802,7 @@ class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
       if (id != null) 'id': id,
       if (walletId != null) 'wallet_id': walletId,
       if (accountId != null) 'account_id': accountId,
+      if (userId != null) 'user_id': userId,
       if (role != null) 'role': role,
       if (joinedAt != null) 'joined_at': joinedAt,
       if (isActive != null) 'is_active': isActive,
@@ -7765,6 +7813,7 @@ class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
     Value<int>? id,
     Value<int>? walletId,
     Value<int>? accountId,
+    Value<int?>? userId,
     Value<WalletRole>? role,
     Value<DateTime>? joinedAt,
     Value<bool>? isActive,
@@ -7773,6 +7822,7 @@ class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
       id: id ?? this.id,
       walletId: walletId ?? this.walletId,
       accountId: accountId ?? this.accountId,
+      userId: userId ?? this.userId,
       role: role ?? this.role,
       joinedAt: joinedAt ?? this.joinedAt,
       isActive: isActive ?? this.isActive,
@@ -7790,6 +7840,9 @@ class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
     }
     if (accountId.present) {
       map['account_id'] = Variable<int>(accountId.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
     }
     if (role.present) {
       map['role'] = Variable<String>(
@@ -7811,6 +7864,7 @@ class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
           ..write('id: $id, ')
           ..write('walletId: $walletId, ')
           ..write('accountId: $accountId, ')
+          ..write('userId: $userId, ')
           ..write('role: $role, ')
           ..write('joinedAt: $joinedAt, ')
           ..write('isActive: $isActive')
@@ -20434,6 +20488,7 @@ typedef $$WalletMembersTableCreateCompanionBuilder =
       Value<int> id,
       required int walletId,
       required int accountId,
+      Value<int?> userId,
       required WalletRole role,
       Value<DateTime> joinedAt,
       Value<bool> isActive,
@@ -20443,6 +20498,7 @@ typedef $$WalletMembersTableUpdateCompanionBuilder =
       Value<int> id,
       Value<int> walletId,
       Value<int> accountId,
+      Value<int?> userId,
       Value<WalletRole> role,
       Value<DateTime> joinedAt,
       Value<bool> isActive,
@@ -20469,6 +20525,11 @@ class $$WalletMembersTableFilterComposer
 
   ColumnFilters<int> get accountId => $composableBuilder(
     column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get userId => $composableBuilder(
+    column: $table.userId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -20513,6 +20574,11 @@ class $$WalletMembersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get role => $composableBuilder(
     column: $table.role,
     builder: (column) => ColumnOrderings(column),
@@ -20546,6 +20612,9 @@ class $$WalletMembersTableAnnotationComposer
 
   GeneratedColumn<int> get accountId =>
       $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<int> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<WalletRole, String> get role =>
       $composableBuilder(column: $table.role, builder: (column) => column);
@@ -20591,6 +20660,7 @@ class $$WalletMembersTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<int> walletId = const Value.absent(),
                 Value<int> accountId = const Value.absent(),
+                Value<int?> userId = const Value.absent(),
                 Value<WalletRole> role = const Value.absent(),
                 Value<DateTime> joinedAt = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
@@ -20598,6 +20668,7 @@ class $$WalletMembersTableTableManager
                 id: id,
                 walletId: walletId,
                 accountId: accountId,
+                userId: userId,
                 role: role,
                 joinedAt: joinedAt,
                 isActive: isActive,
@@ -20607,6 +20678,7 @@ class $$WalletMembersTableTableManager
                 Value<int> id = const Value.absent(),
                 required int walletId,
                 required int accountId,
+                Value<int?> userId = const Value.absent(),
                 required WalletRole role,
                 Value<DateTime> joinedAt = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
@@ -20614,6 +20686,7 @@ class $$WalletMembersTableTableManager
                 id: id,
                 walletId: walletId,
                 accountId: accountId,
+                userId: userId,
                 role: role,
                 joinedAt: joinedAt,
                 isActive: isActive,

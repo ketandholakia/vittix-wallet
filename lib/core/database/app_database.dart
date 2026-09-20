@@ -1985,7 +1985,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   Future<int> insertDeletedRecord(String uuid, String tableName) {
     /* return into(deletedRecords).insert(
