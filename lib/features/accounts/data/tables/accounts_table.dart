@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:expense_tracker/core/money/money.dart';
 import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,7 +12,7 @@ class Accounts extends Table {
   TextColumn get type => text().map(const EnumNameConverter(AccountType.values))();
   IntColumn get icon => integer()();
   TextColumn get color => text()();
-  RealColumn get openingBalance => real().withDefault(const Constant(0))();
+  IntColumn get openingBalance => integer().map(const MoneyConverter()).withDefault(const Constant(0))();
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
   DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
 }

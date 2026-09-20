@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:expense_tracker/core/money/money.dart';
 import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
 import 'package:expense_tracker/features/categories/data/tables/categories_table.dart';
@@ -11,7 +12,7 @@ class RecurringTransactions extends Table {
   IntColumn get walletId => integer().withDefault(const Constant(1)).references(Wallets, #id, onDelete: KeyAction.cascade)();
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   TextColumn get name => text().withLength(min: 1, max: 100)();
-  RealColumn get amount => real()();
+  IntColumn get amount => integer().map(const MoneyConverter())();
   TextColumn get type => text().map(const EnumNameConverter(TransactionType.values))();
   IntColumn get categoryId => integer().references(Categories, #id, onDelete: KeyAction.cascade)();
   IntColumn get accountId => integer().references(Accounts, #id, onDelete: KeyAction.restrict)();

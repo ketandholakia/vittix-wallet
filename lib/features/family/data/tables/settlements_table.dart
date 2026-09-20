@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:expense_tracker/core/money/money.dart';
 import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
 import 'package:expense_tracker/features/family/data/tables/wallet_members_table.dart';
@@ -12,7 +13,7 @@ class WalletSettlements extends Table {
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   IntColumn get payerMemberId => integer().references(WalletMembers, #id, onDelete: KeyAction.cascade)();
   IntColumn get receiverMemberId => integer().references(WalletMembers, #id, onDelete: KeyAction.cascade)();
-  RealColumn get amount => real()();
+  IntColumn get amount => integer().map(const MoneyConverter())();
   DateTimeColumn get settlementDate => dateTime().clientDefault(() => DateTime.now())();
   TextColumn get notes => text().nullable()();
   IntColumn get createdByAccountId => integer().nullable().references(Accounts, #id, onDelete: KeyAction.setNull)();

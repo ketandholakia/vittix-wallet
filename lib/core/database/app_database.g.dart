@@ -357,18 +357,16 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _openingBalanceMeta = const VerificationMeta(
-    'openingBalance',
-  );
   @override
-  late final GeneratedColumn<double> openingBalance = GeneratedColumn<double>(
-    'opening_balance',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> openingBalance =
+      GeneratedColumn<int>(
+        'opening_balance',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      ).withConverter<double>($AccountsTable.$converteropeningBalance);
   static const VerificationMeta _isDefaultMeta = const VerificationMeta(
     'isDefault',
   );
@@ -460,15 +458,6 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     } else if (isInserting) {
       context.missing(_colorMeta);
     }
-    if (data.containsKey('opening_balance')) {
-      context.handle(
-        _openingBalanceMeta,
-        openingBalance.isAcceptableOrUnknown(
-          data['opening_balance']!,
-          _openingBalanceMeta,
-        ),
-      );
-    }
     if (data.containsKey('is_default')) {
       context.handle(
         _isDefaultMeta,
@@ -520,10 +509,12 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
         DriftSqlType.string,
         data['${effectivePrefix}color'],
       )!,
-      openingBalance: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}opening_balance'],
-      )!,
+      openingBalance: $AccountsTable.$converteropeningBalance.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}opening_balance'],
+        )!,
+      ),
       isDefault: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_default'],
@@ -542,6 +533,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   static JsonTypeConverter2<AccountType, String, String> $convertertype =
       const EnumNameConverter(AccountType.values);
+  static TypeConverter<double, int> $converteropeningBalance =
+      const MoneyConverter();
 }
 
 class Account extends DataClass implements Insertable<Account> {
@@ -579,7 +572,11 @@ class Account extends DataClass implements Insertable<Account> {
     }
     map['icon'] = Variable<int>(icon);
     map['color'] = Variable<String>(color);
-    map['opening_balance'] = Variable<double>(openingBalance);
+    {
+      map['opening_balance'] = Variable<int>(
+        $AccountsTable.$converteropeningBalance.toSql(openingBalance),
+      );
+    }
     map['is_default'] = Variable<bool>(isDefault);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -771,7 +768,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     Expression<String>? type,
     Expression<int>? icon,
     Expression<String>? color,
-    Expression<double>? openingBalance,
+    Expression<int>? openingBalance,
     Expression<bool>? isDefault,
     Expression<DateTime>? updatedAt,
   }) {
@@ -842,7 +839,9 @@ class AccountsCompanion extends UpdateCompanion<Account> {
       map['color'] = Variable<String>(color.value);
     }
     if (openingBalance.present) {
-      map['opening_balance'] = Variable<double>(openingBalance.value);
+      map['opening_balance'] = Variable<int>(
+        $AccountsTable.$converteropeningBalance.toSql(openingBalance.value),
+      );
     }
     if (isDefault.present) {
       map['is_default'] = Variable<bool>(isDefault.value);
@@ -914,15 +913,15 @@ class $WalletBillsTable extends WalletBills
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($WalletBillsTable.$converteramount);
   static const VerificationMeta _dueDateMeta = const VerificationMeta(
     'dueDate',
   );
@@ -1084,14 +1083,6 @@ class $WalletBillsTable extends WalletBills
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('due_date')) {
       context.handle(
         _dueDateMeta,
@@ -1171,10 +1162,12 @@ class $WalletBillsTable extends WalletBills
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $WalletBillsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       dueDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}due_date'],
@@ -1227,6 +1220,7 @@ class $WalletBillsTable extends WalletBills
     return $WalletBillsTable(attachedDatabase, alias);
   }
 
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
   static JsonTypeConverter2<WalletBillRecurrence, String, String>
   $converterrecurrence = const EnumNameConverter(WalletBillRecurrence.values);
   static JsonTypeConverter2<WalletBillStatus, String, String> $converterstatus =
@@ -1270,7 +1264,11 @@ class WalletBill extends DataClass implements Insertable<WalletBill> {
     map['id'] = Variable<int>(id);
     map['wallet_id'] = Variable<int>(walletId);
     map['name'] = Variable<String>(name);
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $WalletBillsTable.$converteramount.toSql(amount),
+      );
+    }
     map['due_date'] = Variable<DateTime>(dueDate);
     {
       map['recurrence'] = Variable<String>(
@@ -1548,7 +1546,7 @@ class WalletBillsCompanion extends UpdateCompanion<WalletBill> {
     Expression<int>? id,
     Expression<int>? walletId,
     Expression<String>? name,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<DateTime>? dueDate,
     Expression<String>? recurrence,
     Expression<String>? category,
@@ -1627,7 +1625,9 @@ class WalletBillsCompanion extends UpdateCompanion<WalletBill> {
       map['name'] = Variable<String>(name.value);
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $WalletBillsTable.$converteramount.toSql(amount.value),
+      );
     }
     if (dueDate.present) {
       map['due_date'] = Variable<DateTime>(dueDate.value);
@@ -1728,15 +1728,15 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
     requiredDuringInsert: false,
     clientDefault: () => const Uuid().v4(),
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($BudgetsTable.$converteramount);
   static const VerificationMeta _periodMeta = const VerificationMeta('period');
   @override
   late final GeneratedColumn<String> period = GeneratedColumn<String>(
@@ -1806,14 +1806,6 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
         uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
       );
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('period')) {
       context.handle(
         _periodMeta,
@@ -1857,10 +1849,12 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
         DriftSqlType.string,
         data['${effectivePrefix}uuid'],
       )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $BudgetsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       period: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}period'],
@@ -1880,6 +1874,8 @@ class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
   $BudgetsTable createAlias(String alias) {
     return $BudgetsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
 }
 
 class Budget extends DataClass implements Insertable<Budget> {
@@ -1905,7 +1901,11 @@ class Budget extends DataClass implements Insertable<Budget> {
     map['id'] = Variable<int>(id);
     map['wallet_id'] = Variable<int>(walletId);
     map['uuid'] = Variable<String>(uuid);
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $BudgetsTable.$converteramount.toSql(amount),
+      );
+    }
     map['period'] = Variable<String>(period);
     map['category_id'] = Variable<int>(categoryId);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -2046,7 +2046,7 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
     Expression<int>? id,
     Expression<int>? walletId,
     Expression<String>? uuid,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<String>? period,
     Expression<int>? categoryId,
     Expression<DateTime>? updatedAt,
@@ -2095,7 +2095,9 @@ class BudgetsCompanion extends UpdateCompanion<Budget> {
       map['uuid'] = Variable<String>(uuid.value);
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $BudgetsTable.$converteramount.toSql(amount.value),
+      );
     }
     if (period.present) {
       map['period'] = Variable<String>(period.value);
@@ -3301,17 +3303,15 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, LoanDb> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _principalAmountMeta = const VerificationMeta(
-    'principalAmount',
-  );
   @override
-  late final GeneratedColumn<double> principalAmount = GeneratedColumn<double>(
-    'principal_amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> principalAmount =
+      GeneratedColumn<int>(
+        'principal_amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($LoansTable.$converterprincipalAmount);
   static const VerificationMeta _interestRateMeta = const VerificationMeta(
     'interestRate',
   );
@@ -3356,17 +3356,15 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, LoanDb> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _emiAmountMeta = const VerificationMeta(
-    'emiAmount',
-  );
   @override
-  late final GeneratedColumn<double> emiAmount = GeneratedColumn<double>(
-    'emi_amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> emiAmount =
+      GeneratedColumn<int>(
+        'emi_amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($LoansTable.$converteremiAmount);
   static const VerificationMeta _isActiveMeta = const VerificationMeta(
     'isActive',
   );
@@ -3453,17 +3451,6 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, LoanDb> {
     } else if (isInserting) {
       context.missing(_accountIdMeta);
     }
-    if (data.containsKey('principal_amount')) {
-      context.handle(
-        _principalAmountMeta,
-        principalAmount.isAcceptableOrUnknown(
-          data['principal_amount']!,
-          _principalAmountMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_principalAmountMeta);
-    }
     if (data.containsKey('interest_rate')) {
       context.handle(
         _interestRateMeta,
@@ -3502,14 +3489,6 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, LoanDb> {
           _nextEmiDateMeta,
         ),
       );
-    }
-    if (data.containsKey('emi_amount')) {
-      context.handle(
-        _emiAmountMeta,
-        emiAmount.isAcceptableOrUnknown(data['emi_amount']!, _emiAmountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_emiAmountMeta);
     }
     if (data.containsKey('is_active')) {
       context.handle(
@@ -3552,10 +3531,12 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, LoanDb> {
         DriftSqlType.int,
         data['${effectivePrefix}account_id'],
       )!,
-      principalAmount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}principal_amount'],
-      )!,
+      principalAmount: $LoansTable.$converterprincipalAmount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}principal_amount'],
+        )!,
+      ),
       interestRate: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}interest_rate'],
@@ -3572,10 +3553,12 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, LoanDb> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}next_emi_date'],
       ),
-      emiAmount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}emi_amount'],
-      )!,
+      emiAmount: $LoansTable.$converteremiAmount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}emi_amount'],
+        )!,
+      ),
       isActive: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
@@ -3591,6 +3574,11 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, LoanDb> {
   $LoansTable createAlias(String alias) {
     return $LoansTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<double, int> $converterprincipalAmount =
+      const MoneyConverter();
+  static TypeConverter<double, int> $converteremiAmount =
+      const MoneyConverter();
 }
 
 class LoanDb extends DataClass implements Insertable<LoanDb> {
@@ -3630,14 +3618,22 @@ class LoanDb extends DataClass implements Insertable<LoanDb> {
     map['uuid'] = Variable<String>(uuid);
     map['name'] = Variable<String>(name);
     map['account_id'] = Variable<int>(accountId);
-    map['principal_amount'] = Variable<double>(principalAmount);
+    {
+      map['principal_amount'] = Variable<int>(
+        $LoansTable.$converterprincipalAmount.toSql(principalAmount),
+      );
+    }
     map['interest_rate'] = Variable<double>(interestRate);
     map['tenure_months'] = Variable<int>(tenureMonths);
     map['start_date'] = Variable<DateTime>(startDate);
     if (!nullToAbsent || nextEmiDate != null) {
       map['next_emi_date'] = Variable<DateTime>(nextEmiDate);
     }
-    map['emi_amount'] = Variable<double>(emiAmount);
+    {
+      map['emi_amount'] = Variable<int>(
+        $LoansTable.$converteremiAmount.toSql(emiAmount),
+      );
+    }
     map['is_active'] = Variable<bool>(isActive);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -3870,12 +3866,12 @@ class LoansCompanion extends UpdateCompanion<LoanDb> {
     Expression<String>? uuid,
     Expression<String>? name,
     Expression<int>? accountId,
-    Expression<double>? principalAmount,
+    Expression<int>? principalAmount,
     Expression<double>? interestRate,
     Expression<int>? tenureMonths,
     Expression<DateTime>? startDate,
     Expression<DateTime>? nextEmiDate,
-    Expression<double>? emiAmount,
+    Expression<int>? emiAmount,
     Expression<bool>? isActive,
     Expression<DateTime>? updatedAt,
   }) {
@@ -3947,7 +3943,9 @@ class LoansCompanion extends UpdateCompanion<LoanDb> {
       map['account_id'] = Variable<int>(accountId.value);
     }
     if (principalAmount.present) {
-      map['principal_amount'] = Variable<double>(principalAmount.value);
+      map['principal_amount'] = Variable<int>(
+        $LoansTable.$converterprincipalAmount.toSql(principalAmount.value),
+      );
     }
     if (interestRate.present) {
       map['interest_rate'] = Variable<double>(interestRate.value);
@@ -3962,7 +3960,9 @@ class LoansCompanion extends UpdateCompanion<LoanDb> {
       map['next_emi_date'] = Variable<DateTime>(nextEmiDate.value);
     }
     if (emiAmount.present) {
-      map['emi_amount'] = Variable<double>(emiAmount.value);
+      map['emi_amount'] = Variable<int>(
+        $LoansTable.$converteremiAmount.toSql(emiAmount.value),
+      );
     }
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
@@ -4058,15 +4058,15 @@ class $PeerDebtsTable extends PeerDebts
         type: DriftSqlType.int,
         requiredDuringInsert: true,
       ).withConverter<PeerDebtType>($PeerDebtsTable.$convertertype);
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($PeerDebtsTable.$converteramount);
   static const VerificationMeta _noteMeta = const VerificationMeta('note');
   @override
   late final GeneratedColumn<String> note = GeneratedColumn<String>(
@@ -4174,14 +4174,6 @@ class $PeerDebtsTable extends PeerDebts
     } else if (isInserting) {
       context.missing(_personNameMeta);
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('note')) {
       context.handle(
         _noteMeta,
@@ -4248,10 +4240,12 @@ class $PeerDebtsTable extends PeerDebts
           data['${effectivePrefix}type'],
         )!,
       ),
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $PeerDebtsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       note: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}note'],
@@ -4282,6 +4276,7 @@ class $PeerDebtsTable extends PeerDebts
 
   static JsonTypeConverter2<PeerDebtType, int, int> $convertertype =
       const EnumIndexConverter<PeerDebtType>(PeerDebtType.values);
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
 }
 
 class PeerDebtDb extends DataClass implements Insertable<PeerDebtDb> {
@@ -4319,7 +4314,11 @@ class PeerDebtDb extends DataClass implements Insertable<PeerDebtDb> {
     {
       map['type'] = Variable<int>($PeerDebtsTable.$convertertype.toSql(type));
     }
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $PeerDebtsTable.$converteramount.toSql(amount),
+      );
+    }
     if (!nullToAbsent || note != null) {
       map['note'] = Variable<String>(note);
     }
@@ -4535,7 +4534,7 @@ class PeerDebtsCompanion extends UpdateCompanion<PeerDebtDb> {
     Expression<String>? uuid,
     Expression<String>? personName,
     Expression<int>? type,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<String>? note,
     Expression<DateTime>? date,
     Expression<bool>? isSettled,
@@ -4606,7 +4605,9 @@ class PeerDebtsCompanion extends UpdateCompanion<PeerDebtDb> {
       );
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $PeerDebtsTable.$converteramount.toSql(amount.value),
+      );
     }
     if (note.present) {
       map['note'] = Variable<String>(note.value);
@@ -4686,15 +4687,15 @@ class $WalletAllowancesTable extends WalletAllowances
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($WalletAllowancesTable.$converteramount);
   @override
   late final GeneratedColumnWithTypeConverter<WalletAllowanceFrequency, String>
   frequency =
@@ -4834,14 +4835,6 @@ class $WalletAllowancesTable extends WalletAllowances
     } else if (isInserting) {
       context.missing(_memberIdMeta);
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('start_date')) {
       context.handle(
         _startDateMeta,
@@ -4913,10 +4906,12 @@ class $WalletAllowancesTable extends WalletAllowances
         DriftSqlType.int,
         data['${effectivePrefix}member_id'],
       )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $WalletAllowancesTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       frequency: $WalletAllowancesTable.$converterfrequency.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -4959,6 +4954,7 @@ class $WalletAllowancesTable extends WalletAllowances
     return $WalletAllowancesTable(attachedDatabase, alias);
   }
 
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
   static JsonTypeConverter2<WalletAllowanceFrequency, String, String>
   $converterfrequency = const EnumNameConverter(
     WalletAllowanceFrequency.values,
@@ -4998,7 +4994,11 @@ class WalletAllowance extends DataClass implements Insertable<WalletAllowance> {
     map['id'] = Variable<int>(id);
     map['wallet_id'] = Variable<int>(walletId);
     map['member_id'] = Variable<int>(memberId);
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $WalletAllowancesTable.$converteramount.toSql(amount),
+      );
+    }
     {
       map['frequency'] = Variable<String>(
         $WalletAllowancesTable.$converterfrequency.toSql(frequency),
@@ -5239,7 +5239,7 @@ class WalletAllowancesCompanion extends UpdateCompanion<WalletAllowance> {
     Expression<int>? id,
     Expression<int>? walletId,
     Expression<int>? memberId,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<String>? frequency,
     Expression<DateTime>? startDate,
     Expression<DateTime>? endDate,
@@ -5310,7 +5310,9 @@ class WalletAllowancesCompanion extends UpdateCompanion<WalletAllowance> {
       map['member_id'] = Variable<int>(memberId.value);
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $WalletAllowancesTable.$converteramount.toSql(amount.value),
+      );
     }
     if (frequency.present) {
       map['frequency'] = Variable<String>(
@@ -5402,15 +5404,15 @@ class $WalletAllowancePaymentsTable extends WalletAllowancePayments
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($WalletAllowancePaymentsTable.$converteramount);
   static const VerificationMeta _paidDateMeta = const VerificationMeta(
     'paidDate',
   );
@@ -5475,14 +5477,6 @@ class $WalletAllowancePaymentsTable extends WalletAllowancePayments
     } else if (isInserting) {
       context.missing(_memberIdMeta);
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('paid_date')) {
       context.handle(
         _paidDateMeta,
@@ -5516,10 +5510,12 @@ class $WalletAllowancePaymentsTable extends WalletAllowancePayments
         DriftSqlType.int,
         data['${effectivePrefix}member_id'],
       )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $WalletAllowancePaymentsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       paidDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}paid_date'],
@@ -5535,6 +5531,8 @@ class $WalletAllowancePaymentsTable extends WalletAllowancePayments
   $WalletAllowancePaymentsTable createAlias(String alias) {
     return $WalletAllowancePaymentsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
 }
 
 class WalletAllowancePayment extends DataClass
@@ -5559,7 +5557,11 @@ class WalletAllowancePayment extends DataClass
     map['id'] = Variable<int>(id);
     map['allowance_id'] = Variable<int>(allowanceId);
     map['member_id'] = Variable<int>(memberId);
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $WalletAllowancePaymentsTable.$converteramount.toSql(amount),
+      );
+    }
     map['paid_date'] = Variable<DateTime>(paidDate);
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
@@ -5695,7 +5697,7 @@ class WalletAllowancePaymentsCompanion
     Expression<int>? id,
     Expression<int>? allowanceId,
     Expression<int>? memberId,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<DateTime>? paidDate,
     Expression<String>? notes,
   }) {
@@ -5740,7 +5742,9 @@ class WalletAllowancePaymentsCompanion
       map['member_id'] = Variable<int>(memberId.value);
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $WalletAllowancePaymentsTable.$converteramount.toSql(amount.value),
+      );
     }
     if (paidDate.present) {
       map['paid_date'] = Variable<DateTime>(paidDate.value);
@@ -5827,15 +5831,15 @@ class $WalletSettlementsTable extends WalletSettlements
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($WalletSettlementsTable.$converteramount);
   static const VerificationMeta _settlementDateMeta = const VerificationMeta(
     'settlementDate',
   );
@@ -5944,14 +5948,6 @@ class $WalletSettlementsTable extends WalletSettlements
     } else if (isInserting) {
       context.missing(_receiverMemberIdMeta);
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('settlement_date')) {
       context.handle(
         _settlementDateMeta,
@@ -6011,10 +6007,12 @@ class $WalletSettlementsTable extends WalletSettlements
         DriftSqlType.int,
         data['${effectivePrefix}receiver_member_id'],
       )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $WalletSettlementsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       settlementDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}settlement_date'],
@@ -6038,6 +6036,8 @@ class $WalletSettlementsTable extends WalletSettlements
   $WalletSettlementsTable createAlias(String alias) {
     return $WalletSettlementsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
 }
 
 class WalletSettlement extends DataClass
@@ -6072,7 +6072,11 @@ class WalletSettlement extends DataClass
     map['uuid'] = Variable<String>(uuid);
     map['payer_member_id'] = Variable<int>(payerMemberId);
     map['receiver_member_id'] = Variable<int>(receiverMemberId);
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $WalletSettlementsTable.$converteramount.toSql(amount),
+      );
+    }
     map['settlement_date'] = Variable<DateTime>(settlementDate);
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
@@ -6276,7 +6280,7 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
     Expression<String>? uuid,
     Expression<int>? payerMemberId,
     Expression<int>? receiverMemberId,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<DateTime>? settlementDate,
     Expression<String>? notes,
     Expression<int>? createdByAccountId,
@@ -6342,7 +6346,9 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
       map['receiver_member_id'] = Variable<int>(receiverMemberId.value);
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $WalletSettlementsTable.$converteramount.toSql(amount.value),
+      );
     }
     if (settlementDate.present) {
       map['settlement_date'] = Variable<DateTime>(settlementDate.value);
@@ -7844,29 +7850,25 @@ class $WalletGoalsTable extends WalletGoals
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _targetAmountMeta = const VerificationMeta(
-    'targetAmount',
-  );
   @override
-  late final GeneratedColumn<double> targetAmount = GeneratedColumn<double>(
-    'target_amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _currentAmountMeta = const VerificationMeta(
-    'currentAmount',
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> targetAmount =
+      GeneratedColumn<int>(
+        'target_amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($WalletGoalsTable.$convertertargetAmount);
   @override
-  late final GeneratedColumn<double> currentAmount = GeneratedColumn<double>(
-    'current_amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> currentAmount =
+      GeneratedColumn<int>(
+        'current_amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      ).withConverter<double>($WalletGoalsTable.$convertercurrentAmount);
   static const VerificationMeta _targetDateMeta = const VerificationMeta(
     'targetDate',
   );
@@ -7966,26 +7968,6 @@ class $WalletGoalsTable extends WalletGoals
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('target_amount')) {
-      context.handle(
-        _targetAmountMeta,
-        targetAmount.isAcceptableOrUnknown(
-          data['target_amount']!,
-          _targetAmountMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_targetAmountMeta);
-    }
-    if (data.containsKey('current_amount')) {
-      context.handle(
-        _currentAmountMeta,
-        currentAmount.isAcceptableOrUnknown(
-          data['current_amount']!,
-          _currentAmountMeta,
-        ),
-      );
-    }
     if (data.containsKey('target_date')) {
       context.handle(
         _targetDateMeta,
@@ -8043,14 +8025,18 @@ class $WalletGoalsTable extends WalletGoals
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      targetAmount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}target_amount'],
-      )!,
-      currentAmount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}current_amount'],
-      )!,
+      targetAmount: $WalletGoalsTable.$convertertargetAmount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}target_amount'],
+        )!,
+      ),
+      currentAmount: $WalletGoalsTable.$convertercurrentAmount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}current_amount'],
+        )!,
+      ),
       targetDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}target_date'],
@@ -8078,6 +8064,11 @@ class $WalletGoalsTable extends WalletGoals
   $WalletGoalsTable createAlias(String alias) {
     return $WalletGoalsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<double, int> $convertertargetAmount =
+      const MoneyConverter();
+  static TypeConverter<double, int> $convertercurrentAmount =
+      const MoneyConverter();
 }
 
 class WalletGoal extends DataClass implements Insertable<WalletGoal> {
@@ -8109,8 +8100,16 @@ class WalletGoal extends DataClass implements Insertable<WalletGoal> {
     map['id'] = Variable<int>(id);
     map['wallet_id'] = Variable<int>(walletId);
     map['name'] = Variable<String>(name);
-    map['target_amount'] = Variable<double>(targetAmount);
-    map['current_amount'] = Variable<double>(currentAmount);
+    {
+      map['target_amount'] = Variable<int>(
+        $WalletGoalsTable.$convertertargetAmount.toSql(targetAmount),
+      );
+    }
+    {
+      map['current_amount'] = Variable<int>(
+        $WalletGoalsTable.$convertercurrentAmount.toSql(currentAmount),
+      );
+    }
     if (!nullToAbsent || targetDate != null) {
       map['target_date'] = Variable<DateTime>(targetDate);
     }
@@ -8320,8 +8319,8 @@ class WalletGoalsCompanion extends UpdateCompanion<WalletGoal> {
     Expression<int>? id,
     Expression<int>? walletId,
     Expression<String>? name,
-    Expression<double>? targetAmount,
-    Expression<double>? currentAmount,
+    Expression<int>? targetAmount,
+    Expression<int>? currentAmount,
     Expression<DateTime>? targetDate,
     Expression<int>? createdByAccountId,
     Expression<int>? updatedByAccountId,
@@ -8383,10 +8382,14 @@ class WalletGoalsCompanion extends UpdateCompanion<WalletGoal> {
       map['name'] = Variable<String>(name.value);
     }
     if (targetAmount.present) {
-      map['target_amount'] = Variable<double>(targetAmount.value);
+      map['target_amount'] = Variable<int>(
+        $WalletGoalsTable.$convertertargetAmount.toSql(targetAmount.value),
+      );
     }
     if (currentAmount.present) {
-      map['current_amount'] = Variable<double>(currentAmount.value);
+      map['current_amount'] = Variable<int>(
+        $WalletGoalsTable.$convertercurrentAmount.toSql(currentAmount.value),
+      );
     }
     if (targetDate.present) {
       map['target_date'] = Variable<DateTime>(targetDate.value);
@@ -8473,15 +8476,15 @@ class $WalletGoalContributionsTable extends WalletGoalContributions
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($WalletGoalContributionsTable.$converteramount);
   static const VerificationMeta _contributedAtMeta = const VerificationMeta(
     'contributedAt',
   );
@@ -8544,14 +8547,6 @@ class $WalletGoalContributionsTable extends WalletGoalContributions
         ),
       );
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('contributed_at')) {
       context.handle(
         _contributedAtMeta,
@@ -8586,10 +8581,12 @@ class $WalletGoalContributionsTable extends WalletGoalContributions
         DriftSqlType.int,
         data['${effectivePrefix}contributed_by_account_id'],
       ),
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $WalletGoalContributionsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       contributedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}contributed_at'],
@@ -8601,6 +8598,8 @@ class $WalletGoalContributionsTable extends WalletGoalContributions
   $WalletGoalContributionsTable createAlias(String alias) {
     return $WalletGoalContributionsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
 }
 
 class WalletGoalContribution extends DataClass
@@ -8628,7 +8627,11 @@ class WalletGoalContribution extends DataClass
     if (!nullToAbsent || contributedByAccountId != null) {
       map['contributed_by_account_id'] = Variable<int>(contributedByAccountId);
     }
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $WalletGoalContributionsTable.$converteramount.toSql(amount),
+      );
+    }
     map['contributed_at'] = Variable<DateTime>(contributedAt);
     return map;
   }
@@ -8774,7 +8777,7 @@ class WalletGoalContributionsCompanion
     Expression<int>? walletId,
     Expression<int>? goalId,
     Expression<int>? contributedByAccountId,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<DateTime>? contributedAt,
   }) {
     return RawValuesInsertable({
@@ -8825,7 +8828,9 @@ class WalletGoalContributionsCompanion
       );
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $WalletGoalContributionsTable.$converteramount.toSql(amount.value),
+      );
     }
     if (contributedAt.present) {
       map['contributed_at'] = Variable<DateTime>(contributedAt.value);
@@ -8888,15 +8893,15 @@ class $WalletGoalSchedulesTable extends WalletGoalSchedules
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($WalletGoalSchedulesTable.$converteramount);
   @override
   late final GeneratedColumnWithTypeConverter<
     WalletGoalScheduleFrequency,
@@ -9042,14 +9047,6 @@ class $WalletGoalSchedulesTable extends WalletGoalSchedules
     } else if (isInserting) {
       context.missing(_memberIdMeta);
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('start_date')) {
       context.handle(
         _startDateMeta,
@@ -9126,10 +9123,12 @@ class $WalletGoalSchedulesTable extends WalletGoalSchedules
         DriftSqlType.int,
         data['${effectivePrefix}member_id'],
       )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $WalletGoalSchedulesTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       frequency: $WalletGoalSchedulesTable.$converterfrequency.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -9172,6 +9171,7 @@ class $WalletGoalSchedulesTable extends WalletGoalSchedules
     return $WalletGoalSchedulesTable(attachedDatabase, alias);
   }
 
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
   static JsonTypeConverter2<WalletGoalScheduleFrequency, String, String>
   $converterfrequency = const EnumNameConverter(
     WalletGoalScheduleFrequency.values,
@@ -9212,7 +9212,11 @@ class WalletGoalSchedule extends DataClass
     map['id'] = Variable<int>(id);
     map['wallet_goal_id'] = Variable<int>(walletGoalId);
     map['member_id'] = Variable<int>(memberId);
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $WalletGoalSchedulesTable.$converteramount.toSql(amount),
+      );
+    }
     {
       map['frequency'] = Variable<String>(
         $WalletGoalSchedulesTable.$converterfrequency.toSql(frequency),
@@ -9454,7 +9458,7 @@ class WalletGoalSchedulesCompanion extends UpdateCompanion<WalletGoalSchedule> {
     Expression<int>? id,
     Expression<int>? walletGoalId,
     Expression<int>? memberId,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<String>? frequency,
     Expression<DateTime>? startDate,
     Expression<DateTime>? nextDueDate,
@@ -9525,7 +9529,9 @@ class WalletGoalSchedulesCompanion extends UpdateCompanion<WalletGoalSchedule> {
       map['member_id'] = Variable<int>(memberId.value);
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $WalletGoalSchedulesTable.$converteramount.toSql(amount.value),
+      );
     }
     if (frequency.present) {
       map['frequency'] = Variable<String>(
@@ -11877,17 +11883,17 @@ class $WalletExpenseSplitMembersTable extends WalletExpenseSplitMembers
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _amountOwedMeta = const VerificationMeta(
-    'amountOwed',
-  );
   @override
-  late final GeneratedColumn<double> amountOwed = GeneratedColumn<double>(
-    'amount_owed',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amountOwed =
+      GeneratedColumn<int>(
+        'amount_owed',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>(
+        $WalletExpenseSplitMembersTable.$converteramountOwed,
+      );
   static const VerificationMeta _percentageMeta = const VerificationMeta(
     'percentage',
   );
@@ -11900,18 +11906,18 @@ class $WalletExpenseSplitMembersTable extends WalletExpenseSplitMembers
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
-  static const VerificationMeta _settledAmountMeta = const VerificationMeta(
-    'settledAmount',
-  );
   @override
-  late final GeneratedColumn<double> settledAmount = GeneratedColumn<double>(
-    'settled_amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> settledAmount =
+      GeneratedColumn<int>(
+        'settled_amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      ).withConverter<double>(
+        $WalletExpenseSplitMembersTable.$convertersettledAmount,
+      );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -11952,27 +11958,10 @@ class $WalletExpenseSplitMembersTable extends WalletExpenseSplitMembers
     } else if (isInserting) {
       context.missing(_memberIdMeta);
     }
-    if (data.containsKey('amount_owed')) {
-      context.handle(
-        _amountOwedMeta,
-        amountOwed.isAcceptableOrUnknown(data['amount_owed']!, _amountOwedMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountOwedMeta);
-    }
     if (data.containsKey('percentage')) {
       context.handle(
         _percentageMeta,
         percentage.isAcceptableOrUnknown(data['percentage']!, _percentageMeta),
-      );
-    }
-    if (data.containsKey('settled_amount')) {
-      context.handle(
-        _settledAmountMeta,
-        settledAmount.isAcceptableOrUnknown(
-          data['settled_amount']!,
-          _settledAmountMeta,
-        ),
       );
     }
     return context;
@@ -11999,18 +11988,23 @@ class $WalletExpenseSplitMembersTable extends WalletExpenseSplitMembers
         DriftSqlType.int,
         data['${effectivePrefix}member_id'],
       )!,
-      amountOwed: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount_owed'],
-      )!,
+      amountOwed: $WalletExpenseSplitMembersTable.$converteramountOwed.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount_owed'],
+        )!,
+      ),
       percentage: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}percentage'],
       )!,
-      settledAmount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}settled_amount'],
-      )!,
+      settledAmount: $WalletExpenseSplitMembersTable.$convertersettledAmount
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.int,
+              data['${effectivePrefix}settled_amount'],
+            )!,
+          ),
     );
   }
 
@@ -12018,6 +12012,11 @@ class $WalletExpenseSplitMembersTable extends WalletExpenseSplitMembers
   $WalletExpenseSplitMembersTable createAlias(String alias) {
     return $WalletExpenseSplitMembersTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<double, int> $converteramountOwed =
+      const MoneyConverter();
+  static TypeConverter<double, int> $convertersettledAmount =
+      const MoneyConverter();
 }
 
 class WalletExpenseSplitMember extends DataClass
@@ -12042,9 +12041,19 @@ class WalletExpenseSplitMember extends DataClass
     map['id'] = Variable<int>(id);
     map['split_id'] = Variable<int>(splitId);
     map['member_id'] = Variable<int>(memberId);
-    map['amount_owed'] = Variable<double>(amountOwed);
+    {
+      map['amount_owed'] = Variable<int>(
+        $WalletExpenseSplitMembersTable.$converteramountOwed.toSql(amountOwed),
+      );
+    }
     map['percentage'] = Variable<double>(percentage);
-    map['settled_amount'] = Variable<double>(settledAmount);
+    {
+      map['settled_amount'] = Variable<int>(
+        $WalletExpenseSplitMembersTable.$convertersettledAmount.toSql(
+          settledAmount,
+        ),
+      );
+    }
     return map;
   }
 
@@ -12178,9 +12187,9 @@ class WalletExpenseSplitMembersCompanion
     Expression<int>? id,
     Expression<int>? splitId,
     Expression<int>? memberId,
-    Expression<double>? amountOwed,
+    Expression<int>? amountOwed,
     Expression<double>? percentage,
-    Expression<double>? settledAmount,
+    Expression<int>? settledAmount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -12223,13 +12232,21 @@ class WalletExpenseSplitMembersCompanion
       map['member_id'] = Variable<int>(memberId.value);
     }
     if (amountOwed.present) {
-      map['amount_owed'] = Variable<double>(amountOwed.value);
+      map['amount_owed'] = Variable<int>(
+        $WalletExpenseSplitMembersTable.$converteramountOwed.toSql(
+          amountOwed.value,
+        ),
+      );
     }
     if (percentage.present) {
       map['percentage'] = Variable<double>(percentage.value);
     }
     if (settledAmount.present) {
-      map['settled_amount'] = Variable<double>(settledAmount.value);
+      map['settled_amount'] = Variable<int>(
+        $WalletExpenseSplitMembersTable.$convertersettledAmount.toSql(
+          settledAmount.value,
+        ),
+      );
     }
     return map;
   }
@@ -12964,15 +12981,15 @@ class $RecurringTransactionsTable extends RecurringTransactions
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($RecurringTransactionsTable.$converteramount);
   @override
   late final GeneratedColumnWithTypeConverter<TransactionType, String> type =
       GeneratedColumn<String>(
@@ -13130,14 +13147,6 @@ class $RecurringTransactionsTable extends RecurringTransactions
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('category_id')) {
       context.handle(
         _categoryIdMeta,
@@ -13227,10 +13236,12 @@ class $RecurringTransactionsTable extends RecurringTransactions
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $RecurringTransactionsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       type: $RecurringTransactionsTable.$convertertype.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -13277,6 +13288,7 @@ class $RecurringTransactionsTable extends RecurringTransactions
     return $RecurringTransactionsTable(attachedDatabase, alias);
   }
 
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
   static JsonTypeConverter2<TransactionType, String, String> $convertertype =
       const EnumNameConverter(TransactionType.values);
 }
@@ -13320,7 +13332,11 @@ class RecurringTransactionDb extends DataClass
     map['wallet_id'] = Variable<int>(walletId);
     map['uuid'] = Variable<String>(uuid);
     map['name'] = Variable<String>(name);
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $RecurringTransactionsTable.$converteramount.toSql(amount),
+      );
+    }
     {
       map['type'] = Variable<String>(
         $RecurringTransactionsTable.$convertertype.toSql(type),
@@ -13587,7 +13603,7 @@ class RecurringTransactionsCompanion
     Expression<int>? walletId,
     Expression<String>? uuid,
     Expression<String>? name,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<String>? type,
     Expression<int>? categoryId,
     Expression<int>? accountId,
@@ -13666,7 +13682,9 @@ class RecurringTransactionsCompanion
       map['name'] = Variable<String>(name.value);
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $RecurringTransactionsTable.$converteramount.toSql(amount.value),
+      );
     }
     if (type.present) {
       map['type'] = Variable<String>(
@@ -14476,15 +14494,15 @@ class $TransactionsTable extends Transactions
     requiredDuringInsert: false,
     clientDefault: () => const Uuid().v4(),
   );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($TransactionsTable.$converteramount);
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
@@ -14611,14 +14629,6 @@ class $TransactionsTable extends Transactions
         uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
       );
     }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
     if (data.containsKey('date')) {
       context.handle(
         _dateMeta,
@@ -14691,10 +14701,12 @@ class $TransactionsTable extends Transactions
         DriftSqlType.string,
         data['${effectivePrefix}uuid'],
       )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}amount'],
-      )!,
+      amount: $TransactionsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
       date: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}date'],
@@ -14737,6 +14749,7 @@ class $TransactionsTable extends Transactions
     return $TransactionsTable(attachedDatabase, alias);
   }
 
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
   static JsonTypeConverter2<TransactionType, String, String> $convertertype =
       const EnumNameConverter(TransactionType.values);
 }
@@ -14778,7 +14791,11 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     map['wallet_id'] = Variable<int>(walletId);
     map['id'] = Variable<int>(id);
     map['uuid'] = Variable<String>(uuid);
-    map['amount'] = Variable<double>(amount);
+    {
+      map['amount'] = Variable<int>(
+        $TransactionsTable.$converteramount.toSql(amount),
+      );
+    }
     map['date'] = Variable<DateTime>(date);
     if (!nullToAbsent || note != null) {
       map['note'] = Variable<String>(note);
@@ -15011,7 +15028,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
     Expression<int>? walletId,
     Expression<int>? id,
     Expression<String>? uuid,
-    Expression<double>? amount,
+    Expression<int>? amount,
     Expression<DateTime>? date,
     Expression<String>? note,
     Expression<String>? type,
@@ -15080,7 +15097,9 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
       map['uuid'] = Variable<String>(uuid.value);
     }
     if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+      map['amount'] = Variable<int>(
+        $TransactionsTable.$converteramount.toSql(amount.value),
+      );
     }
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
@@ -16539,10 +16558,11 @@ class $$AccountsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get openingBalance => $composableBuilder(
-    column: $table.openingBalance,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get openingBalance =>
+      $composableBuilder(
+        column: $table.openingBalance,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<bool> get isDefault => $composableBuilder(
     column: $table.isDefault,
@@ -16599,7 +16619,7 @@ class $$AccountsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get openingBalance => $composableBuilder(
+  ColumnOrderings<int> get openingBalance => $composableBuilder(
     column: $table.openingBalance,
     builder: (column) => ColumnOrderings(column),
   );
@@ -16645,10 +16665,11 @@ class $$AccountsTableAnnotationComposer
   GeneratedColumn<String> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
 
-  GeneratedColumn<double> get openingBalance => $composableBuilder(
-    column: $table.openingBalance,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<double, int> get openingBalance =>
+      $composableBuilder(
+        column: $table.openingBalance,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<bool> get isDefault =>
       $composableBuilder(column: $table.isDefault, builder: (column) => column);
@@ -16812,10 +16833,11 @@ class $$WalletBillsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get dueDate => $composableBuilder(
     column: $table.dueDate,
@@ -16898,7 +16920,7 @@ class $$WalletBillsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -16972,7 +16994,7 @@ class $$WalletBillsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumn<DateTime> get dueDate =>
@@ -17176,10 +17198,11 @@ class $$BudgetsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get period => $composableBuilder(
     column: $table.period,
@@ -17221,7 +17244,7 @@ class $$BudgetsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -17260,7 +17283,7 @@ class $$BudgetsTableAnnotationComposer
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumn<String> get period =>
@@ -17984,10 +18007,11 @@ class $$LoansTableFilterComposer extends Composer<_$AppDatabase, $LoansTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get principalAmount => $composableBuilder(
-    column: $table.principalAmount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get principalAmount =>
+      $composableBuilder(
+        column: $table.principalAmount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<double> get interestRate => $composableBuilder(
     column: $table.interestRate,
@@ -18009,10 +18033,11 @@ class $$LoansTableFilterComposer extends Composer<_$AppDatabase, $LoansTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get emiAmount => $composableBuilder(
-    column: $table.emiAmount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get emiAmount =>
+      $composableBuilder(
+        column: $table.emiAmount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
@@ -18059,7 +18084,7 @@ class $$LoansTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get principalAmount => $composableBuilder(
+  ColumnOrderings<int> get principalAmount => $composableBuilder(
     column: $table.principalAmount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -18084,7 +18109,7 @@ class $$LoansTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get emiAmount => $composableBuilder(
+  ColumnOrderings<int> get emiAmount => $composableBuilder(
     column: $table.emiAmount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -18124,10 +18149,11 @@ class $$LoansTableAnnotationComposer
   GeneratedColumn<int> get accountId =>
       $composableBuilder(column: $table.accountId, builder: (column) => column);
 
-  GeneratedColumn<double> get principalAmount => $composableBuilder(
-    column: $table.principalAmount,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<double, int> get principalAmount =>
+      $composableBuilder(
+        column: $table.principalAmount,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<double> get interestRate => $composableBuilder(
     column: $table.interestRate,
@@ -18147,7 +18173,7 @@ class $$LoansTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get emiAmount =>
+  GeneratedColumnWithTypeConverter<double, int> get emiAmount =>
       $composableBuilder(column: $table.emiAmount, builder: (column) => column);
 
   GeneratedColumn<bool> get isActive =>
@@ -18329,10 +18355,11 @@ class $$PeerDebtsTableFilterComposer
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get note => $composableBuilder(
     column: $table.note,
@@ -18394,7 +18421,7 @@ class $$PeerDebtsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -18451,7 +18478,7 @@ class $$PeerDebtsTableAnnotationComposer
   GeneratedColumnWithTypeConverter<PeerDebtType, int> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumn<String> get note =>
@@ -18630,10 +18657,11 @@ class $$WalletAllowancesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnWithTypeConverterFilters<
     WalletAllowanceFrequency,
@@ -18705,7 +18733,7 @@ class $$WalletAllowancesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -18769,7 +18797,7 @@ class $$WalletAllowancesTableAnnotationComposer
   GeneratedColumn<int> get memberId =>
       $composableBuilder(column: $table.memberId, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<WalletAllowanceFrequency, String>
@@ -18962,10 +18990,11 @@ class $$WalletAllowancePaymentsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get paidDate => $composableBuilder(
     column: $table.paidDate,
@@ -19002,7 +19031,7 @@ class $$WalletAllowancePaymentsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -19038,7 +19067,7 @@ class $$WalletAllowancePaymentsTableAnnotationComposer
   GeneratedColumn<int> get memberId =>
       $composableBuilder(column: $table.memberId, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumn<DateTime> get paidDate =>
@@ -19214,10 +19243,11 @@ class $$WalletSettlementsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get settlementDate => $composableBuilder(
     column: $table.settlementDate,
@@ -19274,7 +19304,7 @@ class $$WalletSettlementsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -19328,7 +19358,7 @@ class $$WalletSettlementsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumn<DateTime> get settlementDate => $composableBuilder(
@@ -20249,15 +20279,17 @@ class $$WalletGoalsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get targetAmount => $composableBuilder(
-    column: $table.targetAmount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get targetAmount =>
+      $composableBuilder(
+        column: $table.targetAmount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<double> get currentAmount => $composableBuilder(
-    column: $table.currentAmount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get currentAmount =>
+      $composableBuilder(
+        column: $table.currentAmount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get targetDate => $composableBuilder(
     column: $table.targetDate,
@@ -20309,12 +20341,12 @@ class $$WalletGoalsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get targetAmount => $composableBuilder(
+  ColumnOrderings<int> get targetAmount => $composableBuilder(
     column: $table.targetAmount,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get currentAmount => $composableBuilder(
+  ColumnOrderings<int> get currentAmount => $composableBuilder(
     column: $table.currentAmount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -20363,15 +20395,17 @@ class $$WalletGoalsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<double> get targetAmount => $composableBuilder(
-    column: $table.targetAmount,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<double, int> get targetAmount =>
+      $composableBuilder(
+        column: $table.targetAmount,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<double> get currentAmount => $composableBuilder(
-    column: $table.currentAmount,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<double, int> get currentAmount =>
+      $composableBuilder(
+        column: $table.currentAmount,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<DateTime> get targetDate => $composableBuilder(
     column: $table.targetDate,
@@ -20545,10 +20579,11 @@ class $$WalletGoalContributionsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get contributedAt => $composableBuilder(
     column: $table.contributedAt,
@@ -20585,7 +20620,7 @@ class $$WalletGoalContributionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -20619,7 +20654,7 @@ class $$WalletGoalContributionsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumn<DateTime> get contributedAt => $composableBuilder(
@@ -20788,10 +20823,11 @@ class $$WalletGoalSchedulesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnWithTypeConverterFilters<
     WalletGoalScheduleFrequency,
@@ -20863,7 +20899,7 @@ class $$WalletGoalSchedulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -20929,7 +20965,7 @@ class $$WalletGoalSchedulesTableAnnotationComposer
   GeneratedColumn<int> get memberId =>
       $composableBuilder(column: $table.memberId, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<WalletGoalScheduleFrequency, String>
@@ -22335,20 +22371,22 @@ class $$WalletExpenseSplitMembersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amountOwed => $composableBuilder(
-    column: $table.amountOwed,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amountOwed =>
+      $composableBuilder(
+        column: $table.amountOwed,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<double> get percentage => $composableBuilder(
     column: $table.percentage,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get settledAmount => $composableBuilder(
-    column: $table.settledAmount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get settledAmount =>
+      $composableBuilder(
+        column: $table.settledAmount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 }
 
 class $$WalletExpenseSplitMembersTableOrderingComposer
@@ -22375,7 +22413,7 @@ class $$WalletExpenseSplitMembersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amountOwed => $composableBuilder(
+  ColumnOrderings<int> get amountOwed => $composableBuilder(
     column: $table.amountOwed,
     builder: (column) => ColumnOrderings(column),
   );
@@ -22385,7 +22423,7 @@ class $$WalletExpenseSplitMembersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get settledAmount => $composableBuilder(
+  ColumnOrderings<int> get settledAmount => $composableBuilder(
     column: $table.settledAmount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -22409,20 +22447,22 @@ class $$WalletExpenseSplitMembersTableAnnotationComposer
   GeneratedColumn<int> get memberId =>
       $composableBuilder(column: $table.memberId, builder: (column) => column);
 
-  GeneratedColumn<double> get amountOwed => $composableBuilder(
-    column: $table.amountOwed,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<double, int> get amountOwed =>
+      $composableBuilder(
+        column: $table.amountOwed,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<double> get percentage => $composableBuilder(
     column: $table.percentage,
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get settledAmount => $composableBuilder(
-    column: $table.settledAmount,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<double, int> get settledAmount =>
+      $composableBuilder(
+        column: $table.settledAmount,
+        builder: (column) => column,
+      );
 }
 
 class $$WalletExpenseSplitMembersTableTableManager
@@ -22963,10 +23003,11 @@ class $$RecurringTransactionsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnWithTypeConverterFilters<TransactionType, TransactionType, String>
   get type => $composableBuilder(
@@ -23044,7 +23085,7 @@ class $$RecurringTransactionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -23116,7 +23157,7 @@ class $$RecurringTransactionsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<TransactionType, String> get type =>
@@ -23737,10 +23778,11 @@ class $$TransactionsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<DateTime> get date => $composableBuilder(
     column: $table.date,
@@ -23808,7 +23850,7 @@ class $$TransactionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get amount => $composableBuilder(
+  ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
@@ -23872,7 +23914,7 @@ class $$TransactionsTableAnnotationComposer
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
 
-  GeneratedColumn<double> get amount =>
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumn<DateTime> get date =>

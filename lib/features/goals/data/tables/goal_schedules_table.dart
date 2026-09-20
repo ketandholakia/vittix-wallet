@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:expense_tracker/core/money/money.dart';
 import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
 import 'package:expense_tracker/features/family/data/tables/wallet_members_table.dart';
@@ -9,7 +10,7 @@ class WalletGoalSchedules extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get walletGoalId => integer().references(WalletGoals, #id, onDelete: KeyAction.cascade)();
   IntColumn get memberId => integer().references(WalletMembers, #id, onDelete: KeyAction.cascade)();
-  RealColumn get amount => real()();
+  IntColumn get amount => integer().map(const MoneyConverter())();
   TextColumn get frequency => text().map(const EnumNameConverter(WalletGoalScheduleFrequency.values))();
   DateTimeColumn get startDate => dateTime()();
   DateTimeColumn get nextDueDate => dateTime()();

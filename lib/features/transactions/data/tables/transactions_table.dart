@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:expense_tracker/core/money/money.dart';
 import 'package:expense_tracker/core/database/database_enums.dart';
 import '../../../../features/accounts/data/tables/accounts_table.dart';
 import '../../../../features/categories/data/tables/categories_table.dart';
@@ -9,7 +10,7 @@ class Transactions extends Table {
   IntColumn get walletId => integer().withDefault(const Constant(1))();
   IntColumn get id => integer().autoIncrement()();
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
-  RealColumn get amount => real()();
+  IntColumn get amount => integer().map(const MoneyConverter())();
   DateTimeColumn get date => dateTime()();
   TextColumn get note => text().nullable()();
 

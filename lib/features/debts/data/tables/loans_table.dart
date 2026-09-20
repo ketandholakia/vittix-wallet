@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:expense_tracker/core/money/money.dart';
 import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
 import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
 import 'package:uuid/uuid.dart';
@@ -10,12 +11,12 @@ class Loans extends Table {
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   TextColumn get name => text().withLength(min: 1, max: 100)();
   IntColumn get accountId => integer().references(Accounts, #id, onDelete: KeyAction.cascade)();
-  RealColumn get principalAmount => real()();
+  IntColumn get principalAmount => integer().map(const MoneyConverter())();
   RealColumn get interestRate => real()();
   IntColumn get tenureMonths => integer()();
   DateTimeColumn get startDate => dateTime()();
   DateTimeColumn get nextEmiDate => dateTime().nullable()();
-  RealColumn get emiAmount => real()();
+  IntColumn get emiAmount => integer().map(const MoneyConverter())();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
   DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
 }

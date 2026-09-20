@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:expense_tracker/core/money/money.dart';
 import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
 import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
@@ -8,7 +9,7 @@ class WalletBills extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get walletId => integer().references(Wallets, #id, onDelete: KeyAction.cascade)();
   TextColumn get name => text().withLength(min: 1, max: 100)();
-  RealColumn get amount => real()();
+  IntColumn get amount => integer().map(const MoneyConverter())();
   DateTimeColumn get dueDate => dateTime()();
   TextColumn get recurrence => text().map(const EnumNameConverter(WalletBillRecurrence.values))();
   TextColumn get category => text().withLength(min: 1, max: 60)();

@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:drift/drift.dart';
+import 'package:expense_tracker/core/money/money.dart';
 import 'package:expense_tracker/features/transactions/data/tables/transactions_table.dart';
 import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
 import 'package:uuid/uuid.dart';
@@ -12,7 +13,7 @@ class PeerDebts extends Table {
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   TextColumn get personName => text().withLength(min: 1, max: 100)();
   IntColumn get type => intEnum<PeerDebtType>()();
-  RealColumn get amount => real()();
+  IntColumn get amount => integer().map(const MoneyConverter())();
   TextColumn get note => text().nullable()();
   DateTimeColumn get date => dateTime()();
   BoolColumn get isSettled => boolean().withDefault(const Constant(false))();

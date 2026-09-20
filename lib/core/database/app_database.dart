@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 export 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:drift/native.dart';
+import 'package:expense_tracker/core/money/money.dart';
 import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -1693,7 +1694,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
     return query.map((row) {
       return MonthlyTotal(
-          year: row.read(year)!, month: row.read(month)!, total: row.read(totalAmount) ?? 0.0);
+          year: row.read(year)!, month: row.read(month)!, total: Money.toMajorUnits(row.read(totalAmount) ?? 0));
     }).get();
   }
 
@@ -1733,8 +1734,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     final expenseRow = await expenseQuery.getSingle();
 
     return MonthlySummaryTotals(
-      totalIncome: incomeRow.read(incomeSum) ?? 0.0,
-      totalExpense: expenseRow.read(expenseSum) ?? 0.0,
+      // Summed in SQL as exact minor units, converted once at the boundary.
+      totalIncome: Money.toMajorUnits(incomeRow.read(incomeSum) ?? 0),
+      totalExpense: Money.toMajorUnits(expenseRow.read(expenseSum) ?? 0),
     );
   }
 }
@@ -1934,7 +1936,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   Future<int> insertDeletedRecord(String uuid, String tableName) {
     /* return into(deletedRecords).insert(
