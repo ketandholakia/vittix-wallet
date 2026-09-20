@@ -2,6 +2,24 @@ import 'package:expense_tracker/domain/entities/transaction.dart';
 import 'package:expense_tracker/domain/entities/category.dart';
 import 'package:intl/intl.dart';
 
+/// Escapes a single CSV field for RFC 4180 and neutralises spreadsheet formula
+/// injection: a leading `=`, `+`, `-`, `@`, tab or CR would otherwise be
+/// interpreted as a formula when the file is opened in Excel, LibreOffice or
+/// Google Sheets. Such a value is prefixed with an apostrophe before quoting.
+String escapeCsvField(String text) {
+  var field = text;
+  if (field.isNotEmpty && '=+-@\t\r'.contains(field[0])) {
+    field = "'$field";
+  }
+  if (field.contains('"') ||
+      field.contains(',') ||
+      field.contains('\n') ||
+      field.contains('\r')) {
+    return '"${field.replaceAll('"', '""')}"';
+  }
+  return field;
+}
+
 /// Generates an RFC 4180 compliant CSV string from a list of transactions.
 String generateCsv({
   required List<Transaction> transactions,
@@ -13,12 +31,7 @@ String generateCsv({
   // CSV Header
   buffer.writeln('ID,Date,Type,Parent Category,Category,Account,Amount,Currency,Note');
 
-  String escapeCsv(String text) {
-    if (text.contains('"') || text.contains(',') || text.contains('\n') || text.contains('\r')) {
-      return '"${text.replaceAll('"', '""')}"';
-    }
-    return text;
-  }
+  String escapeCsv(String text) => escapeCsvField(text);
 
   for (final tx in transactions) {
     final parentId = tx.category.parentId;

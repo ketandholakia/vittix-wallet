@@ -417,18 +417,63 @@ class CsvTransactionImporter {
     return DateTime.parse(input);
   }
 
+  /// Parses an amount that may use Western (`1,234.56`) or Indian
+  /// (`1,50,000.00`) digit grouping, or a comma as the decimal separator
+  /// (`1,50`). Returns the numeric value.
   static double _parseAmount(String value) {
-    final cleaned = value.replaceAll(RegExp(r'[^0-9,\.\-]'), '').trim();
+    var input = value.trim();
+    if (input.isEmpty) {
+      throw FormatException('Invalid amount: $value');
+    }
+
+    // Drop a leading currency/alpha prefix such as "Rs." or "INR " (keeping a
+    // leading minus sign) so "Rs. 1,234.56" parses like "1,234.56".
+    final firstDigit = input.indexOf(RegExp(r'\d'));
+    if (firstDigit > 0) {
+      final prefix = input.substring(0, firstDigit);
+      input = '${prefix.contains('-') ? '-' : ''}${input.substring(firstDigit)}';
+    }
+
+    final cleaned = input.replaceAll(RegExp(r'[^0-9,.\-]'), '').trim();
     if (cleaned.isEmpty) {
       throw FormatException('Invalid amount: $value');
     }
-    final normalized = cleaned.contains(',') && cleaned.contains('.')
-        ? cleaned.replaceAll(',', '')
-        : cleaned.contains(',') && !cleaned.contains('.')
-            ? cleaned.replaceAll(',', '.')
-            : cleaned;
-    return double.parse(normalized);
+
+    final lastComma = cleaned.lastIndexOf(',');
+    final lastDot = cleaned.lastIndexOf('.');
+
+    String normalized;
+    if (lastComma >= 0 && lastDot >= 0) {
+      // Both separators present: whichever comes last is the decimal point.
+      normalized = lastComma > lastDot
+          ? cleaned.replaceAll('.', '').replaceAll(',', '.') // 1.234,56
+          : cleaned.replaceAll(',', ''); // 1,234.56 / 1,50,000.00
+    } else if (lastComma >= 0) {
+      // Only commas. A single comma followed by 1-2 digits is a decimal
+      // separator; otherwise the commas are thousands separators.
+      final digitsAfter = cleaned.length - lastComma - 1;
+      final commaCount = ','.allMatches(cleaned).length;
+      normalized = (commaCount == 1 && (digitsAfter == 1 || digitsAfter == 2))
+          ? cleaned.replaceAll(',', '.')
+          : cleaned.replaceAll(',', '');
+    } else if (lastDot >= 0) {
+      // Only dots. Multiple dots are grouping separators (1.234.567).
+      final dotCount = '.'.allMatches(cleaned).length;
+      normalized = dotCount > 1 ? cleaned.replaceAll('.', '') : cleaned;
+    } else {
+      normalized = cleaned;
+    }
+
+    final parsed = double.tryParse(normalized);
+    if (parsed == null) {
+      throw FormatException('Invalid amount: $value');
+    }
+    return parsed;
   }
+
+  /// Exposed for unit tests of amount normalisation.
+  @visibleForTesting
+  static double parseAmountForTest(String value) => _parseAmount(value);
 
   static String _normalize(String input) {
     return input.trim().toLowerCase();

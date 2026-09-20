@@ -5,10 +5,15 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
+    <!-- Required for cloud sync (Nextcloud/WebDAV) in release builds. The
+         debug/profile manifests declare this only for the Flutter tool, so
+         without it here sync would fail in release. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Vittix Wallet"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"

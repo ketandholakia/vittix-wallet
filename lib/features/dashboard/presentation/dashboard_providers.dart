@@ -23,10 +23,15 @@ final monthlyReportProvider = FutureProvider.autoDispose<MonthlyReport>((ref) as
   final walletId = ref.watch(currentWalletIdProvider);
   final month = DateTime.now();
   final firstDay = DateTime(month.year, month.month, 1);
-  final lastDay = DateTime(month.year, month.month + 1, 0);
+  // Half-open range [firstDay, nextMonthStart) so transactions on the last
+  // day of the month (which carry a time of day) are not dropped.
+  final nextMonthStart = DateTime(month.year, month.month + 1, 1);
 
   final transactions = await (db.select(db.transactions)
-        ..where((t) => t.walletId.equals(walletId) & t.date.isBetween(drift.Constant(firstDay), drift.Constant(lastDay))))
+        ..where((t) =>
+            t.walletId.equals(walletId) &
+            t.date.isBiggerOrEqualValue(firstDay) &
+            t.date.isSmallerThanValue(nextMonthStart)))
       .get();
       
   final accounts = await db.select(db.accounts).get();

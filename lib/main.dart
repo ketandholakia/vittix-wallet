@@ -4,7 +4,9 @@ import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/presentation/main_screen.dart';
 import 'package:expense_tracker/features/notifications/data/notification_provider.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
+import 'package:expense_tracker/core/services/auto_backup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
@@ -73,6 +75,20 @@ class _MyAppState extends ConsumerState<MyApp> {
       if (recurringKey != todayKey) {
         await ref.read(processRecurringTransactionsUseCaseProvider).call();
         await prefs.setString('lastRecurringBootstrapDay', todayKey);
+      }
+
+      // Automatic backup: writes at most once per configured interval.
+      final autoBackupKey = prefs.getString('lastAutoBackupCheckDay');
+      if (autoBackupKey != todayKey) {
+        try {
+          final settings = AutoBackupSettings.load(prefs);
+          await ref
+              .read(autoBackupServiceProvider)
+              .runIfDue(settings: settings, prefs: prefs);
+        } catch (e) {
+          debugPrint('Auto backup failed: $e');
+        }
+        await prefs.setString('lastAutoBackupCheckDay', todayKey);
       }
 
       if (kDebugMode) {

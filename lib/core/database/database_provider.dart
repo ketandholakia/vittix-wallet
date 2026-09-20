@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:expense_tracker/core/services/auto_backup.dart';
+import 'package:expense_tracker/core/services/backup_service.dart';
 import 'package:expense_tracker/sms/data/sms_import_metrics_dao.dart';
 import 'package:expense_tracker/sms/data/sms_parsing_dao.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 // A provider for the AppDatabase instance.
 // We use a singleton pattern here to ensure only one database instance is created.
@@ -9,13 +15,21 @@ final databaseProvider = Provider<AppDatabase>((ref) {
   return AppDatabase();
 });
 
-// Provider to get the database file. This is useful for backup/restore.
-/*
+/// The on-device database file. Used by backup and restore.
 final databaseFileProvider = FutureProvider<File>((ref) async {
   final dbFolder = await getApplicationDocumentsDirectory();
-  return File(p.join(dbFolder.path, 'db.sqlite'));
+  return File(p.join(dbFolder.path, kDatabaseFileName));
 });
-*/
+
+/// Snapshot/validate/restore operations for the live database.
+final backupServiceProvider = Provider<BackupService>((ref) {
+  return BackupService(ref.watch(databaseProvider));
+});
+
+/// Periodic backups into a user-chosen folder (runs at app start).
+final autoBackupServiceProvider = Provider<AutoBackupService>((ref) {
+  return AutoBackupService(ref.watch(backupServiceProvider));
+});
 
 // Providers for each DAO
 final categoryDaoProvider = Provider<CategoryDao>((ref) {

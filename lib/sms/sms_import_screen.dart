@@ -3,6 +3,7 @@ import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/categories/domain/category.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
+import 'package:expense_tracker/core/utils/duplicate_detector.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
 import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
 import 'package:expense_tracker/sms/sms_transaction_parser.dart';
@@ -202,6 +203,12 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
 
     final categoryByName = {for (final c in categories) c.name.toLowerCase(): c};
 
+    int skippedDuplicates = 0;
+    // Existing ledger entries, so re-importing the same SMS does not silently
+    // double up. Same rule as the manual entry form.
+    final existingTransactions =
+        await ref.read(watchRecentTransactionsUseCaseProvider).call(limit: 200).first;
+
     for (final candidate in _candidates.where((item) => item.isSelected)) {
       final category = candidate.suggestedCategoryName == null
           ? categories.first
@@ -234,6 +241,11 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
           updatedAt: DateTime.now(),
         );
 
+        if (looksLikeDuplicate(transaction, existingTransactions)) {
+          skippedDuplicates++;
+          continue;
+        }
+
         // Audit: source = 'import' (not 'user') for SMS-imported transactions.
         // The 'import' source suppresses actor attribution per P2-3A convention.
         await ref.read(addTransactionUseCaseProvider).call(transaction, source: 'import');
@@ -246,7 +258,7 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
           walletId: walletId,
           acceptedImports: _candidates.where((c) => c.isSelected).length,
           rejectedImports: _rejectedImports,
-          duplicateDetections: _duplicateDetections,
+          duplicateDetections: _duplicateDetections + skippedDuplicates,
         );
     await ref.read(walletDaoProvider).logOnboardingActivity(
           walletId: walletId,
@@ -254,7 +266,11 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
         );
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Saved ${_candidates.where((c) => c.isSelected).length} SMS transactions')),
+        SnackBar(
+          content: Text(
+              'Saved ${_candidates.where((c) => c.isSelected).length - skippedDuplicates} SMS transactions'
+              '${skippedDuplicates > 0 ? ' ($skippedDuplicates skipped as likely duplicates)' : ''}'),
+        ),
       );
     }
   }

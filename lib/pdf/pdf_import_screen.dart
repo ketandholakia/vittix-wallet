@@ -5,6 +5,7 @@ import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/categories/domain/category.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
+import 'package:expense_tracker/core/utils/duplicate_detector.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
 import 'package:expense_tracker/pdf/pdf_text_extractor.dart';
 import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
@@ -164,7 +165,12 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
     final categoryByName = {for (final c in categories) c.name.toLowerCase(): c};
 
     int savedCount = 0;
-    
+    int skippedDuplicates = 0;
+    // Existing ledger entries, so re-importing a statement that is already
+    // recorded does not silently double up. Same rule as manual entry.
+    final existingTransactions =
+        await ref.read(watchRecentTransactionsUseCaseProvider).call(limit: 200).first;
+
     // We need to re-find the parser to generate the hash again
     // Or we could have stored the hash in the candidate. Let's just generate a simple hash.
     for (final candidate in _candidates.where((item) => item.isSelected)) {
@@ -184,6 +190,11 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
         updatedAt: DateTime.now(),
       );
 
+      if (looksLikeDuplicate(transaction, existingTransactions)) {
+        skippedDuplicates++;
+        continue;
+      }
+
       await ref.read(addTransactionUseCaseProvider).call(transaction);
       
       // Basic hash
@@ -196,7 +207,10 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
     
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Saved $savedCount PDF transactions')),
+        SnackBar(
+          content: Text('Saved $savedCount PDF transactions'
+              '${skippedDuplicates > 0 ? ' ($skippedDuplicates skipped as likely duplicates)' : ''}'),
+        ),
       );
       Navigator.of(context).pop();
     }

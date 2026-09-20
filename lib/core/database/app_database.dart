@@ -1583,13 +1583,16 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   // Get By Month
   Stream<List<TransactionWithDetails>> watchTransactionsInMonth(DateTime month, [int? walletId]) {
     final firstDay = DateTime(month.year, month.month, 1);
-    final lastDay = DateTime(month.year, month.month + 1, 0);
+    // Half-open range [firstDay, nextMonthStart) so transactions on the last
+    // day of the month (which carry a time of day) are not dropped.
+    final nextMonthStart = DateTime(month.year, month.month + 1, 1);
 
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
       innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
     ])
-      ..where(transactions.date.isBetween(Constant(firstDay), Constant(lastDay)))
+      ..where(transactions.date.isBiggerOrEqualValue(firstDay) &
+          transactions.date.isSmallerThanValue(nextMonthStart))
       ..orderBy([OrderingTerm.desc(transactions.date)]);
 
     if (walletId != null) {
@@ -1658,7 +1661,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
   Future<MonthlySummaryTotals> getMonthlySummaryTotals(DateTime month, [int? walletId]) async {
     final firstDay = DateTime(month.year, month.month, 1);
-    final lastDay = DateTime(month.year, month.month + 1, 0);
+    // Half-open range [firstDay, nextMonthStart) so transactions on the last
+    // day of the month (which carry a time of day) are not dropped.
+    final nextMonthStart = DateTime(month.year, month.month + 1, 1);
 
     final incomeSum = transactions.amount.sum();
     final expenseSum = transactions.amount.sum();
@@ -1667,7 +1672,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       ..addColumns([incomeSum])
       ..where(
         transactions.type.equalsValue(TransactionType.income) &
-            transactions.date.isBetween(Constant(firstDay), Constant(lastDay)),
+            transactions.date.isBiggerOrEqualValue(firstDay) &
+            transactions.date.isSmallerThanValue(nextMonthStart),
       );
     if (walletId != null) {
       incomeQuery.where(transactions.walletId.equals(walletId));
@@ -1678,7 +1684,8 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
       ..addColumns([expenseSum])
       ..where(
         transactions.type.equalsValue(TransactionType.expense) &
-            transactions.date.isBetween(Constant(firstDay), Constant(lastDay)),
+            transactions.date.isBiggerOrEqualValue(firstDay) &
+            transactions.date.isSmallerThanValue(nextMonthStart),
       );
     if (walletId != null) {
       expenseQuery.where(transactions.walletId.equals(walletId));
@@ -2264,10 +2271,14 @@ class GoalDao extends DatabaseAccessor<AppDatabase> with _$GoalDaoMixin {
 }
 
 
+/// File name of the on-device SQLite database. Shared with the backup/restore
+/// service (`core/services/backup_service.dart`) so both agree on the location.
+const String kDatabaseFileName = 'db.sqlite';
+
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'db.sqlite'));
+    final file = File(p.join(dbFolder.path, kDatabaseFileName));
     return NativeDatabase.createInBackground(file);
   });
 }

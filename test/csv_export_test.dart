@@ -132,4 +132,38 @@ void main() {
       expect(lines[2], 'Next line note."');
     });
   });
+
+  // Regression tests for spreadsheet formula injection (backlog item B2).
+  group('escapeCsvField', () {
+    test('plain values pass through unchanged', () {
+      expect(escapeCsvField('Groceries'), 'Groceries');
+      expect(escapeCsvField(''), '');
+      expect(escapeCsvField('Monthly rent'), 'Monthly rent');
+    });
+
+    test('separators, quotes and newlines are RFC 4180 quoted', () {
+      expect(escapeCsvField('a,b'), '"a,b"');
+      expect(escapeCsvField('say "hi"'), '"say ""hi"""');
+      expect(escapeCsvField('line1\nline2'), '"line1\nline2"');
+    });
+
+    test('formula injection is neutralised with a leading apostrophe', () {
+      expect(escapeCsvField('=1+1'), "'=1+1");
+      expect(escapeCsvField('+SUM(A1)'), "'+SUM(A1)");
+      expect(escapeCsvField('-2+3'), "'-2+3");
+      expect(escapeCsvField('@SUM(A1)'), "'@SUM(A1)");
+      expect(escapeCsvField('=HYPERLINK("http://x")'),
+          '"\'=HYPERLINK(""http://x"")"');
+    });
+
+    test('formula injection combined with a comma is both prefixed and quoted',
+        () {
+      expect(escapeCsvField('=A1,B1'), '"\'=A1,B1"');
+    });
+
+    test('a formula marker in the middle of a value is left alone', () {
+      expect(escapeCsvField('coffee - 2'), 'coffee - 2');
+      expect(escapeCsvField('a=b'), 'a=b');
+    });
+  });
 }

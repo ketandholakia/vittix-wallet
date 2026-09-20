@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
 import 'package:expense_tracker/features/categories/presentation/category_screen.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
+import 'package:expense_tracker/core/services/backup_service.dart';
+import 'package:expense_tracker/features/settings/presentation/auto_backup_screen.dart';
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
 import 'package:expense_tracker/core/utils/csv_exporter.dart';
@@ -11,7 +13,6 @@ import 'package:expense_tracker/features/recurring/presentation/recurring_transa
 import 'package:expense_tracker/sms/sms_import_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
@@ -19,6 +20,12 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:expense_tracker/features/sync/data/sync_service.dart';
+
+/// Cloud sync is not release-ready yet: deleted records never propagate,
+/// Nextcloud mode only performs GETs, and wallets are matched by local row ids.
+/// The Settings UI is therefore hidden (backlog item A8). Flip to `true` to
+/// re-enable the section for development, or delete it once sync is rebuilt.
+const bool kCloudSyncEnabled = false;
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -320,108 +327,110 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const SizedBox(height: 24),
 
-          Text('Cloud Sync', style: textTheme.titleLarge),
-          const SizedBox(height: 8),
-          _SettingsCard(
-            child: Column(
-              children: [
-                SwitchListTile(
-                  secondary: const Icon(Icons.cloud_sync_outlined),
-                  title: const Text('Simulate Cloud Sync'),
-                  subtitle: const Text('Test sync offline using local storage simulation'),
-                  value: isSimulated,
-                  onChanged: (value) {
-                    ref.read(isSimulatedSyncProvider.notifier).updateIsSimulatedSync(value);
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: TextFormField(
-                    initialValue: syncUrl,
-                    enabled: !isSimulated,
-                    decoration: const InputDecoration(
-                      labelText: 'Nextcloud WebDAV URL',
-                      hintText: 'https://[server]/remote.php/webdav/',
-                      prefixIcon: Icon(Icons.link),
-                      border: OutlineInputBorder(),
-                    ),
+          if (kCloudSyncEnabled) ...[
+            Text('Cloud Sync', style: textTheme.titleLarge),
+            const SizedBox(height: 8),
+            _SettingsCard(
+              child: Column(
+                children: [
+                  SwitchListTile(
+                    secondary: const Icon(Icons.cloud_sync_outlined),
+                    title: const Text('Simulate Cloud Sync'),
+                    subtitle: const Text('Test sync offline using local storage simulation'),
+                    value: isSimulated,
                     onChanged: (value) {
-                      ref.read(syncUrlProvider.notifier).updateSyncUrl(value);
+                      ref.read(isSimulatedSyncProvider.notifier).updateIsSimulatedSync(value);
                     },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: TextFormField(
-                    initialValue: syncUsername,
-                    enabled: !isSimulated,
-                    decoration: const InputDecoration(
-                      labelText: 'Nextcloud Username',
-                      hintText: 'e.g., john.doe',
-                      prefixIcon: Icon(Icons.person),
-                      border: OutlineInputBorder(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: TextFormField(
+                      initialValue: syncUrl,
+                      enabled: !isSimulated,
+                      decoration: const InputDecoration(
+                        labelText: 'Nextcloud WebDAV URL',
+                        hintText: 'https://[server]/remote.php/webdav/',
+                        prefixIcon: Icon(Icons.link),
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        ref.read(syncUrlProvider.notifier).updateSyncUrl(value);
+                      },
                     ),
-                    onChanged: (value) {
-                      ref.read(nextcloudUsernameProvider.notifier).updateUsername(value);
-                    },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: TextFormField(
-                    initialValue: syncPassword,
-                    enabled: !isSimulated,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'App Password',
-                      hintText: 'Generated in Nextcloud Settings > Security',
-                      prefixIcon: Icon(Icons.key),
-                      border: OutlineInputBorder(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: TextFormField(
+                      initialValue: syncUsername,
+                      enabled: !isSimulated,
+                      decoration: const InputDecoration(
+                        labelText: 'Nextcloud Username',
+                        hintText: 'e.g., john.doe',
+                        prefixIcon: Icon(Icons.person),
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        ref.read(nextcloudUsernameProvider.notifier).updateUsername(value);
+                      },
                     ),
-                    onChanged: (value) {
-                      ref.read(nextcloudPasswordProvider.notifier).updatePassword(value);
-                    },
                   ),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  title: const Text('Synchronize Now'),
-                  subtitle: Text(syncStatusMessage),
-                  trailing: syncState.status == SyncStatus.syncing
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.sync),
-                  onTap: syncState.status == SyncStatus.syncing
-                      ? null
-                      : () async {
-                          final notifier = ref.read(syncStateProvider.notifier);
-                          await notifier.performSync();
-                          final freshState = ref.read(syncStateProvider);
-                          if (!context.mounted) return;
-                          if (freshState.status == SyncStatus.success) {
-                            if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Sync completed successfully!'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          } else if (freshState.status == SyncStatus.error) {
-                            if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Sync failed: ${freshState.errorMessage}'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        },
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: TextFormField(
+                      initialValue: syncPassword,
+                      enabled: !isSimulated,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'App Password',
+                        hintText: 'Generated in Nextcloud Settings > Security',
+                        prefixIcon: Icon(Icons.key),
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        ref.read(nextcloudPasswordProvider.notifier).updatePassword(value);
+                      },
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    title: const Text('Synchronize Now'),
+                    subtitle: Text(syncStatusMessage),
+                    trailing: syncState.status == SyncStatus.syncing
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.sync),
+                    onTap: syncState.status == SyncStatus.syncing
+                        ? null
+                        : () async {
+                            final notifier = ref.read(syncStateProvider.notifier);
+                            await notifier.performSync();
+                            final freshState = ref.read(syncStateProvider);
+                            if (!context.mounted) return;
+                            if (freshState.status == SyncStatus.success) {
+                              if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Sync completed successfully!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            } else if (freshState.status == SyncStatus.error) {
+                              if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Sync failed: ${freshState.errorMessage}'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
+          ],
 
           Text('Backup & Restore', style: textTheme.titleLarge),
           const SizedBox(height: 8),
@@ -432,30 +441,84 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: const Text('Save a backup of your database'),
               onTap: () async {
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
-                final dbFolder = await getApplicationDocumentsDirectory();
-                final dbFile = File(p.join(dbFolder.path, 'db.sqlite'));
-                
-                if (!await dbFile.exists()) {
-                  scaffoldMessenger.showSnackBar(
-                    const SnackBar(content: Text('Database file not found!')),
-                  );
-                  return;
-                }
-
-                final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-                final backupFileName = 'expense_backup_$timestamp.db';
-                final tempDir = await getTemporaryDirectory();
-                final backupFile = File(p.join(tempDir.path, backupFileName));
+                final passController = TextEditingController();
+                final passphrase = await showDialog<String>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Backup passphrase'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Optional. With a passphrase the backup is encrypted '
+                          '(AES-256-GCM) and useless without it. Leave empty for '
+                          'a plain database file.',
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: passController,
+                          autofocus: true,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Passphrase (optional)',
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(''),
+                        child: const Text('No encryption'),
+                      ),
+                      FilledButton(
+                        onPressed: () => Navigator.of(ctx).pop(passController.text),
+                        child: const Text('Create backup'),
+                      ),
+                    ],
+                  ),
+                );
+                if (passphrase == null) return;
 
                 try {
-                  await dbFile.copy(backupFile.path);
-                  await Share.shareXFiles([XFile(backupFile.path)], text: 'Expense Tracker Database Backup');
+                  // VACUUM INTO gives a consistent snapshot while the DB is open.
+                  final tempDir = await getTemporaryDirectory();
+                  final name = BackupService.timestampedBackupName(DateTime.now());
+                  final service = ref.read(backupServiceProvider);
+                  final File snapshot;
+                  if (passphrase.isEmpty) {
+                    snapshot =
+                        await service.createSnapshot(p.join(tempDir.path, name));
+                  } else {
+                    snapshot = await service.createEncryptedSnapshot(
+                      p.join(tempDir.path, '$name.enc'),
+                      passphrase,
+                    );
+                  }
+                  await Share.shareXFiles(
+                    [XFile(snapshot.path)],
+                    text: passphrase.isEmpty
+                        ? 'Vittix Wallet database backup'
+                        : 'Vittix Wallet encrypted database backup',
+                  );
                 } catch (e) {
                   scaffoldMessenger.showSnackBar(
                     SnackBar(content: Text('Error saving backup: $e')),
                   );
                 }
               },
+            ),
+          ),
+          const SizedBox(height: 8),
+          _SettingsCard(
+            child: ListTile(
+              leading: const Icon(Icons.schedule),
+              title: const Text('Automatic Backup'),
+              subtitle: const Text('Scheduled snapshots with optional encryption'),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const AutoBackupScreen()),
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -510,64 +573,109 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: const Text('Restore data from a backup file'),
               onTap: () async {
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
-                final confirmed = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Import Data?'),
-                    content: const Text(
-                      'This will overwrite all current data with the backup file. This action cannot be undone. The app will restart after import.',
-                    ),
-                    actions: [
-                      TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-                        child: Text('Import', style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                      ),
-                    ],
-                  ),
-                );
 
-                if (confirmed != true) return;
-
-                final result = await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['db', 'sqlite'],
-                );
-
+                final result = await FilePicker.platform.pickFiles();
                 if (result == null || result.files.single.path == null) return;
 
-                final backupFile = File(result.files.single.path!);
-                final File? appDbFile = null; // ref.read(databaseFileProvider).value;
+                final picked = File(result.files.single.path!);
+                final liveDbFile = await ref.read(databaseFileProvider.future);
 
-                if (appDbFile == null) {
-                  scaffoldMessenger.showSnackBar(const SnackBar(content: Text('Database file not found!')));
-                  return;
-                }
-
+                Directory? scratch;
                 try {
-                  await ref.read(databaseProvider).close();
-                  await backupFile.copy(appDbFile.path);
+                  var candidate = picked;
+
+                  // Encrypted backups are unreadable until decrypted.
+                  if (BackupService.isEncryptedFile(picked)) {
+                    final passController = TextEditingController();
+                    final passphrase = await showDialog<String>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Encrypted backup'),
+                        content: TextField(
+                          controller: passController,
+                          autofocus: true,
+                          obscureText: true,
+                          decoration: const InputDecoration(labelText: 'Passphrase'),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(),
+                            child: const Text('Cancel'),
+                          ),
+                          FilledButton(
+                            onPressed: () => Navigator.of(ctx).pop(passController.text),
+                            child: const Text('Decrypt'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (passphrase == null || passphrase.isEmpty) return;
+
+                    scratch = await Directory.systemTemp.createTemp('vittix_restore');
+                    candidate = await BackupService.decryptToFile(
+                      picked,
+                      passphrase,
+                      p.join(scratch.path, 'decrypted.sqlite'),
+                    );
+                  }
+
+                  // Inspect the candidate (read-only) before asking the user to
+                  // confirm: a junk file must never reach the swap step.
+                  final validation = BackupService.validate(
+                    candidate,
+                    currentSchemaVersion:
+                        ref.read(databaseProvider).schemaVersion,
+                  );
+                  if (!validation.isValid) {
+                    scaffoldMessenger.showSnackBar(
+                      SnackBar(
+                        content: Text('Not a usable backup: ${validation.error}'),
+                      ),
+                    );
+                    return;
+                  }
 
                   if (!context.mounted) return;
-
-                  await showDialog<void>(
+                  final confirmed = await showDialog<bool>(
                     context: context,
-                    barrierDismissible: false,
                     builder: (context) => AlertDialog(
-                      title: const Text('Import Successful'),
-                      content: const Text('Data has been restored. The app will now restart.'),
+                      title: const Text('Import Data?'),
+                      content: const Text(
+                        'This will overwrite all current data with the backup file. This action cannot be undone.',
+                      ),
                       actions: [
+                        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
                         TextButton(
-                          onPressed: () => SystemNavigator.pop(), // Close the app
-                          child: const Text('OK'),
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text('Import', style: TextStyle(color: Theme.of(context).colorScheme.error)),
                         ),
                       ],
                     ),
+                  );
+
+                  if (confirmed != true) return;
+
+                  await ref.read(backupServiceProvider).restore(
+                        candidate,
+                        liveDbFile: liveDbFile,
+                      );
+
+                  // Rebuild the database and every provider derived from it so
+                  // the restored data shows up without restarting the app.
+                  ref.invalidate(databaseProvider);
+
+                  if (!context.mounted) return;
+                  scaffoldMessenger.showSnackBar(
+                    const SnackBar(content: Text('Data restored from backup.')),
                   );
                 } catch (e) {
                   scaffoldMessenger.showSnackBar(
                     SnackBar(content: Text('Error importing data: $e')),
                   );
+                } finally {
+                  if (scratch != null && await scratch.exists()) {
+                    await scratch.delete(recursive: true);
+                  }
                 }
               },
             ),

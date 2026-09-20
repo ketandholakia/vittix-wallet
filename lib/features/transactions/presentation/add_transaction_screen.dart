@@ -14,6 +14,7 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/receipt/receipt_scanner_screen.dart';
 import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
+import 'package:expense_tracker/core/utils/duplicate_detector.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
   final domain.Transaction? existingTransaction;
@@ -191,12 +192,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         // Duplicate detection: check recent transactions for same amount, date, account
         final recentStream = ref.read(watchRecentTransactionsUseCaseProvider).call(limit: 50);
         final recentList = await recentStream.first;
-        final isDuplicate = recentList.any((tx) =>
-            tx.amount == amount &&
-            tx.date.year == _selectedDate.year &&
-            tx.date.month == _selectedDate.month &&
-            tx.date.day == _selectedDate.day &&
-            tx.account.id == _selectedAccount!.id);
+        // Shared rule (see duplicate_detector.dart) so manual, SMS and PDF entry
+        // all warn about duplicates the same way.
+        final isDuplicate = looksLikeDuplicate(transaction, recentList);
 
         if (isDuplicate && mounted) {
           final confirmed = await showDialog<bool>(
