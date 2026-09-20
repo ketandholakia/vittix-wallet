@@ -381,7 +381,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<void> deleteMember(int memberId, {int? actorAccountId}) async {
+  Future<void> deleteMember(int memberId, {int? actorAccountId, int? actorUserId}) async {
     await transaction(() async {
       final existing = await (select(walletMembers)..where((m) => m.id.equals(memberId))).getSingleOrNull();
       if (existing == null) return;
@@ -390,6 +390,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         walletId: existing.walletId,
         permissionCheck: (s, r) => s.canRemoveMembers(r),
         actorAccountId: actorAccountId,
+        actorUserId: actorUserId,
         actionName: 'remove members',
       );
 
@@ -411,6 +412,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         ),
         existing.walletId,
         actorAccountId: actorAccountId,
+        actorUserId: actorUserId,
       );
 
       await (delete(walletMembers)..where((m) => m.id.equals(memberId))).go();

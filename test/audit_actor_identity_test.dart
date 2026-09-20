@@ -132,6 +132,85 @@ void main() {
     expect(events.map((e) => e.actorUserId), isNot(contains(newUser)));
   });
 
+  test('a role change is attributed to the acting user', () async {
+    // A second member to change the role of, so the owner is untouched.
+    final memberAccount = await db.into(db.accounts).insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletId),
+            name: 'Member Account',
+            type: db_enums.AccountType.cash,
+            icon: 0,
+            color: '00FFFF',
+          ),
+        );
+    final memberUser = await db.userDao
+        .insertUser(const UsersCompanion(displayName: Value('Ravi')));
+    final memberId = await db.walletDao.insertMember(
+      WalletMembersCompanion.insert(
+        walletId: walletId,
+        accountId: memberAccount,
+        role: WalletRole.member,
+        userId: Value(memberUser),
+      ),
+    );
+
+    // Asha (owner) promotes Ravi, acting as a user.
+    await db.walletDao.updateMember(
+      WalletMembersCompanion(
+        id: Value(memberId),
+        walletId: Value(walletId),
+        accountId: Value(memberAccount),
+        role: const Value(WalletRole.admin),
+      ),
+      actorUserId: userId,
+    );
+
+    final events = await db.walletDao
+        .getActivityForWallet(walletId, action: 'MEMBER_ROLE_CHANGED');
+
+    expect(events, hasLength(1));
+    expect(
+      events.single.actorUserId,
+      userId,
+      reason: 'the role change must name the acting admin, not the member changed',
+    );
+    expect(events.single.actorUserId, isNot(memberUser));
+  });
+
+  test('a member removal is attributed to the acting user', () async {
+    final secondAccount = await db.into(db.accounts).insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletId),
+            name: 'Second Account',
+            type: db_enums.AccountType.cash,
+            icon: 0,
+            color: '00FFFF',
+          ),
+        );
+    final secondUser = await db.userDao
+        .insertUser(const UsersCompanion(displayName: Value('Ravi')));
+    await db.walletDao.insertMember(
+      WalletMembersCompanion.insert(
+        walletId: walletId,
+        accountId: secondAccount,
+        role: WalletRole.member,
+        userId: Value(secondUser),
+      ),
+    );
+
+    await db.walletDao.deactivateMember(
+      walletId,
+      secondAccount,
+      actorUserId: userId,
+    );
+
+    final events = await db.walletDao
+        .getActivityForWallet(walletId, action: 'MEMBER_DEACTIVATED');
+
+    expect(events, hasLength(1));
+    expect(events.single.actorUserId, userId);
+  });
+
   test('a viewer cannot create audit events', () async {
     // A second member, so the wallet keeps an owner.
     final viewerAccount = await db.into(db.accounts).insert(
