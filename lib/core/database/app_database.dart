@@ -450,14 +450,30 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
 
   // --- Wallet-scoped Activity operations (P2-3) ---
 
-  Future<int> insertActivity(WalletActivitiesCompanion activity, int walletId, {int? actorAccountId}) async {
+  Future<int> insertActivity(
+    WalletActivitiesCompanion activity,
+    int walletId, {
+    int? actorAccountId,
+    int? actorUserId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canCreateActivity(r),
       actorAccountId: actorAccountId,
+      actorUserId: actorUserId,
       actionName: 'create activity',
     );
-    return into(walletActivities).insert(activity);
+    // A7 step 3 slice 2: record whoever acted. The helper previously used the
+    // actor only for the permission check and never stamped it on the row, so
+    // audit events did not say who did anything. Prefer the real user identity,
+    // falling back to the legacy account actor.
+    var row = activity;
+    if (actorUserId != null) {
+      row = row.copyWith(actorUserId: Value(actorUserId));
+    } else if (actorAccountId != null) {
+      row = row.copyWith(actorAccountId: Value(actorAccountId));
+    }
+    return into(walletActivities).insert(row);
   }
 
   Future<List<WalletActivity>> getActivityForWallet(int walletId, {int? limit, int? offset, int? actorAccountId, String? action, String? entityType}) async {
@@ -2003,7 +2019,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   Future<int> insertDeletedRecord(String uuid, String tableName) {
     /* return into(deletedRecords).insert(

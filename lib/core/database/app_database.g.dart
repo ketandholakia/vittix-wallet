@@ -15733,6 +15733,17 @@ class $WalletActivitiesTable extends WalletActivities
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _actorUserIdMeta = const VerificationMeta(
+    'actorUserId',
+  );
+  @override
+  late final GeneratedColumn<int> actorUserId = GeneratedColumn<int>(
+    'actor_user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _actionMeta = const VerificationMeta('action');
   @override
   late final GeneratedColumn<String> action = GeneratedColumn<String>(
@@ -15837,6 +15848,7 @@ class $WalletActivitiesTable extends WalletActivities
     uuid,
     actorAccountId,
     actorMemberId,
+    actorUserId,
     action,
     entityType,
     entityId,
@@ -15890,6 +15902,15 @@ class $WalletActivitiesTable extends WalletActivities
         actorMemberId.isAcceptableOrUnknown(
           data['actor_member_id']!,
           _actorMemberIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('actor_user_id')) {
+      context.handle(
+        _actorUserIdMeta,
+        actorUserId.isAcceptableOrUnknown(
+          data['actor_user_id']!,
+          _actorUserIdMeta,
         ),
       );
     }
@@ -15978,6 +15999,10 @@ class $WalletActivitiesTable extends WalletActivities
         DriftSqlType.int,
         data['${effectivePrefix}actor_member_id'],
       ),
+      actorUserId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}actor_user_id'],
+      ),
       action: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}action'],
@@ -16025,6 +16050,10 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
   final String uuid;
   final int? actorAccountId;
   final int? actorMemberId;
+
+  /// A7 step 3 slice 2: the real identity behind an audit event, alongside the
+  /// legacy actorAccountId. Nullable while call sites migrate.
+  final int? actorUserId;
   final String action;
   final String entityType;
   final int entityId;
@@ -16039,6 +16068,7 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
     required this.uuid,
     this.actorAccountId,
     this.actorMemberId,
+    this.actorUserId,
     required this.action,
     required this.entityType,
     required this.entityId,
@@ -16059,6 +16089,9 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
     }
     if (!nullToAbsent || actorMemberId != null) {
       map['actor_member_id'] = Variable<int>(actorMemberId);
+    }
+    if (!nullToAbsent || actorUserId != null) {
+      map['actor_user_id'] = Variable<int>(actorUserId);
     }
     map['action'] = Variable<String>(action);
     map['entity_type'] = Variable<String>(entityType);
@@ -16088,6 +16121,9 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
       actorMemberId: actorMemberId == null && nullToAbsent
           ? const Value.absent()
           : Value(actorMemberId),
+      actorUserId: actorUserId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actorUserId),
       action: Value(action),
       entityType: Value(entityType),
       entityId: Value(entityId),
@@ -16116,6 +16152,7 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
       uuid: serializer.fromJson<String>(json['uuid']),
       actorAccountId: serializer.fromJson<int?>(json['actorAccountId']),
       actorMemberId: serializer.fromJson<int?>(json['actorMemberId']),
+      actorUserId: serializer.fromJson<int?>(json['actorUserId']),
       action: serializer.fromJson<String>(json['action']),
       entityType: serializer.fromJson<String>(json['entityType']),
       entityId: serializer.fromJson<int>(json['entityId']),
@@ -16135,6 +16172,7 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
       'uuid': serializer.toJson<String>(uuid),
       'actorAccountId': serializer.toJson<int?>(actorAccountId),
       'actorMemberId': serializer.toJson<int?>(actorMemberId),
+      'actorUserId': serializer.toJson<int?>(actorUserId),
       'action': serializer.toJson<String>(action),
       'entityType': serializer.toJson<String>(entityType),
       'entityId': serializer.toJson<int>(entityId),
@@ -16152,6 +16190,7 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
     String? uuid,
     Value<int?> actorAccountId = const Value.absent(),
     Value<int?> actorMemberId = const Value.absent(),
+    Value<int?> actorUserId = const Value.absent(),
     String? action,
     String? entityType,
     int? entityId,
@@ -16170,6 +16209,7 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
     actorMemberId: actorMemberId.present
         ? actorMemberId.value
         : this.actorMemberId,
+    actorUserId: actorUserId.present ? actorUserId.value : this.actorUserId,
     action: action ?? this.action,
     entityType: entityType ?? this.entityType,
     entityId: entityId ?? this.entityId,
@@ -16190,6 +16230,9 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
       actorMemberId: data.actorMemberId.present
           ? data.actorMemberId.value
           : this.actorMemberId,
+      actorUserId: data.actorUserId.present
+          ? data.actorUserId.value
+          : this.actorUserId,
       action: data.action.present ? data.action.value : this.action,
       entityType: data.entityType.present
           ? data.entityType.value
@@ -16213,6 +16256,7 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
           ..write('uuid: $uuid, ')
           ..write('actorAccountId: $actorAccountId, ')
           ..write('actorMemberId: $actorMemberId, ')
+          ..write('actorUserId: $actorUserId, ')
           ..write('action: $action, ')
           ..write('entityType: $entityType, ')
           ..write('entityId: $entityId, ')
@@ -16232,6 +16276,7 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
     uuid,
     actorAccountId,
     actorMemberId,
+    actorUserId,
     action,
     entityType,
     entityId,
@@ -16250,6 +16295,7 @@ class WalletActivity extends DataClass implements Insertable<WalletActivity> {
           other.uuid == this.uuid &&
           other.actorAccountId == this.actorAccountId &&
           other.actorMemberId == this.actorMemberId &&
+          other.actorUserId == this.actorUserId &&
           other.action == this.action &&
           other.entityType == this.entityType &&
           other.entityId == this.entityId &&
@@ -16266,6 +16312,7 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
   final Value<String> uuid;
   final Value<int?> actorAccountId;
   final Value<int?> actorMemberId;
+  final Value<int?> actorUserId;
   final Value<String> action;
   final Value<String> entityType;
   final Value<int> entityId;
@@ -16280,6 +16327,7 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
     this.uuid = const Value.absent(),
     this.actorAccountId = const Value.absent(),
     this.actorMemberId = const Value.absent(),
+    this.actorUserId = const Value.absent(),
     this.action = const Value.absent(),
     this.entityType = const Value.absent(),
     this.entityId = const Value.absent(),
@@ -16295,6 +16343,7 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
     this.uuid = const Value.absent(),
     this.actorAccountId = const Value.absent(),
     this.actorMemberId = const Value.absent(),
+    this.actorUserId = const Value.absent(),
     required String action,
     required String entityType,
     required int entityId,
@@ -16314,6 +16363,7 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
     Expression<String>? uuid,
     Expression<int>? actorAccountId,
     Expression<int>? actorMemberId,
+    Expression<int>? actorUserId,
     Expression<String>? action,
     Expression<String>? entityType,
     Expression<int>? entityId,
@@ -16329,6 +16379,7 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
       if (uuid != null) 'uuid': uuid,
       if (actorAccountId != null) 'actor_account_id': actorAccountId,
       if (actorMemberId != null) 'actor_member_id': actorMemberId,
+      if (actorUserId != null) 'actor_user_id': actorUserId,
       if (action != null) 'action': action,
       if (entityType != null) 'entity_type': entityType,
       if (entityId != null) 'entity_id': entityId,
@@ -16346,6 +16397,7 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
     Value<String>? uuid,
     Value<int?>? actorAccountId,
     Value<int?>? actorMemberId,
+    Value<int?>? actorUserId,
     Value<String>? action,
     Value<String>? entityType,
     Value<int>? entityId,
@@ -16361,6 +16413,7 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
       uuid: uuid ?? this.uuid,
       actorAccountId: actorAccountId ?? this.actorAccountId,
       actorMemberId: actorMemberId ?? this.actorMemberId,
+      actorUserId: actorUserId ?? this.actorUserId,
       action: action ?? this.action,
       entityType: entityType ?? this.entityType,
       entityId: entityId ?? this.entityId,
@@ -16389,6 +16442,9 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
     }
     if (actorMemberId.present) {
       map['actor_member_id'] = Variable<int>(actorMemberId.value);
+    }
+    if (actorUserId.present) {
+      map['actor_user_id'] = Variable<int>(actorUserId.value);
     }
     if (action.present) {
       map['action'] = Variable<String>(action.value);
@@ -16425,6 +16481,7 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
           ..write('uuid: $uuid, ')
           ..write('actorAccountId: $actorAccountId, ')
           ..write('actorMemberId: $actorMemberId, ')
+          ..write('actorUserId: $actorUserId, ')
           ..write('action: $action, ')
           ..write('entityType: $entityType, ')
           ..write('entityId: $entityId, ')
@@ -24806,6 +24863,7 @@ typedef $$WalletActivitiesTableCreateCompanionBuilder =
       Value<String> uuid,
       Value<int?> actorAccountId,
       Value<int?> actorMemberId,
+      Value<int?> actorUserId,
       required String action,
       required String entityType,
       required int entityId,
@@ -24822,6 +24880,7 @@ typedef $$WalletActivitiesTableUpdateCompanionBuilder =
       Value<String> uuid,
       Value<int?> actorAccountId,
       Value<int?> actorMemberId,
+      Value<int?> actorUserId,
       Value<String> action,
       Value<String> entityType,
       Value<int> entityId,
@@ -24863,6 +24922,11 @@ class $$WalletActivitiesTableFilterComposer
 
   ColumnFilters<int> get actorMemberId => $composableBuilder(
     column: $table.actorMemberId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get actorUserId => $composableBuilder(
+    column: $table.actorUserId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24941,6 +25005,11 @@ class $$WalletActivitiesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get actorUserId => $composableBuilder(
+    column: $table.actorUserId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get action => $composableBuilder(
     column: $table.action,
     builder: (column) => ColumnOrderings(column),
@@ -25007,6 +25076,11 @@ class $$WalletActivitiesTableAnnotationComposer
 
   GeneratedColumn<int> get actorMemberId => $composableBuilder(
     column: $table.actorMemberId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get actorUserId => $composableBuilder(
+    column: $table.actorUserId,
     builder: (column) => column,
   );
 
@@ -25081,6 +25155,7 @@ class $$WalletActivitiesTableTableManager
                 Value<String> uuid = const Value.absent(),
                 Value<int?> actorAccountId = const Value.absent(),
                 Value<int?> actorMemberId = const Value.absent(),
+                Value<int?> actorUserId = const Value.absent(),
                 Value<String> action = const Value.absent(),
                 Value<String> entityType = const Value.absent(),
                 Value<int> entityId = const Value.absent(),
@@ -25095,6 +25170,7 @@ class $$WalletActivitiesTableTableManager
                 uuid: uuid,
                 actorAccountId: actorAccountId,
                 actorMemberId: actorMemberId,
+                actorUserId: actorUserId,
                 action: action,
                 entityType: entityType,
                 entityId: entityId,
@@ -25111,6 +25187,7 @@ class $$WalletActivitiesTableTableManager
                 Value<String> uuid = const Value.absent(),
                 Value<int?> actorAccountId = const Value.absent(),
                 Value<int?> actorMemberId = const Value.absent(),
+                Value<int?> actorUserId = const Value.absent(),
                 required String action,
                 required String entityType,
                 required int entityId,
@@ -25125,6 +25202,7 @@ class $$WalletActivitiesTableTableManager
                 uuid: uuid,
                 actorAccountId: actorAccountId,
                 actorMemberId: actorMemberId,
+                actorUserId: actorUserId,
                 action: action,
                 entityType: entityType,
                 entityId: entityId,
