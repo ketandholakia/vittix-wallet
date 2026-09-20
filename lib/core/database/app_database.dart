@@ -579,7 +579,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     );
   }
 
-  Future<void> logMemberAdded({required int walletId, required int accountId, int? actorAccountId}) async {
+  Future<void> logMemberAdded({required int walletId, required int accountId, int? actorAccountId, int? actorUserId}) async {
     await insertActivity(
       WalletActivitiesCompanion.insert(
         walletId: walletId,
@@ -591,10 +591,11 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       ),
       walletId,
       actorAccountId: actorAccountId,
+      actorUserId: actorUserId,
     );
   }
 
-  Future<void> logInvitationActivity({required int walletId, required int invitationId, required String action, int? actorAccountId}) async {
+  Future<void> logInvitationActivity({required int walletId, required int invitationId, required String action, int? actorAccountId, int? actorUserId}) async {
     await insertActivity(
       WalletActivitiesCompanion.insert(
         walletId: walletId,
@@ -606,6 +607,7 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       ),
       walletId,
       actorAccountId: actorAccountId,
+      actorUserId: actorUserId,
     );
   }
 
