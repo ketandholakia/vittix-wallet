@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
 
 final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) {
@@ -395,6 +396,7 @@ class CurrentWalletIdNotifier extends StateNotifier<int> {
     try {
       final storedId = _prefs?.getInt(_key);
       final validId = await _walletDao!.validateActiveWallet(storedId, actorAccountId: actorAccountId);
+      if (!mounted) return;
       if (validId != null) {
         if (state != validId) {
           state = validId;
@@ -402,9 +404,13 @@ class CurrentWalletIdNotifier extends StateNotifier<int> {
         await _prefs?.setInt(_key, validId);
       } else {
         await _prefs?.remove(_key);
-        state = 0;
+        if (mounted) state = 0;
       }
-    } catch (_) {}
+    } on Object catch (error, stackTrace) {
+      // Keep the current wallet on a transient failure (including the database
+      // being closed during teardown); never crash startup.
+      AppLogger.warn('Active wallet revalidation failed', error, stackTrace);
+    }
   }
 
   Future<bool> selectWallet(int value, {int? actorAccountId}) async {
@@ -478,7 +484,11 @@ class DashboardWidgetsHiddenNotifier extends StateNotifier<Map<String, bool>> {
     if (str != null) {
       try {
         return Map<String, bool>.from(jsonDecode(str));
-      } catch (_) {}
+      } on FormatException catch (error) {
+        AppLogger.warn('Invalid dashboard widget settings; using defaults', error);
+      } on TypeError catch (error) {
+        AppLogger.warn('Invalid dashboard widget settings; using defaults', error);
+      }
     }
     return {};
   }

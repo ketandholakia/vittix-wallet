@@ -6,6 +6,7 @@ import 'package:expense_tracker/features/categories/domain/category.dart';
 import 'package:expense_tracker/features/categories/data/category_repository.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart';
 import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,6 +22,10 @@ class CsvImportSummary {
   final String dateFormat;
   final List<CsvPreviewRow> previewRows;
 
+  /// Human-readable reasons for skipped rows, so the UI can show details
+  /// instead of only a count.
+  final List<String> skippedReasons;
+
   const CsvImportSummary({
     required this.imported,
     required this.duplicates,
@@ -32,6 +37,7 @@ class CsvImportSummary {
     this.delimiter = ',',
     this.dateFormat = 'yyyy-MM-dd',
     this.previewRows = const [],
+    this.skippedReasons = const [],
   });
 }
 
@@ -117,8 +123,11 @@ class CsvTransactionImporter {
     var imported = 0;
     var duplicates = 0;
     var skipped = 0;
+    final skippedReasons = <String>[];
+    var rowNumber = 1;
 
     for (final row in rows.skip(1)) {
+      rowNumber++;
       if (row.isEmpty || row.every((value) => value.trim().isEmpty)) {
         continue;
       }
@@ -171,8 +180,14 @@ class CsvTransactionImporter {
           ),
         );
         imported++;
-      } catch (_) {
+      } on FormatException catch (error) {
         skipped++;
+        skippedReasons.add('Row $rowNumber: ${error.message}');
+        AppLogger.warn('CSV row $rowNumber skipped', error);
+      } on Exception catch (error, stackTrace) {
+        skipped++;
+        skippedReasons.add('Row $rowNumber: $error');
+        AppLogger.error('CSV row $rowNumber failed', error, stackTrace);
       }
     }
 
@@ -180,6 +195,7 @@ class CsvTransactionImporter {
       imported: imported,
       duplicates: duplicates,
       skipped: skipped,
+      skippedReasons: skippedReasons,
       wouldCreateAccounts: analysis.wouldCreateAccounts,
       wouldCreateCategories: analysis.wouldCreateCategories,
       previewMissingAccounts: analysis.previewMissingAccounts,
@@ -233,8 +249,11 @@ class CsvTransactionImporter {
     var imported = 0;
     var duplicates = 0;
     var skipped = 0;
+    final skippedReasons = <String>[];
+    var rowNumber = 1;
 
     for (final row in rows.skip(1)) {
+      rowNumber++;
       if (row.isEmpty || row.every((value) => value.trim().isEmpty)) continue;
       try {
         final date = _parseDate(row[dateIndex], detectedDateFormat);
@@ -289,8 +308,14 @@ class CsvTransactionImporter {
           status: 'import',
         );
         imported++;
-      } catch (_) {
+      } on FormatException catch (error) {
         skipped++;
+        skippedReasons.add('Row $rowNumber: ${error.message}');
+        AppLogger.warn('CSV preview row $rowNumber skipped', error);
+      } on Exception catch (error, stackTrace) {
+        skipped++;
+        skippedReasons.add('Row $rowNumber: $error');
+        AppLogger.error('CSV preview row $rowNumber failed', error, stackTrace);
       }
     }
 
@@ -298,6 +323,7 @@ class CsvTransactionImporter {
       imported: imported,
       duplicates: duplicates,
       skipped: skipped,
+      skippedReasons: skippedReasons,
       wouldCreateAccounts: missingAccounts.length,
       wouldCreateCategories: missingCategories.length,
       previewMissingAccounts: missingAccounts.toList()..sort(),
@@ -412,7 +438,9 @@ class CsvTransactionImporter {
     if (format != null) {
       try {
         return format.parseStrict(input);
-      } catch (_) {}
+      } on FormatException {
+        // Expected: this row does not match this candidate format.
+      }
     }
     return DateTime.parse(input);
   }
@@ -502,7 +530,9 @@ class CsvTransactionImporter {
         try {
           _dateFormats[entry]!.parseStrict(value);
           candidates[entry] = candidates[entry]! + 1;
-        } catch (_) {}
+        } on FormatException {
+          // Expected: the value does not use this format.
+        }
       }
     }
     if (rows.isEmpty) return 'yyyy-MM-dd';

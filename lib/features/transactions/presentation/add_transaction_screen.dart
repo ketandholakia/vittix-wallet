@@ -14,6 +14,7 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/receipt/receipt_scanner_screen.dart';
 import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:expense_tracker/core/utils/duplicate_detector.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
@@ -157,8 +158,10 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           ),
         );
       }
-    } catch (_) {
-      // Silently fail - this is a convenience feature
+    } on Exception catch (error, stackTrace) {
+      // Convenience feature: never block saving a transaction because of it,
+      // but keep the failure visible in debug builds.
+      AppLogger.warn('Category suggestion failed', error, stackTrace);
     }
   }
 

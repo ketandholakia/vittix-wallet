@@ -3,6 +3,7 @@ import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/categories/domain/category.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:expense_tracker/core/utils/duplicate_detector.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
 import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:android_sms_reader/android_sms_reader.dart';
+import 'package:sqlite3/sqlite3.dart' show SqliteException;
 
 class SmsImportScreen extends ConsumerStatefulWidget {
   const SmsImportScreen({super.key});
@@ -133,7 +135,13 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
                 );
                 break;
               }
-            } catch (_) {}
+            } on FormatException catch (error) {
+              // A merchant mapping can contain an invalid user-supplied regex.
+              AppLogger.warn(
+                'Skipping invalid merchant mapping "${mapping.originalPattern}"',
+                error,
+              );
+            }
           }
           _candidates.add(candidate!);
         } else {
@@ -148,8 +156,13 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
               ),
               authorizedWalletId: walletId,
             );
-          } catch (_) {
-            // Ignore constraint errors (e.g., if we re-import without resolving)
+          } on SqliteException catch (error) {
+            // A duplicate row (re-import without resolving) is expected; log it
+            // so unexpected constraint failures are visible in debug builds.
+            AppLogger.warn(
+              'Unrecognized SMS entry was not stored',
+              error,
+            );
           }
         }
       }

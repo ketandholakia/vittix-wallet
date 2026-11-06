@@ -1,3 +1,5 @@
+import 'package:expense_tracker/core/utils/app_logger.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -54,7 +56,11 @@ class NotificationService {
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
       );
-    } catch (_) {
+    } on PlatformException catch (error) {
+      AppLogger.warn(
+        'Exact daily reminder alarm not permitted; using inexact',
+        error,
+      );
       await _flutterLocalNotificationsPlugin.zonedSchedule(
         0,
         'Daily Reminder',
@@ -125,7 +131,11 @@ class NotificationService {
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
       );
-    } catch (_) {
+    } on PlatformException catch (error) {
+      AppLogger.warn(
+        'Exact monthly summary alarm not permitted; using inexact',
+        error,
+      );
       await _flutterLocalNotificationsPlugin.zonedSchedule(
         99,
         'Monthly Summary Ready',

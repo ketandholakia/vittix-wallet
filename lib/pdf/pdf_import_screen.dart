@@ -5,6 +5,7 @@ import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/categories/domain/category.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:expense_tracker/core/utils/duplicate_detector.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
 import 'package:expense_tracker/pdf/pdf_text_extractor.dart';
@@ -139,7 +140,13 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
               );
               break;
             }
-          } catch (_) {}
+          } on FormatException catch (error) {
+            // A merchant mapping can contain an invalid user-supplied regex.
+            AppLogger.warn(
+              'Skipping invalid merchant mapping "${mapping.originalPattern}"',
+              error,
+            );
+          }
         }
 
         _candidates.add(candidate);

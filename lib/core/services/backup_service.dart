@@ -204,7 +204,8 @@ class BackupService {
         raf.readSync(_containerMagic.length),
         _containerMagic,
       );
-    } catch (_) {
+    } on FileSystemException {
+      // An unreadable file is simply not a container.
       return false;
     } finally {
       raf?.closeSync();
@@ -505,7 +506,8 @@ class BackupService {
     try {
       raf = file.openSync();
       return String.fromCharCodes(raf.readSync(16));
-    } catch (_) {
+    } on FileSystemException {
+      // Callers treat a missing/unreadable header as "not a database".
       return null;
     } finally {
       raf?.closeSync();

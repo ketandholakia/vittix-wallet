@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
 import 'package:sqlite3/sqlite3.dart';
 
@@ -84,7 +85,8 @@ class DatabaseEncryption {
       raf = file.openSync();
       final header = String.fromCharCodes(raf.readSync(16));
       return header.startsWith(sqliteMagic);
-    } catch (_) {
+    } on FileSystemException {
+      // An unreadable file cannot be confirmed as plaintext.
       return false;
     } finally {
       raf?.closeSync();
@@ -216,7 +218,13 @@ class DatabaseEncryption {
       source.execute("ATTACH DATABASE '$encryptedPath' AS encrypted KEY \"x'$hex'\"");
       source.select("SELECT sqlcipher_export('encrypted')");
       source.execute('DETACH DATABASE encrypted');
-    } catch (_) {
+    } on SqliteException catch (error) {
+      AppLogger.warn('Encrypting the database failed', error);
+      source?.dispose();
+      if (await encrypted.exists()) await encrypted.delete();
+      return false;
+    } on FileSystemException catch (error) {
+      AppLogger.warn('Encrypting the database failed', error);
       source?.dispose();
       if (await encrypted.exists()) await encrypted.delete();
       return false;
@@ -236,7 +244,8 @@ class DatabaseEncryption {
       await encrypted.copy(file.path);
       await encrypted.delete();
       return true;
-    } catch (_) {
+    } on FileSystemException catch (error) {
+      AppLogger.warn('Swapping in the encrypted database failed', error);
       return false;
     }
   }
@@ -261,7 +270,8 @@ class DatabaseEncryption {
       db.execute(pragmaForKey(base64Key));
       final check = db.select('PRAGMA integrity_check');
       return check.isNotEmpty && check.first.values.first?.toString() == 'ok';
-    } catch (_) {
+    } on SqliteException {
+      // A wrong key or non-database file is expected here.
       return false;
     } finally {
       db?.dispose();

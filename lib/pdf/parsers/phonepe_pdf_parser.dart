@@ -166,7 +166,7 @@ class PhonePePdfParser extends PdfStatementParser {
     for (final format in _dateFormats) {
       try {
         return format.parseStrict(dateStr);
-      } catch (_) {
+      } on FormatException {
         // Try next format
       }
     }

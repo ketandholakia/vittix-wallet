@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:expense_tracker/core/services/backup_service.dart';
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -142,8 +143,9 @@ class AutoBackupService {
       final oldest = backups.removeAt(0);
       try {
         await oldest.delete();
-      } catch (_) {
+      } on FileSystemException catch (error) {
         // Best effort: a locked file should not fail the whole run.
+        AppLogger.warn('Could not prune old backup ${oldest.path}', error);
       }
     }
   }

@@ -700,3 +700,32 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   remote, near-simultaneous conflicts, inserts and tombstone blocking. The
   existing cloud-sync and RBAC suites stay green.
 
+## Release hardening P1-8: no more swallowed errors
+
+- New `core/utils/app_logger.dart` (`AppLogger.info/warn/error`) is the single
+  logging sink; every method returns immediately in release builds. Stack traces
+  are emitted as plain text because `debugPrintStack` asserts on the
+  "asynchronous gap" markers present in test stacks.
+- Replaced every `catch (_)` with a targeted `on` clause:
+  - `csv_importer.dart`: per-row import and preview now distinguish
+    `FormatException` from other `Exception`s, increment `skipped`, record
+    `skippedReasons` (`"Row N: <reason>"`) and log. Date-format probing catches
+    `FormatException` as an expected "try next format" path.
+  - `pdf_import_screen.dart` / `sms_import_screen.dart`: an invalid
+    user-supplied merchant-mapping regex (`FormatException`) is logged and
+    skipped; duplicate unrecognised-SMS inserts (`SqliteException`) are logged.
+  - `settings_providers.dart`: wallet revalidation catches `Object` (a closed
+    database during teardown used to leak as an unhandled `StateError`) and logs;
+    dashboard widget JSON catches `FormatException`/`TypeError`.
+  - `accounts_overview_widget.dart`: unknown currency codes (`ArgumentError`) log.
+  - `backup_service.dart`, `database_encryption.dart`, `auto_backup.dart`: file
+    probes catch `FileSystemException`; encryption probes catch
+    `SqliteException`; failed pruning logs.
+  - `pin_hasher.dart`: corrupt hash (`FormatException`) fails verification and logs.
+  - `notification_service.dart`: exact-alarm `PlatformException` logs before
+    falling back to inexact alarms.
+  - `add_transaction_screen.dart`: category-suggestion failures log.
+- `CsvImportSummary` gained `skippedReasons`; the SMS and PDF screens already
+  display candidate/rejected/duplicate totals. No CSV import UI is currently
+  wired up, so the summary is returned to callers.
+

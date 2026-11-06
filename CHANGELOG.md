@@ -115,3 +115,22 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   Conflicts are deduplicated per entity/uuid/timestamp.
 - Tombstone filtering moved into the generic merge.
 - Added `test/sync_merge_test.dart` for the decision matrix and merge outcomes.
+
+## P1-8 — Stop swallowing errors
+
+- Added `core/utils/app_logger.dart`, a single diagnostic sink that is a no-op
+  in release builds.
+- Replaced every `catch (_)` in the listed paths with specific `on` clauses:
+  CSV date parsing (`FormatException`), CSV row import (Format
+  `Exception`/`Exception` with row number), PDF/SMS merchant mapping
+  (`FormatException`), SMS unrecognised-row insert (`SqliteException`), wallet
+  revalidation (`Object` so teardown errors cannot leak), dashboard widget JSON
+  (`FormatException`/`TypeError`), account currency (`ArgumentError`), backup
+  probes (`FileSystemException`/`SqliteException`), backup pruning, PIN hash
+  corruption, notification exact-alarm fallback (`PlatformException`) and
+  category suggestions.
+- `CsvImportSummary.skippedReasons` now lists row numbers and reasons; SMS/PDF
+  screens already show candidate/rejected/duplicate counts. (CSV import has no
+  screen wired to it, so the summary is returned to callers.)
+- `AppLogger` prints stack traces as plain text (Flutter's frame parser asserts
+  on test-only "asynchronous gap" markers), and release builds log nothing.

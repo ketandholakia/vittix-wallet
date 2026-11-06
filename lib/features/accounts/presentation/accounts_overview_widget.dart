@@ -1,6 +1,7 @@
 import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
 import 'package:expense_tracker/core/providers/settings_providers.dart';
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/features/transactions/presentation/transfer_form_screen.dart';
 import 'package:expense_tracker/features/transactions/presentation/transaction_list_screen.dart';
@@ -111,7 +112,13 @@ class AccountsOverviewWidget extends ConsumerWidget {
                                   final currency = Currency.values.byName(account.currencyCode!);
                                   final info = currencyData[currency]!;
                                   format = NumberFormat.currency(locale: info.locale, symbol: info.symbol);
-                                } catch (_) {}
+                                } on ArgumentError catch (error) {
+                                  AppLogger.warn(
+                                    'Unknown currency code '
+                                    '"${account.currencyCode}"',
+                                    error,
+                                  );
+                                }
                               }
                               return Text(
                                 format.format(item.balance),

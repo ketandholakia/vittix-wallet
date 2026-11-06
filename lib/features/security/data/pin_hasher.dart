@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:crypto/crypto.dart' as legacy_crypto;
 import 'package:cryptography/cryptography.dart';
 
@@ -53,7 +54,9 @@ class PinHasher {
     try {
       salt = base64.decode(parts[2]);
       expected = base64.decode(parts[3]);
-    } catch (_) {
+    } on FormatException catch (error) {
+      // A corrupted hash must fail verification, not crash the lock screen.
+      AppLogger.warn('Corrupt PIN hash in secure storage', error);
       return false;
     }
 
