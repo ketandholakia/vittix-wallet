@@ -42,9 +42,10 @@ app.*.map.json
 **/android/app/profile
 **/android/app/release
 
-# Keystore files
+# Keystore files and release signing configuration
 *.jks
 *.keystore
+android/key.properties
 
 # Google Services (if using Firebase)
 **/android/app/google-services.json

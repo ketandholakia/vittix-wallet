@@ -1,0 +1,11 @@
+# Copy this file to android/key.properties and fill in your release keystore.
+# android/key.properties is gitignored and must never be committed.
+#
+# Paths are resolved relative to the android/ directory unless absolute.
+# Create a keystore with:
+#   keytool -genkey -v -keystore android/app/vittix-release.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias vittix
+storeFile=vittix-release.jks
+storePassword=change-me
+keyAlias=vittix
+keyPassword=change-me

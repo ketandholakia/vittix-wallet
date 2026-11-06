@@ -1,11 +1,32 @@
+import java.io.File
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Release signing material is deliberately NOT checked in. Copy
+// android/key.properties.example to android/key.properties and point storeFile
+// at your keystore. Release builds fail fast with a clear message when it is
+// missing or incomplete.
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
+val hasKeystoreProperties = keystorePropertiesFile.exists()
+if (hasKeystoreProperties) {
+    FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
+}
+
+val requiredKeystoreKeys = listOf("storeFile", "storePassword", "keyAlias", "keyPassword")
+val missingKeystoreKeys = requiredKeystoreKeys.filter {
+    keystoreProperties.getProperty(it).isNullOrBlank()
+}
+val releaseSigningReady = hasKeystoreProperties && missingKeystoreKeys.isEmpty()
+
 android {
-    namespace = "com.example.expense_tracker"
+    namespace = "com.vittix.wallet"
     // Use a minimum of 36 to satisfy plugin requirements (e.g. file_picker).
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
@@ -17,8 +38,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.expense_tracker"
+        applicationId = "com.vittix.wallet"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -27,13 +47,54 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (releaseSigningReady) {
+            create("release") {
+                val storePath = keystoreProperties.getProperty("storeFile")
+                storeFile = if (File(storePath).isAbsolute) {
+                    File(storePath)
+                } else {
+                    // Paths in key.properties are relative to the android/ directory.
+                    rootProject.file(storePath)
+                }
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            if (releaseSigningReady) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+    }
+}
+
+// Fail only when a release build is actually requested, so debug builds and
+// `flutter test` keep working on machines without signing material.
+gradle.taskGraph.whenReady {
+    val releaseRequested = allTasks.any { task ->
+        val name = task.name
+        (name.contains("Release")) &&
+            (name.startsWith("assemble") || name.startsWith("bundle") || name.startsWith("package"))
+    }
+    if (releaseRequested && !releaseSigningReady) {
+        val reason = if (!hasKeystoreProperties) {
+            "android/key.properties does not exist"
+        } else {
+            "android/key.properties is missing: ${missingKeystoreKeys.joinToString(", ")}"
+        }
+        throw GradleException(
+            "Refusing to build a release APK/AAB: $reason.\n" +
+                "Copy android/key.properties.example to android/key.properties and fill in " +
+                "storeFile, storePassword, keyAlias and keyPassword."
+        )
     }
 }
 

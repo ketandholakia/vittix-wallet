@@ -1,4 +1,4 @@
-package com.example.expense_tracker
+package com.vittix.wallet
 
 import android.content.BroadcastReceiver
 import android.content.Context

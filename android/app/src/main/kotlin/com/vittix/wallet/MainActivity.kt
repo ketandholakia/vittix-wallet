@@ -1,11 +1,11 @@
-package com.example.expense_tracker
+package com.vittix.wallet
 
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.embedding.android.FlutterFragmentActivity
 
 class MainActivity : FlutterFragmentActivity() {
-    private val channelName = "expense_tracker/sms_capture"
+    private val channelName = "com.vittix.wallet/sms_capture"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

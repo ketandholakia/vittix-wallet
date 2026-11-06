@@ -18,8 +18,8 @@
 [CmdletBinding()]
 param(
     [string]$AvdName        = 'Medium_Phone',
-    [string]$AppId          = 'com.example.expense_tracker',
-    [string]$Activity       = 'com.example.expense_tracker.MainActivity',
+    [string]$AppId          = 'com.vittix.wallet',
+    [string]$Activity       = 'com.vittix.wallet.MainActivity',
     [int]   $BootTimeoutSec = 300,
     [string]$ReportDir      = '',
     [switch]$SkipUnitTests,

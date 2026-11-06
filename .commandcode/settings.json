@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(flutter:*)",
+      "Shell(dart:*)",
+      "Shell(tee:*)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

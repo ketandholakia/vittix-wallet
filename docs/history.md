@@ -530,3 +530,20 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   - Added pre-operation wallet validation (`WalletDao.isWalletValid`); fail cleanly if context is invalid
 - **Test Suite**:
   - Added `test/sms_wallet_isolation_test.dart` containing 35 dedicated unit and security integration tests covering SMS isolation, merchant mapping RBAC/isolation, import wallet ownership, audit attribution, privacy invariants, failure atomicity, and Security Attacks 1 through 8
+
+## Release hardening P0-1: Android signing and identity
+
+- Release signing is no longer the debug key. `android/app/build.gradle.kts`
+  loads `android/key.properties` at configuration time and registers a
+  `release` signing config only when all four fields are present.
+  `gradle.taskGraph.whenReady` fails any `assembleRelease`/`bundleRelease`/
+  `packageRelease*` invocation with an actionable message when the file is
+  missing or incomplete, while debug builds and tests keep working.
+- Added `android/key.properties.example` and gitignored `android/key.properties`.
+- Application identity moved from `com.example.expense_tracker` to
+  `com.vittix.wallet` (`namespace`, `applicationId`, Kotlin package and the
+  SMS capture `MethodChannel`; the Dart channel name was updated to match).
+- Release builds now enable `minifyEnabled` and `shrinkResources`;
+  `proguard-rules.pro` keeps ML Kit, SQLCipher/sqflite classes and app
+  components. `tools/smoke_test_android.ps1` defaults updated to the new id.
+

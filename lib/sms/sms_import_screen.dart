@@ -23,7 +23,7 @@ class SmsImportScreen extends ConsumerStatefulWidget {
 }
 
 class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
-  static const MethodChannel _smsChannel = MethodChannel('expense_tracker/sms_capture');
+  static const MethodChannel _smsChannel = MethodChannel('com.vittix.wallet/sms_capture');
   final SmsTransactionParser _parser = SmsTransactionParser();
   final Set<String> _knownHashes = <String>{};
   final List<SmsTransactionCandidate> _candidates = <SmsTransactionCandidate>[];
