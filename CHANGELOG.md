@@ -167,3 +167,22 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
 - `lib/data/**` and `lib/domain/**` were kept: they are an actively used
   re-export layer, not dead code.
 - Analyzer now has **0 errors** (was 10).
+
+## P2-11 — Split database and sync service
+
+- `app_database.dart` went from ~2,600 to 347 lines:
+  - one `part` file per DAO under `lib/core/database/daos/`
+    (`wallet_dao.dart`, `account_dao.dart`, `transaction_dao.dart`,
+    `budget_dao.dart`, `recurring_transaction_dao.dart`, `allowance_dao.dart`,
+    `bill_dao.dart`, `category_dao.dart`, `goal_dao.dart`, `user_dao.dart`,
+    `payee_dao.dart`, `transaction_tag_dao.dart`, `attachment_dao.dart`).
+  - `lib/core/database/migrations/database_migrations.dart` holds
+    `createSchema`, `upgradeSchema`, and one `migrateToVn` function per schema
+    version (v2-v19).
+  - Part files stay in the same Drift library, so the generated `_$…DaoMixin`
+    and table fields keep working with no public API change.
+- `sync_service.dart` was split into:
+  - `sync_service.dart` (coordinator, payload, transport),
+  - `sync_entity_upserts.dart` (per-entity upsert handlers),
+  - `sync_simulated_server.dart` (local simulated server),
+  - `sync_merge.dart` (generic per-entity merge adapters, from P1-7).

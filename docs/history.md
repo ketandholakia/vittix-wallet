@@ -772,3 +772,24 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   larger move.
 - Result: `flutter analyze` went from 10 errors to **0 errors**.
 
+## Release hardening P2-11: database and sync service split
+
+- `lib/core/database/app_database.dart` reduced from ~2,600 lines to 347.
+  - Each DAO now lives in `lib/core/database/daos/<name>_dao.dart` as a `part`
+    of the database library. Because Drift's generated mixins are private to the
+    library, parts (not separate libraries) keep `_$WalletDaoMixin` etc. visible
+    without changing the public API.
+  - Extracted DAOs: Wallet, Account, Transaction, Budget, RecurringTransaction,
+    Allowance, Bill, Category, Goal, User, Payee, TransactionTag, Attachment.
+    (`DebtsDao`, `SmsParsingDao`, `SmsImportMetricsDao` already lived in their
+    feature folders.)
+  - Migrations moved to `lib/core/database/migrations/database_migrations.dart`
+    as an extension with `createSchema`, `upgradeSchema`, and one
+    `migrateToVn` function per version (v2-v19). Empty historical steps (v6)
+    are explicit no-ops.
+- `sync_service.dart` split into a coordinator plus parts:
+  - `sync_entity_upserts.dart` holds the per-entity upsert handlers,
+  - `sync_simulated_server.dart` holds the simulated server,
+  - `sync_merge.dart` (P1-7) holds the generic per-entity merge adapters.
+- No generated code or public API changed; full suite stays green.
+
