@@ -793,3 +793,14 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   - `sync_merge.dart` (P1-7) holds the generic per-entity merge adapters.
 - No generated code or public API changed; full suite stays green.
 
+## Release hardening P2-12: one DI approach
+
+- `get_it` was declared in `pubspec.yaml` but never imported anywhere in
+  `lib/`, `test/` or `integration_test/`. Riverpod is the real DI layer:
+  `ProviderScope` at the root, ~495 `ref.watch`/`ref.read` call sites across 74
+  files, and `ProviderContainer` overrides in tests.
+- Removed the `get_it` dependency (and its lockfile entry) rather than keeping
+  two competing service locators. Riverpod was chosen because it is already the
+  de-facto system, supports widget-scoped lifetimes and test overrides, and
+  removing it would have meant rewriting essentially the whole app.
+

@@ -186,3 +186,11 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   - `sync_entity_upserts.dart` (per-entity upsert handlers),
   - `sync_simulated_server.dart` (local simulated server),
   - `sync_merge.dart` (generic per-entity merge adapters, from P1-7).
+
+## P2-12 — One DI approach: Riverpod
+
+- Removed the `get_it` dependency from `pubspec.yaml`/`pubspec.lock`.
+- It was declared but never imported or used. Riverpod is the actual DI system
+  (~495 `ref.watch`/`ref.read` uses across 74 files, plus `ProviderScope` in
+  `main.dart` and `ProviderContainer` in tests), so keeping both was dead
+  weight and an invitation to split the wiring.
