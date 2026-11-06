@@ -194,3 +194,36 @@
 - [ ] Team roles
 - [x] Multi-device sync scaffold
 - [ ] Optional cloud backend for collaboration
+
+## Release hardening engagement (completed 2026-11)
+
+- [x] P0-1 Android signing and `com.vittix.wallet` identity
+- [x] P0-2 database encryption fails closed + recovery screen
+- [x] P0-3 SQLCipher snapshot verification + atomic restore
+- [x] P0-4 wallet-scoped sync tombstones (schema v17)
+- [x] P0-5 https-only sync, secure token, optional payload encryption
+- [x] P1-6 defensive REAL→INTEGER money migration (schema v18)
+- [x] P1-7 generic conflict merge + clock-skew guard (schema v19)
+- [x] P1-8 specific error handling + no-op-in-release `AppLogger`
+- [x] P1-9 monotonic PIN lockout clock + PBKDF2 210k in an isolate
+- [x] P2-10 duplicate/shim removal (analyzer errors to 0)
+- [x] P2-11 database DAO/migration split + sync service split
+- [x] P2-12 Riverpod-only DI (`get_it` removed)
+- [x] P2-13 strict analyzer/lints, `.isolated` tests resolved, real README,
+  first-frame + DB-ready startup
+- [x] P2-14 optional SMS build + exact-alarm fallback
+- [x] `flutter analyze` 0 issues; `flutter test` 444 passing
+
+## Next milestone
+
+- [ ] Product decision on portable backups (plaintext snapshot inside the
+  passphrase container) versus keeping keystore-bound snapshots
+- [ ] Nextcloud push support and stable wallet UUID identity in sync
+- [ ] Remove the `lib/data/**` + `lib/domain/**` re-export shim layer
+- [ ] Full Dart money API migration to integer minor units (deferred as high
+  risk; storage is already exact)
+- [ ] Wire the no-SMS Gradle property into a CI flavor and verify the merged
+  manifest on device
+- [ ] Upgrade a real v12/v16 database through v19 on device and compare row
+  counts/amounts before and after
+- [ ] Replace the remaining dashboard/settings stub providers with real queries

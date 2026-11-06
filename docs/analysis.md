@@ -451,3 +451,29 @@ The P2-4 milestone closes identified wallet-isolation, authorization, audit-attr
 - **Deferred Limitations**:
   - **Device-Wide Deduplication**: `sms_imported_hashes` stored in SharedPreferences remains device-local. Duplicate SMS imported on a second device is a recognized product limitation.
   - **Merchant Mapping Sync**: Merchant mappings remain device-local. Cloud sync for merchant mappings is deferred to future releases.
+
+## Release hardening current state (2026-11)
+
+- **Database:** SQLCipher, fail-closed key resolution, recovery screen, atomic
+  restore, schema v19. Migrations live in one function per version under
+  `core/database/migrations/`; DAOs live in `core/database/daos/`.
+- **Money:** stored as integer minor units; the v18 migration upgrades legacy
+  REAL columns with half-away-from-zero rounding. The Dart API keeps doubles at
+  the boundary for compatibility.
+- **Sync:** tombstones are wallet-scoped and applied/pushed without
+  resurrection; conflicts use a shared merge core with a 5-minute future-clock
+  guard and a 2-second conflict window backed by `sync_conflicts`. The sync token
+  and passphrase are in secure storage; transport is https-only; payloads can be
+  AES-GCM encrypted with the backup container.
+- **Security:** PBKDF2 210k in an isolate, monotonic lockout, fail-closed
+  encryption, no-op-in-release logging, secrets never logged.
+- **Tooling:** strict analyzer + requested lints, `flutter analyze` clean;
+  Cloud Sync, debts/loans and widget tests enabled; stale app-lock widget test
+  removed; README documents setup/security/backup/sync/SMS policy.
+- **Startup:** first-frame + database-ready trigger; notifications, recurring
+  processing and auto-backup have independent once-per-day gates and error
+  handlers.
+- **Remaining risks:** keystore-bound backups are not portable after key loss;
+  Nextcloud push is still missing; the `lib/data`/`lib/domain` shim layer and
+  several dashboard/settings stub providers remain; a full money API migration
+  is deliberately deferred.
