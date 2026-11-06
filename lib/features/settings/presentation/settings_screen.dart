@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
 import 'package:expense_tracker/features/categories/presentation/category_screen.dart';
+import 'package:expense_tracker/core/config/feature_flags.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/services/backup_service.dart';
 import 'package:expense_tracker/features/security/data/pin_hasher.dart';
@@ -208,21 +209,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          _SettingsCard(
-            child: ListTile(
-              leading: const Icon(Icons.sms_outlined),
-              title: const Text('Import SMS'),
-              subtitle: const Text('Scan inbox messages and review detected transactions'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                if (mounted) {
-                  Navigator.of(context).push(
-                  MaterialPageRoute<void>(builder: (_) => Scaffold(appBar: AppBar(title: const Text('SMS Import')))),
-                );
-                }
-              },
+          if (kSmsImportEnabled)
+            _SettingsCard(
+              child: ListTile(
+                leading: const Icon(Icons.sms_outlined),
+                title: const Text('Import SMS'),
+                subtitle: const Text('Scan inbox messages and review detected transactions'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  if (mounted) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => Scaffold(
+                          appBar: AppBar(title: const Text('SMS Import')),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
-          ),
           const SizedBox(height: 24),
 
           Text('Security', style: textTheme.titleLarge),

@@ -828,3 +828,22 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   run in their own `_runOncePerDay` gate with their own error handler; a failed
   gate is retried on the next launch instead of being marked done.
 
+## Release hardening P2-14: Android SMS policy and exact alarms
+
+- README now carries the Play permission declaration rationale for
+  `READ_SMS`/`RECEIVE_SMS`: user-initiated SMS import and on-device capture only,
+  device-local storage, no SMS content in sync/audit, and no prompt for users
+  who never open the feature.
+- **Fully optional SMS:** `kSmsImportEnabled` (`SMS_IMPORT_ENABLED` dart-define)
+  hides the Settings tile and short-circuits `SmsImportScreen`. On the Gradle
+  side, `vittix.smsImport=false` makes `androidComponents` add
+  `src/noSms/AndroidManifest.xml`, which removes both permissions (also the
+  copies declared by the `android_sms_reader` plugin) and the
+  `com.vittix.wallet.SmsCaptureReceiver`. A no-SMS build therefore has no SMS
+  capability and every other feature still works.
+- **Exact alarms:** `NotificationService._androidScheduleMode()` calls
+  `canScheduleExactNotifications()` and uses `exactAllowWhileIdle` only when
+  permitted, otherwise `inexactAllowWhileIdle`. The `PlatformException`
+  fallback remains as a second line of defence. README documents that Play may
+  reject `SCHEDULE_EXACT_ALARM` and that the app then stays on inexact alarms.
+

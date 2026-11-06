@@ -217,3 +217,19 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   query). Notifications, recurring processing and auto-backup each have their
   own try block and their own once-per-day gate, so one failure cannot skip the
   others or retry in a loop.
+
+## P2-14 — Android policy
+
+- README documents why `READ_SMS`/`RECEIVE_SMS` are needed (Play declaration
+  wording), how SMS data stays on-device, and how to build without SMS.
+- SMS import is now optional end to end:
+  - `kSmsImportEnabled` (`--dart-define=SMS_IMPORT_ENABLED=false`) hides the
+    Settings entry and short-circuits the import screen.
+  - `-Pvittix.smsImport=false` (or the equivalent Gradle property) merges
+    `android/app/src/noSms/AndroidManifest.xml`, removing both SMS permissions
+    (including the copies contributed by `android_sms_reader`) and the
+    `SmsCaptureReceiver`.
+- Exact alarms: `NotificationService` checks
+  `canScheduleExactNotifications()` and falls back to `inexactAllowWhileIdle`
+  when exact alarms are unavailable (with the existing `PlatformException`
+  fallback as a backstop). The README documents the Play policy trade-off.

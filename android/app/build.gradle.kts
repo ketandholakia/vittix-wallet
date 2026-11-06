@@ -19,6 +19,14 @@ if (hasKeystoreProperties) {
     FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
 }
 
+// SMS import is optional. Set `vittix.smsImport=false` (android/gradle.properties,
+// ORG_GRADLE_PROJECT_vittix.smsImport, or -Pvittix.smsImport=false) to build an
+// APK/AAB that declares no SMS permissions and registers no SMS receiver. Pair
+// it with --dart-define=SMS_IMPORT_ENABLED=false so the UI entry point is hidden.
+val smsImportEnabled = (project.findProperty("vittix.smsImport") ?: "true")
+    .toString()
+    .toBoolean()
+
 val requiredKeystoreKeys = listOf("storeFile", "storePassword", "keyAlias", "keyPassword")
 val missingKeystoreKeys = requiredKeystoreKeys.filter {
     keystoreProperties.getProperty(it).isNullOrBlank()
@@ -72,6 +80,17 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+}
+
+// When SMS import is disabled, merge an overlay manifest that removes the SMS
+// permissions contributed by this app and by android_sms_reader, and removes
+// the capture receiver.
+androidComponents {
+    onVariants { variant ->
+        if (!smsImportEnabled) {
+            variant.sources.manifests?.addStaticSourceDirectory("src/noSms")
         }
     }
 }

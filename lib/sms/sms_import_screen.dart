@@ -3,6 +3,7 @@ import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/categories/domain/category.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
+import 'package:expense_tracker/core/config/feature_flags.dart';
 import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:expense_tracker/core/utils/duplicate_detector.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
@@ -58,6 +59,13 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
   }
 
   Future<void> _loadCandidates() async {
+    if (!kSmsImportEnabled) {
+      setState(() {
+        _loading = false;
+        _error = 'SMS import is not enabled in this build.';
+      });
+      return;
+    }
     try {
       _candidates.clear();
       _duplicateDetections = 0;

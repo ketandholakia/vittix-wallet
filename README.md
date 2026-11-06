@@ -161,11 +161,41 @@ and auto-capture features:
 
 Both are runtime-requested only when the user opens the SMS import flow, and all
 capture state is device-local (`sms_capture_queue` SharedPreferences). No SMS
-content is synced, and transaction notes are reduced to `[SMS] Merchant`. A
-build flavor without these permissions can omit the SMS entry point and every
-other feature continues to work. For Play, declare SMS access as an optional
-runtime permission for the import features and provide the standard SMS
-permission declaration.
+content is synced, and transaction notes are reduced to `[SMS] Merchant`.
+
+**Play declaration.** SMS access is an optional feature permission, not a core
+functionality: declare that `READ_SMS`/`RECEIVE_SMS` power the user-initiated
+"SMS import" and auto-capture of bank/UPI transaction messages, that messages
+are processed on-device only, and that users who do not use the feature are
+never prompted.
+
+**Building without SMS.** Set the Gradle property and the Dart define together:
+
+```properties
+# android/gradle.properties (or ORG_GRADLE_PROJECT_vittix.smsImport=false)
+vittix.smsImport=false
+```
+
+```bash
+flutter build appbundle --release --dart-define=SMS_IMPORT_ENABLED=false
+```
+
+With `vittix.smsImport=false`, Gradle merges
+`android/app/src/noSms/AndroidManifest.xml`, which removes `READ_SMS`,
+`RECEIVE_SMS` (including the copies declared by `android_sms_reader`) and the
+`SmsCaptureReceiver`. With `SMS_IMPORT_ENABLED=false`, the Settings entry point
+and the import screen are disabled. Every other feature works unchanged.
+
+## Exact alarms
+
+`SCHEDULE_EXACT_ALARM` is declared for daily reminders and the monthly summary.
+On Android 12+ the OS may refuse exact alarms. `NotificationService` asks
+`canScheduleExactNotifications()` first and schedules with
+`inexactAllowWhileIdle` when exact alarms are not granted (and catches
+`PlatformException` as a second fallback), so reminders still arrive within the
+inexact window instead of being dropped. Play treats exact-alarm access as a
+policy-sensitive permission; if the store rejects it, remove the manifest entry
+and the app will stay on inexact alarms automatically.
 
 ## Testing
 

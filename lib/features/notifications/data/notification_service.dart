@@ -33,6 +33,27 @@ class NotificationService {
         ?.requestNotificationsPermission();
   }
 
+  /// Android only grants exact alarms on some releases/policies. Prefer exact,
+  /// but never assume it: fall back to inexact when the OS says no.
+  Future<AndroidScheduleMode> _androidScheduleMode() async {
+    final android = _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+    if (android == null) return AndroidScheduleMode.exactAllowWhileIdle;
+    try {
+      final canExact = await android.canScheduleExactNotifications() ?? false;
+      return canExact
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle;
+    } on PlatformException catch (error) {
+      AppLogger.warn(
+        'Could not query exact-alarm permission; using inexact',
+        error,
+      );
+      return AndroidScheduleMode.inexactAllowWhileIdle;
+    }
+  }
+
   Future<void> scheduleDailyReminder() async {
     const details = NotificationDetails(
       android: AndroidNotificationDetails(
@@ -44,6 +65,7 @@ class NotificationService {
       ),
     );
     final scheduledTime = _nextInstanceOf8PM();
+    final scheduleMode = await _androidScheduleMode();
 
     try {
       await _flutterLocalNotificationsPlugin.zonedSchedule(
@@ -52,7 +74,7 @@ class NotificationService {
         'Did you remember to record today\'s expenses?',
         scheduledTime,
         details,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: scheduleMode,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
       );
@@ -119,6 +141,7 @@ class NotificationService {
       ),
     );
     final scheduledTime = _nextFirstOfMonth9AM();
+    final scheduleMode = await _androidScheduleMode();
 
     try {
       await _flutterLocalNotificationsPlugin.zonedSchedule(
@@ -127,7 +150,7 @@ class NotificationService {
         'Your spending summary for last month is ready. Open the app to review!',
         scheduledTime,
         details,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: scheduleMode,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
       );
