@@ -573,3 +573,27 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   encrypted+verified, new, new/plaintext with key failure, plaintext migration
   success/failure).
 
+## Release hardening P0-3: SQLCipher backups verified, atomic restore
+
+- **Finding (verified on device via `integration_test/backup_cipher_test.dart`):**
+  SQLCipher's `VACUUM INTO` copies the source codec, so the snapshot is
+  **encrypted with the database key** — its first 16 bytes are not
+  `SQLite format 3`. The old `validate()` (plaintext header required) therefore
+  rejected every real backup.
+- `BackupService.validate` is now `async` and key-aware: `databaseKey` opens an
+  encrypted snapshot; `passphrase` unwraps a container first. Wrong keys and
+  wrong passphrases return invalid rather than throwing.
+- `BackupService.restore` is atomic and non-destructive:
+  1. unwrap a container and validate the candidate;
+  2. stage a copy in the live file's directory and validate it again;
+  3. close the DB, move the old file to `.bak`, rename the staged file in;
+  4. remove old `-wal`/`-shm` only after the swap;
+  5. probe the new file and restore `.bak` if it cannot be opened.
+  `.bak` is kept as the last-known-good copy.
+- Settings import and `DatabaseRecoveryService` pass the live database key.
+- **Known limitation (needs product decision):** a raw snapshot (and the inner
+  payload of a passphrase container) is still encrypted with the device
+  keystore key, so it cannot be opened after keystore loss or on a new device
+  unless the same key is available. Making portable backups would require
+  exporting a plaintext snapshot into the passphrase container.
+

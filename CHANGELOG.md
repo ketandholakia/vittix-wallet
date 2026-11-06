@@ -31,3 +31,21 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   `DatabaseRecoveryService`) shown instead of the app when unlocking fails, and
   a persistent warning banner while running unencrypted.
 - Added tests for every resolution branch using a fake secure store.
+
+## P0-3 — SQLCipher backup verification and atomic restore
+
+- Verified with a device integration test (`integration_test/backup_cipher_test.dart`)
+  that `VACUUM INTO` on a SQLCipher database produces an **encrypted** snapshot
+  (its first 16 bytes are not `SQLite format 3`).
+- `BackupService.validate()` is now async and key-aware: it opens encrypted
+  snapshots with the database key (after unwrapping a passphrase container)
+  instead of requiring the plaintext SQLite header. Wrong keys/passphrases fail
+  closed.
+- `restore()` is atomic: materialize → validate → stage beside the live file →
+  close → move old DB to `.bak` → rename staged file into place → only then
+  delete old `-wal`/`-shm` → probe the new file and roll back to `.bak` if it
+  cannot be opened. The previous database is kept as `.bak`.
+- Settings import and the recovery service pass the live database key to
+  validation/restore.
+- Plaintext scratch files from encrypted snapshots are still deleted on every
+  path, including failure.

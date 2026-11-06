@@ -29,6 +29,7 @@ class DatabaseRecoveryService {
   static Future<void> restoreFromBackup({
     required File backupFile,
     String? passphrase,
+    String? databaseKey,
     int currentSchemaVersion = kCurrentSchemaVersion,
   }) async {
     final live = await liveDatabaseFile();
@@ -49,9 +50,10 @@ class DatabaseRecoveryService {
         candidate = materialized;
       }
 
-      final firstCheck = BackupService.validate(
+      final firstCheck = await BackupService.validate(
         candidate,
         currentSchemaVersion: currentSchemaVersion,
+        databaseKey: databaseKey,
       );
       if (!firstCheck.isValid) {
         throw FormatException(firstCheck.error ?? 'Invalid backup file.');
@@ -60,9 +62,10 @@ class DatabaseRecoveryService {
       if (candidate.path != staged.path) {
         await candidate.copy(staged.path);
       }
-      final stagedCheck = BackupService.validate(
+      final stagedCheck = await BackupService.validate(
         staged,
         currentSchemaVersion: currentSchemaVersion,
+        databaseKey: databaseKey,
       );
       if (!stagedCheck.isValid) {
         throw FormatException(stagedCheck.error ?? 'Invalid backup file.');

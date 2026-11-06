@@ -31,6 +31,15 @@ final databaseEncryptionWarningProvider = Provider<String?>((ref) {
   return ref.watch(databaseOpenPlanProvider).valueOrNull?.warning;
 });
 
+/// Base64 key that opens the live database, or null when it is plaintext.
+///
+/// Used to validate and restore encrypted SQLCipher snapshots, which are
+/// encrypted with this same key.
+final databaseKeyProvider = FutureProvider<String?>((ref) async {
+  final plan = await ref.watch(databaseOpenPlanProvider.future);
+  return plan.base64Key;
+});
+
 /// The on-device database file. Used by backup and restore.
 final databaseFileProvider = FutureProvider<File>((ref) async {
   final dbFolder = await getApplicationDocumentsDirectory();

@@ -65,6 +65,7 @@ class _DatabaseRecoveryScreenState
       await DatabaseRecoveryService.restoreFromBackup(
         backupFile: file,
         passphrase: passphrase,
+        databaseKey: ref.read(databaseKeyProvider).valueOrNull,
       );
       resetDatabaseOpenPlanCache();
       ref.invalidate(databaseOpenPlanProvider);

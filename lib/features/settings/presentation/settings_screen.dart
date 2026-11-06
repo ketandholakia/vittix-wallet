@@ -625,10 +625,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
                   // Inspect the candidate (read-only) before asking the user to
                   // confirm: a junk file must never reach the swap step.
-                  final validation = BackupService.validate(
+                  // SQLCipher snapshots are encrypted with the live database key.
+                  final databaseKey = await ref.read(databaseKeyProvider.future);
+                  final validation = await BackupService.validate(
                     candidate,
                     currentSchemaVersion:
                         ref.read(databaseProvider).schemaVersion,
+                    databaseKey: databaseKey,
                   );
                   if (!validation.isValid) {
                     scaffoldMessenger.showSnackBar(
@@ -662,6 +665,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   await ref.read(backupServiceProvider).restore(
                         candidate,
                         liveDbFile: liveDbFile,
+                        databaseKey: databaseKey,
                       );
 
                   // Rebuild the database and every provider derived from it so

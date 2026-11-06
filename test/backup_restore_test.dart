@@ -21,8 +21,8 @@ void main() {
     }
   });
 
-  test('validate rejects a missing file', () {
-    final result = BackupService.validate(
+  test('validate rejects a missing file', () async {
+    final result = await BackupService.validate(
       File(p.join(dir.path, 'nope.db')),
       currentSchemaVersion: 11,
     );
@@ -34,9 +34,22 @@ void main() {
     final junk = File(p.join(dir.path, 'junk.db'));
     await junk.writeAsString('this is definitely not a database file' * 20);
 
-    final result = BackupService.validate(junk, currentSchemaVersion: 11);
+    final result =
+        await BackupService.validate(junk, currentSchemaVersion: 11);
     expect(result.isValid, isFalse);
     expect(result.error, contains('Not a SQLite'));
+  });
+
+  test('validate does not treat an encrypted snapshot as plaintext', () async {
+    final encrypted = File(p.join(dir.path, 'enc_only.db'));
+    await encrypted.writeAsBytes(
+      List<int>.generate(256, (i) => (i * 41 + 3) % 256),
+    );
+
+    final withoutKey =
+        await BackupService.validate(encrypted, currentSchemaVersion: 11);
+    expect(withoutKey.isValid, isFalse);
+    expect(withoutKey.error, contains('database key'));
   });
 
   test('validate accepts a real migrated database', () async {
@@ -46,7 +59,8 @@ void main() {
     final schemaVersion = db.schemaVersion;
     await db.close();
 
-    final result = BackupService.validate(dbFile, currentSchemaVersion: schemaVersion);
+    final result =
+        await BackupService.validate(dbFile, currentSchemaVersion: schemaVersion);
     expect(result.isValid, isTrue, reason: result.error);
     expect(result.schemaVersion, schemaVersion);
   });
@@ -58,7 +72,7 @@ void main() {
     await db.into(db.wallets).insert(const WalletsCompanion(name: Value('Wallet A')));
     await db.close();
 
-    final result = BackupService.validate(dbFile, currentSchemaVersion: 1);
+    final result = await BackupService.validate(dbFile, currentSchemaVersion: 1);
     expect(result.isValid, isFalse);
     expect(result.error, contains('newer app version'));
   });
@@ -75,7 +89,8 @@ void main() {
 
     expect(await snapshot.exists(), isTrue);
     expect(snapshot.lengthSync(), greaterThan(0));
-    final check = BackupService.validate(snapshot, currentSchemaVersion: schemaVersion);
+    final check =
+        await BackupService.validate(snapshot, currentSchemaVersion: schemaVersion);
     expect(check.isValid, isTrue, reason: check.error);
   });
 
@@ -124,9 +139,10 @@ void main() {
       expect(BackupService.isEncryptedFile(dbFile), isFalse);
       expect(BackupService.isEncryptedFile(encrypted), isTrue);
       expect(
-        BackupService.validate(encrypted, currentSchemaVersion: 11).isValid,
+        (await BackupService.validate(encrypted, currentSchemaVersion: 11))
+            .isValid,
         isFalse,
-        reason: 'a container is not directly readable as SQLite',
+        reason: 'a container needs its passphrase',
       );
     });
 
@@ -150,8 +166,24 @@ void main() {
         'my passphrase',
         p.join(dir.path, 'decrypted.sqlite'),
       );
-      final check = BackupService.validate(plain, currentSchemaVersion: schemaVersion);
+      final check =
+          await BackupService.validate(plain, currentSchemaVersion: schemaVersion);
       expect(check.isValid, isTrue, reason: check.error);
+
+      // The container can also be validated in one step with its passphrase.
+      final containerCheck = await BackupService.validate(
+        container,
+        currentSchemaVersion: schemaVersion,
+        passphrase: 'my passphrase',
+      );
+      expect(containerCheck.isValid, isTrue, reason: containerCheck.error);
+
+      final wrongPass = await BackupService.validate(
+        container,
+        currentSchemaVersion: schemaVersion,
+        passphrase: 'wrong',
+      );
+      expect(wrongPass.isValid, isFalse);
     });
   });
 

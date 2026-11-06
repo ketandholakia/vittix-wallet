@@ -5,6 +5,8 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:expense_tracker/core/database/database_encryption.dart';
+import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
 
 /// Outcome of inspecting a candidate backup file.
@@ -221,30 +223,93 @@ class BackupService {
   // -------------------------------------------------------------- validation
   /// Inspects [file] without modifying it.
   ///
+  /// `VACUUM INTO` on a SQLCipher database produces an *encrypted* snapshot,
+  /// so the old "must start with SQLite format 3" check rejected every real
+  /// backup. A snapshot is now opened with [databaseKey] when it is encrypted,
+  /// and passphrase containers are unwrapped with [passphrase] first.
+  ///
   /// [currentSchemaVersion] is the schema version this build understands; a
   /// backup written by a newer build is rejected rather than half-read.
-  static BackupValidationResult validate(
+  static Future<BackupValidationResult> validate(
     File file, {
     required int currentSchemaVersion,
-  }) {
-    if (!file.existsSync()) {
+    String? databaseKey,
+    String? passphrase,
+  }) async {
+    if (!await file.exists()) {
       return const BackupValidationResult(
         isValid: false,
         error: 'File not found',
       );
     }
 
+    if (isEncryptedFile(file)) {
+      if (passphrase == null || passphrase.isEmpty) {
+        return const BackupValidationResult(
+          isValid: false,
+          error: 'Encrypted backup: a passphrase is required',
+        );
+      }
+      File? scratch;
+      try {
+        final clear = await decryptBytes(await file.readAsBytes(), passphrase);
+        scratch = File('${file.path}.validate.tmp');
+        await scratch.writeAsBytes(clear, flush: true);
+        return _validateDatabaseFile(
+          scratch,
+          currentSchemaVersion: currentSchemaVersion,
+          databaseKey: databaseKey,
+        );
+      } on FormatException catch (error) {
+        return BackupValidationResult(isValid: false, error: error.message);
+      } on FileSystemException catch (error) {
+        return BackupValidationResult(isValid: false, error: error.message);
+      } finally {
+        if (scratch != null) {
+          try {
+            if (await scratch.exists()) await scratch.delete();
+          } on FileSystemException catch (_) {
+            // Best effort: scratch validation files must not mask the result.
+          }
+        }
+      }
+    }
+
+    return _validateDatabaseFile(
+      file,
+      currentSchemaVersion: currentSchemaVersion,
+      databaseKey: databaseKey,
+    );
+  }
+
+  static BackupValidationResult _validateDatabaseFile(
+    File file, {
+    required int currentSchemaVersion,
+    String? databaseKey,
+  }) {
     final header = _readHeader(file);
-    if (header == null || !header.startsWith(_sqliteMagic)) {
+    if (header == null) {
       return const BackupValidationResult(
         isValid: false,
-        error: 'Not a SQLite database file',
+        error: 'File not found or unreadable',
+      );
+    }
+    final plaintext = header.startsWith(_sqliteMagic);
+
+    if (!plaintext && (databaseKey == null || databaseKey.isEmpty)) {
+      return const BackupValidationResult(
+        isValid: false,
+        error: 'Not a SQLite database, or an encrypted snapshot that requires '
+            'the database key',
       );
     }
 
     Database? db;
     try {
       db = sqlite3.open(file.path, mode: OpenMode.readOnly);
+      if (!plaintext) {
+        db.execute(DatabaseEncryption.pragmaForKey(databaseKey!));
+      }
       final integrity = db.select('PRAGMA integrity_check');
       final verdict =
           integrity.isEmpty ? null : integrity.first.values.first?.toString();
@@ -270,36 +335,138 @@ class BackupService {
       }
 
       return BackupValidationResult(isValid: true, schemaVersion: version);
-    } catch (e) {
-      return BackupValidationResult(isValid: false, error: e.toString());
+    } on SqliteException catch (error) {
+      return BackupValidationResult(
+        isValid: false,
+        error: plaintext
+            ? error.message
+            : 'Cannot open the encrypted backup with the supplied key '
+                '(${error.message})',
+      );
     } finally {
       db?.dispose();
     }
   }
 
   // ----------------------------------------------------------------- restore
-  /// Replaces the live database with [backupFile].
+  /// Replaces the live database with [backupFile], atomically.
   ///
-  /// The database is closed first (required to release the file handle), stale
-  /// WAL/SHM sidecars are removed, and only then is the file swapped in.
+  /// Steps: materialize (unwrapping a passphrase container), validate, stage a
+  /// copy in the live database's directory, close the database, move the old
+  /// file to `.bak`, rename the staged file into place, then drop the old
+  /// WAL/SHM sidecars. The previous database is kept as `.bak`; if the new file
+  /// fails to open it is rolled back automatically.
   Future<void> restore(
     File backupFile, {
     required File liveDbFile,
+    String? databaseKey,
+    String? passphrase,
   }) async {
     if (backupFile.path == liveDbFile.path) {
       throw ArgumentError('Backup file and live database are the same file.');
     }
 
-    await _db.close();
+    final directory = liveDbFile.parent;
+    final base = p.basename(liveDbFile.path);
+    final materialized = File(p.join(directory.path, '$base.restore.src.tmp'));
+    final staged = File(p.join(directory.path, '$base.restore.tmp'));
+    File candidate = backupFile;
 
-    for (final suffix in const ['-wal', '-shm']) {
-      final sidecar = File('${liveDbFile.path}$suffix');
-      if (await sidecar.exists()) {
-        await sidecar.delete();
+    try {
+      if (isEncryptedFile(backupFile)) {
+        if (passphrase == null || passphrase.isEmpty) {
+          throw ArgumentError(
+            'This backup is encrypted; a passphrase is required.',
+          );
+        }
+        await decryptToFile(backupFile, passphrase, materialized.path);
+        candidate = materialized;
+      }
+
+      final version = _db.schemaVersion;
+      final candidateCheck = await validate(
+        candidate,
+        currentSchemaVersion: version,
+        databaseKey: databaseKey,
+      );
+      if (!candidateCheck.isValid) {
+        throw FormatException(candidateCheck.error ?? 'Invalid backup file');
+      }
+
+      // Stage beside the live database so the final rename is same-volume and
+      // atomic. Re-validate the staged copy in case the copy was truncated.
+      await candidate.copy(staged.path);
+      final stagedCheck = await validate(
+        staged,
+        currentSchemaVersion: version,
+        databaseKey: databaseKey,
+      );
+      if (!stagedCheck.isValid) {
+        throw FormatException(stagedCheck.error ?? 'Invalid backup file');
+      }
+
+      await _db.close();
+
+      final previous = File('${liveDbFile.path}.bak');
+      if (await previous.exists()) {
+        await previous.delete();
+      }
+      if (await liveDbFile.exists()) {
+        await liveDbFile.rename(previous.path);
+      }
+      await staged.rename(liveDbFile.path);
+
+      // The sidecars belong to the previous database. They must only be
+      // removed once the new file is in place.
+      for (final suffix in const ['-wal', '-shm']) {
+        final sidecar = File('${liveDbFile.path}$suffix');
+        if (await sidecar.exists()) {
+          await sidecar.delete();
+        }
+      }
+
+      // Prove the swapped-in file opens. Roll back if it does not.
+      if (!await _opensAsDatabase(liveDbFile, databaseKey)) {
+        if (await liveDbFile.exists()) {
+          await liveDbFile.delete();
+        }
+        if (await previous.exists()) {
+          await previous.rename(liveDbFile.path);
+        }
+        throw StateError(
+          'Restored database could not be opened; the previous database was '
+          'put back.',
+        );
+      }
+      // `.bak` is intentionally kept as the last-known-good copy.
+    } finally {
+      if (await materialized.exists()) {
+        await materialized.delete();
+      }
+      if (await staged.exists()) {
+        await staged.delete();
       }
     }
+  }
 
-    await backupFile.copy(liveDbFile.path);
+  static Future<bool> _opensAsDatabase(
+    File file,
+    String? databaseKey,
+  ) async {
+    Database? db;
+    try {
+      db = sqlite3.open(file.path, mode: OpenMode.readOnly);
+      if (databaseKey != null && databaseKey.isNotEmpty) {
+        db.execute(DatabaseEncryption.pragmaForKey(databaseKey));
+      }
+      final integrity = db.select('PRAGMA integrity_check');
+      return integrity.isNotEmpty &&
+          integrity.first.values.first?.toString() == 'ok';
+    } on SqliteException {
+      return false;
+    } finally {
+      db?.dispose();
+    }
   }
 
   // ------------------------------------------------------------------ helpers

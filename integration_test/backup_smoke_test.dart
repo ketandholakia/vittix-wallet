@@ -76,7 +76,7 @@ void main() {
       'smoke-passphrase',
       p.join(tmp.path, 'decrypted.sqlite'),
     );
-    final result = BackupService.validate(
+    final result = await BackupService.validate(
       plain,
       currentSchemaVersion: db.schemaVersion,
     );
