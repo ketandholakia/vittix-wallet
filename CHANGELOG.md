@@ -89,3 +89,16 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
 - Removed credentials and payloads from logs and exceptions: failures log only
   the error type, and HTTP errors no longer include response bodies.
 - Added `test/sync_security_test.dart` for URL policy and token migration.
+
+## P1-6 — Money as integer minor units (defensive migration)
+
+- Confirmed the current schema already stores every money column as `INTEGER`
+  minor units through `MoneyConverter`; the Dart-facing API intentionally keeps
+  `double` major units at the boundary (so CSV/SMS/LLM/report code is unchanged).
+- Added schema v18: `convertLegacyMoneyColumns` rewrites any money column whose
+  declared SQLite type is still `REAL`/`DOUBLE`/`FLOAT`/`NUMERIC` (databases
+  created before v13) using `ROUND(value * 100)` instead of silent truncation.
+  It is idempotent and skips missing tables/columns.
+- Added `test/money_migration_test.dart` seeding `0.1 + 0.2`, `1234.565`,
+  negative values and an exact half, asserting `[30, 123457, -30, 1]`.
+- No Dart API rewrite: backwards-compatible CSV import/export is preserved.

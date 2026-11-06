@@ -2020,7 +2020,30 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
 
 /// Schema version this build understands. Shared with backup validation and
 /// the recovery screen, which must not import a database instance.
-const int kCurrentSchemaVersion = 17;
+const int kCurrentSchemaVersion = 18;
+
+/// Money columns that must be stored as integer minor units.
+///
+/// Drift already declares these as `INTEGER` (via `MoneyConverter`), but
+/// databases created before schema v13 physically still hold `REAL` values.
+/// The v18 migration rewrites any column whose declared type is still floating
+/// point.
+const Map<String, List<String>> kMoneyColumns = {
+  'accounts': ['opening_balance'],
+  'transactions': ['amount'],
+  'recurring_transactions': ['amount'],
+  'budgets': ['amount'],
+  'peer_debts': ['amount'],
+  'loans': ['principal_amount', 'emi_amount'],
+  'wallet_bills': ['amount'],
+  'wallet_settlements': ['amount'],
+  'wallet_allowances': ['amount'],
+  'wallet_allowance_payments': ['amount'],
+  'wallet_goals': ['target_amount', 'current_amount'],
+  'wallet_goal_contributions': ['amount'],
+  'wallet_goal_schedules': ['amount'],
+  'wallet_expense_split_members': ['amount_owed', 'settled_amount'],
+};
 
 /// Tables whose deletes are tombstoned for sync, mapped to the SQL expression
 /// that yields their wallet id (`NULL` for wallet-independent tables).
@@ -2067,6 +2090,54 @@ class AppDatabase extends _$AppDatabase {
         walletId: Value(walletId),
       ),
     );
+  }
+
+  /// Converts legacy `REAL` money columns to exact integer minor units.
+  ///
+  /// SQLite cannot change a column's declared type in place, so each affected
+  /// column is replaced: add an integer sibling, round the value half away from
+  /// zero (`ROUND(value * 100)`), drop the old column and rename the sibling.
+  /// Columns that are already `INTEGER` (the normal case) are left untouched,
+  /// which makes this idempotent.
+  ///
+  /// [columns] is overridable for tests; production uses [kMoneyColumns].
+  Future<void> convertLegacyMoneyColumns({
+    Map<String, List<String>> columns = kMoneyColumns,
+  }) async {
+    for (final entry in columns.entries) {
+      final table = entry.key;
+      final info = await customSelect("PRAGMA table_info('$table')").get();
+      if (info.isEmpty) continue; // Table did not exist in this schema.
+
+      final declaredTypes = <String, String>{
+        for (final row in info)
+          row.read<String>('name'): row.read<String>('type').toUpperCase(),
+      };
+
+      for (final column in entry.value) {
+        final type = declaredTypes[column];
+        if (type == null) continue; // Column did not exist in this schema.
+        final isFloatingPoint = type.contains('REAL') ||
+            type.contains('DOUBLE') ||
+            type.contains('FLOAT') ||
+            type.contains('NUMERIC');
+        if (!isFloatingPoint) continue;
+
+        final temporary = '${column}_minor_tmp';
+        await customStatement(
+          'ALTER TABLE "$table" ADD COLUMN "$temporary" INTEGER',
+        );
+        await customStatement(
+          'UPDATE "$table" SET "$temporary" = '
+          'CAST(ROUND("$column" * 100.0) AS INTEGER) '
+          'WHERE "$column" IS NOT NULL',
+        );
+        await customStatement('ALTER TABLE "$table" DROP COLUMN "$column"');
+        await customStatement(
+          'ALTER TABLE "$table" RENAME COLUMN "$temporary" TO "$column"',
+        );
+      }
+    }
   }
 
   /// Installs `AFTER DELETE` triggers that write a `deleted_records` row for
@@ -2266,6 +2337,11 @@ class AppDatabase extends _$AppDatabase {
             }
           }
           await _ensureDeletionTriggers();
+        }
+        if (from < 18) {
+          // P1-6: normalise any legacy floating-point money columns to exact
+          // integer minor units (paise/cents).
+          await convertLegacyMoneyColumns();
         }
       },
     );

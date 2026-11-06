@@ -650,3 +650,31 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   private hosts, malformed input) and the token migration (migrate + delete,
   prefer secure value, empty state).
 
+## Release hardening P1-6: money stored as integer minor units
+
+- **Audit result:** every money column in the Drift schema is already
+  `integer().map(const MoneyConverter())`; SQLite stores paise/cents and Dart
+  keeps `double` major units, which is what A6 intended. No Dart call sites
+  needed changing for new databases.
+- **Gap fixed:** databases created before schema v13 may still have physically
+  `REAL` columns and there was no data migration. Schema v18 adds
+  `AppDatabase.convertLegacyMoneyColumns`: for each known money column whose
+  `PRAGMA table_info` type is floating point it adds a temporary INTEGER
+  column, sets it to `CAST(ROUND(value * 100.0) AS INTEGER)` (half away from
+  zero), drops the old column and renames the temporary one. Missing
+  tables/columns and already-INTEGER columns are skipped, so it is idempotent.
+- Money column map covers: `accounts.opening_balance`, `transactions.amount`,
+  `recurring_transactions.amount`, `budgets.amount`, `peer_debts.amount`,
+  `loans.principal_amount/emi_amount`, `wallet_bills.amount`,
+  `wallet_settlements.amount`, `wallet_allowances.amount`,
+  `wallet_allowance_payments.amount`,
+  `wallet_goals.target_amount/current_amount`,
+  `wallet_goal_contributions.amount`, `wallet_goal_schedules.amount`,
+  `wallet_expense_split_members.amount_owed/settled_amount`.
+- Tests: `test/money_migration_test.dart` seeds `0.1 + 0.2`, `1234.565`,
+  `-(0.1 + 0.2)` and `0.005` and expects `[30, 123457, -30, 1]`; it also checks
+  idempotency and that the live schema is already INTEGER.
+- **Decision:** the Dart public API stays `double` (converter at the DB
+  boundary). A full `double`→`int` API rewrite was rejected as high-risk; CSV
+  import/export and all existing call sites remain backwards compatible.
+
