@@ -174,7 +174,7 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
             walletId: walletId,
             action: 'sms_setup_completed',
           );
-    } catch (e) {
+    } on Object catch (e) {
       setState(() {
         _loading = false;
         _error = e.toString();
@@ -186,7 +186,7 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
     try {
       final raw = await _smsChannel.invokeMethod<List<dynamic>>('pullCapturedSms');
       return raw
-              ?.whereType<Map>()
+              ?.whereType<Map<dynamic, dynamic>>()
               .map((item) => item.map((key, value) => MapEntry(key.toString(), value)))
               .toList() ??
           <Map<String, dynamic>>[];

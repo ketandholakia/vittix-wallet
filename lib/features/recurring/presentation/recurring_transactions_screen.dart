@@ -27,7 +27,7 @@ class RecurringTransactionsScreen extends ConsumerWidget {
             icon: const Icon(Icons.calendar_month),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(
+                MaterialPageRoute<void>(
                   builder: (context) => const SubscriptionCalendarScreen(),
                 ),
               );
@@ -161,7 +161,7 @@ class RecurringTransactionsScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const AddRecurringTransactionScreen()),
+            MaterialPageRoute<void>(builder: (_) => const AddRecurringTransactionScreen()),
           );
         },
         child: const Icon(Icons.add),

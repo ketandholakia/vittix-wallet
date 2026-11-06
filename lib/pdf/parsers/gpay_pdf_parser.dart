@@ -223,7 +223,7 @@ class GPayPdfParser extends PdfStatementParser {
       final cleanCombined = combined.replaceAll(',', '');
       final formatter = DateFormat(_dateFormatPattern, 'en_US');
       return formatter.parseStrict(cleanCombined);
-    } catch (e) {
+    } on Object {
       return null;
     }
   }

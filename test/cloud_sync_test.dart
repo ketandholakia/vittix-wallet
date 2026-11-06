@@ -246,9 +246,9 @@ void main() {
 
       // Set up simulated server state with same category, but newer updatedAt and different name
       final prefs = await SharedPreferences.getInstance();
-      final serverState = {
-        'accounts': [],
-        'categories': [
+      final serverState = <String, dynamic>{
+        'accounts': <dynamic>[],
+        'categories': <dynamic>[
           {
             'uuid': 'cat-lww-1',
             'name': 'New Remote Name',
@@ -259,10 +259,10 @@ void main() {
             'updatedAt': newerTime.millisecondsSinceEpoch,
           }
         ],
-        'transactions': [],
-        'budgets': [],
-        'recurring_transactions': [],
-        'deletions': [],
+        'transactions': <dynamic>[],
+        'budgets': <dynamic>[],
+        'recurring_transactions': <dynamic>[],
+        'deletions': <dynamic>[],
       };
       await prefs.setString('simulated_server_state', jsonEncode(serverState));
 
@@ -294,9 +294,9 @@ void main() {
 
       // Set up simulated server state with same category, but older updatedAt and different name
       final prefs = await SharedPreferences.getInstance();
-      final serverState = {
-        'accounts': [],
-        'categories': [
+      final serverState = <String, dynamic>{
+        'accounts': <dynamic>[],
+        'categories': <dynamic>[
           {
             'uuid': 'cat-lww-2',
             'name': 'Old Remote Name',
@@ -307,10 +307,10 @@ void main() {
             'updatedAt': originalTime.millisecondsSinceEpoch,
           }
         ],
-        'transactions': [],
-        'budgets': [],
-        'recurring_transactions': [],
-        'deletions': [],
+        'transactions': <dynamic>[],
+        'budgets': <dynamic>[],
+        'recurring_transactions': <dynamic>[],
+        'deletions': <dynamic>[],
       };
       await prefs.setString('simulated_server_state', jsonEncode(serverState));
 
@@ -342,12 +342,12 @@ void main() {
 
       // Set up simulated server state containing a deletion log for this category
       final prefs = await SharedPreferences.getInstance();
-      final serverState = {
-        'accounts': [],
-        'categories': [],
-        'transactions': [],
-        'budgets': [],
-        'recurring_transactions': [],
+      final serverState = <String, dynamic>{
+        'accounts': <dynamic>[],
+        'categories': <dynamic>[],
+        'transactions': <dynamic>[],
+        'budgets': <dynamic>[],
+        'recurring_transactions': <dynamic>[],
         'deletions': [
           {
             'uuid': 'cat-to-delete',

@@ -4,7 +4,7 @@ part of 'sync_service.dart';
 extension SyncSimulatedServer on SyncNotifier {
   Future<Map<String, dynamic>> _runSimulatedServerSync(Map<String, dynamic> clientPayload, DateTime clientLastSync) async {
     // Artificial delay for UI realism
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future<void>.delayed(const Duration(milliseconds: 800));
 
     final prefs = await SharedPreferences.getInstance();
     const serverStateKey = 'simulated_server_state';

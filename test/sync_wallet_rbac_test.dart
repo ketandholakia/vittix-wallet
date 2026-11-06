@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:expense_tracker/core/database/app_database.dart' hide isNull, isNotNull, Budget, Transaction, TransactionType, Category, Account;
 import 'package:expense_tracker/core/database/database_provider.dart';
@@ -278,7 +277,7 @@ void main() {
           await database.transaction(() async {
             final existing = await (database.select(database.accounts)..where((a) => a.uuid.equals('acc-wallet-b-uuid'))).getSingleOrNull();
             if (existing != null && existing.walletId != walletIdA) {
-              throw WalletPermissionDeniedException('Cross-wallet account mutation rejected for uuid acc-wallet-b-uuid');
+              throw const WalletPermissionDeniedException('Cross-wallet account mutation rejected for uuid acc-wallet-b-uuid');
             }
           });
         },
@@ -306,7 +305,7 @@ void main() {
           await database.transaction(() async {
             final parentGoal = await (database.select(database.walletGoals)..where((g) => g.id.equals(goalIdB))).getSingleOrNull();
             if (parentGoal == null || parentGoal.walletId != walletIdA) {
-              throw WalletPermissionDeniedException('Cross-wallet goal contribution parent rejected');
+              throw const WalletPermissionDeniedException('Cross-wallet goal contribution parent rejected');
             }
           });
         },
@@ -331,7 +330,7 @@ void main() {
           await database.transaction(() async {
             final parentAllowance = await (database.select(database.walletAllowances)..where((a) => a.id.equals(allowanceIdB))).getSingleOrNull();
             if (parentAllowance == null || parentAllowance.walletId != walletIdA) {
-              throw WalletPermissionDeniedException('Cross-wallet allowance payment parent rejected');
+              throw const WalletPermissionDeniedException('Cross-wallet allowance payment parent rejected');
             }
           });
         },
@@ -358,7 +357,7 @@ void main() {
             const uuid = 'acc-to-delete-uuid';
             final target = await (database.select(database.accounts)..where((a) => a.uuid.equals(uuid))).getSingleOrNull();
             if (target != null && target.walletId != walletIdA) {
-              throw WalletPermissionDeniedException('Cross-wallet deletion rejected for account $uuid');
+              throw const WalletPermissionDeniedException('Cross-wallet deletion rejected for account $uuid');
             }
           });
         },
@@ -406,7 +405,7 @@ void main() {
             );
 
             // Invalid cross-wallet operation triggers exception
-            throw WalletPermissionDeniedException('Simulated authorization failure during sync');
+            throw const WalletPermissionDeniedException('Simulated authorization failure during sync');
           });
         },
         throwsA(isA<WalletPermissionDeniedException>()),

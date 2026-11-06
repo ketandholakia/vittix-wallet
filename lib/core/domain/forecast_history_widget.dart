@@ -34,7 +34,7 @@ class ForecastHistoryWidget extends ConsumerWidget {
                   ),
                 ),
               const SizedBox(height: 4),
-              Text('30-day trend and 90-day trend are derived locally from forecast providers.'),
+              const Text('30-day trend and 90-day trend are derived locally from forecast providers.'),
             ],
           ),
         ),

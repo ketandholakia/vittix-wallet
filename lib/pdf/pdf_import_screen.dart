@@ -152,7 +152,7 @@ class _PdfImportScreenState extends ConsumerState<PdfImportScreen> {
         _candidates.add(candidate);
       }
 
-    } catch (e) {
+    } on Object catch (e) {
       setState(() {
         _error = 'Error parsing PDF: $e';
       });

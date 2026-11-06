@@ -148,7 +148,7 @@ class DatabaseEncryption {
     Object? keyError;
     try {
       key = await getOrCreateKey(store);
-    } catch (error) {
+    } on Object catch (error) {
       keyError = error;
     }
 

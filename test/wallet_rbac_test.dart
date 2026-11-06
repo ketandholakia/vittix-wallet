@@ -465,7 +465,7 @@ void main() {
       // Attempt unauthorized wallet deletion by ADMIN
       try {
         await walletDao.deleteWallet(walletIdA, actorAccountId: accountAdminA);
-      } catch (_) {}
+      } on Object catch (_) {}
 
       // Verify wallet A still exists intact
       final remainingWallets = await (database.select(database.wallets)..where((w) => w.id.equals(walletIdA))).get();

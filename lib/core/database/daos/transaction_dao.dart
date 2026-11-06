@@ -2,7 +2,7 @@ part of '../app_database.dart';
 
 @DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
 class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDaoMixin {
-  TransactionDao(AppDatabase db) : super(db);
+  TransactionDao(super.db);
 
   List<TransactionWithDetails> _mapTransactionRows(List<TypedResult> rows) {
     return rows.map((row) {

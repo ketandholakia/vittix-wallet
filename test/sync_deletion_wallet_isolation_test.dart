@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:expense_tracker/core/database/app_database.dart' hide isNull, isNotNull;
 import 'package:flutter_test/flutter_test.dart';
@@ -65,7 +64,7 @@ void main() {
     test('F4 — Split deletion sync handler rejects cross-wallet deletion', () async {
       const splitUuid = 'split-uuid-A-del';
       final txIdA = await database.into(database.transactions).insert(TransactionsCompanion.insert(walletId: Value(walletIdA), amount: 100.0, date: DateTime.now(), type: TransactionType.expense, categoryId: categoryId, accountId: accountIdA));
-      await database.into(database.walletExpenseSplits).insert(WalletExpenseSplitsCompanion.insert(walletId: walletIdA, uuid: Value(splitUuid), transactionId: txIdA, paidByMemberId: memberIdA, splitMethod: WalletExpenseSplitMethod.equal));
+      await database.into(database.walletExpenseSplits).insert(WalletExpenseSplitsCompanion.insert(walletId: walletIdA, uuid: const Value(splitUuid), transactionId: txIdA, paidByMemberId: memberIdA, splitMethod: WalletExpenseSplitMethod.equal));
       // The sync handler checks target.walletId == walletId before deleting.
       final existing = await (database.select(database.walletExpenseSplits)..where((s) => s.uuid.equals(splitUuid))).getSingle();
       expect(existing.walletId, walletIdA);
@@ -73,14 +72,14 @@ void main() {
 
     test('F5 — Settlement deletion sync handler rejects cross-wallet deletion', () async {
       const settlementUuid = 'settlement-uuid-A-del';
-      await database.into(database.walletSettlements).insert(WalletSettlementsCompanion.insert(walletId: walletIdA, uuid: Value(settlementUuid), payerMemberId: memberIdA, receiverMemberId: memberIdA, amount: 50.0));
+      await database.into(database.walletSettlements).insert(WalletSettlementsCompanion.insert(walletId: walletIdA, uuid: const Value(settlementUuid), payerMemberId: memberIdA, receiverMemberId: memberIdA, amount: 50.0));
       final existing = await (database.select(database.walletSettlements)..where((s) => s.uuid.equals(settlementUuid))).getSingle();
       expect(existing.walletId, walletIdA);
     });
 
     test('F6 — PeerDebt deletion sync handler rejects cross-wallet deletion', () async {
       const debtUuid = 'peer-debt-uuid-A-del';
-      await database.into(database.peerDebts).insert(PeerDebtsCompanion.insert(walletId: walletIdA, uuid: Value(debtUuid), personName: 'A', type: PeerDebtType.lent, amount: 10.0, date: DateTime.now()));
+      await database.into(database.peerDebts).insert(PeerDebtsCompanion.insert(walletId: walletIdA, uuid: const Value(debtUuid), personName: 'A', type: PeerDebtType.lent, amount: 10.0, date: DateTime.now()));
       final existing = await (database.select(database.peerDebts)..where((pd) => pd.uuid.equals(debtUuid))).getSingle();
       expect(existing.walletId, walletIdA);
     });

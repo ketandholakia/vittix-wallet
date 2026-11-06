@@ -26,7 +26,7 @@ void main() {
   });
 
   final testCategory = Category(id: 1, name: 'Food', icon: Icons.fastfood, color: Colors.red);
-  final testAccount = Account(id: 1, name: 'Cash', type: AccountType.cash, icon: Icons.payments, color: Colors.green);
+  final testAccount = const Account(id: 1, name: 'Cash', type: AccountType.cash, icon: Icons.payments, color: Colors.green);
 
   group('Budget Rollover Tests', () {
     test('Scenario 1: Disabled Rollover', () async {

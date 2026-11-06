@@ -25,7 +25,7 @@ void main() {
 
   setUp(() async {
     final docs = await getApplicationDocumentsDirectory();
-    tmp = await Directory(p.join(docs.path, 'smoke_backup'))
+    tmp = Directory(p.join(docs.path, 'smoke_backup'))
       ..createSync(recursive: true);
     dbFile = File(p.join(tmp.path, 'smoke.sqlite'));
     db = AppDatabase.forTesting(NativeDatabase(dbFile));
@@ -37,7 +37,7 @@ void main() {
   tearDown(() async {
     try {
       await db.close();
-    } catch (_) {
+    } on Object catch (_) {
       // Already closed by the restore test.
     }
     if (await tmp.exists()) {

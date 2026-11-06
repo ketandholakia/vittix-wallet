@@ -70,9 +70,9 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
         Navigator.pop(context, candidate);
       } else {
         // Navigate to AddTransactionScreen with the parsed data
-        Navigator.pushReplacement(
+        await Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
+          MaterialPageRoute<void>(
             builder: (context) => AddTransactionScreen(
               initialAmount: candidate.amount,
               initialMerchant: candidate.merchant,
@@ -82,7 +82,7 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
         );
       }
 
-    } catch (e) {
+    } on Object catch (e) {
       if (!mounted) return;
       setState(() {
         _isProcessing = false;

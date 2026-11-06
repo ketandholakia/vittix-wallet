@@ -1,4 +1,4 @@
-﻿import 'package:expense_tracker/core/database/app_database.dart' as db;
+import 'package:expense_tracker/core/database/app_database.dart' as db;
 import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
@@ -207,7 +207,7 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
                         _preview = null;
                         _previewMessage = 'Wallet invitation accepted successfully.';
                       });
-                    } catch (e) {
+                    } on Object catch (e) {
                       setState(() {
                         _previewMessage = 'Accept failed: $e';
                       });
@@ -266,7 +266,7 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
                                       _preview = invitation;
                                       _previewMessage = 'Invitation accepted successfully.';
                                     });
-                                  } catch (e) {
+                                  } on Object catch (e) {
                                     setState(() {
                                       _previewMessage = 'Accept failed: $e';
                                     });
@@ -289,7 +289,7 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
                                         walletId: walletId,
                                       );
                                       ref.invalidate(walletInvitationsProvider);
-                                    } catch (e) {
+                                    } on Object catch (e) {
                                       setState(() {
                                         _previewMessage = 'Revoke failed: $e';
                                       });

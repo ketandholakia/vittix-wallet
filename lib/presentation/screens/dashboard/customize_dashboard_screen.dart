@@ -35,10 +35,7 @@ class CustomizeDashboardScreen extends ConsumerWidget {
       ),
       body: ReorderableListView.builder(
         itemCount: widgetsOrder.length,
-        onReorder: (oldIndex, newIndex) {
-          if (oldIndex < newIndex) {
-            newIndex -= 1;
-          }
+        onReorderItem: (oldIndex, newIndex) {
           final newList = List<String>.from(widgetsOrder);
           final item = newList.removeAt(oldIndex);
           newList.insert(newIndex, item);

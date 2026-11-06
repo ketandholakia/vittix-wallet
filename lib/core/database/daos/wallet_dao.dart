@@ -2,7 +2,7 @@ part of '../app_database.dart';
 
 @DriftAccessor(tables: [Wallets, WalletMembers, WalletInvitations, WalletSettlements, WalletExpenseSplits, WalletExpenseSplitMembers, PeerDebts, Transactions, WalletActivities])
 class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
-  WalletDao(AppDatabase db) : super(db);
+  WalletDao(super.db);
 
   Future<WalletRole?> getRoleInWallet(
     int walletId, {
@@ -387,17 +387,17 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
   Future<List<WalletActivity>> getActivityForWallet(int walletId, {int? limit, int? offset, int? actorAccountId, String? action, String? entityType}) async {
     final query = select(walletActivities)..where((a) => a.walletId.equals(walletId));
     if (actorAccountId != null) {
-      query..where((a) => a.actorAccountId.equals(actorAccountId));
+      query.where((a) => a.actorAccountId.equals(actorAccountId));
     }
     if (action != null) {
-      query..where((a) => a.action.equals(action));
+      query.where((a) => a.action.equals(action));
     }
     if (entityType != null) {
-      query..where((a) => a.entityType.equals(entityType));
+      query.where((a) => a.entityType.equals(entityType));
     }
-    query..orderBy([(a) => OrderingTerm.desc(a.createdAt)]);
+    query.orderBy([(a) => OrderingTerm.desc(a.createdAt)]);
     if (limit != null) {
-      query..limit(limit, offset: offset ?? 0);
+      query.limit(limit, offset: offset ?? 0);
     }
     return query.get();
   }
@@ -405,17 +405,17 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
   Stream<List<WalletActivity>> watchActivityForWallet(int walletId, {int? limit, int? actorAccountId, String? action, String? entityType}) {
     final query = select(walletActivities)..where((a) => a.walletId.equals(walletId));
     if (actorAccountId != null) {
-      query..where((a) => a.actorAccountId.equals(actorAccountId));
+      query.where((a) => a.actorAccountId.equals(actorAccountId));
     }
     if (action != null) {
-      query..where((a) => a.action.equals(action));
+      query.where((a) => a.action.equals(action));
     }
     if (entityType != null) {
-      query..where((a) => a.entityType.equals(entityType));
+      query.where((a) => a.entityType.equals(entityType));
     }
-    query..orderBy([(a) => OrderingTerm.desc(a.createdAt)]);
+    query.orderBy([(a) => OrderingTerm.desc(a.createdAt)]);
     if (limit != null) {
-      query..limit(limit);
+      query.limit(limit);
     }
     return query.watch();
   }

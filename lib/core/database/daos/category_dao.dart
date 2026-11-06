@@ -2,7 +2,7 @@ part of '../app_database.dart';
 
 @DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
 class CategoryDao extends DatabaseAccessor<AppDatabase> with _$CategoryDaoMixin {
-  CategoryDao(AppDatabase db) : super(db);
+  CategoryDao(super.db);
 
   // Get All: Returns a stream that automatically updates when the data changes.
   Stream<List<Category>> watchAllCategories() => select(categories).watch();

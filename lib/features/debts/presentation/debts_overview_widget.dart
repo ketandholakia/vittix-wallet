@@ -94,7 +94,7 @@ class DebtsOverviewWidget extends ConsumerWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const DebtsLoansScreen()),
+                  MaterialPageRoute<void>(builder: (_) => const DebtsLoansScreen()),
                 ).then((_) => ref.invalidate(debtsSummaryProvider));
               },
             ),
@@ -113,7 +113,7 @@ class DebtsOverviewWidget extends ConsumerWidget {
           child: InkWell(
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const DebtsLoansScreen()),
+                MaterialPageRoute<void>(builder: (_) => const DebtsLoansScreen()),
               ).then((_) => ref.invalidate(debtsSummaryProvider));
             },
             borderRadius: BorderRadius.circular(16),

@@ -8,6 +8,7 @@ import 'package:expense_tracker/features/settings/presentation/settings_provider
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/core/services/auto_backup.dart';
+import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:expense_tracker/features/security/presentation/database_recovery_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,61 +52,100 @@ class _MyAppState extends ConsumerState<MyApp> {
     if (kDebugMode) {
       debugPrint('MyApp initState at ${DateTime.now().toIso8601String()}');
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) => _deferStartupWork());
+    // No fixed delay: wait for the first rendered frame, then for the database
+    // to be genuinely ready (open + migrated).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onFirstFrame();
+    });
   }
 
-  Future<void> _deferStartupWork() async {
-    await Future.delayed(const Duration(seconds: 2));
+  Future<void> _onFirstFrame() async {
+    final ready = await _waitForDatabaseReady();
     if (!mounted) return;
-    await _initNotificationsAndRecurringWork();
-    if (mounted) {
-      setState(() {
-        _startupComplete = true;
-      });
+    setState(() => _startupComplete = true);
+    if (ready) {
+      // Runs after the UI is interactive; each job has its own gate and error
+      // handling, so one failure cannot skip the others.
+      await _runStartupWork();
     }
   }
 
-  Future<void> _initNotificationsAndRecurringWork() async {
-    final startup = Stopwatch()..start();
+  /// Opens the database (running migrations) and verifies it responds.
+  ///
+  /// Returns false when the database could not be opened; the UI shows the
+  /// recovery screen in that case and background work must not run.
+  Future<bool> _waitForDatabaseReady() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final todayKey = DateTime.now().toIso8601String().substring(0, 10);
-      final scheduledKey = prefs.getString('lastNotificationBootstrapDay');
-      final recurringKey = prefs.getString('lastRecurringBootstrapDay');
-      final notificationService = ref.read(notificationServiceProvider);
+      await ref.read(databaseOpenPlanProvider.future);
+      await ref.read(databaseProvider).customSelect('SELECT 1').get();
+      return true;
+    } on Object catch (error, stackTrace) {
+      AppLogger.error('Database is not ready at startup', error, stackTrace);
+      return false;
+    }
+  }
 
-      if (scheduledKey != todayKey) {
-        await notificationService.init();
-        await notificationService.requestPermissions();
-        await notificationService.scheduleDailyReminder();
-        await notificationService.scheduleMonthlySummary();
-        await prefs.setString('lastNotificationBootstrapDay', todayKey);
-      }
+  Future<void> _runStartupWork() async {
+    final startup = Stopwatch()..start();
+    final prefs = await SharedPreferences.getInstance();
+    final today = DateTime.now().toIso8601String().substring(0, 10);
 
-      if (recurringKey != todayKey) {
-        await ref.read(processRecurringTransactionsUseCaseProvider).call();
-        await prefs.setString('lastRecurringBootstrapDay', todayKey);
-      }
+    await _runOncePerDay(
+      prefs,
+      key: 'lastNotificationBootstrapDay',
+      today: today,
+      label: 'notification setup',
+      action: () async {
+        final service = ref.read(notificationServiceProvider);
+        await service.init();
+        await service.requestPermissions();
+        await service.scheduleDailyReminder();
+        await service.scheduleMonthlySummary();
+      },
+    );
 
-      // Automatic backup: writes at most once per configured interval.
-      final autoBackupKey = prefs.getString('lastAutoBackupCheckDay');
-      if (autoBackupKey != todayKey) {
-        try {
-          final settings = AutoBackupSettings.load(prefs);
-          await ref
-              .read(autoBackupServiceProvider)
-              .runIfDue(settings: settings, prefs: prefs);
-        } catch (e) {
-          debugPrint('Auto backup failed: $e');
-        }
-        await prefs.setString('lastAutoBackupCheckDay', todayKey);
-      }
+    await _runOncePerDay(
+      prefs,
+      key: 'lastRecurringBootstrapDay',
+      today: today,
+      label: 'recurring transactions',
+      action: () => ref.read(processRecurringTransactionsUseCaseProvider).call(),
+    );
 
-      if (kDebugMode) {
-        debugPrint('Background startup work finished in ${startup.elapsedMilliseconds}ms');
-      }
-    } catch (e, stack) {
-      debugPrint('Background startup work failed: $e\n$stack');
+    await _runOncePerDay(
+      prefs,
+      key: 'lastAutoBackupCheckDay',
+      today: today,
+      label: 'automatic backup',
+      action: () async {
+        final settings = AutoBackupSettings.load(prefs);
+        await ref
+            .read(autoBackupServiceProvider)
+            .runIfDue(settings: settings, prefs: prefs);
+      },
+    );
+
+    if (kDebugMode) {
+      debugPrint(
+        'Background startup work finished in '
+        '${startup.elapsedMilliseconds}ms',
+      );
+    }
+  }
+
+  Future<void> _runOncePerDay(
+    SharedPreferences prefs, {
+    required String key,
+    required String today,
+    required String label,
+    required Future<void> Function() action,
+  }) async {
+    if (prefs.getString(key) == today) return;
+    try {
+      await action();
+      await prefs.setString(key, today);
+    } on Object catch (error, stackTrace) {
+      AppLogger.error('Startup $label failed', error, stackTrace);
     }
   }
 

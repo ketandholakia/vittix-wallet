@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,7 +62,7 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
     if (widget.mode == LockScreenMode.unlock) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // Trigger auto-auth after a tiny delay so the UI settles
-        Future.delayed(const Duration(milliseconds: 300), () {
+        Future<void>.delayed(const Duration(milliseconds: 300), () {
           if (mounted) {
             _authenticateWithBiometrics();
           }
@@ -99,7 +100,7 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
       setState(() {
         _deviceSupportsBiometrics = canCheck || isSupported;
       });
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('Error checking biometrics support: $e');
     }
   }
@@ -117,11 +118,11 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
       );
 
       if (authenticated) {
-        HapticFeedback.mediumImpact();
+        unawaited(HapticFeedback.mediumImpact());
         ref.read(appLockStateProvider.notifier).unlock();
         widget.onSuccess?.call('');
       }
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('Biometric authentication failed: $e');
     }
   }
@@ -149,7 +150,7 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
     });
 
     if (_inputPin.length == 4) {
-      Future.delayed(const Duration(milliseconds: 150), () {
+      Future<void>.delayed(const Duration(milliseconds: 150), () {
         if (mounted) {
           _processFullPin();
         }
@@ -211,7 +212,7 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
           await ref.read(pinHashProvider.notifier).updatePinHash(upgraded);
         }
         if (!mounted) return;
-        HapticFeedback.mediumImpact();
+        unawaited(HapticFeedback.mediumImpact());
         if (widget.mode == LockScreenMode.unlock) {
           ref.read(appLockStateProvider.notifier).unlock();
         }
@@ -227,7 +228,7 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
           });
         } else {
           if (_inputPin == _setupFirstPin) {
-            HapticFeedback.mediumImpact();
+            unawaited(HapticFeedback.mediumImpact());
             widget.onSuccess?.call(_inputPin);
           } else {
             setState(() {

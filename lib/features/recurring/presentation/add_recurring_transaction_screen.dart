@@ -98,7 +98,7 @@ class _AddRecurringTransactionScreenState
         if (mounted) {
           Navigator.of(context).pop();
         }
-      } catch (e) {
+      } on Object catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error saving template: $e')),

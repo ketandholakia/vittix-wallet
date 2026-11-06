@@ -106,7 +106,7 @@ class _AccountFormDialogState extends ConsumerState<_AccountFormDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<AccountType>(
-              value: _selectedType,
+              initialValue: _selectedType,
               decoration: const InputDecoration(
                 labelText: 'Account Type',
                 prefixIcon: Icon(Icons.account_balance_wallet_outlined),

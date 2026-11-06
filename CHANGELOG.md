@@ -194,3 +194,26 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   (~495 `ref.watch`/`ref.read` uses across 74 files, plus `ProviderScope` in
   `main.dart` and `ProviderContainer` in tests), so keeping both was dead
   weight and an invitation to split the wiring.
+
+## P2-13 — Tooling, startup and docs
+
+- `analysis_options.yaml` now enables `strict-casts`, `strict-inference`,
+  `strict-raw-types`, `avoid_catches_without_on_clauses`, `unawaited_futures`,
+  `prefer_const_constructors` and `always_declare_return_types`.
+  `flutter analyze` reports **0 issues** (was 210 before the engagement).
+- Applied 162 `dart fix` changes, then fixed the remaining strict-mode issues
+  manually (explicit generics for routes/dialogs/delays, typed stub collections,
+  mounted guards, await/unawaited, typed catch clauses, deprecated share/PIN
+  APIs, test import hides).
+- `.isolated` tests: `cloud_sync` (P0-4) and `debts_loans` re-enabled,
+  `widget_test` replaced with a real smoke test; the stale widget-lifecycle
+  `app_lock_test` was deleted (its PIN/limiter logic is covered by
+  `pin_hashing_test.dart`).
+- README replaced with real setup, architecture, security model, backup/restore,
+  sync, migration and SMS-permission documentation. `pubspec.yaml` has a real
+  description and declares `clock` directly.
+- `main.dart` no longer waits a fixed 2 seconds: startup runs after the first
+  frame while the DB opens and migrates (`databaseOpenPlanProvider` + a probe
+  query). Notifications, recurring processing and auto-backup each have their
+  own try block and their own once-per-day gate, so one failure cannot skip the
+  others or retry in a loop.

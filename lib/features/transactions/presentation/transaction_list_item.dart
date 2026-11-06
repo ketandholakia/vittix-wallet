@@ -118,7 +118,7 @@ class TransactionListItem extends ConsumerWidget {
             }
           : () {
               Navigator.of(context).push(
-                MaterialPageRoute(
+                MaterialPageRoute<void>(
                   builder: (ctx) => AddTransactionScreen(existingTransaction: transaction),
                 ),
               );

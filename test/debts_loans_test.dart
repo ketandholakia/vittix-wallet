@@ -1,14 +1,12 @@
-import 'package:expense_tracker/core/database/database_enums.dart';
 import 'dart:convert';
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/sync_service.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/database_provider.dart';
-import 'package:expense_tracker/debts_loans_screen.dart';
+import 'package:expense_tracker/features/sync/data/sync_service.dart';
+import 'package:expense_tracker/core/providers/database_provider.dart';
+import 'package:expense_tracker/features/debts/presentation/debts_loans_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -108,6 +106,29 @@ void main() {
       });
 
       db = AppDatabase.forTesting(NativeDatabase.memory());
+
+      // Sync requires a valid active wallet with at least one member, and
+      // currentWalletIdProvider defaults to wallet 1.
+      final walletId = await db
+          .into(db.wallets)
+          .insert(const WalletsCompanion(name: Value('Debts Wallet')));
+      final accountId = await db.into(db.accounts).insert(
+            AccountsCompanion.insert(
+              walletId: Value(walletId),
+              name: 'Debts Account',
+              type: AccountType.bank,
+              icon: 0,
+              color: '000000',
+            ),
+          );
+      await db.into(db.walletMembers).insert(
+            WalletMembersCompanion.insert(
+              walletId: walletId,
+              accountId: accountId,
+              role: WalletRole.owner,
+            ),
+          );
+
       container = ProviderContainer(
         overrides: [
           databaseProvider.overrideWithValue(db),
@@ -152,7 +173,7 @@ void main() {
 
       // Set up simulated server with same loan uuid, but newer updatedAt and different name
       final prefs = await SharedPreferences.getInstance();
-      final serverState = {
+      final serverState = <String, dynamic>{
         'accounts': [
           {
             'uuid': 'acc-uuid-loan-2',
@@ -165,11 +186,11 @@ void main() {
             'updatedAt': originalTime.millisecondsSinceEpoch,
           }
         ],
-        'categories': [],
-        'transactions': [],
-        'budgets': [],
-        'recurring_transactions': [],
-        'loans': [
+        'categories': <dynamic>[],
+        'transactions': <dynamic>[],
+        'budgets': <dynamic>[],
+        'recurring_transactions': <dynamic>[],
+        'loans': <dynamic>[
           {
             'uuid': 'loan-lww-1',
             'name': 'Refinanced Home Loan',
@@ -184,8 +205,8 @@ void main() {
             'updatedAt': newerTime.millisecondsSinceEpoch,
           }
         ],
-        'peer_debts': [],
-        'deletions': [],
+        'peer_debts': <dynamic>[],
+        'deletions': <dynamic>[],
       };
       await prefs.setString('simulated_server_state', jsonEncode(serverState));
 
@@ -207,6 +228,7 @@ void main() {
       // 1. Insert local Peer Debt (updated at 10:00)
       await db.into(db.peerDebts).insert(
         PeerDebtsCompanion.insert(
+          walletId: 1,
           uuid: const Value('peer-debt-lww-1'),
           personName: 'Bob',
           type: PeerDebtType.lent,
@@ -219,14 +241,14 @@ void main() {
 
       // Set up simulated server with same peer debt uuid, but newer updatedAt and marked as settled
       final prefs = await SharedPreferences.getInstance();
-      final serverState = {
-        'accounts': [],
-        'categories': [],
-        'transactions': [],
-        'budgets': [],
-        'recurring_transactions': [],
-        'loans': [],
-        'peer_debts': [
+      final serverState = <String, dynamic>{
+        'accounts': <dynamic>[],
+        'categories': <dynamic>[],
+        'transactions': <dynamic>[],
+        'budgets': <dynamic>[],
+        'recurring_transactions': <dynamic>[],
+        'loans': <dynamic>[],
+        'peer_debts': <dynamic>[
           {
             'uuid': 'peer-debt-lww-1',
             'personName': 'Bob',
@@ -239,7 +261,7 @@ void main() {
             'updatedAt': newerTime.millisecondsSinceEpoch,
           }
         ],
-        'deletions': [],
+        'deletions': <dynamic>[],
       };
       await prefs.setString('simulated_server_state', jsonEncode(serverState));
 

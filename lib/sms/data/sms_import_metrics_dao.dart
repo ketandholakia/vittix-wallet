@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/features/transactions/data/tables/sms_import_metrics_table.dart';
 
@@ -6,7 +5,7 @@ part 'sms_import_metrics_dao.g.dart';
 
 @DriftAccessor(tables: [SmsImportMetrics])
 class SmsImportMetricsDao extends DatabaseAccessor<AppDatabase> with _$SmsImportMetricsDaoMixin {
-  SmsImportMetricsDao(AppDatabase db) : super(db);
+  SmsImportMetricsDao(super.db);
 
   Future<void> record({
     required int walletId,

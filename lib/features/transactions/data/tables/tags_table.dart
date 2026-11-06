@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
 
 @DataClassName('Tag')

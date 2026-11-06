@@ -49,7 +49,7 @@ class _LlmSettingsScreenState extends State<LlmSettingsScreen> {
           );
         }
       }
-    } catch (e) {
+    } on Object catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to pick model: $e')),

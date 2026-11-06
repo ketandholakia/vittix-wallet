@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 
 enum AccountType { bank, cash, creditCard, income, loan }
 enum FeedbackCategory { bug, improvement, smsParsingIssue }

@@ -21,7 +21,6 @@ import 'package:expense_tracker/core/presentation/error_display_widget.dart';
 import 'package:expense_tracker/features/reports/presentation/spending_insights_summary_widget.dart';
 import 'package:expense_tracker/features/transactions/presentation/quick_add_widget.dart';
 import 'package:expense_tracker/features/reports/presentation/spending_streak_widget.dart';
-import 'package:expense_tracker/features/family/domain/wallet_activity_feed.dart';
 import 'package:expense_tracker/features/family/presentation/wallet_member_summary_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   bool _showSecondarySections = false;
-  bool _showMore = false;
   final Stopwatch _buildTimer = Stopwatch()..start();
 
   @override
@@ -92,7 +90,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 onSelected: (value) {
                   if (value == -1) {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const expense_tracker_guided_onboarding.GuidedOnboardingScreen()));
+                    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const expense_tracker_guided_onboarding.GuidedOnboardingScreen()));
                   } else {
                     ref.read(currentWalletIdProvider.notifier).selectWallet(value);
                   }
@@ -142,17 +140,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           children: [
             walletsAsync.when(
               data: (wallets) => wallets.length <= 1
-                  ? Card(
-                      margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  ? const Card(
+                      margin: EdgeInsets.fromLTRB(16, 16, 16, 8),
                       child: ListTile(
-                        leading: const Icon(Icons.wallet_outlined),
-                        title: const Text('Your wallet is the home base'),
-                        subtitle: const Text(
+                        leading: Icon(Icons.wallet_outlined),
+                        title: Text('Your wallet is the home base'),
+                        subtitle: Text(
                           'A wallet keeps one set of transactions, budgets, goals, and family data together.',
-                        ),
-                        trailing: TextButton(
-                          onPressed: () => setState(() => _showMore = true),
-                          child: const Text('Continue'),
                         ),
                       ),
                     )
@@ -181,14 +175,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   'attention_needed': const AttentionNeededWidget(),
                   'family_automation': const FamilyAutomationDashboard(),
                   'budget_overview': const BudgetOverviewWidget(),
-                  'debts_overview': SizedBox.shrink(),
+                  'debts_overview': const SizedBox.shrink(),
                   'wallet_member_summary': const WalletMemberSummaryWidget(),
                   'family_financial_summary': const FamilyFinancialSummaryWidget(),
                   'forecast_history': const ForecastHistoryWidget(),
                   'family_goal_summary': const FamilyGoalSummaryWidget(),
                   'spending_insights_summary': const SpendingInsightsSummaryWidget(),
                   'beta_metrics': const BetaMetricsWidget(),
-                  'wallet_activity_feed': SizedBox.shrink(),
+                  'wallet_activity_feed': const SizedBox.shrink(),
                 };
 
                 final visibleWidgets = widgetsOrder
@@ -215,7 +209,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       const SizedBox(height: 16),
                       TextButton.icon(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
+                          Navigator.of(context).push(MaterialPageRoute<void>(
                             builder: (ctx) => const CustomizeDashboardScreen(),
                           ));
                         },

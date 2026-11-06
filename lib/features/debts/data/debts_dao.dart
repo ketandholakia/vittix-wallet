@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/features/debts/data/tables/loans_table.dart';
 import 'package:expense_tracker/features/debts/data/tables/peer_debts_table.dart';

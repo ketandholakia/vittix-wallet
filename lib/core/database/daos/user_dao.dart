@@ -2,7 +2,7 @@ part of '../app_database.dart';
 
 @DriftAccessor(tables: [Users])
 class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
-  UserDao(AppDatabase db) : super(db);
+  UserDao(super.db);
 
   /// Users are global: one person can belong to several wallets.
   Stream<List<User>> watchAllUsers() =>

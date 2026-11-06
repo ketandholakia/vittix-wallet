@@ -1,6 +1,8 @@
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -44,7 +46,7 @@ class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen>
           ),
         );
     await db.walletDao.logWalletCreated(walletId: walletId, walletType: _sharedWallet ? 'shared' : 'personal');
-    ref.read(currentWalletIdProvider.notifier).selectWallet(walletId);
+    unawaited(ref.read(currentWalletIdProvider.notifier).selectWallet(walletId));
     ref.invalidate(availableWalletsProvider);
     setState(() => _walletCreated = true);
     if (mounted) {

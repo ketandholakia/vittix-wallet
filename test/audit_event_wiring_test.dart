@@ -1,6 +1,5 @@
-import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
-import 'package:expense_tracker/data/local/app_database.dart' hide RecurringTransaction, RecurringTransactionDb, Category, Account, TransactionType, Budget, isNull, isNotNull;
+import 'package:expense_tracker/data/local/app_database.dart' hide RecurringTransactionDb, Category, Account, TransactionType, Budget, isNull, isNotNull;
 import 'package:expense_tracker/features/accounts/data/account_repository_impl.dart';
 import 'package:expense_tracker/features/accounts/domain/account.dart' as acct;
 import 'package:expense_tracker/features/budgets/data/budget_repository_impl.dart';
@@ -8,7 +7,6 @@ import 'package:expense_tracker/features/budgets/domain/budget.dart' as budget_d
 import 'package:expense_tracker/features/transactions/data/transaction_repository_impl.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
 import 'package:expense_tracker/domain/entities/category.dart' as cat;
-import 'package:expense_tracker/features/family/domain/wallet_permissions.dart';
 import 'package:expense_tracker/core/database/database_enums.dart' as db_enums;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,10 +26,10 @@ void main() {
     walletDao = database.walletDao;
 
     walletIdA = await database.into(database.wallets).insert(
-      WalletsCompanion.insert(name: 'Wallet A', type: Value('family')),
+      WalletsCompanion.insert(name: 'Wallet A', type: const Value('family')),
     );
     walletIdB = await database.into(database.wallets).insert(
-      WalletsCompanion.insert(name: 'Wallet B', type: Value('family')),
+      WalletsCompanion.insert(name: 'Wallet B', type: const Value('family')),
     );
 
     accountIdA = await database.into(database.accounts).insert(
@@ -70,7 +68,7 @@ void main() {
   group('Account Audit Events', () {
     test('ACCOUNT_CREATED — one event, correct wallet', () async {
       final repo = AccountRepositoryImpl(database.accountDao, walletIdA, walletDao);
-      await repo.addAccount(acct.Account(id: 0, name: 'Savings', type: acct.AccountType.bank, icon: const IconData(1), color: const Color(0xFF00FF00), openingBalance: 0));
+      await repo.addAccount(const acct.Account(id: 0, name: 'Savings', type: acct.AccountType.bank, icon: IconData(1), color: Color(0xFF00FF00), openingBalance: 0));
       expect(await countAuditEvents(walletIdA, 'ACCOUNT_CREATED'), 1);
       final event = await latestEvent(walletIdA, action: 'ACCOUNT_CREATED');
       expect(event!.walletId, walletIdA);
@@ -94,7 +92,7 @@ void main() {
 
     test('Wallet A events do not appear in Wallet B', () async {
       final repoA = AccountRepositoryImpl(database.accountDao, walletIdA, walletDao);
-      await repoA.addAccount(acct.Account(id: 0, name: 'X', type: acct.AccountType.cash, icon: const IconData(3), color: const Color(0xFFABCDEF), openingBalance: 0));
+      await repoA.addAccount(const acct.Account(id: 0, name: 'X', type: acct.AccountType.cash, icon: IconData(3), color: Color(0xFFABCDEF), openingBalance: 0));
       final bEvents = await walletDao.getActivityForWallet(walletIdB, action: 'ACCOUNT_CREATED');
       expect(bEvents, isEmpty);
     });
@@ -158,7 +156,7 @@ void main() {
   group('Split Audit Events', () {
     test('SPLIT_CREATED — one event', () async {
       final txnId = await database.into(database.transactions).insert(TransactionsCompanion.insert(walletId: Value(walletIdA), accountId: accountIdA, categoryId: categoryIdA, amount: 100.0, type: db_enums.TransactionType.expense, date: DateTime.now()));
-      final splitId = await walletDao.insertSplit(WalletExpenseSplitsCompanion.insert(walletId: walletIdA, transactionId: txnId, paidByMemberId: memberIdA, splitMethod: WalletExpenseSplitMethod.equal), walletIdA);
+      await walletDao.insertSplit(WalletExpenseSplitsCompanion.insert(walletId: walletIdA, transactionId: txnId, paidByMemberId: memberIdA, splitMethod: WalletExpenseSplitMethod.equal), walletIdA);
       expect(await countAuditEvents(walletIdA, 'SPLIT_CREATED'), 1);
       final event = await latestEvent(walletIdA, action: 'SPLIT_CREATED');
       expect(event!.entityType, 'split');
@@ -214,7 +212,7 @@ void main() {
   group('Wallet Isolation', () {
     test('Audit event wallet matches business entity wallet', () async {
       final repo = AccountRepositoryImpl(database.accountDao, walletIdA, walletDao);
-      await repo.addAccount(acct.Account(id: 0, name: 'Isolated', type: acct.AccountType.cash, icon: const IconData(0), color: const Color(0xFF000000), openingBalance: 0));
+      await repo.addAccount(const acct.Account(id: 0, name: 'Isolated', type: acct.AccountType.cash, icon: IconData(0), color: Color(0xFF000000), openingBalance: 0));
       final eventsA = await walletDao.getActivityForWallet(walletIdA, action: 'ACCOUNT_CREATED');
       expect(eventsA.length, 1);
       expect(eventsA.first.walletId, walletIdA);

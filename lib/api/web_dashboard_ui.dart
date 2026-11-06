@@ -545,7 +545,7 @@ class WebDashboardUI {
                 select.innerHTML = data.wallets.map(w => 
                     `<option value="\${w.id}" \${w.id === data.currentWalletId ? 'selected' : ''}>\${w.name}</option>`
                 ).join('');
-            } catch (e) {
+            } on Object catch (e) {
                 console.error('Failed to load wallets', e);
             }
         };
@@ -580,7 +580,7 @@ class WebDashboardUI {
                 const txCategorySelect = document.getElementById('tx-category');
                 txCategorySelect.innerHTML = categories.map(c => `<option value="\${c.id}">\${c.name}</option>`).join('');
 
-            } catch (err) {
+            } on Object catch (err) {
                 console.error("Failed to load data:", err);
             }
         };

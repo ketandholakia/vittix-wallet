@@ -2,7 +2,7 @@ part of '../app_database.dart';
 
 @DriftAccessor(tables: [WalletBills])
 class BillDao extends DatabaseAccessor<AppDatabase> with _$BillDaoMixin {
-  BillDao(AppDatabase db) : super(db);
+  BillDao(super.db);
 
   Stream<List<WalletBill>> watchBillsForWallet(int walletId) {
     return (select(walletBills)..where((b) => b.walletId.equals(walletId))).watch();

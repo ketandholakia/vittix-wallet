@@ -29,7 +29,7 @@ void main() {
       color: Colors.green,
     );
 
-    final bankAccount = Account(
+    final bankAccount = const Account(
       id: 1,
       name: 'Bank Account',
       type: AccountType.bank,
@@ -101,7 +101,7 @@ void main() {
           date: DateTime(2026, 6, 12),
           type: TransactionType.expense,
           category: trickyCategory,
-          account: Account(
+          account: const Account(
             id: 3,
             name: 'My "Super" Bank',
             type: AccountType.bank,

@@ -41,7 +41,7 @@ class AccountsOverviewWidget extends ConsumerWidget {
                       TextButton.icon(
                         onPressed: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const TransferFormScreen()),
+                            MaterialPageRoute<void>(builder: (_) => const TransferFormScreen()),
                           );
                         },
                         icon: const Icon(Icons.swap_horiz, size: 18),
@@ -50,7 +50,7 @@ class AccountsOverviewWidget extends ConsumerWidget {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const AccountScreen()),
+                            MaterialPageRoute<void>(builder: (_) => const AccountScreen()),
                           );
                         },
                         child: const Text('Manage'),
@@ -66,7 +66,7 @@ class AccountsOverviewWidget extends ConsumerWidget {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 itemCount: accounts.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final item = accounts[index];
                   final account = item.account;
@@ -75,7 +75,7 @@ class AccountsOverviewWidget extends ConsumerWidget {
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute(
+                          MaterialPageRoute<void>(
                             builder: (_) => TransactionListScreen(initialFilterAccount: account),
                           ),
                         );

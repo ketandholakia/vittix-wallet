@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import 'package:expense_tracker/core/money/money.dart';
-import 'package:expense_tracker/core/database/database_enums.dart';
 import 'package:expense_tracker/features/family/data/tables/wallet_members_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/expense_splits_table.dart';
 

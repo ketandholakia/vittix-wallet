@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:expense_tracker/core/database/app_database.dart' hide isNull, isNotNull;
 import 'package:flutter_test/flutter_test.dart';
@@ -107,7 +106,7 @@ void main() {
   group('B. Mutation Isolation', () {
     test('B1 — Wallet A cannot update Wallet B split', () async {
       final bSplitId = await database.into(database.walletExpenseSplits).insert(WalletExpenseSplitsCompanion.insert(walletId: walletIdB, transactionId: txIdB, paidByMemberId: memberIdB, splitMethod: WalletExpenseSplitMethod.equal));
-      final result = await database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(bSplitId), splitMethod: Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountOwnerA);
+      final result = await database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(bSplitId), splitMethod: const Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountOwnerA);
       expect(result, isFalse);
     });
 
@@ -121,7 +120,7 @@ void main() {
 
     test('B3 — Wallet A cannot update Wallet B settlement', () async {
       final bSettlementId = await database.into(database.walletSettlements).insert(WalletSettlementsCompanion.insert(walletId: walletIdB, payerMemberId: memberIdB, receiverMemberId: memberIdB, amount: 100.0));
-      final result = await database.walletDao.updateSettlement(WalletSettlementsCompanion(id: Value(bSettlementId), amount: Value(999.0)), walletIdA, actorAccountId: accountOwnerA);
+      final result = await database.walletDao.updateSettlement(WalletSettlementsCompanion(id: Value(bSettlementId), amount: const Value(999.0)), walletIdA, actorAccountId: accountOwnerA);
       expect(result, isFalse);
     });
 
@@ -133,7 +132,7 @@ void main() {
 
     test('B5 — Wallet A cannot update Wallet B PeerDebt', () async {
       final bDebtId = await database.into(database.peerDebts).insert(PeerDebtsCompanion.insert(walletId: walletIdB, personName: 'Bob', type: PeerDebtType.lent, amount: 500.0, date: DateTime.now()));
-      final result = await database.walletDao.updatePeerDebt(PeerDebtsCompanion(id: Value(bDebtId), amount: Value(0.0)), walletIdA, actorAccountId: accountOwnerA);
+      final result = await database.walletDao.updatePeerDebt(PeerDebtsCompanion(id: Value(bDebtId), amount: const Value(0.0)), walletIdA, actorAccountId: accountOwnerA);
       expect(result, isFalse);
     });
 
@@ -165,21 +164,21 @@ void main() {
     });
 
     test('C5 — OWNER can manage splits (update)', () async {
-      final result = await database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(splitIdA), splitMethod: Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountOwnerA);
+      final result = await database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(splitIdA), splitMethod: const Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountOwnerA);
       expect(result, isTrue);
     });
 
     test('C6 — ADMIN can manage splits (update)', () async {
-      final result = await database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(splitIdA), splitMethod: Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountAdminA);
+      final result = await database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(splitIdA), splitMethod: const Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountAdminA);
       expect(result, isTrue);
     });
 
     test('C7 — MEMBER cannot manage splits (update)', () async {
-      expect(() => database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(splitIdA), splitMethod: Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountMemberA), throwsA(isA<WalletPermissionDeniedException>()));
+      expect(() => database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(splitIdA), splitMethod: const Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountMemberA), throwsA(isA<WalletPermissionDeniedException>()));
     });
 
     test('C8 — VIEWER cannot manage splits (update)', () async {
-      expect(() => database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(splitIdA), splitMethod: Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountViewerA), throwsA(isA<WalletPermissionDeniedException>()));
+      expect(() => database.walletDao.updateSplit(WalletExpenseSplitsCompanion(id: Value(splitIdA), splitMethod: const Value(WalletExpenseSplitMethod.percentage)), walletIdA, actorAccountId: accountViewerA), throwsA(isA<WalletPermissionDeniedException>()));
     });
 
     test('C9 — OWNER can manage settlements (delete)', () async {
@@ -202,7 +201,7 @@ void main() {
 
     test('C13 — VIEWER cannot create/update/delete PeerDebts', () async {
       expect(() => database.walletDao.insertPeerDebt(PeerDebtsCompanion.insert(walletId: walletIdA, personName: 'X', type: PeerDebtType.lent, amount: 10.0, date: DateTime.now()), walletIdA, actorAccountId: accountViewerA), throwsA(isA<WalletPermissionDeniedException>()));
-      expect(() => database.walletDao.updatePeerDebt(PeerDebtsCompanion(id: Value(peerDebtIdA), amount: Value(99.0)), walletIdA, actorAccountId: accountViewerA), throwsA(isA<WalletPermissionDeniedException>()));
+      expect(() => database.walletDao.updatePeerDebt(PeerDebtsCompanion(id: Value(peerDebtIdA), amount: const Value(99.0)), walletIdA, actorAccountId: accountViewerA), throwsA(isA<WalletPermissionDeniedException>()));
       expect(() => database.walletDao.deletePeerDebt(peerDebtIdA, walletIdA, actorAccountId: accountViewerA), throwsA(isA<WalletPermissionDeniedException>()));
     });
   });
@@ -242,7 +241,7 @@ void main() {
     test('E3 — Wallet A cannot manipulate Wallet B split member (update blocked)', () async {
       final bSplitId = await database.into(database.walletExpenseSplits).insert(WalletExpenseSplitsCompanion.insert(walletId: walletIdB, transactionId: txIdB, paidByMemberId: memberIdB, splitMethod: WalletExpenseSplitMethod.equal));
       final bMemberId = await database.into(database.walletExpenseSplitMembers).insert(WalletExpenseSplitMembersCompanion.insert(splitId: bSplitId, memberId: memberIdB, amountOwed: 100.0));
-      final result = await database.walletDao.updateSplitMember(WalletExpenseSplitMembersCompanion(id: Value(bMemberId), amountOwed: Value(0.0)), walletIdA, actorAccountId: accountOwnerA);
+      final result = await database.walletDao.updateSplitMember(WalletExpenseSplitMembersCompanion(id: Value(bMemberId), amountOwed: const Value(0.0)), walletIdA, actorAccountId: accountOwnerA);
       expect(result, isFalse);
     });
 

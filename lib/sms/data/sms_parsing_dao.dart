@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/features/transactions/data/tables/merchant_mappings_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/unrecognized_sms_table.dart';
@@ -7,7 +6,7 @@ part 'sms_parsing_dao.g.dart';
 
 @DriftAccessor(tables: [MerchantMappings, UnrecognizedSmsEntries])
 class SmsParsingDao extends DatabaseAccessor<AppDatabase> with _$SmsParsingDaoMixin {
-  SmsParsingDao(AppDatabase db) : super(db);
+  SmsParsingDao(super.db);
 
   Future<List<MerchantMapping>> getMerchantMappings(int walletId) {
     return (select(merchantMappings)..where((t) => t.walletId.equals(walletId))).get();

@@ -1,6 +1,5 @@
-import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide RecurringTransaction, RecurringTransactionDb, RecurringTransactions, RecurringInterval, Category, Account, TransactionType, AccountType, isNull, isNotNull;
+import 'package:expense_tracker/core/database/app_database.dart' hide RecurringTransactionDb, Category, Account, TransactionType, AccountType, isNull, isNotNull;
 import 'package:expense_tracker/core/database/database_enums.dart' as db_enums;
 import 'package:expense_tracker/features/recurring/data/recurring_transaction_repository_impl.dart';
 import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
@@ -430,9 +429,9 @@ void main() {
         try {
           await database.transaction(() async {
             await database.into(database.recurringTransactions).insert(makeCompanion(walletId: walletIdA, accountId: accountIdA));
-            throw WalletPermissionDeniedException('Simulated failure');
+            throw const WalletPermissionDeniedException('Simulated failure');
           });
-        } catch (_) {}
+        } on Object catch (_) {}
         final finalCount = (await database.select(database.recurringTransactions).get()).length;
         expect(finalCount, initialCount);
       });

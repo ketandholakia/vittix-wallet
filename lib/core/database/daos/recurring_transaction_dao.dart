@@ -2,7 +2,7 @@ part of '../app_database.dart';
 
 @DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
 class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$RecurringTransactionDaoMixin {
-  RecurringTransactionDao(AppDatabase db) : super(db);
+  RecurringTransactionDao(super.db);
 
   List<RecurringTransactionWithDetails> _mapRows(List<TypedResult> rows) {
     return rows.map((row) {
@@ -60,7 +60,6 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
   /// Returns true if the update succeeded, false if the record doesn't belong to the wallet.
   Future<bool> updateTemplateVerified(RecurringTransactionsCompanion template, int walletId) async {
     final id = template.id;
-    if (id is! Value<int>) return false;
     final count = await (update(recurringTransactions)
           ..where((t) => t.id.equals(id.value) & t.walletId.equals(walletId)))
         .write(template);

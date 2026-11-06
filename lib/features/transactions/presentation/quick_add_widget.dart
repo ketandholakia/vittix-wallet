@@ -9,7 +9,7 @@ class QuickAddWidget extends StatelessWidget {
 
   void _openTransaction(BuildContext context, domain.TransactionType type) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (_) => AddTransactionScreen(initialType: type),
       ),
     );

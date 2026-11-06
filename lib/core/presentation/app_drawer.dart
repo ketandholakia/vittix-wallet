@@ -65,7 +65,7 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const AddTransactionScreen()),
+                      MaterialPageRoute<void>(builder: (_) => const AddTransactionScreen()),
                     );
                   },
                 ),
@@ -76,7 +76,7 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const ReceiptScannerScreen()),
+                      MaterialPageRoute<void>(builder: (_) => const ReceiptScannerScreen()),
                     );
                   },
                 ),
@@ -87,7 +87,7 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const SubscriptionCalendarScreen()),
+                      MaterialPageRoute<void>(builder: (_) => const SubscriptionCalendarScreen()),
                     );
                   },
                 ),
@@ -98,7 +98,7 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const AccountScreen()),
+                      MaterialPageRoute<void>(builder: (_) => const AccountScreen()),
                     );
                   },
                 ),
@@ -109,7 +109,7 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const CategoryScreen()),
+                      MaterialPageRoute<void>(builder: (_) => const CategoryScreen()),
                     );
                   },
                 ),
@@ -123,47 +123,6 @@ class AppDrawer extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                         ),
                   ),
-                ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    final apiState = null; // ref.watch(apiServerStateProvider);
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Local API Server', style: TextStyle(fontWeight: FontWeight.bold)),
-                                Switch(
-                                  value: apiState.isRunning,
-                                  onChanged: (val) {
-                                    if (val) {
-                                      // ref.read(apiServerStateProvider.notifier).startServer();
-                                    } else {
-                                      // ref.read(apiServerStateProvider.notifier).stopServer();
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                            if (apiState.isRunning && apiState.ipAddress != null)
-                              Text(
-                                'http://${apiState.ipAddress}:${apiState.port}',
-                                style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 13),
-                              ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
                 ),
                 _buildDrawerItem(
                   context,

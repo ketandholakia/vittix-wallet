@@ -154,7 +154,7 @@ class _TransactionListScreenState
   }
 
   void _showFilterBottomSheet() {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -748,7 +748,7 @@ class _TransactionListScreenState
           // Manual entry is the default add flow. Receipt scanning is offered
           // as a small link inside the manual entry form itself.
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const AddTransactionScreen()),
+            MaterialPageRoute<void>(builder: (_) => const AddTransactionScreen()),
           );
         },
         child: const Icon(Icons.add),

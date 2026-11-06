@@ -75,7 +75,7 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
                                 
                                 if (!context.mounted) return;
                                 
-                                showDialog(
+                                await showDialog<void>(
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
@@ -118,7 +118,7 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
                                   },
                                 );
                                 
-                              } catch (e) {
+                              } on Object catch (e) {
                                 if (context.mounted) {
                                   scaffoldMessenger.showSnackBar(
                                     SnackBar(content: Text('AI Parse Failed: $e')),

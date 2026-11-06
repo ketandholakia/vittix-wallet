@@ -227,12 +227,12 @@ void main() {
       );
 
       final repoOwner = AccountRepositoryImpl(accountDao, walletIdA, walletDao);
-      final newAcc = account_domain.Account(
+      final newAcc = const account_domain.Account(
         id: 0,
         name: 'New Owner Bank',
         type: account_domain.AccountType.bank,
-        icon: const IconData(0),
-        color: const Color(0xFF00FF00),
+        icon: IconData(0),
+        color: Color(0xFF00FF00),
       );
 
       await repoOwner.addAccount(newAcc);

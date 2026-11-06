@@ -1173,7 +1173,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
       ref.read(lastSyncTimeProvider.notifier).updateLastSyncTime(newLastSync);
 
       state = SyncState(status: SyncStatus.success);
-    } catch (e, stack) {
+    } on Object catch (e, stack) {
       // Never log the error text: HTTP exceptions can embed request or response
       // payloads. The type plus the stack is enough for diagnostics.
       debugPrint('Sync failed: ${e.runtimeType}');

@@ -43,7 +43,7 @@ class SplitExpenseScreen extends ConsumerWidget {
                           ),
                       ],
                     ),
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => SplitDetailScreen(splitId: split.id))),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => SplitDetailScreen(splitId: split.id))),
                   )),
             ],
           ),

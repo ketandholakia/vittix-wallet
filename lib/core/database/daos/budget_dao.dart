@@ -2,7 +2,7 @@ part of '../app_database.dart';
 
 @DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
 class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
-  BudgetDao(AppDatabase db) : super(db);
+  BudgetDao(super.db);
 
   // Add
   Future<int> insertBudget(Insertable<Budget> budget) => into(budgets).insert(budget);

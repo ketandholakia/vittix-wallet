@@ -190,7 +190,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       );
 
       if (_isEditing) {
-        ref.read(updateTransactionUseCaseProvider).call(transaction);
+        await ref.read(updateTransactionUseCaseProvider).call(transaction);
       } else {
         // Duplicate detection: check recent transactions for same amount, date, account
         final recentStream = ref.read(watchRecentTransactionsUseCaseProvider).call(limit: 50);
@@ -223,7 +223,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           if (confirmed != true) return;
         }
 
-        ref.read(addTransactionUseCaseProvider).call(transaction);
+        await ref.read(addTransactionUseCaseProvider).call(transaction);
         ref.read(lastSelectedAccountIdProvider.notifier).updateLastSelectedAccountId(_selectedAccount!.id);
         ref.read(lastSelectedCategoryIdProvider.notifier).updateLastSelectedCategoryId(_selectedCategory!.id);
       }
@@ -235,7 +235,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   /// manual entry form with the extracted amount, merchant and type.
   Future<void> _scanReceipt() async {
     final candidate = await Navigator.of(context).push<PdfTransactionCandidate>(
-      MaterialPageRoute(
+      MaterialPageRoute<PdfTransactionCandidate>(
         builder: (_) => const ReceiptScannerScreen(returnResult: true),
       ),
     );
@@ -343,7 +343,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   
                   if (accountList.isEmpty) {
                     return DropdownButtonFormField<Account>(
-                      value: null,
+                      initialValue: null,
                       decoration: const InputDecoration(
                         labelText: 'Account',
                         prefixIcon: Icon(Icons.account_balance_wallet_outlined),
@@ -359,25 +359,18 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     if (lastId != null) {
                       _selectedAccount = accountList.where((a) => a.id == lastId).firstOrNull;
                     }
-                    if (_selectedAccount == null) {
-                      _selectedAccount = accountList.where((a) => a.type == AccountType.cash).firstOrNull ?? accountList.first;
-                    }
+                    _selectedAccount ??= accountList.where((a) => a.type == AccountType.cash).firstOrNull ?? accountList.first;
                   }
                   
                   // Ensure selected account is actually in the list, otherwise use the first available
                   Account? accountDropdownValue = _selectedAccount;
                   if (accountDropdownValue != null) {
                     accountDropdownValue = accountList.where((a) => a.id == accountDropdownValue!.id).firstOrNull;
-                    if (accountDropdownValue == null) {
-                      // If the selected account is not in the current list, append it so the dropdown doesn't crash, or reset it.
-                      accountDropdownValue = accountList.first;
-                      // Don't modify _selectedAccount during build in a way that breaks state, 
-                      // but for safety, we just use the first item as the selected value for the UI.
-                    }
+                    accountDropdownValue ??= accountList.first;
                   }
 
                   return DropdownButtonFormField<Account>(
-                    value: accountDropdownValue,
+                    initialValue: accountDropdownValue,
                     decoration: const InputDecoration(
                       labelText: 'Account',
                       prefixIcon: Icon(Icons.account_balance_wallet_outlined),
@@ -412,7 +405,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   
                   if (rawCategories.isEmpty) {
                     return DropdownButtonFormField<Category>(
-                      value: null,
+                      initialValue: null,
                       decoration: const InputDecoration(labelText: 'Category', prefixIcon: Icon(Icons.category)),
                       items: const [],
                       onChanged: null,
@@ -451,7 +444,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   }
 
                   return DropdownButtonFormField<Category>(
-                    value: dropdownValue,
+                    initialValue: dropdownValue,
                     decoration: const InputDecoration(labelText: 'Category', prefixIcon: Icon(Icons.category)),
                     items: categoryList.map((category) {
                       final isSub = category.parentId != null;
@@ -528,7 +521,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   }
 
                   return DropdownButtonFormField<domain_payee.Payee>(
-                    value: payeeDropdownValue,
+                    initialValue: payeeDropdownValue,
                     decoration: const InputDecoration(labelText: 'Payee (Optional)', prefixIcon: Icon(Icons.person)),
                     items: [
                       const DropdownMenuItem(value: null, child: Text('None')),

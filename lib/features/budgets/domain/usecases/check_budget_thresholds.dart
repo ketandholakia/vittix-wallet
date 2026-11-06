@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/services/notification_service.dart';
+import 'package:expense_tracker/domain/entities/budget.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart';
 import 'package:expense_tracker/domain/repositories/budget_repository.dart';
 import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
@@ -51,7 +52,7 @@ class CheckBudgetThresholds {
           .toList();
 
       DateTime? oldestMonth;
-      final budgetMap = <String, dynamic>{};
+      final budgetMap = <String, Budget>{};
       for (final b in categoryBudgets) {
         budgetMap[b.period] = b;
         final parts = b.period.split('-');

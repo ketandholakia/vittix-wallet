@@ -38,6 +38,8 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   }
 }
 
+// ISO 4217 codes are intentionally uppercase.
+// ignore: constant_identifier_names
 enum Currency { INR, USD, EUR, GBP }
 
 enum RolloverMode { disabled, surplusOnly, surplusAndDeficit }
@@ -395,7 +397,7 @@ class CurrentWalletIdNotifier extends StateNotifier<int> {
     if (_walletDao == null) return;
     try {
       final storedId = _prefs?.getInt(_key);
-      final validId = await _walletDao!.validateActiveWallet(storedId, actorAccountId: actorAccountId);
+      final validId = await _walletDao.validateActiveWallet(storedId, actorAccountId: actorAccountId);
       if (!mounted) return;
       if (validId != null) {
         if (state != validId) {
@@ -483,7 +485,7 @@ class DashboardWidgetsHiddenNotifier extends StateNotifier<Map<String, bool>> {
     final str = prefs.getString(_key);
     if (str != null) {
       try {
-        return Map<String, bool>.from(jsonDecode(str));
+        return Map<String, bool>.from(jsonDecode(str) as Map);
       } on FormatException catch (error) {
         AppLogger.warn('Invalid dashboard widget settings; using defaults', error);
       } on TypeError catch (error) {

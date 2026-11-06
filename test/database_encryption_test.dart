@@ -134,7 +134,7 @@ void main() {
       await expectLater(
         DatabaseEncryption.resolveOpenPlan(
           file: file,
-          store: _ThrowingKeyStore(),
+          store: const _ThrowingKeyStore(),
           verify: (file, key) async => true,
         ),
         throwsA(isA<DatabaseKeyUnavailableException>()),
@@ -200,7 +200,7 @@ void main() {
 
       final plan = await DatabaseEncryption.resolveOpenPlan(
         file: file,
-        store: _ThrowingKeyStore(),
+        store: const _ThrowingKeyStore(),
       );
 
       expect(plan.mode, DatabaseOpenMode.plaintext);
@@ -215,7 +215,7 @@ void main() {
 
       final plan = await DatabaseEncryption.resolveOpenPlan(
         file: file,
-        store: _ThrowingKeyStore(),
+        store: const _ThrowingKeyStore(),
       );
 
       expect(plan.mode, DatabaseOpenMode.plaintext);

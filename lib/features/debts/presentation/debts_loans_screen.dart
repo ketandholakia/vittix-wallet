@@ -4,12 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/database/app_database.dart' hide Column;
-import 'package:expense_tracker/features/debts/data/debts_dao.dart';
-import 'package:expense_tracker/features/debts/data/tables/peer_debts_table.dart';
 import 'package:expense_tracker/core/database/database_provider.dart';
-import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/features/debts/presentation/debts_overview_widget.dart';
 
 // Repayment calculation helper
 double calculateEmi(double principal, double annualRate, int tenureMonths) {
@@ -277,7 +273,7 @@ class _LoansTab extends ConsumerWidget {
   }
 
   void _showAddLoanSheet(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -288,14 +284,14 @@ class _LoansTab extends ConsumerWidget {
   }
 
   void _showRepaymentDialog(BuildContext context, WidgetRef ref, LoanDb loan, double outstanding) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _RepaymentDialog(loan: loan, outstanding: outstanding),
     );
   }
 
   void _confirmCloseLoan(BuildContext context, WidgetRef ref, LoanDb loan) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Close Loan?'),
@@ -618,7 +614,7 @@ class _RepaymentDialogState extends ConsumerState<_RepaymentDialog> {
     final list = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
     setState(() {
       // Repayments should come from bank, cash, or credit accounts (not loan accounts themselves)
-      _accounts = list.where((a) => a.type! != AccountType.loan).toList();
+      _accounts = list.where((a) => a.type != AccountType.loan).toList();
       if (_accounts.isNotEmpty) {
         _selectedAccount = _accounts.firstWhere((a) => a.isDefault, orElse: () => _accounts.first);
       }
@@ -778,16 +774,16 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
     return Scaffold(
       body: debtsAsync.when(
         data: (debts) {
-          final filteredDebts = debts.where((d) => d.isSettled! == _showSettled).toList();
+          final filteredDebts = debts.where((d) => d.isSettled == _showSettled).toList();
 
           // Calculate summary cards
           double totalOwedToYou = 0; // Lent and active
           double totalYouOwe = 0;   // Borrowed and active
-          for (final d in debts.where((d) => !d.isSettled!)) {
-            if (d.type! == PeerDebtType.lent) {
-              totalOwedToYou += d.amount!;
+          for (final d in debts.where((d) => !d.isSettled)) {
+            if (d.type == PeerDebtType.lent) {
+              totalOwedToYou += d.amount;
             } else {
-              totalYouOwe += d.amount!;
+              totalYouOwe += d.amount;
             }
           }
 
@@ -867,7 +863,7 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                 ),
               ] else ...[
                 ...filteredDebts.map((debt) {
-                  final isLent = debt.type! == PeerDebtType.lent;
+                  final isLent = debt.type == PeerDebtType.lent;
 
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
@@ -888,16 +884,16 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                           size: 20,
                         ),
                       ),
-                      title: Text(debt.personName!, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      title: Text(debt.personName, style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if ((debt.note ?? '') != null && (debt.note ?? '')!.isNotEmpty) ...[
-                            Text((debt.note ?? '')!, style: const TextStyle(fontSize: 12)),
+                          if ((debt.note ?? '').isNotEmpty) ...[
+                            Text((debt.note ?? ''), style: const TextStyle(fontSize: 12)),
                             const SizedBox(height: 2),
                           ],
                           Text(
-                            '${DateFormat('yyyy-MM-dd').format(debt.date!)} • ${isLent ? 'Lent' : 'Borrowed'}',
+                            '${DateFormat('yyyy-MM-dd').format(debt.date)} • ${isLent ? 'Lent' : 'Borrowed'}',
                             style: const TextStyle(fontSize: 10, color: Colors.grey),
                           ),
                         ],
@@ -906,14 +902,14 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            currencyFormatter.format(debt.amount!),
+                            currencyFormatter.format(debt.amount),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                               color: isLent ? Colors.teal : Colors.deepOrange,
                             ),
                           ),
-                          if (!debt.isSettled!) ...[
+                          if (!debt.isSettled) ...[
                             const SizedBox(width: 8),
                             IconButton(
                               icon: const Icon(Icons.done_all, color: Colors.teal),
@@ -944,7 +940,7 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
   }
 
   void _showAddPeerDebtSheet(BuildContext context) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -955,7 +951,7 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
   }
 
   void _settleDebt(BuildContext context, PeerDebtDb debt) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _SettlePeerDebtDialog(debt: debt),
     );
@@ -994,7 +990,7 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
     final walletId = ref.read(currentWalletIdProvider);
     final list = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
     setState(() {
-      _accounts = list.where((a) => a.type! != AccountType.loan).toList();
+      _accounts = list.where((a) => a.type != AccountType.loan).toList();
       if (_accounts.isNotEmpty) {
         _selectedAccount = _accounts.firstWhere((a) => a.isDefault, orElse: () => _accounts.first);
       }
@@ -1117,7 +1113,7 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
               decoration: const InputDecoration(
                 labelText: 'Note (Optional)',
                 border: OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.note),
+                prefixIcon: Icon(Icons.note),
               ),
             ),
             const SizedBox(height: 16),
@@ -1255,7 +1251,7 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
     final walletId = ref.read(currentWalletIdProvider);
     final list = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
     setState(() {
-      _accounts = list.where((a) => a.type! != AccountType.loan).toList();
+      _accounts = list.where((a) => a.type != AccountType.loan).toList();
       if (_accounts.isNotEmpty) {
         _selectedAccount = _accounts.firstWhere((a) => a.isDefault, orElse: () => _accounts.first);
       }
@@ -1269,7 +1265,7 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
       return const AlertDialog(content: SizedBox(height: 80, child: Center(child: CircularProgressIndicator())));
     }
 
-    final isLent = widget.debt.type! == PeerDebtType.lent;
+    final isLent = widget.debt.type == PeerDebtType.lent;
 
     return AlertDialog(
       title: const Text('Settle Debt?'),
@@ -1279,8 +1275,8 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
         children: [
           Text(
             isLent
-                ? 'Mark that ${widget.debt.personName!} paid you back?'
-                : 'Mark that you paid back ${widget.debt.personName!}?',
+                ? 'Mark that ${widget.debt.personName} paid you back?'
+                : 'Mark that you paid back ${widget.debt.personName}?',
           ),
           const SizedBox(height: 16),
           SwitchListTile(
@@ -1338,8 +1334,8 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
       if (_linkAccount && _selectedAccount != null) {
         // Original Lent -> Settlement is Income (getting money back)
         // Original Borrowed -> Settlement is Expense (paying money back)
-        final txType = widget.debt.type! == PeerDebtType.lent ? TransactionType.income : TransactionType.expense;
-        final note = 'Settlement for peer debt: ${widget.debt.personName!}';
+        final txType = widget.debt.type == PeerDebtType.lent ? TransactionType.income : TransactionType.expense;
+        final note = 'Settlement for peer debt: ${widget.debt.personName}';
 
         // Find the 'Transfer' category
         final categories = await db.select(db.categories).get();
@@ -1350,7 +1346,7 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
 
         await db.into(db.transactions).insert(
           TransactionsCompanion.insert(
-            amount: widget.debt.amount!,
+            amount: widget.debt.amount,
             date: now,
             note: Value(note),
             type: txType,

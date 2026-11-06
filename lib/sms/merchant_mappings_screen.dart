@@ -81,7 +81,7 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
 
     if (!context.mounted) return;
 
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (context) {
         return StatefulBuilder(

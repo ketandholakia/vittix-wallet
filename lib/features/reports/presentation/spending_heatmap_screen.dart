@@ -80,7 +80,7 @@ class _SpendingHeatmapScreenState extends ConsumerState<SpendingHeatmapScreen> {
       ),
       body: Column(
         children: [
-          TableCalendar(
+          TableCalendar<Object?>(
             firstDay: DateTime(2020),
             lastDay: DateTime.now(),
             focusedDay: _focusedDay,
@@ -108,7 +108,7 @@ class _SpendingHeatmapScreenState extends ConsumerState<SpendingHeatmapScreen> {
               defaultDecoration: const BoxDecoration(shape: BoxShape.circle),
               weekendDecoration: const BoxDecoration(shape: BoxShape.circle),
             ),
-            calendarBuilders: CalendarBuilders(
+            calendarBuilders: CalendarBuilders<Object?>(
               defaultBuilder: (context, day, focusedDay) {
                 final heatColor = _getHeatColor(day);
                 return Container(

@@ -12,7 +12,6 @@ import 'package:expense_tracker/core/utils/csv_exporter.dart';
 import 'package:expense_tracker/features/security/presentation/lock_screen.dart';
 import 'package:expense_tracker/features/security/presentation/security_providers.dart';
 import 'package:expense_tracker/features/recurring/presentation/recurring_transactions_screen.dart';
-import 'package:expense_tracker/sms/sms_import_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +54,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           _deviceSupportsBiometrics = canCheck || isSupported;
         });
       }
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('Error checking biometrics support in settings: $e');
     }
   }
@@ -168,9 +167,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: const Text('Bank, credit card, loan, cash & income accounts'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                if (mounted) Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const AccountScreen()),
+                if (mounted) {
+                  Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const AccountScreen()),
                 );
+                }
               },
             ),
           ),
@@ -182,9 +183,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: const Text('Add, edit, or remove categories'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                if (mounted) Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const CategoryScreen()),
+                if (mounted) {
+                  Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const CategoryScreen()),
                 );
+                }
               },
             ),
           ),
@@ -196,9 +199,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: const Text('Manage templates for rent, subscriptions, salary, etc.'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                if (mounted) Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const RecurringTransactionsScreen()),
+                if (mounted) {
+                  Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => const RecurringTransactionsScreen()),
                 );
+                }
               },
             ),
           ),
@@ -210,9 +215,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: const Text('Scan inbox messages and review detected transactions'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                if (mounted) Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => Scaffold(appBar: AppBar(title: Text('SMS Import')))),
+                if (mounted) {
+                  Navigator.of(context).push(
+                  MaterialPageRoute<void>(builder: (_) => Scaffold(appBar: AppBar(title: const Text('SMS Import')))),
                 );
+                }
               },
             ),
           ),
@@ -230,8 +237,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   value: isPinEnabled,
                   onChanged: (value) async {
                     if (value) {
+                      if (!context.mounted) return;
+
                       final newPin = await Navigator.of(context).push<String>(
-                        MaterialPageRoute(
+                        MaterialPageRoute<String>(
                           builder: (_) => LockScreen(
                             mode: LockScreenMode.setup,
                             onCancel: () => Navigator.of(context).pop(),
@@ -245,15 +254,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         final hashed = await PinHasher.hash(newPin);
                         await ref.read(pinHashProvider.notifier).updatePinHash(hashed);
                         ref.read(pinLockEnabledProvider.notifier).updatePinLockEnabled(true);
-                        if (mounted) {
+                        if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('PIN Lock enabled successfully')),
                           );
                         }
                       }
                     } else {
+                      if (!context.mounted) return;
+
                       final verifiedPin = await Navigator.of(context).push<String>(
-                        MaterialPageRoute(
+                        MaterialPageRoute<String>(
                           builder: (_) => LockScreen(
                             mode: LockScreenMode.verify,
                             onCancel: () => Navigator.of(context).pop(),
@@ -265,7 +276,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ref.read(pinLockEnabledProvider.notifier).updatePinLockEnabled(false);
                         // ref.read(pinHashProvider.notifier).updatePinHash(null);
                         ref.read(biometricsEnabledProvider.notifier).updateBiometricsEnabled(false);
-                        if (mounted) {
+                        if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('PIN Lock disabled')),
                           );
@@ -282,8 +293,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     subtitle: const Text('Update your 4-digit security PIN'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () async {
+                      if (!context.mounted) return;
+
                       final verifiedPin = await Navigator.of(context).push<String>(
-                        MaterialPageRoute(
+                        MaterialPageRoute<String>(
                           builder: (_) => LockScreen(
                             mode: LockScreenMode.verify,
                             onCancel: () => Navigator.of(context).pop(),
@@ -294,8 +307,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       if (verifiedPin == null) return;
 
                       if (!mounted) return;
+                      if (!context.mounted) return;
+
                       final newPin = await Navigator.of(context).push<String>(
-                        MaterialPageRoute(
+                        MaterialPageRoute<String>(
                           builder: (_) => LockScreen(
                             mode: LockScreenMode.setup,
                             onCancel: () => Navigator.of(context).pop(),
@@ -306,7 +321,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       if (newPin != null && newPin.isNotEmpty) {
                         final hashed = await PinHasher.hash(newPin);
                         await ref.read(pinHashProvider.notifier).updatePinHash(hashed);
-                        if (mounted) {
+                        if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('PIN changed successfully')),
                           );
@@ -434,19 +449,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             final freshState = ref.read(syncStateProvider);
                             if (!context.mounted) return;
                             if (freshState.status == SyncStatus.success) {
-                              if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Sync completed successfully!'),
                                   backgroundColor: Colors.green,
                                 ),
                               );
+                              }
                             } else if (freshState.status == SyncStatus.error) {
-                              if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text('Sync failed: ${freshState.errorMessage}'),
                                   backgroundColor: Colors.red,
                                 ),
                               );
+                              }
                             }
                           },
                   ),
@@ -466,6 +485,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onTap: () async {
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
                 final passController = TextEditingController();
+                if (!context.mounted) return;
+
                 final passphrase = await showDialog<String>(
                   context: context,
                   builder: (ctx) => AlertDialog(
@@ -520,13 +541,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       passphrase,
                     );
                   }
-                  await Share.shareXFiles(
-                    [XFile(snapshot.path)],
-                    text: passphrase.isEmpty
-                        ? 'Vittix Wallet database backup'
-                        : 'Vittix Wallet encrypted database backup',
+                  await SharePlus.instance.share(
+                    ShareParams(
+                      files: [XFile(snapshot.path)],
+                      text: passphrase.isEmpty
+                          ? 'Vittix Wallet database backup'
+                          : 'Vittix Wallet encrypted database backup',
+                    ),
                   );
-                } catch (e) {
+                } on Object catch (e) {
                   scaffoldMessenger.showSnackBar(
                     SnackBar(content: Text('Error saving backup: $e')),
                   );
@@ -541,7 +564,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               title: const Text('Automatic Backup'),
               subtitle: const Text('Scheduled snapshots with optional encryption'),
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const AutoBackupScreen()),
+                MaterialPageRoute<void>(builder: (_) => const AutoBackupScreen()),
               ),
             ),
           ),
@@ -580,8 +603,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   final exportFile = File(p.join(tempDir.path, fileName));
 
                   await exportFile.writeAsString(csvString);
-                  await Share.shareXFiles([XFile(exportFile.path)], text: 'Expense Tracker CSV Export');
-                } catch (e) {
+                  await SharePlus.instance.share(
+                    ShareParams(
+                      files: [XFile(exportFile.path)],
+                      text: 'Expense Tracker CSV Export',
+                    ),
+                  );
+                } on Object catch (e) {
                   scaffoldMessenger.showSnackBar(
                     SnackBar(content: Text('Error exporting CSV: $e')),
                   );
@@ -611,6 +639,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   // Encrypted backups are unreadable until decrypted.
                   if (BackupService.isEncryptedFile(picked)) {
                     final passController = TextEditingController();
+                    if (!context.mounted) return;
+
                     final passphrase = await showDialog<String>(
                       context: context,
                       builder: (ctx) => AlertDialog(
@@ -696,7 +726,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   scaffoldMessenger.showSnackBar(
                     const SnackBar(content: Text('Data restored from backup.')),
                   );
-                } catch (e) {
+                } on Object catch (e) {
                   scaffoldMessenger.showSnackBar(
                     SnackBar(content: Text('Error importing data: $e')),
                   );
@@ -757,7 +787,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                       );
                     }
-                  } catch (e) {
+                  } on Object catch (e) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -803,19 +833,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 if (confirmed == true) {
                   try {
                     await ref.read(databaseProvider).resetDatabase();
-                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('All data has been reset.'),
                         backgroundColor: Colors.green,
                       ),
                     );
-                  } catch (e) {
-                    if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+                    }
+                  } on Object catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Error resetting data: $e'),
                         backgroundColor: Colors.red,
                       ),
                     );
+                    }
                   }
                 }
               },
@@ -837,7 +871,7 @@ class _SettingsCard extends StatelessWidget {
       elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Theme.of(context).dividerColor.withOpacity(0.1)),
+        side: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
       ),
       child: child,
     );

@@ -804,3 +804,27 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   de-facto system, supports widget-scoped lifetimes and test overrides, and
   removing it would have meant rewriting essentially the whole app.
 
+## Release hardening P2-13: strict tooling, startup and docs
+
+- `analysis_options.yaml` enables strict casts/inference/raw types and the
+  requested lints. The analyzer went from 210 issues (10 errors) to **0**
+  across `lib/`, `test/` and `integration_test/`.
+- Automatic `dart fix --apply` handled 162 diagnostics (const constructors,
+  imports, super parameters, redundant null assertions). Remaining strict-mode
+  work was fixed by hand: explicit `<void>`/`<String>` route and dialog types,
+  typed empty stub collections, `Future<void>.delayed`, mounted guards,
+  `await`/`unawaited`, typed catch clauses, `SharePlus`, `onReorderItem`,
+  `AndroidOptions()`, and test import hides.
+- Tests: `cloud_sync_test.dart` and `debts_loans_test.dart` re-enabled (wallet +
+  member seeding, current imports); `widget_test.dart` is a real smoke test. The
+  stale `app_lock_test.dart.isolated` was deleted; PIN hashing and lockout are
+  covered by `pin_hashing_test.dart`.
+- README rewritten with setup, architecture, security model, backup/restore,
+  sync, migration and Play SMS-permission guidance. `pubspec.yaml` description
+  is real and `clock` is now a direct dependency (used by `AppLockWrapper`).
+- Startup: the fixed two-second delay is gone. `main.dart` waits for the first
+  frame, then for the database plan and a `SELECT 1` probe (which runs
+  migrations). Notifications, recurring processing and automatic backup each
+  run in their own `_runOncePerDay` gate with their own error handler; a failed
+  gate is retried on the next launch instead of being marked done.
+

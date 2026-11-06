@@ -63,7 +63,7 @@ class ReportsScreen extends ConsumerWidget {
                 subtitle: const Text('View expenses by category for the month'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).push(MaterialPageRoute<void>(
                     builder: (ctx) => CategoryReportScreen(transactions: report.transactions),
                   ));
                 },
@@ -74,7 +74,7 @@ class ReportsScreen extends ConsumerWidget {
                 subtitle: const Text('View expenses by account for the month'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).push(MaterialPageRoute<void>(
                     builder: (ctx) => AccountReportScreen(transactions: report.transactions),
                   ));
                 },
@@ -85,7 +85,7 @@ class ReportsScreen extends ConsumerWidget {
                 subtitle: const Text('Compare your spending over time'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).push(MaterialPageRoute<void>(
                     builder: (ctx) => const TrendReportScreen(),
                   ));
                 },
@@ -96,7 +96,7 @@ class ReportsScreen extends ConsumerWidget {
                 subtitle: const Text('Visualize daily spending intensity'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).push(MaterialPageRoute<void>(
                     builder: (ctx) => const SpendingHeatmapScreen(),
                   ));
                 },

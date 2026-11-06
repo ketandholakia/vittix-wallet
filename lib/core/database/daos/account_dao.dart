@@ -2,7 +2,7 @@ part of '../app_database.dart';
 
 @DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
 class AccountDao extends DatabaseAccessor<AppDatabase> with _$AccountDaoMixin {
-  AccountDao(AppDatabase db) : super(db);
+  AccountDao(super.db);
 
   Stream<List<Account>> watchAllAccounts([int? walletId]) {
     if (walletId != null) {
@@ -88,7 +88,7 @@ class AccountDao extends DatabaseAccessor<AppDatabase> with _$AccountDaoMixin {
     }
 
     final accountIds = targetAccounts.map((account) => account.id).toList();
-    final accountRows = await (select(this.accounts)..where((a) => a.id.isIn(accountIds))).get();
+    final accountRows = await (select(accounts)..where((a) => a.id.isIn(accountIds))).get();
     final query = select(transactions);
     if (walletId != null) {
       query.where((t) => t.accountId.isIn(accountIds) & t.walletId.equals(walletId));

@@ -1,6 +1,4 @@
-import 'package:drift/drift.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/features/family/domain/wallet_permissions.dart';
 
 abstract class AllowanceRepository {
   Stream<List<WalletAllowance>> watchAllowances();

@@ -19,7 +19,7 @@ class LlmService {
     if (_isInitializing) {
       // Very simple lock mechanism for basic usage
       while (_isInitializing) {
-        await Future.delayed(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
       }
       return;
     }
@@ -102,7 +102,7 @@ JSON:
         rawBlock: rawBody,
         confidence: 0.95,
       );
-    } catch (e) {
+    } on Object catch (e) {
       throw Exception("Failed to parse LLM response: $e\nRaw Response: $response");
     }
   }

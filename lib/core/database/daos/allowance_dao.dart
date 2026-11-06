@@ -2,7 +2,7 @@ part of '../app_database.dart';
 
 @DriftAccessor(tables: [WalletAllowances, WalletAllowancePayments])
 class AllowanceDao extends DatabaseAccessor<AppDatabase> with _$AllowanceDaoMixin {
-  AllowanceDao(AppDatabase db) : super(db);
+  AllowanceDao(super.db);
 
   Stream<List<WalletAllowance>> watchAllowancesForWallet(int walletId) {
     return (select(walletAllowances)..where((a) => a.walletId.equals(walletId))).watch();

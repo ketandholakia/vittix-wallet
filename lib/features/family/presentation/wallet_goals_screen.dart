@@ -1,6 +1,5 @@
 import 'package:expense_tracker/core/database/app_database.dart' as db;
 import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/features/family/domain/family_finance_models.dart';

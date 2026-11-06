@@ -514,7 +514,7 @@ void main() {
             role: const Value(WalletRole.viewer),
           ),
         );
-      } catch (_) {}
+      } on Object catch (_) {}
 
       // Verify no fields in DB were changed
       final afterMember = await (database.select(database.walletMembers)..where((m) => m.id.equals(ownerId))).getSingle();

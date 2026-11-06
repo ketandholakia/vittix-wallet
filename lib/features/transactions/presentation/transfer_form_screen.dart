@@ -125,7 +125,7 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
         if (mounted) {
           Navigator.of(context).pop();
         }
-      } catch (e) {
+      } on Object catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error making transfer: $e')),

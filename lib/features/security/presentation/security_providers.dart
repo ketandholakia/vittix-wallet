@@ -1,7 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:expense_tracker/features/security/data/secure_storage_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart' hide secureStorageProvider;
 
 // Provides the asynchronously loaded PIN hash from secure storage.
@@ -22,7 +21,7 @@ class PinHashNotifier extends StateNotifier<AsyncValue<String?>> {
     try {
       final pin = await _storage.read(key: _key);
       state = AsyncValue.data(pin);
-    } catch (e, st) {
+    } on Object catch (e, st) {
       state = AsyncValue.error(e, st);
     }
   }
@@ -36,7 +35,7 @@ class PinHashNotifier extends StateNotifier<AsyncValue<String?>> {
         await _storage.write(key: _key, value: hash);
       }
       state = AsyncValue.data(hash);
-    } catch (e, st) {
+    } on Object catch (e, st) {
       state = AsyncValue.error(e, st);
     }
   }

@@ -92,7 +92,7 @@ class _AutoBackupScreenState extends ConsumerState<AutoBackupScreen> {
             ? 'Nothing written. Pick a folder first (and a passphrase if encrypting).'
             : 'Backup written: ${file.path}';
       });
-    } catch (e) {
+    } on Object catch (e) {
       if (!mounted) return;
       setState(() => _status = 'Backup failed: $e');
     } finally {

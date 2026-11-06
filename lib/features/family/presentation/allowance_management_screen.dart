@@ -1,6 +1,5 @@
 import 'package:expense_tracker/core/database/app_database.dart' as db;
 import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/features/family/domain/family_allowance_models.dart';
@@ -121,7 +120,7 @@ class AllowanceManagementScreen extends ConsumerWidget {
                       walletId: db.Value(walletId),
                       memberId: db.Value(allowance.memberId),
                       amount: db.Value(double.tryParse(amount.text) ?? allowance.amount),
-                      frequency: db.Value(db.WalletAllowanceFrequency.monthly),
+                      frequency: const db.Value(db.WalletAllowanceFrequency.monthly),
                       startDate: db.Value(allowance.startDate),
                       isActive: db.Value(allowance.isActive),
                     ),
@@ -142,7 +141,7 @@ class AllowanceManagementScreen extends ConsumerWidget {
             walletId: db.Value(walletId),
             memberId: db.Value(allowance.memberId),
             amount: db.Value(allowance.amount),
-            frequency: db.Value(db.WalletAllowanceFrequency.monthly),
+            frequency: const db.Value(db.WalletAllowanceFrequency.monthly),
             startDate: db.Value(allowance.startDate),
             isActive: db.Value(active),
           ),

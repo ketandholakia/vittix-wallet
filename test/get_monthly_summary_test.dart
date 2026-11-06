@@ -21,7 +21,7 @@ void main() {
   });
 
   final testCategory = Category(id: 1, name: 'Food', icon: Icons.fastfood, color: Colors.red);
-  final testAccount = Account(id: 1, name: 'Cash', type: AccountType.cash, icon: Icons.payments, color: Colors.green);
+  final testAccount = const Account(id: 1, name: 'Cash', type: AccountType.cash, icon: Icons.payments, color: Colors.green);
   final tTransactions = [
     Transaction(id: 1, amount: 100, date: DateTime.now(), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()),
     Transaction(id: 2, amount: 500, date: DateTime.now(), type: TransactionType.income, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()),
