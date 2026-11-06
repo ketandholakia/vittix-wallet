@@ -2020,7 +2020,23 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
 
 /// Schema version this build understands. Shared with backup validation and
 /// the recovery screen, which must not import a database instance.
-const int kCurrentSchemaVersion = 16;
+const int kCurrentSchemaVersion = 17;
+
+/// Tables whose deletes are tombstoned for sync, mapped to the SQL expression
+/// that yields their wallet id (`NULL` for wallet-independent tables).
+const Map<String, String> kTombstonedTables = {
+  'accounts': 'OLD.wallet_id',
+  'budgets': 'OLD.wallet_id',
+  'categories': 'NULL',
+  'transactions': 'OLD.wallet_id',
+  'recurring_transactions': 'OLD.wallet_id',
+  'loans': 'OLD.wallet_id',
+  'peer_debts': 'OLD.wallet_id',
+  'wallet_expense_splits': 'OLD.wallet_id',
+  'wallet_settlements': 'OLD.wallet_id',
+  'wallet_activities': 'OLD.wallet_id',
+  'wallets': 'NULL',
+};
 
 @DriftDatabase(
   tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, SmsImportMetrics, Tags, Transactions, UnrecognizedSmsEntries, WalletActivities, Users],
@@ -2034,13 +2050,39 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => kCurrentSchemaVersion;
 
-  Future<int> insertDeletedRecord(String uuid, String tableName) {
-    /* return into(deletedRecords).insert(
+  /// Records a tombstone manually.
+  ///
+  /// Deletes performed through SQL (any DAO, cascade or raw statement) are
+  /// tombstoned by the triggers installed in [_ensureDeletionTriggers]; this is
+  /// available for callers that need to write one explicitly.
+  Future<int> insertDeletedRecord(
+    String uuid,
+    String tableName, {
+    int? walletId,
+  }) {
+    return into(deletedRecords).insert(
       DeletedRecordsCompanion.insert(
         uuid: uuid,
         deletedTable: tableName,
+        walletId: Value(walletId),
       ),
-    ); */ return Future.value(0);
+    );
+  }
+
+  /// Installs `AFTER DELETE` triggers that write a `deleted_records` row for
+  /// every synced table. Idempotent.
+  Future<void> _ensureDeletionTriggers() async {
+    for (final entry in kTombstonedTables.entries) {
+      await customStatement('''
+        CREATE TRIGGER IF NOT EXISTS ${entry.key}_tombstone
+        AFTER DELETE ON ${entry.key}
+        BEGIN
+          INSERT INTO deleted_records (uuid, table_name, wallet_id, deleted_at)
+          VALUES (OLD.uuid, '${entry.key}', ${entry.value},
+                  CAST(strftime('%s', 'now') AS INTEGER));
+        END
+      ''');
+    }
   }
 
   @override
@@ -2053,14 +2095,9 @@ class AppDatabase extends _$AppDatabase {
           batch.insertAll(categories, DefaultCategories.defaultCategories);
         });
 
-        // Create Deletion Triggers for fresh db
-        
-        
-        
-        
-        
-        
-        
+        // Tombstone every delete of a synced table so other devices can apply
+        // the deletion instead of resurrecting the row.
+        await _ensureDeletionTriggers();
       },
       onUpgrade: (m, from, to) async {
         if (from < 2) {
@@ -2211,6 +2248,25 @@ class AppDatabase extends _$AppDatabase {
           // income/expense totals and edited or deleted as a unit.
           await m.addColumn(transactions, transactions.transferGroupId);
         }
+        if (from < 17) {
+          // P0-4: re-enable sync tombstones with wallet scoping.
+          final table = await customSelect(
+            "SELECT name FROM sqlite_master WHERE type = 'table' "
+            "AND name = 'deleted_records'",
+          ).get();
+          if (table.isEmpty) {
+            await m.createTable(deletedRecords);
+          } else {
+            final columns =
+                await customSelect("PRAGMA table_info('deleted_records')").get();
+            final hasWalletId =
+                columns.any((row) => row.read<String>('name') == 'wallet_id');
+            if (!hasWalletId) {
+              await m.addColumn(deletedRecords, deletedRecords.walletId);
+            }
+          }
+          await _ensureDeletionTriggers();
+        }
       },
     );
   }
@@ -2231,7 +2287,7 @@ class AppDatabase extends _$AppDatabase {
 
 @DriftAccessor(tables: [WalletGoals, WalletGoalContributions, WalletGoalSchedules])
 class GoalDao extends DatabaseAccessor<AppDatabase> with _$GoalDaoMixin {
-  GoalDao(AppDatabase db) : super(db);
+  GoalDao(super.db);
 
   Stream<List<WalletGoal>> watchGoals(int walletId) {
     return (select(walletGoals)..where((g) => g.walletId.equals(walletId))).watch();

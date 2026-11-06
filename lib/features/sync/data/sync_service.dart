@@ -295,8 +295,23 @@ class SyncNotifier extends StateNotifier<SyncState> {
     }
   }
 
+  Future<bool> _hasAnyTombstone(String uuid, String table) async {
+    final row = await (db.select(db.deletedRecords)
+          ..where((d) => d.uuid.equals(uuid) & d.deletedTable.equals(table))
+          ..limit(1))
+        .getSingleOrNull();
+    return row != null;
+  }
+
+  Future<void> _deleteTombstone(String uuid, String table) async {
+    await (db.delete(db.deletedRecords)
+          ..where((d) => d.uuid.equals(uuid) & d.deletedTable.equals(table)))
+        .go();
+  }
+
   Future<void> _upsertWalletExpenseSplit(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletExpenseSplit.fromJson(data);
+    if (await _hasAnyTombstone(item.uuid, 'wallet_expense_splits')) return;
     if (item.walletId != targetWalletId) {
       throw WalletPermissionDeniedException(
         'Cross-wallet split sync payload rejected (${item.walletId} != $targetWalletId)',
@@ -315,6 +330,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
   Future<void> _upsertWalletSettlement(Map<String, dynamic> data, int targetWalletId) async {
     final item = WalletSettlement.fromJson(data);
+    if (await _hasAnyTombstone(item.uuid, 'wallet_settlements')) return;
     if (item.walletId != targetWalletId) {
       throw WalletPermissionDeniedException(
         'Cross-wallet settlement sync payload rejected (${item.walletId} != $targetWalletId)',
@@ -333,6 +349,15 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
   Future<void> _upsertWallet(Map<String, dynamic> data, int targetWalletId) async {
     final walletId = data['id'] as int;
+    final updatedAt = _parseDateTime(data['updatedAt'] ?? data['createdAt']);
+    final tombstone = await (db.select(db.deletedRecords)
+          ..where((d) =>
+              d.uuid.equals(data['uuid'] as String) &
+              d.deletedTable.equals('wallets'))
+          ..orderBy([(d) => OrderingTerm.desc(d.deletedAt)])
+          ..limit(1))
+        .getSingleOrNull();
+    if (tombstone != null && !tombstone.deletedAt.isBefore(updatedAt)) return;
     if (walletId != targetWalletId) {
       throw WalletPermissionDeniedException(
         'Cross-wallet sync payload wallet mismatch ($walletId != $targetWalletId)',
@@ -421,7 +446,12 @@ class SyncNotifier extends StateNotifier<SyncState> {
     final localBillsFuture = (db.select(db.walletBills)..where((t) => t.walletId.equals(walletId))).get();
     final localSplitsFuture = (db.select(db.walletExpenseSplits)..where((t) => t.walletId.equals(walletId))).get();
     final localSettlementsFuture = (db.select(db.walletSettlements)..where((t) => t.walletId.equals(walletId))).get();
-    final localDeletionsFuture = db.select(db.deletedRecords).get();
+    // Only this wallet's tombstones (plus wallet-independent ones such as
+    // categories) are pushed. Pushing every wallet's log let one wallet's sync
+    // delete another wallet's data.
+    final localDeletionsFuture = (db.select(db.deletedRecords)
+          ..where((d) => d.walletId.equals(walletId) | d.walletId.isNull()))
+        .get();
 
     final localAccounts = await localAccountsFuture;
     final localCategories = await localCategoriesFuture;
@@ -527,6 +557,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
     final deletionsJson = localDeletionsList.map((d) => {
       'uuid': d.uuid,
       'tableName': d.deletedTable,
+      'walletId': d.walletId,
       'deletedAt': d.deletedAt.millisecondsSinceEpoch,
     }).toList();
 
@@ -570,9 +601,14 @@ class SyncNotifier extends StateNotifier<SyncState> {
     try {
       final isSimulated = ref.read(isSimulatedSyncProvider);
       final syncUrl = ref.read(syncUrlProvider);
-      final nextcloudUsername = ref.read(nextcloudUsernameProvider);
-      final nextcloudPassword = ref.read(nextcloudPasswordProvider);
-      final isNextcloud = nextcloudUsername.isNotEmpty && nextcloudPassword.isNotEmpty;
+      // Never touch the keystore for simulated sync; secrets are only read when
+      // they are actually needed.
+      final nextcloudUsername =
+          isSimulated ? '' : ref.read(nextcloudUsernameProvider);
+      final nextcloudPassword =
+          isSimulated ? '' : ref.read(nextcloudPasswordProvider);
+      final isNextcloud =
+          nextcloudUsername.isNotEmpty && nextcloudPassword.isNotEmpty;
 
       final token = ref.read(syncTokenProvider);
       final lastSyncDateTime = ref.read(lastSyncTimeProvider);
@@ -591,11 +627,18 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
       final payload = await _buildSyncPayload(walletId, cutoff, deviceId, actorAccountId: actorAccountId);
 
+      // Remember exactly which tombstones this run pushes. Cleanup must not
+      // touch other wallets' pending tombstones.
+      final pushedDeletions = await (db.select(db.deletedRecords)
+            ..where((d) => d.walletId.equals(walletId) | d.walletId.isNull()))
+          .get();
+      final pushedDeletionIds = pushedDeletions.map((d) => d.id).toList();
+
       Map<String, dynamic> responseData;
       if (isSimulated) {
         responseData = await _runSimulatedServerSync(payload, cutoff);
       } else if (isNextcloud) {
-        final basicAuth = 'Basic ' + base64Encode(utf8.encode('$nextcloudUsername:$nextcloudPassword'));
+        final basicAuth = 'Basic ${base64Encode(utf8.encode('$nextcloudUsername:$nextcloudPassword'))}';
         final fileUrl = syncUrl.endsWith('/') ? '${syncUrl}vittix_sync_state.json' : '$syncUrl/vittix_sync_state.json';
         final getResponse = await http.get(Uri.parse(fileUrl), headers: {'Authorization': basicAuth});
         if (getResponse.statusCode == 200) {
@@ -632,12 +675,24 @@ class SyncNotifier extends StateNotifier<SyncState> {
         final remoteChanges = responseData['changes'] as Map<String, dynamic>? ?? {};
         final remoteDeletions = responseData['deletions'] as List<dynamic>? ?? [];
 
+        // A tombstone must not be resurrected by an older remote change.
+        final localTombstones = await db.select(db.deletedRecords).get();
+        final tombstoneByKey = <String, DateTime>{
+          for (final t in localTombstones)
+            '${t.deletedTable}:${t.uuid}': t.deletedAt,
+        };
+        bool blockedByTombstone(String table, String uuid, DateTime incoming) {
+          final deletedAt = tombstoneByKey['$table:$uuid'];
+          return deletedAt != null && !deletedAt.isBefore(incoming);
+        }
+
         // Apply categories first (dependency order 1)
         final remoteCategoriesList = remoteChanges['categories'] as List<dynamic>? ?? [];
         for (final item in remoteCategoriesList) {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          if (blockedByTombstone('categories', uuid, updatedAt)) continue;
           // Find local category
           final existing = await (db.select(db.categories)..where((c) => c.uuid.equals(uuid))).getSingleOrNull();
           if (existing == null) {
@@ -686,6 +741,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          if (blockedByTombstone('accounts', uuid, updatedAt)) continue;
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
           if (remoteWalletId != walletId) {
             throw WalletPermissionDeniedException('Cross-wallet account payload rejected ($remoteWalletId != $walletId)');
@@ -741,6 +797,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          if (blockedByTombstone('transactions', uuid, updatedAt)) continue;
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
           if (remoteWalletId != walletId) {
             throw WalletPermissionDeniedException('Cross-wallet transaction payload rejected ($remoteWalletId != $walletId)');
@@ -804,6 +861,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          if (blockedByTombstone('budgets', uuid, updatedAt)) continue;
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
           if (remoteWalletId != walletId) {
             throw WalletPermissionDeniedException('Cross-wallet budget payload rejected ($remoteWalletId != $walletId)');
@@ -853,6 +911,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          if (blockedByTombstone('recurring_transactions', uuid, updatedAt)) continue;
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
 
           // Reject cross-wallet payloads
@@ -922,6 +981,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          if (blockedByTombstone('loans', uuid, updatedAt)) continue;
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
           if (remoteWalletId != walletId) {
             throw WalletPermissionDeniedException('Cross-wallet loan payload rejected ($remoteWalletId != $walletId)');
@@ -983,6 +1043,7 @@ class SyncNotifier extends StateNotifier<SyncState> {
           final data = item as Map<String, dynamic>;
           final uuid = data['uuid'] as String;
           final updatedAt = _parseDateTime(data['updatedAt']);
+          if (blockedByTombstone('peer_debts', uuid, updatedAt)) continue;
           final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
           if (remoteWalletId != walletId) {
             throw WalletPermissionDeniedException('Cross-wallet peer debt payload rejected ($remoteWalletId != $walletId)');
@@ -1094,85 +1155,84 @@ class SyncNotifier extends StateNotifier<SyncState> {
           await _upsertWalletSettlement(item as Map<String, dynamic>, walletId);
         }
 
-        // Apply remote deletions with cross-wallet checks
+        // Apply remote deletions. A tombstone only wins when it is at least as
+        // new as the local row; a newer local edit is kept.
+        const tombstonedColumns = <String, String?>{
+          'accounts': 'wallet_id',
+          'categories': null,
+          'transactions': 'wallet_id',
+          'budgets': 'wallet_id',
+          'recurring_transactions': 'wallet_id',
+          'loans': 'wallet_id',
+          'peer_debts': 'wallet_id',
+          'wallet_expense_splits': 'wallet_id',
+          'wallet_settlements': 'wallet_id',
+          'wallet_activities': 'wallet_id',
+          'wallets': null,
+        };
+        const tablesWithUpdatedAt = {
+          'accounts',
+          'categories',
+          'transactions',
+          'budgets',
+          'recurring_transactions',
+          'loans',
+          'peer_debts',
+        };
+
         for (final item in remoteDeletions) {
           final del = item as Map<String, dynamic>;
           final uuid = del['uuid'] as String;
           final tableName = del['tableName'] as String;
+          if (!tombstonedColumns.containsKey(tableName)) continue;
 
-          if (tableName == 'accounts') {
-            final target = await (db.select(db.accounts)..where((a) => a.uuid.equals(uuid))).getSingleOrNull();
-            if (target != null) {
-              if (target.walletId != walletId) {
-                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for account $uuid');
-              }
-              await (db.delete(db.accounts)..where((a) => a.uuid.equals(uuid))).go();
-            }
-          } else if (tableName == 'categories') {
-            await (db.delete(db.categories)..where((c) => c.uuid.equals(uuid))).go();
-          } else if (tableName == 'transactions') {
-            final target = await (db.select(db.transactions)..where((t) => t.uuid.equals(uuid))).getSingleOrNull();
-            if (target != null) {
-              if (target.walletId != walletId) {
-                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for transaction $uuid');
-              }
-              await (db.delete(db.transactions)..where((t) => t.uuid.equals(uuid))).go();
-            }
-          } else if (tableName == 'budgets') {
-            final target = await (db.select(db.budgets)..where((b) => b.uuid.equals(uuid))).getSingleOrNull();
-            if (target != null) {
-              if (target.walletId != walletId) {
-                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for budget $uuid');
-              }
-              await (db.delete(db.budgets)..where((b) => b.uuid.equals(uuid))).go();
-            }
-          } else if (tableName == 'recurring_transactions') {
-            final target = await (db.select(db.recurringTransactions)..where((r) => r.uuid.equals(uuid))).getSingleOrNull();
-            if (target != null) {
-              if (target.walletId != walletId) {
-                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for recurring transaction $uuid');
-              }
-              await (db.delete(db.recurringTransactions)..where((r) => r.uuid.equals(uuid))).go();
-            }
-          } else if (tableName == 'loans') {
-            final target = await (db.select(db.loans)..where((l) => l.uuid.equals(uuid))).getSingleOrNull();
-            if (target != null) {
-              if (target.walletId != walletId) {
-                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for loan $uuid');
-              }
-              await (db.delete(db.loans)..where((l) => l.uuid.equals(uuid))).go();
-            }
-          } else if (tableName == 'peer_debts') {
-            final target = await (db.select(db.peerDebts)..where((pd) => pd.uuid.equals(uuid))).getSingleOrNull();
-            if (target != null) {
-              if (target.walletId != walletId) {
-                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for peer debt $uuid');
-              }
-              await (db.delete(db.peerDebts)..where((pd) => pd.uuid.equals(uuid))).go();
-            }
-          } else if (tableName == 'wallet_expense_splits') {
-            final target = await (db.select(db.walletExpenseSplits)..where((s) => s.uuid.equals(uuid))).getSingleOrNull();
-            if (target != null) {
-              if (target.walletId != walletId) {
-                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for split $uuid');
-              }
-              await (db.delete(db.walletExpenseSplits)..where((s) => s.uuid.equals(uuid))).go();
-            }
-          } else if (tableName == 'wallet_settlements') {
-            final target = await (db.select(db.walletSettlements)..where((s) => s.uuid.equals(uuid))).getSingleOrNull();
-            if (target != null) {
-              if (target.walletId != walletId) {
-                throw WalletPermissionDeniedException('Cross-wallet deletion rejected for settlement $uuid');
-              }
-              await (db.delete(db.walletSettlements)..where((s) => s.uuid.equals(uuid))).go();
-            }
+          final deletionWalletId = (del['walletId'] as num?)?.toInt();
+          if (deletionWalletId != null && deletionWalletId != walletId) {
+            // Never apply another wallet's tombstone.
+            continue;
           }
+
+          final deletedAt = _parseDateTime(del['deletedAt']);
+          final walletColumn = tombstonedColumns[tableName];
+          final updatedAtExpression =
+              tablesWithUpdatedAt.contains(tableName) ? 'updated_at' : 'NULL';
+          final existing = await db.customSelect(
+            'SELECT ${walletColumn ?? 'NULL'} AS wallet_id, '
+            '$updatedAtExpression AS updated_at '
+            'FROM $tableName WHERE uuid = ? LIMIT 1',
+            variables: [Variable<String>(uuid)],
+          ).getSingleOrNull();
+
+          if (existing == null) {
+            await _deleteTombstone(uuid, tableName);
+            continue;
+          }
+          if (walletColumn != null && existing.data['wallet_id'] != walletId) {
+            continue;
+          }
+          final updatedAtSeconds = existing.data['updated_at'] as int?;
+          if (updatedAtSeconds != null &&
+              DateTime.fromMillisecondsSinceEpoch(updatedAtSeconds * 1000)
+                  .isAfter(deletedAt)) {
+            // The local row was edited after the remote deletion: keep it.
+            continue;
+          }
+
+          await db.customStatement(
+            'DELETE FROM $tableName WHERE uuid = ?',
+            [uuid],
+          );
+          // The trigger just wrote a local tombstone; the server already has
+          // this deletion, so drop it instead of pushing it straight back.
+          await _deleteTombstone(uuid, tableName);
         }
 
-        // 5. Cleanup successfully synced local deletion logs.
-        final localDeletionsList = await db.select(db.deletedRecords).get();
-        for (final d in localDeletionsList) {
-          await (db.delete(db.deletedRecords)..where((dr) => dr.id.equals(d.id))).go();
+        // 5. Cleanup only the tombstones this run pushed. Other wallets'
+        // pending tombstones must survive.
+        if (pushedDeletionIds.isNotEmpty) {
+          await (db.delete(db.deletedRecords)
+                ..where((dr) => dr.id.isIn(pushedDeletionIds)))
+              .go();
         }
       });
 
@@ -1235,24 +1295,37 @@ class SyncNotifier extends StateNotifier<SyncState> {
     final clientChanges = clientPayload['changes'] as Map<String, dynamic>;
     final clientDeletions = clientPayload['deletions'] as List<dynamic>;
 
-    // 1. Process client deletions on simulated server
+    // 1. Process client deletions on simulated server. A newer server-side edit
+    // beats an older tombstone.
     for (final del in clientDeletions) {
       final d = del as Map<String, dynamic>;
       final uuid = d['uuid'] as String;
       final tableName = d['tableName'] as String;
       final deletedAt = d['deletedAt'];
+      final deletionAt = _parseDateTime(deletedAt);
+      final walletId = (d['walletId'] as num?)?.toInt();
 
-      // Remove from server lists
       final list = serverDb[tableName] as List<dynamic>? ?? [];
+      final hasNewerEdit = list.any((item) {
+        final row = item as Map<String, dynamic>;
+        if (row['uuid'] != uuid) return false;
+        final updated = _parseDateTime(row['updatedAt'] ?? row['createdAt']);
+        return updated.isAfter(deletionAt);
+      });
+      if (hasNewerEdit) continue;
+
       list.removeWhere((item) => (item as Map<String, dynamic>)['uuid'] == uuid);
 
-      // Add to server deletions
       final deletionsList = serverDb['deletions'] as List<dynamic>? ?? [];
-      final exists = deletionsList.any((item) => (item as Map<String, dynamic>)['uuid'] == uuid);
+      final exists = deletionsList.any((item) {
+        final row = item as Map<String, dynamic>;
+        return row['uuid'] == uuid && row['tableName'] == tableName;
+      });
       if (!exists) {
         deletionsList.add({
           'uuid': uuid,
           'tableName': tableName,
+          'walletId': walletId,
           'deletedAt': deletedAt,
         });
       }
@@ -1294,6 +1367,16 @@ class SyncNotifier extends StateNotifier<SyncState> {
         }
         final clientUpdatedAt = _parseDateTime(clientItem['updatedAt']);
         final normalizedClientItem = Map<String, dynamic>.from(_jsonSafeValue(clientItem) as Map);
+
+        // Do not resurrect a row that has a tombstone at least as new as this
+        // client edit.
+        final serverDeletions = serverDb['deletions'] as List<dynamic>? ?? [];
+        final tombstoned = serverDeletions.any((deletion) {
+          final row = deletion as Map<String, dynamic>;
+          return row['uuid'] == identity &&
+              !_parseDateTime(row['deletedAt']).isBefore(clientUpdatedAt);
+        });
+        if (tombstoned) continue;
 
         final existingIndex = serverList.indexWhere((x) {
           final row = x as Map<String, dynamic>;

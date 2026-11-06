@@ -597,3 +597,31 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   unless the same key is available. Making portable backups would require
   exporting a plaintext snapshot into the passphrase container.
 
+## Release hardening P0-4: sync tombstones re-enabled
+
+- `deleted_records` gained a nullable `wallet_id` (schema v17). The v17
+  migration creates the table if an old database never had it and adds the
+  column otherwise; it is idempotent.
+- `AppDatabase._ensureDeletionTriggers` installs `AFTER DELETE` triggers for
+  every synced UUID table, inserting `(uuid, table_name, wallet_id, deleted_at)`
+  with `deleted_at` as Unix seconds (Drift's storage format). Called from
+  `onCreate` and the v17 migration.
+- `insertDeletedRecord(uuid, table, {walletId})` writes a real tombstone again.
+- Sync:
+  - `_buildSyncPayload` filters tombstones to `walletId == current` or null and
+    serialises `walletId`.
+  - After a successful push, only the tombstones captured for that run are
+    deleted (previously every wallet's log was wiped).
+  - Pull skips tombstones belonging to another wallet, keeps a local row whose
+    `updatedAt` is newer than the tombstone, blocks remote upserts that are not
+    newer than a local tombstone, and clears the trigger-generated tombstone
+    after applying a remote deletion so it is not echoed back.
+  - The simulated server honours the same rules (newer edit beats older
+    tombstone; tombstones block older client edits).
+- Tests: `cloud_sync_test.dart` is enabled again (stale imports, seed wallet +
+  membership, `kCurrentSchemaVersion` assertion); `sync_deletion_wallet_isolation_test.dart`
+  remains green.
+- `CurrentWalletIdNotifier.selectWallet` now throws `InvalidActiveWalletException`
+  for an invalid wallet instead of allowing the switch; this fixes the
+  pre-existing failing `active_wallet_validation_test` Test 11.
+

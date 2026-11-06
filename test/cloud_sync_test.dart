@@ -1,13 +1,11 @@
-import 'package:expense_tracker/core/database/database_enums.dart';
 import 'dart:convert';
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/sync_service.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/database_provider.dart';
+import 'package:expense_tracker/features/sync/data/sync_service.dart';
+import 'package:expense_tracker/core/providers/database_provider.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -196,6 +194,29 @@ void main() {
       });
 
       db = AppDatabase.forTesting(NativeDatabase.memory());
+
+      // Sync requires a valid active wallet with at least one member, and
+      // currentWalletIdProvider defaults to wallet 1.
+      final walletId = await db
+          .into(db.wallets)
+          .insert(const WalletsCompanion(name: Value('Sync Wallet')));
+      final accountId = await db.into(db.accounts).insert(
+            AccountsCompanion.insert(
+              walletId: Value(walletId),
+              name: 'Sync Account',
+              type: AccountType.bank,
+              icon: 0,
+              color: '000000',
+            ),
+          );
+      await db.into(db.walletMembers).insert(
+            WalletMembersCompanion.insert(
+              walletId: walletId,
+              accountId: accountId,
+              role: WalletRole.owner,
+            ),
+          );
+
       container = ProviderContainer(
         overrides: [
           databaseProvider.overrideWithValue(db),
@@ -213,7 +234,7 @@ void main() {
       final newerTime = DateTime(2026, 6, 1, 12, 0, 0);
 
       // 1. Insert local category (updated at 10:00)
-      final catId = await db.into(db.categories).insert(
+      await db.into(db.categories).insert(
         CategoriesCompanion.insert(
           uuid: const Value('cat-lww-1'),
           name: 'Old Local Name',
@@ -261,7 +282,7 @@ void main() {
       final originalTime = DateTime(2026, 6, 1, 10, 0, 0);
 
       // 1. Insert local category (updated at 12:00)
-      final catId = await db.into(db.categories).insert(
+      await db.into(db.categories).insert(
         CategoriesCompanion.insert(
           uuid: const Value('cat-lww-2'),
           name: 'New Local Name',
@@ -306,7 +327,7 @@ void main() {
 
     test('Deletion - should apply remote deletion log locally', () async {
       // 1. Insert local category
-      final catId = await db.into(db.categories).insert(
+      await db.into(db.categories).insert(
         CategoriesCompanion.insert(
           uuid: const Value('cat-to-delete'),
           name: 'Category to Delete',
@@ -349,8 +370,8 @@ void main() {
    group('Cloud Sync Migration v5', () {
       test('Database initializes and runs migrations successfully', () async {
         final testDb = AppDatabase.forTesting(NativeDatabase.memory());
-        // Verify schemaVersion is 19
-        expect(testDb.schemaVersion, 19);
+        // The test build must expose the schema version it actually creates.
+        expect(testDb.schemaVersion, kCurrentSchemaVersion);
         // Verify we can access tables without errors
         final accounts = await testDb.select(testDb.accounts).get();
         expect(accounts.isNotEmpty, true); // contains default accounts

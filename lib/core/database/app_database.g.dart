@@ -10760,6 +10760,17 @@ class $DeletedRecordsTable extends DeletedRecords
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _walletIdMeta = const VerificationMeta(
+    'walletId',
+  );
+  @override
+  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+    'wallet_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _deletedAtMeta = const VerificationMeta(
     'deletedAt',
   );
@@ -10773,7 +10784,13 @@ class $DeletedRecordsTable extends DeletedRecords
     defaultValue: currentDateAndTime,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, uuid, deletedTable, deletedAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    uuid,
+    deletedTable,
+    walletId,
+    deletedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -10808,6 +10825,12 @@ class $DeletedRecordsTable extends DeletedRecords
     } else if (isInserting) {
       context.missing(_deletedTableMeta);
     }
+    if (data.containsKey('wallet_id')) {
+      context.handle(
+        _walletIdMeta,
+        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
+      );
+    }
     if (data.containsKey('deleted_at')) {
       context.handle(
         _deletedAtMeta,
@@ -10835,6 +10858,10 @@ class $DeletedRecordsTable extends DeletedRecords
         DriftSqlType.string,
         data['${effectivePrefix}table_name'],
       )!,
+      walletId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wallet_id'],
+      ),
       deletedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}deleted_at'],
@@ -10852,11 +10879,13 @@ class DeletedRecord extends DataClass implements Insertable<DeletedRecord> {
   final int id;
   final String uuid;
   final String deletedTable;
+  final int? walletId;
   final DateTime deletedAt;
   const DeletedRecord({
     required this.id,
     required this.uuid,
     required this.deletedTable,
+    this.walletId,
     required this.deletedAt,
   });
   @override
@@ -10865,6 +10894,9 @@ class DeletedRecord extends DataClass implements Insertable<DeletedRecord> {
     map['id'] = Variable<int>(id);
     map['uuid'] = Variable<String>(uuid);
     map['table_name'] = Variable<String>(deletedTable);
+    if (!nullToAbsent || walletId != null) {
+      map['wallet_id'] = Variable<int>(walletId);
+    }
     map['deleted_at'] = Variable<DateTime>(deletedAt);
     return map;
   }
@@ -10874,6 +10906,9 @@ class DeletedRecord extends DataClass implements Insertable<DeletedRecord> {
       id: Value(id),
       uuid: Value(uuid),
       deletedTable: Value(deletedTable),
+      walletId: walletId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(walletId),
       deletedAt: Value(deletedAt),
     );
   }
@@ -10887,6 +10922,7 @@ class DeletedRecord extends DataClass implements Insertable<DeletedRecord> {
       id: serializer.fromJson<int>(json['id']),
       uuid: serializer.fromJson<String>(json['uuid']),
       deletedTable: serializer.fromJson<String>(json['deletedTable']),
+      walletId: serializer.fromJson<int?>(json['walletId']),
       deletedAt: serializer.fromJson<DateTime>(json['deletedAt']),
     );
   }
@@ -10897,6 +10933,7 @@ class DeletedRecord extends DataClass implements Insertable<DeletedRecord> {
       'id': serializer.toJson<int>(id),
       'uuid': serializer.toJson<String>(uuid),
       'deletedTable': serializer.toJson<String>(deletedTable),
+      'walletId': serializer.toJson<int?>(walletId),
       'deletedAt': serializer.toJson<DateTime>(deletedAt),
     };
   }
@@ -10905,11 +10942,13 @@ class DeletedRecord extends DataClass implements Insertable<DeletedRecord> {
     int? id,
     String? uuid,
     String? deletedTable,
+    Value<int?> walletId = const Value.absent(),
     DateTime? deletedAt,
   }) => DeletedRecord(
     id: id ?? this.id,
     uuid: uuid ?? this.uuid,
     deletedTable: deletedTable ?? this.deletedTable,
+    walletId: walletId.present ? walletId.value : this.walletId,
     deletedAt: deletedAt ?? this.deletedAt,
   );
   DeletedRecord copyWithCompanion(DeletedRecordsCompanion data) {
@@ -10919,6 +10958,7 @@ class DeletedRecord extends DataClass implements Insertable<DeletedRecord> {
       deletedTable: data.deletedTable.present
           ? data.deletedTable.value
           : this.deletedTable,
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
@@ -10929,13 +10969,14 @@ class DeletedRecord extends DataClass implements Insertable<DeletedRecord> {
           ..write('id: $id, ')
           ..write('uuid: $uuid, ')
           ..write('deletedTable: $deletedTable, ')
+          ..write('walletId: $walletId, ')
           ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, uuid, deletedTable, deletedAt);
+  int get hashCode => Object.hash(id, uuid, deletedTable, walletId, deletedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -10943,6 +10984,7 @@ class DeletedRecord extends DataClass implements Insertable<DeletedRecord> {
           other.id == this.id &&
           other.uuid == this.uuid &&
           other.deletedTable == this.deletedTable &&
+          other.walletId == this.walletId &&
           other.deletedAt == this.deletedAt);
 }
 
@@ -10950,17 +10992,20 @@ class DeletedRecordsCompanion extends UpdateCompanion<DeletedRecord> {
   final Value<int> id;
   final Value<String> uuid;
   final Value<String> deletedTable;
+  final Value<int?> walletId;
   final Value<DateTime> deletedAt;
   const DeletedRecordsCompanion({
     this.id = const Value.absent(),
     this.uuid = const Value.absent(),
     this.deletedTable = const Value.absent(),
+    this.walletId = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
   DeletedRecordsCompanion.insert({
     this.id = const Value.absent(),
     required String uuid,
     required String deletedTable,
+    this.walletId = const Value.absent(),
     this.deletedAt = const Value.absent(),
   }) : uuid = Value(uuid),
        deletedTable = Value(deletedTable);
@@ -10968,12 +11013,14 @@ class DeletedRecordsCompanion extends UpdateCompanion<DeletedRecord> {
     Expression<int>? id,
     Expression<String>? uuid,
     Expression<String>? deletedTable,
+    Expression<int>? walletId,
     Expression<DateTime>? deletedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (uuid != null) 'uuid': uuid,
       if (deletedTable != null) 'table_name': deletedTable,
+      if (walletId != null) 'wallet_id': walletId,
       if (deletedAt != null) 'deleted_at': deletedAt,
     });
   }
@@ -10982,12 +11029,14 @@ class DeletedRecordsCompanion extends UpdateCompanion<DeletedRecord> {
     Value<int>? id,
     Value<String>? uuid,
     Value<String>? deletedTable,
+    Value<int?>? walletId,
     Value<DateTime>? deletedAt,
   }) {
     return DeletedRecordsCompanion(
       id: id ?? this.id,
       uuid: uuid ?? this.uuid,
       deletedTable: deletedTable ?? this.deletedTable,
+      walletId: walletId ?? this.walletId,
       deletedAt: deletedAt ?? this.deletedAt,
     );
   }
@@ -11004,6 +11053,9 @@ class DeletedRecordsCompanion extends UpdateCompanion<DeletedRecord> {
     if (deletedTable.present) {
       map['table_name'] = Variable<String>(deletedTable.value);
     }
+    if (walletId.present) {
+      map['wallet_id'] = Variable<int>(walletId.value);
+    }
     if (deletedAt.present) {
       map['deleted_at'] = Variable<DateTime>(deletedAt.value);
     }
@@ -11016,6 +11068,7 @@ class DeletedRecordsCompanion extends UpdateCompanion<DeletedRecord> {
           ..write('id: $id, ')
           ..write('uuid: $uuid, ')
           ..write('deletedTable: $deletedTable, ')
+          ..write('walletId: $walletId, ')
           ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
@@ -22221,6 +22274,7 @@ typedef $$DeletedRecordsTableCreateCompanionBuilder =
       Value<int> id,
       required String uuid,
       required String deletedTable,
+      Value<int?> walletId,
       Value<DateTime> deletedAt,
     });
 typedef $$DeletedRecordsTableUpdateCompanionBuilder =
@@ -22228,6 +22282,7 @@ typedef $$DeletedRecordsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> uuid,
       Value<String> deletedTable,
+      Value<int?> walletId,
       Value<DateTime> deletedAt,
     });
 
@@ -22252,6 +22307,11 @@ class $$DeletedRecordsTableFilterComposer
 
   ColumnFilters<String> get deletedTable => $composableBuilder(
     column: $table.deletedTable,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get walletId => $composableBuilder(
+    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22285,6 +22345,11 @@ class $$DeletedRecordsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
     column: $table.deletedAt,
     builder: (column) => ColumnOrderings(column),
@@ -22310,6 +22375,9 @@ class $$DeletedRecordsTableAnnotationComposer
     column: $table.deletedTable,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get walletId =>
+      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get deletedAt =>
       $composableBuilder(column: $table.deletedAt, builder: (column) => column);
@@ -22351,11 +22419,13 @@ class $$DeletedRecordsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> uuid = const Value.absent(),
                 Value<String> deletedTable = const Value.absent(),
+                Value<int?> walletId = const Value.absent(),
                 Value<DateTime> deletedAt = const Value.absent(),
               }) => DeletedRecordsCompanion(
                 id: id,
                 uuid: uuid,
                 deletedTable: deletedTable,
+                walletId: walletId,
                 deletedAt: deletedAt,
               ),
           createCompanionCallback:
@@ -22363,11 +22433,13 @@ class $$DeletedRecordsTableTableManager
                 Value<int> id = const Value.absent(),
                 required String uuid,
                 required String deletedTable,
+                Value<int?> walletId = const Value.absent(),
                 Value<DateTime> deletedAt = const Value.absent(),
               }) => DeletedRecordsCompanion.insert(
                 id: id,
                 uuid: uuid,
                 deletedTable: deletedTable,
+                walletId: walletId,
                 deletedAt: deletedAt,
               ),
           withReferenceMapper: (p0) => p0

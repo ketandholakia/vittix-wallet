@@ -49,3 +49,26 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   validation/restore.
 - Plaintext scratch files from encrypted snapshots are still deleted on every
   path, including failure.
+
+## P0-4 — Sync deletions (tombstones)
+
+- `deleted_records` now stores `wallet_id`; schema version is 17 with a
+  migration that adds the column (or creates the table if an older database
+  never had it).
+- `AFTER DELETE` triggers now write a tombstone for every synced UUID table
+  (`accounts`, `categories`, `transactions`, `budgets`,
+  `recurring_transactions`, `loans`, `peer_debts`, `wallet_expense_splits`,
+  `wallet_settlements`, `wallet_activities`, `wallets`) in `onCreate` and in the
+  v17 migration. `insertDeletedRecord` writes a real row again.
+- Sync pushes only the current wallet's tombstones (plus wallet-independent
+  ones) and populates `walletId` in the payload. Cleanup deletes only the
+  tombstones that were pushed, never other wallets' logs.
+- Pull applies tombstones with wallet isolation: foreign tombstones are skipped,
+  a newer local edit survives an older tombstone, and remote changes do not
+  resurrect a row with a newer tombstone. Applied remote deletions clear the
+  local trigger-generated tombstone so it is not pushed straight back.
+- Re-enabled `test/cloud_sync_test.dart` and kept
+  `test/sync_deletion_wallet_isolation_test.dart` green (fixed stale imports,
+  wallet/member setup, and the schema-version assertion).
+- Fixed `CurrentWalletIdNotifier.selectWallet` to reject an invalid wallet
+  instead of "allowing selection anyway" (the pre-existing failing test).

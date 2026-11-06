@@ -336,10 +336,17 @@ class CurrentWalletIdNotifier extends StateNotifier<int> {
   }
 
   Future<bool> selectWallet(int value, {int? actorAccountId}) async {
-    if (_walletDao != null) {
-      final isValid = await _walletDao!.isWalletValid(value, actorAccountId: actorAccountId);
+    final walletDao = _walletDao;
+    if (walletDao != null) {
+      final isValid =
+          await walletDao.isWalletValid(value, actorAccountId: actorAccountId);
       if (!isValid) {
-        debugPrint('Warning: Wallet $value does not have active membership, but allowing selection anyway.');
+        // Rejecting the switch preserves the previous valid wallet instead of
+        // moving the app into a wallet context the actor cannot access.
+        throw InvalidActiveWalletException(
+          'Cannot switch to wallet $value: it does not exist or the actor has '
+          'no active membership.',
+        );
       }
     }
     await _prefs?.setInt(_key, value);
