@@ -41,6 +41,7 @@ import 'package:expense_tracker/features/goals/data/tables/goal_schedules_table.
 import 'package:expense_tracker/features/settings/data/tables/feedback_table.dart';
 import 'package:expense_tracker/features/settings/data/tables/notification_preferences_table.dart';
 import 'package:expense_tracker/features/sync/data/tables/deleted_records_table.dart';
+import 'package:expense_tracker/features/sync/data/tables/sync_conflicts_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/attachments_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/expense_splits_table.dart';
 import 'package:expense_tracker/features/transactions/data/tables/expense_split_members_table.dart';
@@ -2020,7 +2021,7 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
 
 /// Schema version this build understands. Shared with backup validation and
 /// the recovery screen, which must not import a database instance.
-const int kCurrentSchemaVersion = 18;
+const int kCurrentSchemaVersion = 19;
 
 /// Money columns that must be stored as integer minor units.
 ///
@@ -2062,7 +2063,7 @@ const Map<String, String> kTombstonedTables = {
 };
 
 @DriftDatabase(
-  tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, SmsImportMetrics, Tags, Transactions, UnrecognizedSmsEntries, WalletActivities, Users],
+  tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, SyncConflicts, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, SmsImportMetrics, Tags, Transactions, UnrecognizedSmsEntries, WalletActivities, Users],
   daos: [CategoryDao, AccountDao, TransactionDao, BudgetDao, RecurringTransactionDao, DebtsDao, WalletDao, TransactionTagDao, AttachmentDao, AllowanceDao, GoalDao, BillDao, PayeeDao, SmsParsingDao, SmsImportMetricsDao, UserDao],
 )
 class AppDatabase extends _$AppDatabase {
@@ -2342,6 +2343,10 @@ class AppDatabase extends _$AppDatabase {
           // P1-6: normalise any legacy floating-point money columns to exact
           // integer minor units (paise/cents).
           await convertLegacyMoneyColumns();
+        }
+        if (from < 19) {
+          // P1-7: keep near-simultaneous remote edits instead of dropping them.
+          await m.createTable(syncConflicts);
         }
       },
     );

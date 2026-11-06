@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/core/services/backup_service.dart';
-import 'package:flutter/foundation.dart';
+import 'package:expense_tracker/features/sync/data/sync_merge.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
@@ -321,6 +322,38 @@ class SyncNotifier extends StateNotifier<SyncState> {
     } else {
       await db.update(db.walletBills).replace(item.toCompanion(false));
     }
+  }
+
+  /// Records a concurrent remote edit instead of dropping it silently.
+  Future<void> _recordSyncConflict(
+    int walletId,
+    String entity,
+    Map<String, dynamic> data,
+    DateTime localUpdatedAt,
+  ) async {
+    final uuid = data['uuid'] as String;
+    final remoteUpdatedAt = _parseDateTime(data['updatedAt']);
+    // Deduplicate: every sync echoes unchanged rows, and they must not grow an
+    // unbounded conflict log.
+    final existing = await (db.select(db.syncConflicts)
+          ..where((c) =>
+              c.entity.equals(entity) &
+              c.uuid.equals(uuid) &
+              c.remoteUpdatedAt.equals(remoteUpdatedAt))
+          ..limit(1))
+        .getSingleOrNull();
+    if (existing != null) return;
+
+    await db.into(db.syncConflicts).insert(
+          SyncConflictsCompanion.insert(
+            walletId: Value(walletId),
+            entity: entity,
+            uuid: uuid,
+            localUpdatedAt: localUpdatedAt,
+            remoteUpdatedAt: remoteUpdatedAt,
+            remoteJson: jsonEncode(_jsonSafeValue(data)),
+          ),
+        );
   }
 
   Future<bool> _hasAnyTombstone(String uuid, String table) async {
@@ -732,109 +765,134 @@ class SyncNotifier extends StateNotifier<SyncState> {
           for (final t in localTombstones)
             '${t.deletedTable}:${t.uuid}': t.deletedAt,
         };
-        bool blockedByTombstone(String table, String uuid, DateTime incoming) {
-          final deletedAt = tombstoneByKey['$table:$uuid'];
-          return deletedAt != null && !deletedAt.isBefore(incoming);
-        }
 
         // Apply categories first (dependency order 1)
         final remoteCategoriesList = remoteChanges['categories'] as List<dynamic>? ?? [];
-        for (final item in remoteCategoriesList) {
-          final data = item as Map<String, dynamic>;
-          final uuid = data['uuid'] as String;
-          final updatedAt = _parseDateTime(data['updatedAt']);
-          if (blockedByTombstone('categories', uuid, updatedAt)) continue;
-          // Find local category
-          final existing = await (db.select(db.categories)..where((c) => c.uuid.equals(uuid))).getSingleOrNull();
-          if (existing == null) {
-            int? parentId;
+        await mergeEntityChanges<Category>(
+          entity: 'categories',
+          changes: remoteCategoriesList,
+          tombstoneByKey: tombstoneByKey,
+          uuidOf: (data) => data['uuid'] as String,
+          remoteUpdatedAt: (data) => _parseDateTime(data['updatedAt']),
+          findLocal: (uuid) => (db.select(db.categories)
+                ..where((c) => c.uuid.equals(uuid)))
+              .getSingleOrNull(),
+          localUpdatedAt: (local) => local.updatedAt,
+          insertRemote: (data) async {
+            final uuid = data['uuid'] as String;
             final parentUuid = data['parentUuid'] as String?;
-            if (parentUuid != null) {
-              parentId = categoryUuidToId[parentUuid];
-            }
-            final companion = CategoriesCompanion.insert(
-              uuid: Value(uuid),
-              name: data['name'] as String,
-              icon: (data['icon'] as num).toInt(),
-              color: data['color'] as String,
-              isDefault: Value(data['isDefault'] as bool? ?? false),
-              parentId: Value(parentId),
-              updatedAt: Value(updatedAt),
-            );
-            final insertedId = await db.into(db.categories).insert(companion);
+            final insertedId = await db.into(db.categories).insert(
+                  CategoriesCompanion.insert(
+                    uuid: Value(uuid),
+                    name: data['name'] as String,
+                    icon: (data['icon'] as num).toInt(),
+                    color: data['color'] as String,
+                    isDefault: Value(data['isDefault'] as bool? ?? false),
+                    parentId: Value(
+                      parentUuid == null ? null : categoryUuidToId[parentUuid],
+                    ),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
             categoryUuidToId[uuid] = insertedId;
-          } else {
-            // Update only if remote updatedAt is newer (LWW)
-            if (updatedAt.isAfter(existing.updatedAt)) {
-              int? parentId;
-              final parentUuid = data['parentUuid'] as String?;
-              if (parentUuid != null) {
-                parentId = categoryUuidToId[parentUuid];
-              }
-              final companion = CategoriesCompanion(
-                id: Value(existing.id),
-                uuid: Value(uuid),
-                name: Value(data['name'] as String),
-                icon: Value((data['icon'] as num).toInt()),
-                color: Value(data['color'] as String),
-                isDefault: Value(data['isDefault'] as bool? ?? false),
-                parentId: Value(parentId),
-                updatedAt: Value(updatedAt),
-              );
-              await db.update(db.categories).replace(companion);
-            }
-          }
-        }
+          },
+          updateRemote: (local, data) async {
+            final parentUuid = data['parentUuid'] as String?;
+            await db.update(db.categories).replace(
+                  CategoriesCompanion(
+                    id: Value(local.id),
+                    uuid: Value(data['uuid'] as String),
+                    name: Value(data['name'] as String),
+                    icon: Value((data['icon'] as num).toInt()),
+                    color: Value(data['color'] as String),
+                    isDefault: Value(data['isDefault'] as bool? ?? false),
+                    parentId: Value(
+                      parentUuid == null ? null : categoryUuidToId[parentUuid],
+                    ),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          recordConflict: (data, local) =>
+              _recordSyncConflict(walletId, 'categories', data, local.updatedAt),
+        );
 
         // Apply accounts (dependency order 2)
         final remoteAccountsList = remoteChanges['accounts'] as List<dynamic>? ?? [];
-        for (final item in remoteAccountsList) {
-          final data = item as Map<String, dynamic>;
-          final uuid = data['uuid'] as String;
-          final updatedAt = _parseDateTime(data['updatedAt']);
-          if (blockedByTombstone('accounts', uuid, updatedAt)) continue;
-          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
-          if (remoteWalletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet account payload rejected ($remoteWalletId != $walletId)');
-          }
-
-          // Find local account
-          final existing = await (db.select(db.accounts)..where((a) => a.uuid.equals(uuid))).getSingleOrNull();
-          if (existing != null && existing.walletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet account mutation rejected for uuid $uuid');
-          }
-          if (existing == null) {
-            final companion = AccountsCompanion.insert(
-              walletId: Value(remoteWalletId),
-              uuid: Value(uuid),
-              name: data['name'] as String,
-              type: _parseAccountType(data['type']),
-              icon: (data['icon'] as num).toInt(),
-              color: data['color'] as String,
-              openingBalance: Value((data['openingBalance'] as num?)?.toDouble() ?? 0.0),
-              isDefault: Value(data['isDefault'] as bool? ?? false),
-              updatedAt: Value(updatedAt),
-            );
-            final insertedId = await db.into(db.accounts).insert(companion);
-            accountUuidToId[uuid] = insertedId;
-          } else {
-            if (updatedAt.isAfter(existing.updatedAt)) {
-              final companion = AccountsCompanion(
-                id: Value(existing.id),
-                walletId: Value(remoteWalletId),
-                uuid: Value(uuid),
-                name: Value(data['name'] as String),
-                type: Value(_parseAccountType(data['type'])),
-                icon: Value((data['icon'] as num).toInt()),
-                color: Value(data['color'] as String),
-                openingBalance: Value((data['openingBalance'] as num?)?.toDouble() ?? 0.0),
-                isDefault: Value(data['isDefault'] as bool? ?? false),
-                updatedAt: Value(updatedAt),
+        await mergeEntityChanges<Account>(
+          entity: 'accounts',
+          changes: remoteAccountsList,
+          tombstoneByKey: tombstoneByKey,
+          uuidOf: (data) => data['uuid'] as String,
+          remoteUpdatedAt: (data) => _parseDateTime(data['updatedAt']),
+          findLocal: (uuid) async {
+            final existing = await (db.select(db.accounts)
+                  ..where((a) => a.uuid.equals(uuid)))
+                .getSingleOrNull();
+            if (existing != null && existing.walletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet account mutation rejected for uuid $uuid',
               );
-              await db.update(db.accounts).replace(companion);
             }
-          }
-        }
+            return existing;
+          },
+          localUpdatedAt: (local) => local.updatedAt,
+          insertRemote: (data) async {
+            final uuid = data['uuid'] as String;
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet account payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            final insertedId = await db.into(db.accounts).insert(
+                  AccountsCompanion.insert(
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(uuid),
+                    name: data['name'] as String,
+                    type: _parseAccountType(data['type']),
+                    icon: (data['icon'] as num).toInt(),
+                    color: data['color'] as String,
+                    openingBalance: Value(
+                      (data['openingBalance'] as num?)?.toDouble() ?? 0.0,
+                    ),
+                    isDefault: Value(data['isDefault'] as bool? ?? false),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+            accountUuidToId[uuid] = insertedId;
+          },
+          updateRemote: (local, data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet account payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.update(db.accounts).replace(
+                  AccountsCompanion(
+                    id: Value(local.id),
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    name: Value(data['name'] as String),
+                    type: Value(_parseAccountType(data['type'])),
+                    icon: Value((data['icon'] as num).toInt()),
+                    color: Value(data['color'] as String),
+                    openingBalance: Value(
+                      (data['openingBalance'] as num?)?.toDouble() ?? 0.0,
+                    ),
+                    isDefault: Value(data['isDefault'] as bool? ?? false),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          recordConflict: (data, local) =>
+              _recordSyncConflict(walletId, 'accounts', data, local.updatedAt),
+        );
 
         // Re-read category/account mappings as we might have added new ones
         currentAccounts = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
@@ -844,63 +902,81 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
         // Apply transactions (dependency order 3)
         final remoteTransactionsList = remoteChanges['transactions'] as List<dynamic>? ?? [];
-        for (final item in remoteTransactionsList) {
+        final readyTransactions = remoteTransactionsList.where((item) {
           final data = item as Map<String, dynamic>;
-          final uuid = data['uuid'] as String;
-          final updatedAt = _parseDateTime(data['updatedAt']);
-          if (blockedByTombstone('transactions', uuid, updatedAt)) continue;
-          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
-          if (remoteWalletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet transaction payload rejected ($remoteWalletId != $walletId)');
-          }
-
-          final existing = await (db.select(db.transactions)..where((t) => t.uuid.equals(uuid))).getSingleOrNull();
-          if (existing != null && existing.walletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet transaction mutation rejected for uuid $uuid');
-          }
-
-          final categoryUuid = data['categoryUuid'] as String?;
-          final accountUuid = data['accountUuid'] as String?;
-          final categoryId = categoryUuidToId[categoryUuid];
-          final accountId = accountUuidToId[accountUuid];
-
-          if (categoryId == null || accountId == null) {
-            continue;
-          }
-
-          if (existing == null) {
-            final companion = TransactionsCompanion.insert(
-              walletId: Value(remoteWalletId),
-              uuid: Value(uuid),
-              amount: (data['amount'] as num).toDouble(),
-              date: _parseDateTime(data['date']),
-              note: Value(data['note'] as String?),
-              type: _parseTransactionType(data['type']),
-              categoryId: categoryId,
-              accountId: accountId,
-              createdAt: Value(_parseDateTime(data['createdAt'])),
-              updatedAt: Value(updatedAt),
-            );
-            await db.into(db.transactions).insert(companion);
-          } else {
-            if (updatedAt.isAfter(existing.updatedAt)) {
-              final companion = TransactionsCompanion(
-                id: Value(existing.id),
-                walletId: Value(remoteWalletId),
-                uuid: Value(uuid),
-                amount: Value((data['amount'] as num).toDouble()),
-                date: Value(_parseDateTime(data['date'])),
-                note: Value(data['note'] as String?),
-                type: Value(_parseTransactionType(data['type'])),
-                categoryId: Value(categoryId),
-                accountId: Value(accountId),
-                createdAt: Value(existing.createdAt),
-                updatedAt: Value(updatedAt),
+          return categoryUuidToId[data['categoryUuid']] != null &&
+              accountUuidToId[data['accountUuid']] != null;
+        }).toList();
+        await mergeEntityChanges<Transaction>(
+          entity: 'transactions',
+          changes: readyTransactions,
+          tombstoneByKey: tombstoneByKey,
+          uuidOf: (data) => data['uuid'] as String,
+          remoteUpdatedAt: (data) => _parseDateTime(data['updatedAt']),
+          findLocal: (uuid) async {
+            final existing = await (db.select(db.transactions)
+                  ..where((t) => t.uuid.equals(uuid)))
+                .getSingleOrNull();
+            if (existing != null && existing.walletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet transaction mutation rejected for uuid $uuid',
               );
-              await db.update(db.transactions).replace(companion);
             }
-          }
-        }
+            return existing;
+          },
+          localUpdatedAt: (local) => local.updatedAt,
+          insertRemote: (data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet transaction payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.into(db.transactions).insert(
+                  TransactionsCompanion.insert(
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    amount: (data['amount'] as num).toDouble(),
+                    date: _parseDateTime(data['date']),
+                    note: Value(data['note'] as String?),
+                    type: _parseTransactionType(data['type']),
+                    categoryId: categoryUuidToId[data['categoryUuid']]!,
+                    accountId: accountUuidToId[data['accountUuid']]!,
+                    createdAt: Value(_parseDateTime(data['createdAt'])),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          updateRemote: (local, data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet transaction payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.update(db.transactions).replace(
+                  TransactionsCompanion(
+                    id: Value(local.id),
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    amount: Value((data['amount'] as num).toDouble()),
+                    date: Value(_parseDateTime(data['date'])),
+                    note: Value(data['note'] as String?),
+                    type: Value(_parseTransactionType(data['type'])),
+                    categoryId: Value(categoryUuidToId[data['categoryUuid']]!),
+                    accountId: Value(accountUuidToId[data['accountUuid']]!),
+                    createdAt: Value(local.createdAt),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          recordConflict: (data, local) => _recordSyncConflict(
+              walletId, 'transactions', data, local.updatedAt),
+        );
 
         // Re-read transactions as peer_debts may link to them
         final currentTransactions = await (db.select(db.transactions)..where((t) => t.walletId.equals(walletId))).get();
@@ -908,239 +984,327 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
         // Apply budgets (dependency order 4)
         final remoteBudgetsList = remoteChanges['budgets'] as List<dynamic>? ?? [];
-        for (final item in remoteBudgetsList) {
-          final data = item as Map<String, dynamic>;
-          final uuid = data['uuid'] as String;
-          final updatedAt = _parseDateTime(data['updatedAt']);
-          if (blockedByTombstone('budgets', uuid, updatedAt)) continue;
-          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
-          if (remoteWalletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet budget payload rejected ($remoteWalletId != $walletId)');
-          }
-
-          final existing = await (db.select(db.budgets)..where((b) => b.uuid.equals(uuid))).getSingleOrNull();
-          if (existing != null && existing.walletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet budget mutation rejected for uuid $uuid');
-          }
-
-          final categoryUuid = data['categoryUuid'] as String?;
-          final categoryId = categoryUuidToId[categoryUuid];
-
-          if (categoryId == null) {
-            continue;
-          }
-
-          if (existing == null) {
-            final companion = BudgetsCompanion.insert(
-              walletId: Value(remoteWalletId),
-              uuid: Value(uuid),
-              amount: (data['amount'] as num).toDouble(),
-              period: data['period'] as String,
-              categoryId: categoryId,
-              updatedAt: Value(updatedAt),
-            );
-            await db.into(db.budgets).insert(companion);
-          } else {
-            if (updatedAt.isAfter(existing.updatedAt)) {
-              final companion = BudgetsCompanion(
-                id: Value(existing.id),
-                walletId: Value(remoteWalletId),
-                uuid: Value(uuid),
-                amount: Value((data['amount'] as num).toDouble()),
-                period: Value(data['period'] as String),
-                categoryId: Value(categoryId),
-                updatedAt: Value(updatedAt),
+        final readyBudgets = remoteBudgetsList
+            .where((item) =>
+                categoryUuidToId[(item as Map<String, dynamic>)['categoryUuid']] !=
+                null)
+            .toList();
+        await mergeEntityChanges<Budget>(
+          entity: 'budgets',
+          changes: readyBudgets,
+          tombstoneByKey: tombstoneByKey,
+          uuidOf: (data) => data['uuid'] as String,
+          remoteUpdatedAt: (data) => _parseDateTime(data['updatedAt']),
+          findLocal: (uuid) async {
+            final existing = await (db.select(db.budgets)
+                  ..where((b) => b.uuid.equals(uuid)))
+                .getSingleOrNull();
+            if (existing != null && existing.walletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet budget mutation rejected for uuid $uuid',
               );
-              await db.update(db.budgets).replace(companion);
             }
-          }
-        }
+            return existing;
+          },
+          localUpdatedAt: (local) => local.updatedAt,
+          insertRemote: (data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet budget payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.into(db.budgets).insert(
+                  BudgetsCompanion.insert(
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    amount: (data['amount'] as num).toDouble(),
+                    period: data['period'] as String,
+                    categoryId: categoryUuidToId[data['categoryUuid']]!,
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          updateRemote: (local, data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet budget payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.update(db.budgets).replace(
+                  BudgetsCompanion(
+                    id: Value(local.id),
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    amount: Value((data['amount'] as num).toDouble()),
+                    period: Value(data['period'] as String),
+                    categoryId: Value(categoryUuidToId[data['categoryUuid']]!),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          recordConflict: (data, local) =>
+              _recordSyncConflict(walletId, 'budgets', data, local.updatedAt),
+        );
 
         // Apply recurring transactions (dependency order 5)
         final remoteRecurringList = remoteChanges['recurring_transactions'] as List<dynamic>? ?? [];
-        for (final item in remoteRecurringList) {
+        final readyRecurring = remoteRecurringList.where((item) {
           final data = item as Map<String, dynamic>;
-          final uuid = data['uuid'] as String;
-          final updatedAt = _parseDateTime(data['updatedAt']);
-          if (blockedByTombstone('recurring_transactions', uuid, updatedAt)) continue;
-          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
-
-          // Reject cross-wallet payloads
-          if (remoteWalletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet recurring transaction payload rejected ($remoteWalletId != $walletId)');
-          }
-
-          final categoryUuid = data['categoryUuid'] as String?;
-          final accountUuid = data['accountUuid'] as String?;
-          final categoryId = categoryUuidToId[categoryUuid];
-          final accountId = accountUuidToId[accountUuid];
-
-          if (categoryId == null || accountId == null) {
-            continue;
-          }
-
-          final existing = await (db.select(db.recurringTransactions)..where((r) => r.uuid.equals(uuid))).getSingleOrNull();
-
-          // Reject UUID hijacking: existing record belongs to a different wallet
-          if (existing != null && existing.walletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet recurring transaction mutation rejected for uuid $uuid');
-          }
-
-          if (existing == null) {
-            final companion = RecurringTransactionsCompanion.insert(
-              walletId: Value(remoteWalletId),
-              uuid: Value(uuid),
-              name: data['name'] as String,
-              amount: (data['amount'] as num).toDouble(),
-              type: _parseTransactionType(data['type']),
-              categoryId: categoryId,
-              accountId: accountId,
-              interval: data['interval'] as String,
-              startDate: _parseDateTime(data['startDate']),
-              nextDueDate: _parseDateTime(data['nextDueDate']),
-              lastGeneratedDate: Value(data['lastGeneratedDate'] == null ? null : _parseDateTime(data['lastGeneratedDate'])),
-              isActive: Value(data['isActive'] as bool? ?? true),
-              updatedAt: Value(updatedAt),
-            );
-            await db.into(db.recurringTransactions).insert(companion);
-          } else {
-            if (updatedAt.isAfter(existing.updatedAt)) {
-              final companion = RecurringTransactionsCompanion(
-                id: Value(existing.id),
-                walletId: Value(remoteWalletId),
-                uuid: Value(uuid),
-                name: Value(data['name'] as String),
-                amount: Value((data['amount'] as num).toDouble()),
-                type: Value(_parseTransactionType(data['type'])),
-                categoryId: Value(categoryId),
-                accountId: Value(accountId),
-                interval: Value(data['interval'] as String),
-                startDate: Value(_parseDateTime(data['startDate'])),
-                nextDueDate: Value(_parseDateTime(data['nextDueDate'])),
-                lastGeneratedDate: Value(data['lastGeneratedDate'] == null ? null : _parseDateTime(data['lastGeneratedDate'])),
-                isActive: Value(data['isActive'] as bool? ?? true),
-                updatedAt: Value(updatedAt),
+          return categoryUuidToId[data['categoryUuid']] != null &&
+              accountUuidToId[data['accountUuid']] != null;
+        }).toList();
+        await mergeEntityChanges<RecurringTransactionDb>(
+          entity: 'recurring_transactions',
+          changes: readyRecurring,
+          tombstoneByKey: tombstoneByKey,
+          uuidOf: (data) => data['uuid'] as String,
+          remoteUpdatedAt: (data) => _parseDateTime(data['updatedAt']),
+          findLocal: (uuid) async {
+            final existing = await (db.select(db.recurringTransactions)
+                  ..where((r) => r.uuid.equals(uuid)))
+                .getSingleOrNull();
+            if (existing != null && existing.walletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet recurring transaction mutation rejected for '
+                'uuid $uuid',
               );
-              await db.update(db.recurringTransactions).replace(companion);
             }
-          }
-        }
+            return existing;
+          },
+          localUpdatedAt: (local) => local.updatedAt,
+          insertRemote: (data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet recurring transaction payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.into(db.recurringTransactions).insert(
+                  RecurringTransactionsCompanion.insert(
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    name: data['name'] as String,
+                    amount: (data['amount'] as num).toDouble(),
+                    type: _parseTransactionType(data['type']),
+                    categoryId: categoryUuidToId[data['categoryUuid']]!,
+                    accountId: accountUuidToId[data['accountUuid']]!,
+                    interval: data['interval'] as String,
+                    startDate: _parseDateTime(data['startDate']),
+                    nextDueDate: _parseDateTime(data['nextDueDate']),
+                    lastGeneratedDate: Value(data['lastGeneratedDate'] == null
+                        ? null
+                        : _parseDateTime(data['lastGeneratedDate'])),
+                    isActive: Value(data['isActive'] as bool? ?? true),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          updateRemote: (local, data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet recurring transaction payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.update(db.recurringTransactions).replace(
+                  RecurringTransactionsCompanion(
+                    id: Value(local.id),
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    name: Value(data['name'] as String),
+                    amount: Value((data['amount'] as num).toDouble()),
+                    type: Value(_parseTransactionType(data['type'])),
+                    categoryId: Value(categoryUuidToId[data['categoryUuid']]!),
+                    accountId: Value(accountUuidToId[data['accountUuid']]!),
+                    interval: Value(data['interval'] as String),
+                    startDate: Value(_parseDateTime(data['startDate'])),
+                    nextDueDate: Value(_parseDateTime(data['nextDueDate'])),
+                    lastGeneratedDate: Value(data['lastGeneratedDate'] == null
+                        ? null
+                        : _parseDateTime(data['lastGeneratedDate'])),
+                    isActive: Value(data['isActive'] as bool? ?? true),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          recordConflict: (data, local) => _recordSyncConflict(
+              walletId, 'recurring_transactions', data, local.updatedAt),
+        );
 
         // Apply loans (dependency order 6)
         final remoteLoansList = remoteChanges['loans'] as List<dynamic>? ?? [];
-        for (final item in remoteLoansList) {
-          final data = item as Map<String, dynamic>;
-          final uuid = data['uuid'] as String;
-          final updatedAt = _parseDateTime(data['updatedAt']);
-          if (blockedByTombstone('loans', uuid, updatedAt)) continue;
-          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
-          if (remoteWalletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet loan payload rejected ($remoteWalletId != $walletId)');
-          }
-
-          final existing = await (db.select(db.loans)..where((l) => l.uuid.equals(uuid))).getSingleOrNull();
-          if (existing != null && existing.walletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet loan mutation rejected for uuid $uuid');
-          }
-
-          final accountUuid = data['accountUuid'] as String?;
-          final accountId = accountUuidToId[accountUuid];
-
-          if (accountId == null) {
-            continue;
-          }
-
-          if (existing == null) {
-            final companion = LoansCompanion.insert(
-              walletId: Value(remoteWalletId),
-              uuid: Value(uuid),
-              name: data['name'] as String,
-              accountId: accountId,
-              principalAmount: (data['principalAmount'] as num).toDouble(),
-              interestRate: (data['interestRate'] as num).toDouble(),
-              tenureMonths: (data['tenureMonths'] as num).toInt(),
-              startDate: _parseDateTime(data['startDate']),
-              nextEmiDate: Value(data['nextEmiDate'] == null ? null : _parseDateTime(data['nextEmiDate'])),
-              emiAmount: (data['emiAmount'] as num).toDouble(),
-              isActive: Value(data['isActive'] as bool? ?? true),
-              updatedAt: Value(updatedAt),
-            );
-            await db.into(db.loans).insert(companion);
-          } else {
-            if (updatedAt.isAfter(existing.updatedAt)) {
-              final companion = LoansCompanion(
-                id: Value(existing.id),
-                walletId: Value(remoteWalletId),
-                uuid: Value(uuid),
-                name: Value(data['name'] as String),
-                accountId: Value(accountId),
-                principalAmount: Value((data['principalAmount'] as num).toDouble()),
-                interestRate: Value((data['interestRate'] as num).toDouble()),
-                tenureMonths: Value((data['tenureMonths'] as num).toInt()),
-                startDate: Value(_parseDateTime(data['startDate'])),
-                nextEmiDate: Value(data['nextEmiDate'] == null ? null : _parseDateTime(data['nextEmiDate'])),
-                emiAmount: Value((data['emiAmount'] as num).toDouble()),
-                isActive: Value(data['isActive'] as bool? ?? true),
-                updatedAt: Value(updatedAt),
+        final readyLoans = remoteLoansList
+            .where((item) =>
+                accountUuidToId[(item as Map<String, dynamic>)['accountUuid']] !=
+                null)
+            .toList();
+        await mergeEntityChanges<LoanDb>(
+          entity: 'loans',
+          changes: readyLoans,
+          tombstoneByKey: tombstoneByKey,
+          uuidOf: (data) => data['uuid'] as String,
+          remoteUpdatedAt: (data) => _parseDateTime(data['updatedAt']),
+          findLocal: (uuid) async {
+            final existing = await (db.select(db.loans)
+                  ..where((l) => l.uuid.equals(uuid)))
+                .getSingleOrNull();
+            if (existing != null && existing.walletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet loan mutation rejected for uuid $uuid',
               );
-              await db.update(db.loans).replace(companion);
             }
-          }
-        }
+            return existing;
+          },
+          localUpdatedAt: (local) => local.updatedAt,
+          insertRemote: (data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet loan payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.into(db.loans).insert(
+                  LoansCompanion.insert(
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    name: data['name'] as String,
+                    accountId: accountUuidToId[data['accountUuid']]!,
+                    principalAmount: (data['principalAmount'] as num).toDouble(),
+                    interestRate: (data['interestRate'] as num).toDouble(),
+                    tenureMonths: (data['tenureMonths'] as num).toInt(),
+                    startDate: _parseDateTime(data['startDate']),
+                    nextEmiDate: Value(data['nextEmiDate'] == null
+                        ? null
+                        : _parseDateTime(data['nextEmiDate'])),
+                    emiAmount: (data['emiAmount'] as num).toDouble(),
+                    isActive: Value(data['isActive'] as bool? ?? true),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          updateRemote: (local, data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet loan payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.update(db.loans).replace(
+                  LoansCompanion(
+                    id: Value(local.id),
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    name: Value(data['name'] as String),
+                    accountId: Value(accountUuidToId[data['accountUuid']]!),
+                    principalAmount:
+                        Value((data['principalAmount'] as num).toDouble()),
+                    interestRate:
+                        Value((data['interestRate'] as num).toDouble()),
+                    tenureMonths: Value((data['tenureMonths'] as num).toInt()),
+                    startDate: Value(_parseDateTime(data['startDate'])),
+                    nextEmiDate: Value(data['nextEmiDate'] == null
+                        ? null
+                        : _parseDateTime(data['nextEmiDate'])),
+                    emiAmount: Value((data['emiAmount'] as num).toDouble()),
+                    isActive: Value(data['isActive'] as bool? ?? true),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          recordConflict: (data, local) =>
+              _recordSyncConflict(walletId, 'loans', data, local.updatedAt),
+        );
 
         // Apply peer debts (dependency order 7)
         final remotePeerDebtsList = remoteChanges['peer_debts'] as List<dynamic>? ?? [];
-        for (final item in remotePeerDebtsList) {
-          final data = item as Map<String, dynamic>;
-          final uuid = data['uuid'] as String;
-          final updatedAt = _parseDateTime(data['updatedAt']);
-          if (blockedByTombstone('peer_debts', uuid, updatedAt)) continue;
-          final remoteWalletId = (data['walletId'] as num?)?.toInt() ?? walletId;
-          if (remoteWalletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet peer debt payload rejected ($remoteWalletId != $walletId)');
-          }
-
-          final existing = await (db.select(db.peerDebts)..where((pd) => pd.uuid.equals(uuid))).getSingleOrNull();
-          if (existing != null && existing.walletId != walletId) {
-            throw WalletPermissionDeniedException('Cross-wallet peer debt mutation rejected for uuid $uuid');
-          }
-
-          final transactionUuid = data['transactionUuid'] as String?;
-          final transactionId = transactionUuidToId[transactionUuid];
-
-          if (existing == null) {
-            final companion = PeerDebtsCompanion.insert(
-              walletId: remoteWalletId,
-              uuid: Value(uuid),
-              personName: data['personName'] as String,
-              type: _parsePeerDebtType(data['type']),
-              amount: (data['amount'] as num).toDouble(),
-              note: Value(data['note'] as String?),
-              date: _parseDateTime(data['date']),
-              isSettled: Value(data['isSettled'] as bool? ?? false),
-              transactionId: Value(transactionId),
-              updatedAt: Value(updatedAt),
-            );
-            await db.into(db.peerDebts).insert(companion);
-          } else {
-            if (updatedAt.isAfter(existing.updatedAt)) {
-              final companion = PeerDebtsCompanion(
-                id: Value(existing.id),
-                walletId: Value(remoteWalletId),
-                uuid: Value(uuid),
-                personName: Value(data['personName'] as String),
-                type: Value(_parsePeerDebtType(data['type'])),
-                amount: Value((data['amount'] as num).toDouble()),
-                note: Value(data['note'] as String?),
-                date: Value(_parseDateTime(data['date'])),
-                isSettled: Value(data['isSettled'] as bool? ?? false),
-                transactionId: Value(transactionId),
-                updatedAt: Value(updatedAt),
+        await mergeEntityChanges<PeerDebtDb>(
+          entity: 'peer_debts',
+          changes: remotePeerDebtsList,
+          tombstoneByKey: tombstoneByKey,
+          uuidOf: (data) => data['uuid'] as String,
+          remoteUpdatedAt: (data) => _parseDateTime(data['updatedAt']),
+          findLocal: (uuid) async {
+            final existing = await (db.select(db.peerDebts)
+                  ..where((pd) => pd.uuid.equals(uuid)))
+                .getSingleOrNull();
+            if (existing != null && existing.walletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet peer debt mutation rejected for uuid $uuid',
               );
-              await db.update(db.peerDebts).replace(companion);
             }
-          }
-        }
+            return existing;
+          },
+          localUpdatedAt: (local) => local.updatedAt,
+          insertRemote: (data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet peer debt payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.into(db.peerDebts).insert(
+                  PeerDebtsCompanion.insert(
+                    walletId: remoteWalletId,
+                    uuid: Value(data['uuid'] as String),
+                    personName: data['personName'] as String,
+                    type: _parsePeerDebtType(data['type']),
+                    amount: (data['amount'] as num).toDouble(),
+                    note: Value(data['note'] as String?),
+                    date: _parseDateTime(data['date']),
+                    isSettled: Value(data['isSettled'] as bool? ?? false),
+                    transactionId: Value(
+                      transactionUuidToId[data['transactionUuid']],
+                    ),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          updateRemote: (local, data) async {
+            final remoteWalletId =
+                (data['walletId'] as num?)?.toInt() ?? walletId;
+            if (remoteWalletId != walletId) {
+              throw WalletPermissionDeniedException(
+                'Cross-wallet peer debt payload rejected '
+                '($remoteWalletId != $walletId)',
+              );
+            }
+            await db.update(db.peerDebts).replace(
+                  PeerDebtsCompanion(
+                    id: Value(local.id),
+                    walletId: Value(remoteWalletId),
+                    uuid: Value(data['uuid'] as String),
+                    personName: Value(data['personName'] as String),
+                    type: Value(_parsePeerDebtType(data['type'])),
+                    amount: Value((data['amount'] as num).toDouble()),
+                    note: Value(data['note'] as String?),
+                    date: Value(_parseDateTime(data['date'])),
+                    isSettled: Value(data['isSettled'] as bool? ?? false),
+                    transactionId: Value(
+                      transactionUuidToId[data['transactionUuid']],
+                    ),
+                    updatedAt: Value(_parseDateTime(data['updatedAt'])),
+                  ),
+                );
+          },
+          recordConflict: (data, local) =>
+              _recordSyncConflict(walletId, 'peer_debts', data, local.updatedAt),
+        );
 
         final remoteMembersList = remoteChanges['wallet_members'] as List<dynamic>? ?? [];
         final remoteWalletsList = remoteChanges['wallets'] as List<dynamic>? ?? [];

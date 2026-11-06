@@ -678,3 +678,25 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   boundary). A full `double`→`int` API rewrite was rejected as high-risk; CSV
   import/export and all existing call sites remain backwards compatible.
 
+## Release hardening P1-7: one conflict-resolution core
+
+- `lib/features/sync/data/sync_merge.dart`:
+  - `syncClockSkewTolerance = 5 minutes`; a remote `updatedAt` further in the
+    future is ignored.
+  - `syncConflictWindow = 2 seconds`; within that window the local row wins and
+    the remote payload is recorded instead of being dropped.
+  - `mergeEntityChanges<T>` is the single LWW loop; per-entity behaviour is
+    supplied through `uuidOf`, `remoteUpdatedAt`, `findLocal`,
+    `localUpdatedAt`, `insertRemote`, `updateRemote` and `recordConflict`.
+- Replaced the seven copied LWW blocks in `sync_service.dart` (categories,
+  accounts, transactions, budgets, recurring, loans, peer debts). The generic
+  merge also enforces tombstones, so the local `blockedByTombstone` helper was
+  removed.
+- New `sync_conflicts` table (schema v19) stores `walletId`, `entity`, `uuid`,
+  `localUpdatedAt`, `remoteUpdatedAt`, `remoteJson` and `recordedAt`. Inserts
+  are deduplicated on `(entity, uuid, remoteUpdatedAt)` so repeated syncs do
+  not grow the log.
+- Tests: `test/sync_merge_test.dart` covers future-clock skew, newer/older
+  remote, near-simultaneous conflicts, inserts and tombstone blocking. The
+  existing cloud-sync and RBAC suites stay green.
+

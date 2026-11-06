@@ -102,3 +102,16 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
 - Added `test/money_migration_test.dart` seeding `0.1 + 0.2`, `1234.565`,
   negative values and an exact half, asserting `[30, 123457, -30, 1]`.
 - No Dart API rewrite: backwards-compatible CSV import/export is preserved.
+
+## P1-7 — Sync conflict resolution
+
+- Added `sync_merge.dart`: `resolveSyncConflict` (5-minute future clock-skew
+  guard, 2-second conflict window) and `mergeEntityChanges`, one generic
+  last-write-wins merge driven by per-entity callbacks. The seven duplicated
+  `updatedAt.isAfter(existing.updatedAt)` blocks (categories, accounts,
+  transactions, budgets, recurring, loans, peer debts) now use it.
+- Near-simultaneous edits keep the local row and record the remote payload in a
+  new `sync_conflicts` table (schema v19) instead of dropping it silently.
+  Conflicts are deduplicated per entity/uuid/timestamp.
+- Tombstone filtering moved into the generic merge.
+- Added `test/sync_merge_test.dart` for the decision matrix and merge outcomes.

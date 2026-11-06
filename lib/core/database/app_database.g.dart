@@ -11075,6 +11075,519 @@ class DeletedRecordsCompanion extends UpdateCompanion<DeletedRecord> {
   }
 }
 
+class $SyncConflictsTable extends SyncConflicts
+    with TableInfo<$SyncConflictsTable, SyncConflict> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncConflictsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _walletIdMeta = const VerificationMeta(
+    'walletId',
+  );
+  @override
+  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+    'wallet_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _entityMeta = const VerificationMeta('entity');
+  @override
+  late final GeneratedColumn<String> entity = GeneratedColumn<String>(
+    'entity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+    'uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _localUpdatedAtMeta = const VerificationMeta(
+    'localUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> localUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'local_updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _remoteUpdatedAtMeta = const VerificationMeta(
+    'remoteUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> remoteUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'remote_updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _remoteJsonMeta = const VerificationMeta(
+    'remoteJson',
+  );
+  @override
+  late final GeneratedColumn<String> remoteJson = GeneratedColumn<String>(
+    'remote_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordedAtMeta = const VerificationMeta(
+    'recordedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> recordedAt = GeneratedColumn<DateTime>(
+    'recorded_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    walletId,
+    entity,
+    uuid,
+    localUpdatedAt,
+    remoteUpdatedAt,
+    remoteJson,
+    recordedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sync_conflicts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SyncConflict> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('wallet_id')) {
+      context.handle(
+        _walletIdMeta,
+        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
+      );
+    }
+    if (data.containsKey('entity')) {
+      context.handle(
+        _entityMeta,
+        entity.isAcceptableOrUnknown(data['entity']!, _entityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityMeta);
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+        _uuidMeta,
+        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (data.containsKey('local_updated_at')) {
+      context.handle(
+        _localUpdatedAtMeta,
+        localUpdatedAt.isAcceptableOrUnknown(
+          data['local_updated_at']!,
+          _localUpdatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_localUpdatedAtMeta);
+    }
+    if (data.containsKey('remote_updated_at')) {
+      context.handle(
+        _remoteUpdatedAtMeta,
+        remoteUpdatedAt.isAcceptableOrUnknown(
+          data['remote_updated_at']!,
+          _remoteUpdatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_remoteUpdatedAtMeta);
+    }
+    if (data.containsKey('remote_json')) {
+      context.handle(
+        _remoteJsonMeta,
+        remoteJson.isAcceptableOrUnknown(data['remote_json']!, _remoteJsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_remoteJsonMeta);
+    }
+    if (data.containsKey('recorded_at')) {
+      context.handle(
+        _recordedAtMeta,
+        recordedAt.isAcceptableOrUnknown(data['recorded_at']!, _recordedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SyncConflict map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncConflict(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      walletId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wallet_id'],
+      ),
+      entity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity'],
+      )!,
+      uuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}uuid'],
+      )!,
+      localUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}local_updated_at'],
+      )!,
+      remoteUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}remote_updated_at'],
+      )!,
+      remoteJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remote_json'],
+      )!,
+      recordedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}recorded_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SyncConflictsTable createAlias(String alias) {
+    return $SyncConflictsTable(attachedDatabase, alias);
+  }
+}
+
+class SyncConflict extends DataClass implements Insertable<SyncConflict> {
+  final int id;
+  final int? walletId;
+  final String entity;
+  final String uuid;
+  final DateTime localUpdatedAt;
+  final DateTime remoteUpdatedAt;
+  final String remoteJson;
+  final DateTime recordedAt;
+  const SyncConflict({
+    required this.id,
+    this.walletId,
+    required this.entity,
+    required this.uuid,
+    required this.localUpdatedAt,
+    required this.remoteUpdatedAt,
+    required this.remoteJson,
+    required this.recordedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || walletId != null) {
+      map['wallet_id'] = Variable<int>(walletId);
+    }
+    map['entity'] = Variable<String>(entity);
+    map['uuid'] = Variable<String>(uuid);
+    map['local_updated_at'] = Variable<DateTime>(localUpdatedAt);
+    map['remote_updated_at'] = Variable<DateTime>(remoteUpdatedAt);
+    map['remote_json'] = Variable<String>(remoteJson);
+    map['recorded_at'] = Variable<DateTime>(recordedAt);
+    return map;
+  }
+
+  SyncConflictsCompanion toCompanion(bool nullToAbsent) {
+    return SyncConflictsCompanion(
+      id: Value(id),
+      walletId: walletId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(walletId),
+      entity: Value(entity),
+      uuid: Value(uuid),
+      localUpdatedAt: Value(localUpdatedAt),
+      remoteUpdatedAt: Value(remoteUpdatedAt),
+      remoteJson: Value(remoteJson),
+      recordedAt: Value(recordedAt),
+    );
+  }
+
+  factory SyncConflict.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncConflict(
+      id: serializer.fromJson<int>(json['id']),
+      walletId: serializer.fromJson<int?>(json['walletId']),
+      entity: serializer.fromJson<String>(json['entity']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      localUpdatedAt: serializer.fromJson<DateTime>(json['localUpdatedAt']),
+      remoteUpdatedAt: serializer.fromJson<DateTime>(json['remoteUpdatedAt']),
+      remoteJson: serializer.fromJson<String>(json['remoteJson']),
+      recordedAt: serializer.fromJson<DateTime>(json['recordedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'walletId': serializer.toJson<int?>(walletId),
+      'entity': serializer.toJson<String>(entity),
+      'uuid': serializer.toJson<String>(uuid),
+      'localUpdatedAt': serializer.toJson<DateTime>(localUpdatedAt),
+      'remoteUpdatedAt': serializer.toJson<DateTime>(remoteUpdatedAt),
+      'remoteJson': serializer.toJson<String>(remoteJson),
+      'recordedAt': serializer.toJson<DateTime>(recordedAt),
+    };
+  }
+
+  SyncConflict copyWith({
+    int? id,
+    Value<int?> walletId = const Value.absent(),
+    String? entity,
+    String? uuid,
+    DateTime? localUpdatedAt,
+    DateTime? remoteUpdatedAt,
+    String? remoteJson,
+    DateTime? recordedAt,
+  }) => SyncConflict(
+    id: id ?? this.id,
+    walletId: walletId.present ? walletId.value : this.walletId,
+    entity: entity ?? this.entity,
+    uuid: uuid ?? this.uuid,
+    localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+    remoteUpdatedAt: remoteUpdatedAt ?? this.remoteUpdatedAt,
+    remoteJson: remoteJson ?? this.remoteJson,
+    recordedAt: recordedAt ?? this.recordedAt,
+  );
+  SyncConflict copyWithCompanion(SyncConflictsCompanion data) {
+    return SyncConflict(
+      id: data.id.present ? data.id.value : this.id,
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
+      entity: data.entity.present ? data.entity.value : this.entity,
+      uuid: data.uuid.present ? data.uuid.value : this.uuid,
+      localUpdatedAt: data.localUpdatedAt.present
+          ? data.localUpdatedAt.value
+          : this.localUpdatedAt,
+      remoteUpdatedAt: data.remoteUpdatedAt.present
+          ? data.remoteUpdatedAt.value
+          : this.remoteUpdatedAt,
+      remoteJson: data.remoteJson.present
+          ? data.remoteJson.value
+          : this.remoteJson,
+      recordedAt: data.recordedAt.present
+          ? data.recordedAt.value
+          : this.recordedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncConflict(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('entity: $entity, ')
+          ..write('uuid: $uuid, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('remoteUpdatedAt: $remoteUpdatedAt, ')
+          ..write('remoteJson: $remoteJson, ')
+          ..write('recordedAt: $recordedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    walletId,
+    entity,
+    uuid,
+    localUpdatedAt,
+    remoteUpdatedAt,
+    remoteJson,
+    recordedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncConflict &&
+          other.id == this.id &&
+          other.walletId == this.walletId &&
+          other.entity == this.entity &&
+          other.uuid == this.uuid &&
+          other.localUpdatedAt == this.localUpdatedAt &&
+          other.remoteUpdatedAt == this.remoteUpdatedAt &&
+          other.remoteJson == this.remoteJson &&
+          other.recordedAt == this.recordedAt);
+}
+
+class SyncConflictsCompanion extends UpdateCompanion<SyncConflict> {
+  final Value<int> id;
+  final Value<int?> walletId;
+  final Value<String> entity;
+  final Value<String> uuid;
+  final Value<DateTime> localUpdatedAt;
+  final Value<DateTime> remoteUpdatedAt;
+  final Value<String> remoteJson;
+  final Value<DateTime> recordedAt;
+  const SyncConflictsCompanion({
+    this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
+    this.entity = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.localUpdatedAt = const Value.absent(),
+    this.remoteUpdatedAt = const Value.absent(),
+    this.remoteJson = const Value.absent(),
+    this.recordedAt = const Value.absent(),
+  });
+  SyncConflictsCompanion.insert({
+    this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
+    required String entity,
+    required String uuid,
+    required DateTime localUpdatedAt,
+    required DateTime remoteUpdatedAt,
+    required String remoteJson,
+    this.recordedAt = const Value.absent(),
+  }) : entity = Value(entity),
+       uuid = Value(uuid),
+       localUpdatedAt = Value(localUpdatedAt),
+       remoteUpdatedAt = Value(remoteUpdatedAt),
+       remoteJson = Value(remoteJson);
+  static Insertable<SyncConflict> custom({
+    Expression<int>? id,
+    Expression<int>? walletId,
+    Expression<String>? entity,
+    Expression<String>? uuid,
+    Expression<DateTime>? localUpdatedAt,
+    Expression<DateTime>? remoteUpdatedAt,
+    Expression<String>? remoteJson,
+    Expression<DateTime>? recordedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (walletId != null) 'wallet_id': walletId,
+      if (entity != null) 'entity': entity,
+      if (uuid != null) 'uuid': uuid,
+      if (localUpdatedAt != null) 'local_updated_at': localUpdatedAt,
+      if (remoteUpdatedAt != null) 'remote_updated_at': remoteUpdatedAt,
+      if (remoteJson != null) 'remote_json': remoteJson,
+      if (recordedAt != null) 'recorded_at': recordedAt,
+    });
+  }
+
+  SyncConflictsCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? walletId,
+    Value<String>? entity,
+    Value<String>? uuid,
+    Value<DateTime>? localUpdatedAt,
+    Value<DateTime>? remoteUpdatedAt,
+    Value<String>? remoteJson,
+    Value<DateTime>? recordedAt,
+  }) {
+    return SyncConflictsCompanion(
+      id: id ?? this.id,
+      walletId: walletId ?? this.walletId,
+      entity: entity ?? this.entity,
+      uuid: uuid ?? this.uuid,
+      localUpdatedAt: localUpdatedAt ?? this.localUpdatedAt,
+      remoteUpdatedAt: remoteUpdatedAt ?? this.remoteUpdatedAt,
+      remoteJson: remoteJson ?? this.remoteJson,
+      recordedAt: recordedAt ?? this.recordedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (walletId.present) {
+      map['wallet_id'] = Variable<int>(walletId.value);
+    }
+    if (entity.present) {
+      map['entity'] = Variable<String>(entity.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (localUpdatedAt.present) {
+      map['local_updated_at'] = Variable<DateTime>(localUpdatedAt.value);
+    }
+    if (remoteUpdatedAt.present) {
+      map['remote_updated_at'] = Variable<DateTime>(remoteUpdatedAt.value);
+    }
+    if (remoteJson.present) {
+      map['remote_json'] = Variable<String>(remoteJson.value);
+    }
+    if (recordedAt.present) {
+      map['recorded_at'] = Variable<DateTime>(recordedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncConflictsCompanion(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('entity: $entity, ')
+          ..write('uuid: $uuid, ')
+          ..write('localUpdatedAt: $localUpdatedAt, ')
+          ..write('remoteUpdatedAt: $remoteUpdatedAt, ')
+          ..write('remoteJson: $remoteJson, ')
+          ..write('recordedAt: $recordedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $AttachmentsTable extends Attachments
     with TableInfo<$AttachmentsTable, Attachment> {
   @override
@@ -16981,6 +17494,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WalletNotificationPreferencesTable walletNotificationPreferences =
       $WalletNotificationPreferencesTable(this);
   late final $DeletedRecordsTable deletedRecords = $DeletedRecordsTable(this);
+  late final $SyncConflictsTable syncConflicts = $SyncConflictsTable(this);
   late final $AttachmentsTable attachments = $AttachmentsTable(this);
   late final $WalletExpenseSplitsTable walletExpenseSplits =
       $WalletExpenseSplitsTable(this);
@@ -17050,6 +17564,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     feedbackEntries,
     walletNotificationPreferences,
     deletedRecords,
+    syncConflicts,
     attachments,
     walletExpenseSplits,
     walletExpenseSplitMembers,
@@ -22467,6 +22982,265 @@ typedef $$DeletedRecordsTableProcessedTableManager =
       DeletedRecord,
       PrefetchHooks Function()
     >;
+typedef $$SyncConflictsTableCreateCompanionBuilder =
+    SyncConflictsCompanion Function({
+      Value<int> id,
+      Value<int?> walletId,
+      required String entity,
+      required String uuid,
+      required DateTime localUpdatedAt,
+      required DateTime remoteUpdatedAt,
+      required String remoteJson,
+      Value<DateTime> recordedAt,
+    });
+typedef $$SyncConflictsTableUpdateCompanionBuilder =
+    SyncConflictsCompanion Function({
+      Value<int> id,
+      Value<int?> walletId,
+      Value<String> entity,
+      Value<String> uuid,
+      Value<DateTime> localUpdatedAt,
+      Value<DateTime> remoteUpdatedAt,
+      Value<String> remoteJson,
+      Value<DateTime> recordedAt,
+    });
+
+class $$SyncConflictsTableFilterComposer
+    extends Composer<_$AppDatabase, $SyncConflictsTable> {
+  $$SyncConflictsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get remoteUpdatedAt => $composableBuilder(
+    column: $table.remoteUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get remoteJson => $composableBuilder(
+    column: $table.remoteJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SyncConflictsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SyncConflictsTable> {
+  $$SyncConflictsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entity => $composableBuilder(
+    column: $table.entity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get remoteUpdatedAt => $composableBuilder(
+    column: $table.remoteUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get remoteJson => $composableBuilder(
+    column: $table.remoteJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SyncConflictsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SyncConflictsTable> {
+  $$SyncConflictsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get walletId =>
+      $composableBuilder(column: $table.walletId, builder: (column) => column);
+
+  GeneratedColumn<String> get entity =>
+      $composableBuilder(column: $table.entity, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get localUpdatedAt => $composableBuilder(
+    column: $table.localUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get remoteUpdatedAt => $composableBuilder(
+    column: $table.remoteUpdatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get remoteJson => $composableBuilder(
+    column: $table.remoteJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get recordedAt => $composableBuilder(
+    column: $table.recordedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$SyncConflictsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncConflictsTable,
+          SyncConflict,
+          $$SyncConflictsTableFilterComposer,
+          $$SyncConflictsTableOrderingComposer,
+          $$SyncConflictsTableAnnotationComposer,
+          $$SyncConflictsTableCreateCompanionBuilder,
+          $$SyncConflictsTableUpdateCompanionBuilder,
+          (
+            SyncConflict,
+            BaseReferences<_$AppDatabase, $SyncConflictsTable, SyncConflict>,
+          ),
+          SyncConflict,
+          PrefetchHooks Function()
+        > {
+  $$SyncConflictsTableTableManager(_$AppDatabase db, $SyncConflictsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SyncConflictsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SyncConflictsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SyncConflictsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> walletId = const Value.absent(),
+                Value<String> entity = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                Value<DateTime> localUpdatedAt = const Value.absent(),
+                Value<DateTime> remoteUpdatedAt = const Value.absent(),
+                Value<String> remoteJson = const Value.absent(),
+                Value<DateTime> recordedAt = const Value.absent(),
+              }) => SyncConflictsCompanion(
+                id: id,
+                walletId: walletId,
+                entity: entity,
+                uuid: uuid,
+                localUpdatedAt: localUpdatedAt,
+                remoteUpdatedAt: remoteUpdatedAt,
+                remoteJson: remoteJson,
+                recordedAt: recordedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> walletId = const Value.absent(),
+                required String entity,
+                required String uuid,
+                required DateTime localUpdatedAt,
+                required DateTime remoteUpdatedAt,
+                required String remoteJson,
+                Value<DateTime> recordedAt = const Value.absent(),
+              }) => SyncConflictsCompanion.insert(
+                id: id,
+                walletId: walletId,
+                entity: entity,
+                uuid: uuid,
+                localUpdatedAt: localUpdatedAt,
+                remoteUpdatedAt: remoteUpdatedAt,
+                remoteJson: remoteJson,
+                recordedAt: recordedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SyncConflictsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncConflictsTable,
+      SyncConflict,
+      $$SyncConflictsTableFilterComposer,
+      $$SyncConflictsTableOrderingComposer,
+      $$SyncConflictsTableAnnotationComposer,
+      $$SyncConflictsTableCreateCompanionBuilder,
+      $$SyncConflictsTableUpdateCompanionBuilder,
+      (
+        SyncConflict,
+        BaseReferences<_$AppDatabase, $SyncConflictsTable, SyncConflict>,
+      ),
+      SyncConflict,
+      PrefetchHooks Function()
+    >;
 typedef $$AttachmentsTableCreateCompanionBuilder =
     AttachmentsCompanion Function({
       Value<int> id,
@@ -25569,6 +26343,8 @@ class $AppDatabaseManager {
       );
   $$DeletedRecordsTableTableManager get deletedRecords =>
       $$DeletedRecordsTableTableManager(_db, _db.deletedRecords);
+  $$SyncConflictsTableTableManager get syncConflicts =>
+      $$SyncConflictsTableTableManager(_db, _db.syncConflicts);
   $$AttachmentsTableTableManager get attachments =>
       $$AttachmentsTableTableManager(_db, _db.attachments);
   $$WalletExpenseSplitsTableTableManager get walletExpenseSplits =>
