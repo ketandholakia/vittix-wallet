@@ -90,7 +90,9 @@ android {
 androidComponents {
     onVariants { variant ->
         if (!smsImportEnabled) {
-            variant.sources.manifests?.addStaticSourceDirectory("src/noSms")
+            variant.sources.manifests?.addStaticManifestFile(
+                "src/noSms/AndroidManifest.xml",
+            )
         }
     }
 }
