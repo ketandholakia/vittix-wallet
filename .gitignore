@@ -99,3 +99,6 @@ $RECYCLE.BIN/
 *.rej
 *.bak
 *.tmp
+
+# Command Code session metadata
+.commandcode/
