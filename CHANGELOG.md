@@ -134,3 +134,17 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   screen wired to it, so the summary is returned to callers.)
 - `AppLogger` prints stack traces as plain text (Flutter's frame parser asserts
   on test-only "asynchronous gap" markers), and release builds log nothing.
+
+## P1-9 — PIN lockout clock and KDF hardening
+
+- `PinAttemptLimiter` now persists a wall-clock high-water mark plus a
+  process-scoped `Stopwatch` reference. Moving the device clock backwards
+  cannot shorten or clear a lockout; a restart falls back to the high-water
+  mark.
+- `PinHasher.defaultIterations` raised from 50 000 to 210 000. PBKDF2 now runs
+  in `Isolate.run` so the UI does not jank.
+- Existing hashes keep verifying with their stored iteration count, and
+  `needsUpgrade` now also upgrades older v2 hashes (< 210 000) on the next
+  successful unlock, not just legacy v1.
+- Tests: clock rollback keeps the lockout; old hashes verify and are flagged
+  for upgrade.

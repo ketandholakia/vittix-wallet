@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:expense_tracker/core/utils/app_logger.dart';
@@ -17,9 +18,9 @@ import 'package:cryptography/cryptography.dart';
 class PinHasher {
   static const scheme = 'pbkdf2-sha256';
 
-  /// Kept modest because PBKDF2 here is pure Dart; a 4-digit PIN has only
-  /// 10 000 combinations, so at-rest encryption (A3 remainder) is the real fix.
-  static const defaultIterations = 50000;
+  /// OWASP-recommended floor for PBKDF2-HMAC-SHA256 (2023+). Derivation runs in
+  /// a background isolate so raising this does not jank the UI.
+  static const defaultIterations = 210000;
 
   static const _saltLength = 16;
   static const _keyLength = 32;
@@ -70,8 +71,17 @@ class PinHasher {
     return RegExp(r'^[0-9a-f]{64}$').hasMatch(stored);
   }
 
-  /// True when the stored hash should be re-hashed to v2 on next success.
-  static bool needsUpgrade(String stored) => isLegacy(stored);
+  /// True when the stored hash should be re-hashed on the next success.
+  ///
+  /// Covers both the legacy v1 format and older v2 hashes whose iteration count
+  /// is below the current [defaultIterations].
+  static bool needsUpgrade(String stored) {
+    if (isLegacy(stored)) return true;
+    final parts = stored.split(r'$');
+    if (parts.length != 4 || parts[0] != scheme) return false;
+    final iterations = int.tryParse(parts[1]) ?? 0;
+    return iterations < defaultIterations;
+  }
 
   /// The original v1 algorithm, retained for verification and upgrades.
   static String legacyHash(String pin) {
@@ -83,6 +93,21 @@ class PinHasher {
   }
 
   static Future<List<int>> _derive(
+    String pin,
+    List<int> salt,
+    int iterations,
+  ) async {
+    // PBKDF2 at 210k iterations is deliberately expensive; keep it off the UI
+    // isolate. The inputs are primitives, so they are safe to send.
+    try {
+      return await Isolate.run(() => _deriveSync(pin, salt, iterations));
+    } on UnsupportedError {
+      // No isolates on this platform (e.g. web): run inline.
+      return _deriveSync(pin, salt, iterations);
+    }
+  }
+
+  static Future<List<int>> _deriveSync(
     String pin,
     List<int> salt,
     int iterations,

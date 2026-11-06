@@ -729,3 +729,21 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   display candidate/rejected/duplicate totals. No CSV import UI is currently
   wired up, so the summary is returned to callers.
 
+## Release hardening P1-9: PIN lockout clock and KDF cost
+
+- `PinAttemptLimiter` stores two independent clocks:
+  - a persisted wall-clock high-water mark (`pin_last_seen_epoch_ms`); effective
+    "now" is `max(now, lastSeen)`, so moving the device clock backwards cannot
+    shorten or clear a lockout, and
+  - a `Stopwatch` deadline that is only trusted when the stored process id
+    matches the current process (`pin_lock_process`). This protects the
+    lockout within a session; after a restart the high-water mark takes over.
+- Explicit `now` arguments (tests) use wall-clock semantics only, so synthetic
+  times remain deterministic.
+- `PinHasher.defaultIterations` is now 210 000 (OWASP floor). Derivation runs
+  via `Isolate.run` with an inline fallback for platforms without isolates.
+- `needsUpgrade` returns true for legacy v1 hashes and for v2 hashes with fewer
+  than 210 000 iterations; the lock screen already re-hashes on success.
+- Tests: `pin_hashing_test.dart` gained a clock-rollback lockout test and an
+  older-v2 upgrade test.
+

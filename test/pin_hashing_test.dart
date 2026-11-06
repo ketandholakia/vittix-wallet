@@ -41,6 +41,17 @@ void main() {
       expect(PinHasher.needsUpgrade(upgraded), isFalse);
     });
 
+    test('older v2 iteration counts are flagged for upgrade', () async {
+      final old = await PinHasher.hash('1234', iterations: 50000);
+      expect(await PinHasher.verify('1234', old), isTrue,
+          reason: 'existing hashes must keep verifying');
+      expect(PinHasher.needsUpgrade(old), isTrue);
+
+      final current = await PinHasher.hash('1234');
+      expect(current.split(r'$')[1], '${PinHasher.defaultIterations}');
+      expect(PinHasher.needsUpgrade(current), isFalse);
+    });
+
     test('malformed stored values are rejected rather than throwing', () async {
       expect(await PinHasher.verify('1234', 'not-a-hash'), isFalse);
       expect(await PinHasher.verify('1234', 'pbkdf2-sha256\$bad\$x\$y'), isFalse);
@@ -100,6 +111,23 @@ void main() {
       expect(await limiter.isLocked(now: now), isFalse);
       expect(await limiter.failures(), 0);
       expect(await limiter.attemptsRemaining(), PinAttemptLimiter.freeAttempts);
+    });
+
+    test('moving the clock backwards does not clear a lockout', () async {
+      final now = DateTime(2026, 1, 1, 12);
+      for (var i = 0; i < PinAttemptLimiter.freeAttempts; i++) {
+        await limiter.registerFailure(now: now);
+      }
+      await limiter.registerFailure(now: now);
+      expect(await limiter.isLocked(now: now), isTrue);
+
+      final rolledBack = now.subtract(const Duration(hours: 3));
+      expect(await limiter.isLocked(now: rolledBack), isTrue,
+          reason: 'the persisted high-water mark must keep the lockout');
+      expect(
+        (await limiter.remainingLockout(now: rolledBack)).inSeconds,
+        greaterThanOrEqualTo(29),
+      );
     });
 
     test('remainingLockout reports time left', () async {
