@@ -2018,6 +2018,10 @@ class RecurringTransactionDao extends DatabaseAccessor<AppDatabase> with _$Recur
 
 // --- DATABASE CLASS ---
 
+/// Schema version this build understands. Shared with backup validation and
+/// the recovery screen, which must not import a database instance.
+const int kCurrentSchemaVersion = 16;
+
 @DriftDatabase(
   tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, SmsImportMetrics, Tags, Transactions, UnrecognizedSmsEntries, WalletActivities, Users],
   daos: [CategoryDao, AccountDao, TransactionDao, BudgetDao, RecurringTransactionDao, DebtsDao, WalletDao, TransactionTagDao, AttachmentDao, AllowanceDao, GoalDao, BillDao, PayeeDao, SmsParsingDao, SmsImportMetricsDao, UserDao],
@@ -2028,7 +2032,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 16;
+  int get schemaVersion => kCurrentSchemaVersion;
 
   Future<int> insertDeletedRecord(String uuid, String tableName) {
     /* return into(deletedRecords).insert(
@@ -2414,6 +2418,38 @@ class GoalDao extends DatabaseAccessor<AppDatabase> with _$GoalDaoMixin {
 /// service (`core/services/backup_service.dart`) so both agree on the location.
 const String kDatabaseFileName = 'db.sqlite';
 
+/// Memoized key-resolution result.
+///
+/// Resolution must run once per process: the plaintext → encrypted migration
+/// must not race with itself, and the recovery UI needs the exact same outcome
+/// as the database opener. A failed future is cached too; the recovery screen
+/// clears the cache before retrying.
+Future<DatabaseOpenPlan>? _cachedOpenPlan;
+
+/// Resolves (and caches) how the on-device database must be opened.
+///
+/// Throws [DatabaseKeyUnavailableException] when the database is encrypted but
+/// cannot be unlocked. It never falls back to opening an encrypted file as
+/// plaintext.
+Future<DatabaseOpenPlan> resolveDatabaseOpenPlan({bool forceReload = false}) {
+  if (forceReload) _cachedOpenPlan = null;
+  return _cachedOpenPlan ??= _resolveDatabaseOpenPlan();
+}
+
+/// Drops the memoized resolution so the next call retries from scratch.
+void resetDatabaseOpenPlanCache() {
+  _cachedOpenPlan = null;
+}
+
+Future<DatabaseOpenPlan> _resolveDatabaseOpenPlan() async {
+  final dbFolder = await getApplicationDocumentsDirectory();
+  final file = File(p.join(dbFolder.path, kDatabaseFileName));
+  return DatabaseEncryption.resolveOpenPlan(
+    file: file,
+    store: SecureStorageKeyValueStore(),
+  );
+}
+
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
@@ -2421,31 +2457,13 @@ LazyDatabase _openConnection() {
 
     // A3: encrypt at rest with a random key held in the platform keystore
     // (option (a) - the PIN stays a UI gate, so a PIN reset cannot lose data).
-    // Every failure path falls back to plaintext rather than leaving the app
-    // unable to open its own database.
-    String? resolvedKey;
-    try {
-      final store = SecureStorageKeyValueStore();
-      final key = await DatabaseEncryption.getOrCreateKey(store);
-      if (DatabaseEncryption.isPlaintextFile(file)) {
-        final migrated = await DatabaseEncryption.migrateToEncrypted(
-          file: file,
-          base64Key: key,
-        );
-        resolvedKey = migrated ? key : null;
-      } else {
-        resolvedKey = key;
-        // The database is already encrypted and opening fine, so the plaintext
-        // copy from the one-time migration must not be left lying around.
-        await DatabaseEncryption.purgePlaintextBackup(file);
-      }
-    } catch (_) {
-      resolvedKey = null;
-    }
+    // Resolution fails closed: an encrypted database is never opened as
+    // plaintext (see DatabaseEncryption.resolveOpenPlan).
+    final plan = await resolveDatabaseOpenPlan();
 
     DatabaseSetup? setup;
-    if (resolvedKey != null) {
-      final key = resolvedKey;
+    if (plan.base64Key != null) {
+      final key = plan.base64Key!;
       setup = (raw) => raw.execute(DatabaseEncryption.pragmaForKey(key));
     }
 

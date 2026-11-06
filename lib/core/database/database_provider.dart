@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:expense_tracker/core/database/database_encryption.dart';
 import 'package:expense_tracker/core/services/auto_backup.dart';
 import 'package:expense_tracker/core/services/backup_service.dart';
 import 'package:expense_tracker/sms/data/sms_import_metrics_dao.dart';
@@ -13,6 +14,21 @@ import 'package:path_provider/path_provider.dart';
 // We use a singleton pattern here to ensure only one database instance is created.
 final databaseProvider = Provider<AppDatabase>((ref) {
   return AppDatabase();
+});
+
+/// How the database was unlocked.
+///
+/// `AsyncError` carries [DatabaseKeyUnavailableException] when an encrypted
+/// database cannot be opened; `AsyncData` with a non-null
+/// [DatabaseOpenPlan.warning] means the app is running on an unencrypted
+/// database and must show a persistent warning.
+final databaseOpenPlanProvider = FutureProvider<DatabaseOpenPlan>((ref) {
+  return resolveDatabaseOpenPlan();
+});
+
+/// Non-null when the live database is unencrypted; drives the warning banner.
+final databaseEncryptionWarningProvider = Provider<String?>((ref) {
+  return ref.watch(databaseOpenPlanProvider).valueOrNull?.warning;
 });
 
 /// The on-device database file. Used by backup and restore.

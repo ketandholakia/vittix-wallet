@@ -547,3 +547,29 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   `proguard-rules.pro` keeps ML Kit, SQLCipher/sqflite classes and app
   components. `tools/smoke_test_android.ps1` defaults updated to the new id.
 
+## Release hardening P0-2: database encryption fails closed
+
+- New `DatabaseEncryption.resolveOpenPlan(file, store, migrate, verify)` is the
+  single decision point for opening the database:
+  - Existing encrypted file → the key must verify (`integrity_check`); otherwise
+    `DatabaseKeyUnavailableException` is thrown and the file is untouched. It is
+    never opened unencrypted and never overwritten.
+  - Existing plaintext file → migrated in place; if migration fails the app
+    refuses to open it unencrypted.
+  - New/empty file → created encrypted.
+  - Plaintext fallback is only reachable when key creation failed, and returns a
+    warning for a persistent UI banner.
+- `_openConnection` now consumes a memoized `DatabaseOpenPlan`
+  (`resolveDatabaseOpenPlan` / `resetDatabaseOpenPlanCache`) so key resolution
+  runs once and cannot race with itself.
+- `databaseOpenPlanProvider` exposes the plan (including
+  `DatabaseKeyUnavailableException`) and `databaseEncryptionWarningProvider`
+  exposes the plaintext warning.
+- Added `DatabaseRecoveryScreen` (retry + restore from backup) and
+  `DatabaseRecoveryService` (validates and atomically swaps a backup without an
+  open database, keeping the previous file as `.bak`).
+- Tests: `test/database_encryption_test.dart` now covers all resolution branches
+  with a fake secure store (encrypted+missing key, encrypted+wrong key,
+  encrypted+verified, new, new/plaintext with key failure, plaintext migration
+  success/failure).
+

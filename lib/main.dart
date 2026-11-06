@@ -8,6 +8,7 @@ import 'package:expense_tracker/features/settings/presentation/settings_provider
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/core/services/auto_backup.dart';
+import 'package:expense_tracker/features/security/presentation/database_recovery_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
@@ -111,15 +112,76 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
+    // Database key resolution must finish before any screen touches the
+    // database. An encrypted database whose key cannot open it shows the
+    // recovery screen instead of silently running on a plaintext file.
+    final openPlan = ref.watch(databaseOpenPlanProvider);
     return MaterialApp(
       title: 'Vittix Wallet',
       theme: VittixTheme.light(),
       darkTheme: VittixTheme.dark(),
       themeMode: themeMode,
       debugShowCheckedModeBanner: false,
-      home: _startupComplete
-          ? const AppLockWrapper(child: MainScreen())
-          : const _BrandSplashScreen(),
+      builder: (context, child) {
+        final warning = ref.watch(databaseEncryptionWarningProvider);
+        if (warning == null || child == null) {
+          return child ?? const SizedBox.shrink();
+        }
+        return _EncryptionWarningBanner(message: warning, child: child);
+      },
+      home: openPlan.when(
+        loading: () => const _BrandSplashScreen(),
+        error: (error, stackTrace) => DatabaseRecoveryScreen(error: error),
+        data: (_) => _startupComplete
+            ? const AppLockWrapper(child: MainScreen())
+            : const _BrandSplashScreen(),
+      ),
+    );
+  }
+}
+
+/// Persistent, non-dismissible banner shown while the database is unencrypted.
+class _EncryptionWarningBanner extends StatelessWidget {
+  const _EncryptionWarningBanner({required this.message, required this.child});
+
+  final String message;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Column(
+      children: [
+        Material(
+          color: colors.errorContainer,
+          child: SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    size: 18,
+                    color: colors.onErrorContainer,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      message,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.onErrorContainer,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Expanded(child: child),
+      ],
     );
   }
 }
