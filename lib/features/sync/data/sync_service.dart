@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:expense_tracker/core/services/backup_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,33 @@ import 'package:expense_tracker/core/database/database_provider.dart';
 enum SyncStatus { idle, syncing, success, error }
 const int syncApiVersion = 1;
 const String _syncDeviceIdKey = 'syncDeviceId';
+
+/// Validates a sync endpoint.
+///
+/// Release builds only accept `https`. Debug builds additionally allow plain
+/// `http` for localhost and private 10.x/192.168.x hosts so a local server can
+/// be used during development.
+Uri validateSyncUrl(String raw, {bool? debugOverride}) {
+  final debug = debugOverride ?? kDebugMode;
+  final uri = Uri.tryParse(raw.trim());
+  if (uri == null || !uri.hasScheme || uri.host.isEmpty) {
+    throw const FormatException('Sync URL is not a valid absolute URL.');
+  }
+  if (uri.scheme == 'https') return uri;
+  if (debug && uri.scheme == 'http' && _isPrivateHttpHost(uri.host)) {
+    return uri;
+  }
+  throw const FormatException(
+    'Sync URL must use https. Plain http is only allowed for localhost and '
+    '10.x/192.168.x hosts in debug builds.',
+  );
+}
+
+bool _isPrivateHttpHost(String host) {
+  if (host == 'localhost' || host == '127.0.0.1' || host == '::1') return true;
+  return RegExp(r'^10\.').hasMatch(host) ||
+      RegExp(r'^192\.168\.').hasMatch(host);
+}
 
 Map<String, String> buildSyncHeaders({required String deviceId, required String token}) {
   final headers = <String, String>{
@@ -611,6 +639,10 @@ class SyncNotifier extends StateNotifier<SyncState> {
           nextcloudUsername.isNotEmpty && nextcloudPassword.isNotEmpty;
 
       final token = ref.read(syncTokenProvider);
+      // The passphrase lives in the platform keystore; simulated sync never
+      // needs it and must not touch the keystore.
+      final syncPassphrase =
+          isSimulated ? '' : ref.read(syncPassphraseProvider);
       final lastSyncDateTime = ref.read(lastSyncTimeProvider);
       final int walletId = targetWalletId ?? ref.read(currentWalletIdProvider);
 
@@ -640,19 +672,38 @@ class SyncNotifier extends StateNotifier<SyncState> {
       } else if (isNextcloud) {
         final basicAuth = 'Basic ${base64Encode(utf8.encode('$nextcloudUsername:$nextcloudPassword'))}';
         final fileUrl = syncUrl.endsWith('/') ? '${syncUrl}vittix_sync_state.json' : '$syncUrl/vittix_sync_state.json';
-        final getResponse = await http.get(Uri.parse(fileUrl), headers: {'Authorization': basicAuth});
+        final uri = validateSyncUrl(fileUrl);
+        final getResponse = await http.get(uri, headers: {'Authorization': basicAuth});
         if (getResponse.statusCode == 200) {
-          responseData = jsonDecode(getResponse.body) as Map<String, dynamic>;
+          responseData = await _decodeSyncResponse(getResponse, syncPassphrase);
         } else if (getResponse.statusCode == 404) {
           responseData = {'changes': <String, dynamic>{}, 'deletions': <dynamic>[]};
         } else {
-          throw Exception("Nextcloud returned status code ${getResponse.statusCode}: ${getResponse.body}");
+          throw Exception(
+            'Nextcloud returned status code ${getResponse.statusCode}',
+          );
         }
       } else {
+        final uri = validateSyncUrl(syncUrl);
         final headers = buildSyncHeaders(deviceId: deviceId, token: token);
-        final response = await http.post(Uri.parse(syncUrl), headers: headers, body: jsonEncode(payload));
-        if (response.statusCode != 200) throw Exception("Server returned status code ${response.statusCode}: ${response.body}");
-        responseData = jsonDecode(response.body) as Map<String, dynamic>;
+        Object body;
+        if (syncPassphrase.isNotEmpty) {
+          // Reuse the backup AES-GCM container instead of inventing a second
+          // format. The server stores opaque bytes.
+          body = await BackupService.encryptBytes(
+            utf8.encode(jsonEncode(payload)),
+            syncPassphrase,
+          );
+          headers['Content-Type'] = 'application/octet-stream';
+          headers['X-Sync-Encrypted'] = 'v1';
+        } else {
+          body = jsonEncode(payload);
+        }
+        final response = await http.post(uri, headers: headers, body: body);
+        if (response.statusCode != 200) {
+          throw Exception('Server returned status code ${response.statusCode}');
+        }
+        responseData = await _decodeSyncResponse(response, syncPassphrase);
       }
 
       if (responseData.containsKey('walletId') && responseData['walletId'] != null) {
@@ -1248,10 +1299,33 @@ class SyncNotifier extends StateNotifier<SyncState> {
 
       state = SyncState(status: SyncStatus.success);
     } catch (e, stack) {
-      debugPrint('Sync failed: $e\n$stack');
+      // Never log the error text: HTTP exceptions can embed request or response
+      // payloads. The type plus the stack is enough for diagnostics.
+      debugPrint('Sync failed: ${e.runtimeType}');
+      if (kDebugMode) {
+        debugPrintStack(stackTrace: stack);
+      }
       state = SyncState(status: SyncStatus.error, errorMessage: e.toString());
       rethrow;
     }
+  }
+
+  Future<Map<String, dynamic>> _decodeSyncResponse(
+    http.Response response,
+    String passphrase,
+  ) async {
+    final bytes = response.bodyBytes;
+    if (BackupService.isEncryptedBytes(bytes)) {
+      if (passphrase.isEmpty) {
+        throw const FormatException(
+          'Received an encrypted sync payload but no sync passphrase is '
+          'configured.',
+        );
+      }
+      final clear = await BackupService.decryptBytes(bytes, passphrase);
+      return jsonDecode(utf8.decode(clear)) as Map<String, dynamic>;
+    }
+    return jsonDecode(utf8.decode(bytes)) as Map<String, dynamic>;
   }
 
   Future<Map<String, dynamic>> _runSimulatedServerSync(Map<String, dynamic> clientPayload, DateTime clientLastSync) async {

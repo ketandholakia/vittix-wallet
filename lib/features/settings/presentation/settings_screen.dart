@@ -72,6 +72,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final syncUrl = ref.watch(syncUrlProvider);
     final syncUsername = ref.watch(nextcloudUsernameProvider);
     final syncPassword = ref.watch(nextcloudPasswordProvider);
+    final syncPassphrase = ref.watch(syncPassphraseProvider);
 
     String syncStatusMessage;
     if (syncState.status == SyncStatus.syncing) {
@@ -392,6 +393,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                       onChanged: (value) {
                         ref.read(nextcloudPasswordProvider.notifier).updatePassword(value);
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: TextFormField(
+                      initialValue: syncPassphrase,
+                      enabled: !isSimulated,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Sync Passphrase (optional)',
+                        helperText: 'Encrypts the sync payload end to end',
+                        prefixIcon: Icon(Icons.enhanced_encryption),
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) {
+                        ref
+                            .read(syncPassphraseProvider.notifier)
+                            .updatePassphrase(value);
                       },
                     ),
                   ),

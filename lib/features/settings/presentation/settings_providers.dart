@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
+import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
 
 final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) {
   return SharedPreferences.getInstance();
@@ -186,15 +188,85 @@ class SyncUrlNotifier extends StateNotifier<String> {
 
 final syncTokenProvider = StateNotifierProvider<SyncTokenNotifier, String>((ref) {
   final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return SyncTokenNotifier(prefs);
+  final secure = SecureStorageKeyValueStore(ref.watch(secureStorageProvider));
+  return SyncTokenNotifier(secure, prefs);
 });
 
+/// Loads the sync token from secure storage, migrating the legacy
+/// SharedPreferences value once and deleting the old key.
+class SyncTokenMigration {
+  const SyncTokenMigration._();
+
+  static const key = 'syncToken';
+
+  static Future<String> load({
+    required SecureKeyValueStore secure,
+    required SharedPreferences? prefs,
+  }) async {
+    final existing = await secure.read(key);
+    if (existing != null && existing.isNotEmpty) return existing;
+
+    final legacy = prefs?.getString(key);
+    if (legacy != null && legacy.isNotEmpty) {
+      await secure.write(key, legacy);
+      await prefs?.remove(key);
+      return legacy;
+    }
+    return '';
+  }
+}
+
 class SyncTokenNotifier extends StateNotifier<String> {
+  SyncTokenNotifier(this._secure, this._prefs) : super('') {
+    _load();
+  }
+
+  final SecureKeyValueStore _secure;
   final SharedPreferences? _prefs;
-  static const _key = 'syncToken';
-  SyncTokenNotifier(this._prefs) : super(_prefs?.getString(_key) ?? '');
-  void updateSyncToken(String value) {
-    _prefs?.setString(_key, value);
+
+  Future<void> _load() async {
+    try {
+      state = await SyncTokenMigration.load(secure: _secure, prefs: _prefs);
+    } on MissingPluginException {
+      // No keystore (tests/unsupported platform): there is no token to load.
+    } on PlatformException {
+      // Keystore unavailable: treat it as no token rather than crashing sync.
+    }
+  }
+
+  Future<void> updateSyncToken(String value) async {
+    await _secure.write(SyncTokenMigration.key, value);
+    state = value;
+  }
+}
+
+/// User-set passphrase used to encrypt the sync payload at rest in transit.
+/// Stored in the platform keystore, never in SharedPreferences.
+final syncPassphraseProvider =
+    StateNotifierProvider<SyncPassphraseNotifier, String>((ref) {
+  return SyncPassphraseNotifier(ref.watch(secureStorageProvider));
+});
+
+class SyncPassphraseNotifier extends StateNotifier<String> {
+  SyncPassphraseNotifier(this._storage) : super('') {
+    _load();
+  }
+
+  final FlutterSecureStorage _storage;
+  static const _key = 'syncPassphrase';
+
+  Future<void> _load() async {
+    try {
+      state = await _storage.read(key: _key) ?? '';
+    } on MissingPluginException {
+      // No keystore: sync stays unencrypted until a passphrase can be stored.
+    } on PlatformException {
+      // Keystore unavailable: same as above.
+    }
+  }
+
+  Future<void> updatePassphrase(String value) async {
+    await _storage.write(key: _key, value: value);
     state = value;
   }
 }

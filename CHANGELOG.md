@@ -72,3 +72,20 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   wallet/member setup, and the schema-version assertion).
 - Fixed `CurrentWalletIdNotifier.selectWallet` to reject an invalid wallet
   instead of "allowing selection anyway" (the pre-existing failing test).
+
+## P0-5 — Sync transport and secrets
+
+- `validateSyncUrl` now rejects anything but `https`. Debug builds additionally
+  allow `http` for `localhost`, `127.0.0.1`, `::1`, `10.x` and `192.168.x`;
+  release builds reject plain http everywhere.
+- `syncToken` moved from SharedPreferences to `flutter_secure_storage` via
+  `SecureStorageKeyValueStore`, with a one-time `SyncTokenMigration` that writes
+  the legacy value to the keystore and deletes the old plaintext key.
+- The sync payload is encrypted with the same AES-GCM container used by
+  `BackupService` (`encryptBytes`/`decryptBytes`), keyed by a user-set sync
+  passphrase in secure storage. Encrypted request/response bodies are detected
+  with `BackupService.isEncryptedBytes`; no second crypto format was added.
+- Added a "Sync Passphrase" field in the sync settings.
+- Removed credentials and payloads from logs and exceptions: failures log only
+  the error type, and HTTP errors no longer include response bodies.
+- Added `test/sync_security_test.dart` for URL policy and token migration.

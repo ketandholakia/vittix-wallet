@@ -625,3 +625,28 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   for an invalid wallet instead of allowing the switch; this fixes the
   pre-existing failing `active_wallet_validation_test` Test 11.
 
+## Release hardening P0-5: sync transport and secrets
+
+- **Transport policy:** `validateSyncUrl` accepts only `https` in release
+  builds. Debug builds also accept `http` for `localhost`/`127.0.0.1`/`::1`,
+  `10.x` and `192.168.x` (local development). Both the Nextcloud WebDAV URL and
+  the generic sync endpoint pass through it before any request.
+- **Token storage:** `syncTokenProvider` now reads/writes the platform keystore
+  through `SecureStorageKeyValueStore`. `SyncTokenMigration` performs a one-time
+  migration from the legacy SharedPreferences key and deletes it. A missing
+  keystore (tests) degrades to "no token" rather than crashing.
+- **Payload encryption:** when a sync passphrase is configured
+  (`syncPassphraseProvider`, secure storage), the JSON payload is wrapped with
+  `BackupService.encryptBytes` (PBKDF2-HMAC-SHA256 + AES-256-GCM, the same
+  container as backups) and sent as `application/octet-stream` with
+  `X-Sync-Encrypted: v1`. Responses are decrypted with
+  `BackupService.isEncryptedBytes`/`decryptBytes`. Simulated sync never reads
+  the keystore.
+- **Log hygiene:** the sync catch block logs only `e.runtimeType` (plus a stack
+  in debug), and HTTP error messages no longer embed response bodies. Tokens,
+  passwords and payloads are never logged.
+- Settings exposes an optional "Sync Passphrase" field.
+- Tests: `test/sync_security_test.dart` covers the URL policy (release/debug,
+  private hosts, malformed input) and the token migration (migrate + delete,
+  prefer secure value, empty state).
+

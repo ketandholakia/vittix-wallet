@@ -190,6 +190,10 @@ class BackupService {
     }
   }
 
+  /// True when [bytes] start with the encrypted container magic.
+  static bool isEncryptedBytes(List<int> bytes) =>
+      _startsWith(bytes, _containerMagic);
+
   /// True when [file] looks like an encrypted Vittix backup container.
   static bool isEncryptedFile(File file) {
     if (!file.existsSync()) return false;
