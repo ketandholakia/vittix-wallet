@@ -1,6 +1,6 @@
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
-import 'package:expense_tracker/core/providers/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/features/accounts/domain/usecases/add_account.dart';
 import 'package:expense_tracker/features/accounts/domain/usecases/delete_account.dart';
 import 'package:expense_tracker/features/accounts/domain/usecases/update_account.dart';

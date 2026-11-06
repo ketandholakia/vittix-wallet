@@ -148,3 +148,22 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   successful unlock, not just legacy v1.
 - Tests: clock rollback keeps the lockout; old hashes verify and are flagged
   for upgrade.
+
+## P2-10 — Remove duplicate files
+
+- Deleted every one-line export shim under `lib/presentation/**` and
+  `lib/core/providers/{settings,dashboard}_providers.dart`; all imports now point
+  at the live `lib/features/**` / `lib/core/presentation/**` copies.
+- Removed the duplicated widgets/screens: add_transaction_screen,
+  transaction_list_item, recent_transactions_list, category_report_screen,
+  dashboard_shimmer, shimmer_list, empty_state_widget, error_display_widget,
+  dashboard_providers, settings_providers (plus budget/trend/account/report
+  shims found in the same pass).
+- Deleted two unreachable, non-compiling screens (`notification_action_center_screen.dart`,
+  `feedback_screen.dart`) whose DAOs do not exist.
+- Fixed `walletInvitationsProvider` (was a `FutureProvider` returning a
+  `Stream`); it is now a `StreamProvider`. Replaced the undefined
+  `appDatabaseProvider` usage with `databaseProvider`.
+- `lib/data/**` and `lib/domain/**` were kept: they are an actively used
+  re-export layer, not dead code.
+- Analyzer now has **0 errors** (was 10).

@@ -1,6 +1,6 @@
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/presentation/widgets/transaction_list_item.dart';
-import 'package:expense_tracker/presentation/widgets/empty_state_widget.dart';
+import 'package:expense_tracker/features/transactions/presentation/transaction_list_item.dart';
+import 'package:expense_tracker/core/presentation/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 
 class RecentTransactionsList extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:expense_tracker/core/providers/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
 import 'package:flutter/material.dart';

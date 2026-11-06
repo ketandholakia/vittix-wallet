@@ -3,7 +3,7 @@
 import 'package:expense_tracker/core/providers/repository_providers.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/core/providers/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/core/database/app_database.dart';
 import 'package:expense_tracker/domain/entities/monthly_report.dart';
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;

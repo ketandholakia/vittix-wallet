@@ -1,19 +1,13 @@
 // BROKEN DEPENDENCY: Experimental
 
-import 'package:expense_tracker/core/providers/dashboard_providers.dart';
-import 'package:expense_tracker/presentation/screens/reports/category_report_screen.dart';
-import 'package:expense_tracker/core/providers/settings_providers.dart';
-import 'package:expense_tracker/presentation/screens/reports/trend_report_screen.dart';
-import 'package:expense_tracker/presentation/screens/reports/widgets/spending_insights_widget.dart';
-import 'package:expense_tracker/presentation/widgets/error_display_widget.dart';
 import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
 import 'package:expense_tracker/features/categories/presentation/category_report_screen.dart';
 import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/features/reports/presentation/trend_report_screen.dart';
-import 'package:expense_tracker/features/accounts/presentation/account_report_screen.dart';
 import 'package:expense_tracker/features/reports/presentation/spending_insights_widget.dart';
-import 'package:expense_tracker/features/reports/presentation/spending_heatmap_screen.dart';
 import 'package:expense_tracker/core/presentation/error_display_widget.dart';
+import 'package:expense_tracker/features/accounts/presentation/account_report_screen.dart';
+import 'package:expense_tracker/features/reports/presentation/spending_heatmap_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:expense_tracker/core/presentation/app_drawer.dart';

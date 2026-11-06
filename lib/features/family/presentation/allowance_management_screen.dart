@@ -1,8 +1,8 @@
 import 'package:expense_tracker/core/database/app_database.dart' as db;
-import 'package:expense_tracker/core/providers/dashboard_providers.dart';
+import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/repository_providers.dart';
-import 'package:expense_tracker/core/providers/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/features/family/domain/family_allowance_models.dart';
 import 'package:expense_tracker/features/family/domain/wallet_permissions.dart';
 import 'package:flutter/material.dart';

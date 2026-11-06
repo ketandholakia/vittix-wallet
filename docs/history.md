@@ -747,3 +747,28 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
 - Tests: `pin_hashing_test.dart` gained a clock-rollback lockout test and an
   older-v2 upgrade test.
 
+## Release hardening P2-10: duplicate files removed
+
+- Every one-line export shim under `lib/presentation/**` (17 files) and
+  `lib/core/providers/settings_providers.dart` /
+  `lib/core/providers/dashboard_providers.dart` was deleted; imports now point
+  directly at the live copies under `lib/features/**` or
+  `lib/core/presentation/**`.
+- Duplicated symbols removed: `add_transaction_screen`,
+  `transaction_list_item`, `recent_transactions_list`, `category_report_screen`,
+  `dashboard_shimmer`, `shimmer_list`, `empty_state_widget`,
+  `error_display_widget`, `dashboard_providers`, `settings_providers`. The same
+  pass also removed the budget, dashboard-header, spending-pie/insights,
+  account-report and trend-report shims.
+- Two unreachable screens that referenced non-existent DAOs were deleted:
+  `features/notifications/data/notification_action_center_screen.dart` and
+  `features/settings/presentation/feedback_screen.dart`. `FeedbackEntries`
+  remains in the schema for a future UI.
+- `walletInvitationsProvider` corrected from `FutureProvider` (returning a
+  `Stream`, which did not compile) to `StreamProvider`; `appDatabaseProvider`
+  replaced with `databaseProvider`.
+- `lib/data/**` and `lib/domain/**` were **kept**: they are re-export shims used
+  by over a hundred imports, not dead code. Removing them is a separate,
+  larger move.
+- Result: `flutter analyze` went from 10 errors to **0 errors**.
+

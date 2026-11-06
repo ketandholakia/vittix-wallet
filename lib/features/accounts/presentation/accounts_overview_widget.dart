@@ -1,6 +1,6 @@
 import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
-import 'package:expense_tracker/core/providers/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/core/utils/app_logger.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
 import 'package:expense_tracker/features/transactions/presentation/transfer_form_screen.dart';

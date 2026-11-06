@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 export 'package:drift/drift.dart';
-import 'package:flutter/foundation.dart';
 import 'package:drift/native.dart';
 import 'package:expense_tracker/core/money/money.dart';
 import 'package:uuid/uuid.dart';
@@ -15,7 +14,6 @@ import 'package:expense_tracker/core/database/database_encryption.dart';
 import 'package:expense_tracker/core/database/sqlcipher_loader.dart';
 import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
 import 'package:expense_tracker/core/database/default_categories.dart';
-import 'package:path/path.dart' as p;
 
 // Import the generated part file
 

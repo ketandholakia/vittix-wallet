@@ -1,6 +1,6 @@
 import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/core/providers/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/core/database/app_database.dart' hide Column;
 import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:expense_tracker/core/database/app_database.dart' as db;
+﻿import 'package:expense_tracker/core/database/app_database.dart' as db;
 import 'package:expense_tracker/features/accounts/domain/account.dart';
 import 'package:expense_tracker/core/providers/database_provider.dart';
 import 'package:expense_tracker/core/providers/usecase_providers.dart';
@@ -19,7 +19,8 @@ final walletInvitationServiceProvider = Provider<WalletInvitationService>((ref) 
   return WalletInvitationService(ref.watch(walletInvitationRepositoryProvider));
 });
 
-final walletInvitationsProvider = FutureProvider<List<db.WalletInvitation>>((ref) async {
+final walletInvitationsProvider =
+    StreamProvider<List<db.WalletInvitation>>((ref) {
   final walletId = ref.watch(currentWalletIdProvider);
   return ref.watch(walletDaoProvider).watchInvitationsForWallet(walletId);
 });
@@ -142,7 +143,7 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
             onPressed: () async {
               final accountId = _selectedAccount?.id;
               if (accountId == null) return;
-              final database = ref.read(appDatabaseProvider);
+              final database = ref.read(databaseProvider);
               final owners = await (database.select(database.walletMembers)..where((m) => m.walletId.equals(walletId) & m.role.equals(db.WalletRole.owner.name))).get();
               if (owners.isEmpty) return; // Cannot invite without an active owner
 
@@ -278,7 +279,7 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
                             onPressed: invitation.status == db.WalletInvitationStatus.pending
                                 ? () async {
                                     try {
-                                      final database = ref.read(appDatabaseProvider);
+                                      final database = ref.read(databaseProvider);
                                       final owners = await (database.select(database.walletMembers)..where((m) => m.walletId.equals(walletId) & m.role.equals(db.WalletRole.owner.name))).get();
                                       final ownerId = owners.isNotEmpty ? owners.first.accountId : invitation.invitedByAccountId;
                                       if (ownerId == null) throw Exception('No actor available');

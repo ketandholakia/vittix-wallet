@@ -7,7 +7,7 @@ import 'package:expense_tracker/core/services/backup_service.dart';
 import 'package:expense_tracker/features/security/data/pin_hasher.dart';
 import 'package:expense_tracker/features/settings/presentation/auto_backup_screen.dart';
 import 'package:expense_tracker/core/providers/repository_providers.dart';
-import 'package:expense_tracker/core/providers/settings_providers.dart';
+import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
 import 'package:expense_tracker/core/utils/csv_exporter.dart';
 import 'package:expense_tracker/features/security/presentation/lock_screen.dart';
 import 'package:expense_tracker/features/security/presentation/security_providers.dart';
