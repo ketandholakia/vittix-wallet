@@ -1,6 +1,6 @@
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/categories/domain/category.dart';
-import 'package:expense_tracker/features/transactions/domain/transaction.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/categories/domain/category.dart';
+import 'package:vittix_wallet/features/transactions/domain/transaction.dart';
 
 enum RecurringInterval {
   daily,

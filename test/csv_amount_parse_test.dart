@@ -1,4 +1,4 @@
-import 'package:expense_tracker/core/utils/csv_importer.dart';
+import 'package:vittix_wallet/core/utils/csv_importer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Regression tests for CSV amount parsing. The importer must handle Western

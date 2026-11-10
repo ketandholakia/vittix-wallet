@@ -1,13 +1,13 @@
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide RecurringTransactionDb, Category, Account, TransactionType, AccountType, isNull, isNotNull;
-import 'package:expense_tracker/core/database/database_enums.dart' as db_enums;
-import 'package:expense_tracker/features/recurring/data/recurring_transaction_repository_impl.dart';
-import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
-import 'package:expense_tracker/features/transactions/data/transaction_repository_impl.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/features/categories/domain/category.dart';
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/transactions/domain/transaction.dart' as tx_domain;
+import 'package:vittix_wallet/core/database/app_database.dart' hide RecurringTransactionDb, Category, Account, TransactionType, AccountType, isNull, isNotNull;
+import 'package:vittix_wallet/core/database/database_enums.dart' as db_enums;
+import 'package:vittix_wallet/features/recurring/data/recurring_transaction_repository_impl.dart';
+import 'package:vittix_wallet/features/recurring/domain/recurring_transaction.dart';
+import 'package:vittix_wallet/features/transactions/data/transaction_repository_impl.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/features/categories/domain/category.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/transactions/domain/transaction.dart' as tx_domain;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide Column;
-import 'package:expense_tracker/core/database/database_provider.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' hide Column;
+import 'package:vittix_wallet/core/database/database_provider.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 
 // Repayment calculation helper
 double calculateEmi(double principal, double annualRate, int tenureMonths) {

@@ -4,7 +4,7 @@ Vittix Wallet is a local-first expense tracker for personal and shared
 wallet-based finance. The on-device database is the source of truth; the app
 works fully offline and can optionally synchronise through Nextcloud/WebDAV.
 
-Package: `expense_tracker` · Flutter 3.44+ · Dart 3.12+
+Package: `vittix_wallet` · Flutter 3.44+ · Dart 3.12+
 
 ## Feature map
 

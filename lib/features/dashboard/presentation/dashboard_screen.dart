@@ -1,32 +1,32 @@
 // BROKEN DEPENDENCY: Experimental
 
-import 'package:expense_tracker/features/settings/presentation/guided_onboarding_screen.dart' as expense_tracker_guided_onboarding;
-import 'package:expense_tracker/features/accounts/presentation/accounts_overview_widget.dart';
-import 'package:expense_tracker/core/domain/attention_needed_widget.dart';
-import 'package:expense_tracker/features/settings/presentation/beta_metrics_widget.dart';
-import 'package:expense_tracker/core/domain/brand_assets.dart';
-import 'package:expense_tracker/features/budgets/presentation/budget_overview_widget.dart';
-import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/core/presentation/dashboard_shimmer.dart';
-import 'package:expense_tracker/features/family/domain/family_automation_dashboard.dart';
-import 'package:expense_tracker/features/family/presentation/family_financial_summary_widget.dart';
-import 'package:expense_tracker/features/family/presentation/family_goal_summary_widget.dart';
-import 'package:expense_tracker/core/domain/forecast_history_widget.dart';
-import 'package:expense_tracker/features/dashboard/presentation/dashboard_header.dart';
-import 'package:expense_tracker/features/transactions/presentation/recent_transactions_list.dart';
-import 'package:expense_tracker/presentation/screens/dashboard/widgets/assets_overview_widget.dart';
-import 'package:expense_tracker/presentation/screens/dashboard/customize_dashboard_screen.dart';
-import 'package:expense_tracker/core/presentation/error_display_widget.dart';
-import 'package:expense_tracker/features/reports/presentation/spending_insights_summary_widget.dart';
-import 'package:expense_tracker/features/transactions/presentation/quick_add_widget.dart';
-import 'package:expense_tracker/features/reports/presentation/spending_streak_widget.dart';
-import 'package:expense_tracker/features/family/presentation/wallet_member_summary_widget.dart';
+import 'package:vittix_wallet/features/settings/presentation/guided_onboarding_screen.dart' as guided_onboarding_alias;
+import 'package:vittix_wallet/features/accounts/presentation/accounts_overview_widget.dart';
+import 'package:vittix_wallet/core/domain/attention_needed_widget.dart';
+import 'package:vittix_wallet/features/settings/presentation/beta_metrics_widget.dart';
+import 'package:vittix_wallet/core/domain/brand_assets.dart';
+import 'package:vittix_wallet/features/budgets/presentation/budget_overview_widget.dart';
+import 'package:vittix_wallet/features/dashboard/presentation/dashboard_providers.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/presentation/dashboard_shimmer.dart';
+import 'package:vittix_wallet/features/family/domain/family_automation_dashboard.dart';
+import 'package:vittix_wallet/features/family/presentation/family_financial_summary_widget.dart';
+import 'package:vittix_wallet/features/family/presentation/family_goal_summary_widget.dart';
+import 'package:vittix_wallet/core/domain/forecast_history_widget.dart';
+import 'package:vittix_wallet/features/dashboard/presentation/dashboard_header.dart';
+import 'package:vittix_wallet/features/transactions/presentation/recent_transactions_list.dart';
+import 'package:vittix_wallet/presentation/screens/dashboard/widgets/assets_overview_widget.dart';
+import 'package:vittix_wallet/presentation/screens/dashboard/customize_dashboard_screen.dart';
+import 'package:vittix_wallet/core/presentation/error_display_widget.dart';
+import 'package:vittix_wallet/features/reports/presentation/spending_insights_summary_widget.dart';
+import 'package:vittix_wallet/features/transactions/presentation/quick_add_widget.dart';
+import 'package:vittix_wallet/features/reports/presentation/spending_streak_widget.dart';
+import 'package:vittix_wallet/features/family/presentation/wallet_member_summary_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:expense_tracker/core/presentation/app_drawer.dart';
+import 'package:vittix_wallet/core/presentation/app_drawer.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -90,7 +90,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 onSelected: (value) {
                   if (value == -1) {
-                    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const expense_tracker_guided_onboarding.GuidedOnboardingScreen()));
+                    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const guided_onboarding_alias.GuidedOnboardingScreen()));
                   } else {
                     ref.read(currentWalletIdProvider.notifier).selectWallet(value);
                   }

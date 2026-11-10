@@ -1,18 +1,18 @@
 import 'dart:io';
 
-import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
-import 'package:expense_tracker/features/categories/presentation/category_screen.dart';
-import 'package:expense_tracker/core/config/feature_flags.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/core/services/backup_service.dart';
-import 'package:expense_tracker/features/security/data/pin_hasher.dart';
-import 'package:expense_tracker/features/settings/presentation/auto_backup_screen.dart';
-import 'package:expense_tracker/core/providers/repository_providers.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/core/utils/csv_exporter.dart';
-import 'package:expense_tracker/features/security/presentation/lock_screen.dart';
-import 'package:expense_tracker/features/security/presentation/security_providers.dart';
-import 'package:expense_tracker/features/recurring/presentation/recurring_transactions_screen.dart';
+import 'package:vittix_wallet/features/accounts/presentation/account_screen.dart';
+import 'package:vittix_wallet/features/categories/presentation/category_screen.dart';
+import 'package:vittix_wallet/core/config/feature_flags.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/core/services/backup_service.dart';
+import 'package:vittix_wallet/features/security/data/pin_hasher.dart';
+import 'package:vittix_wallet/features/settings/presentation/auto_backup_screen.dart';
+import 'package:vittix_wallet/core/providers/repository_providers.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/utils/csv_exporter.dart';
+import 'package:vittix_wallet/features/security/presentation/lock_screen.dart';
+import 'package:vittix_wallet/features/security/presentation/security_providers.dart';
+import 'package:vittix_wallet/features/recurring/presentation/recurring_transactions_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +21,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:expense_tracker/features/sync/data/sync_service.dart';
+import 'package:vittix_wallet/features/sync/data/sync_service.dart';
 
 /// Cloud sync is not release-ready yet: deleted records never propagate,
 /// Nextcloud mode only performs GETs, and wallets are matched by local row ids.

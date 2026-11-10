@@ -233,3 +233,30 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   `canScheduleExactNotifications()` and falls back to `inexactAllowWhileIdle`
   when exact alarms are unavailable (with the existing `PlatformException`
   fallback as a backstop). The README documents the Play policy trade-off.
+
+## P2-15 - Dart package identity `vittix_wallet`
+
+- Renamed the package in `pubspec.yaml` from `expense_tracker` to `vittix_wallet`
+  and rewrote 887 `package:expense_tracker/` imports across `lib/`, `test/` and
+  `integration_test/`. The change is a pure rename: 889 insertions, 889
+  deletions, no logic touched.
+- Dropped the now-stale `expense_tracker_guided_onboarding` import alias in
+  `dashboard_screen.dart` in favour of `guided_onboarding_alias`.
+- Android `applicationId`/`namespace` were already `com.vittix.wallet`, so no
+  native change was required. Historical references in `CHANGELOG.md` and
+  `docs/history.md` are intentionally left intact.
+- Normalised `lib/features/budgets/presentation/budget_list_item.dart` to LF.
+  It was the only Dart file whose committed blob used CRLF, which made
+  `git diff --check` report the four renamed imports as trailing whitespace and
+  would have made the new `dart format --set-exit-if-changed` gate fail on a
+  Linux checkout.
+- Follow-up (not done here): the desktop shells still use the old name, which is
+  independent of Dart package identity. Windows `CMakeLists.txt`, `main.cpp`
+  and `Runner.rc`, Linux `CMakeLists.txt` and `my_application.cc`, macOS
+  `AppInfo.xcconfig`/pbxproj/schemes and two generated `test/*.mocks.dart`
+  header comments still say `expense_tracker`. Linux additionally still declares
+  `APPLICATION_ID "com.example.expense_tracker"`, which predates this change set
+  and contradicts the P0-1 identity claim. Renaming native artefacts cannot be
+  verified without the corresponding toolchains.
+- `tools/generate_brand_assets.py` still hardcodes an absolute
+  `D:\ketan\...\expense_tracker` path. Out of scope for this change set.

@@ -1,11 +1,11 @@
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart'
+import 'package:vittix_wallet/core/database/app_database.dart'
     hide Transaction, Category, Account, TransactionType, AccountType, isNull, isNotNull;
-import 'package:expense_tracker/core/database/database_enums.dart' as db_enums;
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/transactions/data/transaction_repository_impl.dart';
+import 'package:vittix_wallet/core/database/database_enums.dart' as db_enums;
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/transactions/data/transaction_repository_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

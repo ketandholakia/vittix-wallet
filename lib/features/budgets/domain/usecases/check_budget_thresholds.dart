@@ -1,9 +1,9 @@
-import 'package:expense_tracker/core/services/notification_service.dart';
-import 'package:expense_tracker/domain/entities/budget.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/domain/repositories/budget_repository.dart';
-import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/services/notification_service.dart';
+import 'package:vittix_wallet/domain/entities/budget.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/repositories/budget_repository.dart';
+import 'package:vittix_wallet/domain/repositories/transaction_repository.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

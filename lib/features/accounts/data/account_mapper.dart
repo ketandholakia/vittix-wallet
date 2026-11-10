@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/features/accounts/domain/account.dart' as domain;
-import 'package:expense_tracker/data/local/app_database.dart' as db;
-import 'package:expense_tracker/data/local/mappers/category_mapper.dart';
-import 'package:expense_tracker/shared/icon_codepoint.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart' as domain;
+import 'package:vittix_wallet/data/local/app_database.dart' as db;
+import 'package:vittix_wallet/data/local/mappers/category_mapper.dart';
+import 'package:vittix_wallet/shared/icon_codepoint.dart';
 
 extension AccountDBMapper on db.Account {
   domain.Account toDomain() {

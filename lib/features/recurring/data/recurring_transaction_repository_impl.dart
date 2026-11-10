@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/data/local/app_database.dart' as db;
-import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
-import 'package:expense_tracker/features/recurring/data/recurring_transaction_mapper.dart';
-import 'package:expense_tracker/features/recurring/data/recurring_transaction_repository.dart';
+import 'package:vittix_wallet/data/local/app_database.dart' as db;
+import 'package:vittix_wallet/features/recurring/domain/recurring_transaction.dart';
+import 'package:vittix_wallet/features/recurring/data/recurring_transaction_mapper.dart';
+import 'package:vittix_wallet/features/recurring/data/recurring_transaction_repository.dart';
 
 class RecurringTransactionRepositoryImpl implements RecurringTransactionRepository {
   final db.RecurringTransactionDao _dao;

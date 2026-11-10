@@ -1,5 +1,5 @@
-import 'package:expense_tracker/domain/entities/budget.dart';
-import 'package:expense_tracker/domain/repositories/budget_repository.dart';
+import 'package:vittix_wallet/domain/entities/budget.dart';
+import 'package:vittix_wallet/domain/repositories/budget_repository.dart';
 
 class AddBudget {
   final BudgetRepository repository;

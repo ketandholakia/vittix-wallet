@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/core/services/backup_service.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/core/services/backup_service.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 

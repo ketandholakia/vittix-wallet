@@ -1,5 +1,5 @@
-import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/domain/repositories/category_repository.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
+import 'package:vittix_wallet/domain/repositories/category_repository.dart';
 
 class UpdateCategory {
   final CategoryRepository repository;

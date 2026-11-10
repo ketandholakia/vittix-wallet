@@ -1,8 +1,8 @@
 /*
 // BROKEN DEPENDENCY: Experimental
 
-import 'package:expense_tracker/core/database/app_database.dart' as db;
-import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' as db;
+import 'package:vittix_wallet/features/dashboard/presentation/dashboard_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

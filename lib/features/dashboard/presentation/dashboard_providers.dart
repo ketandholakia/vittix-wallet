@@ -1,17 +1,17 @@
 // BROKEN DEPENDENCY: Experimental
 
-import 'package:expense_tracker/core/providers/repository_providers.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/domain/entities/monthly_report.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/features/family/domain/family_finance_models.dart';
-import 'package:expense_tracker/features/family/domain/family_allowance_models.dart';
-import 'package:expense_tracker/features/family/domain/family_commitment_models.dart';
-import 'package:expense_tracker/features/family/data/family_automation_service.dart';
-import 'package:expense_tracker/features/family/domain/family_settlement_models.dart';
+import 'package:vittix_wallet/core/providers/repository_providers.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/domain/entities/monthly_report.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/features/family/domain/family_finance_models.dart';
+import 'package:vittix_wallet/features/family/domain/family_allowance_models.dart';
+import 'package:vittix_wallet/features/family/domain/family_commitment_models.dart';
+import 'package:vittix_wallet/features/family/data/family_automation_service.dart';
+import 'package:vittix_wallet/features/family/domain/family_settlement_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' as drift;

@@ -1,8 +1,8 @@
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide isNull, isNotNull;
-import 'package:expense_tracker/features/goals/data/goal_repository_impl.dart';
-import 'package:expense_tracker/features/bills/data/bill_repository_impl.dart';
-import 'package:expense_tracker/features/family/data/allowance_repository_impl.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' hide isNull, isNotNull;
+import 'package:vittix_wallet/features/goals/data/goal_repository_impl.dart';
+import 'package:vittix_wallet/features/bills/data/bill_repository_impl.dart';
+import 'package:vittix_wallet/features/family/data/allowance_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

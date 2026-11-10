@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/core/database/database_enums.dart';
-import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
+import 'package:vittix_wallet/core/database/database_enums.dart';
+import 'package:vittix_wallet/features/family/data/tables/wallets_table.dart';
 
 @DataClassName('FeedbackEntry')
 class FeedbackEntries extends Table {

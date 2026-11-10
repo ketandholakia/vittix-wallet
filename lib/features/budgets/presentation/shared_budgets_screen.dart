@@ -1,11 +1,11 @@
-import 'package:expense_tracker/features/budgets/domain/budget.dart' as domain;
-import 'package:expense_tracker/features/categories/domain/category.dart' as domain;
-import 'package:expense_tracker/features/dashboard/presentation/dashboard_providers.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/core/providers/repository_providers.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/features/family/domain/family_finance_models.dart';
-import 'package:expense_tracker/features/family/domain/wallet_permissions.dart';
+import 'package:vittix_wallet/features/budgets/domain/budget.dart' as domain;
+import 'package:vittix_wallet/features/categories/domain/category.dart' as domain;
+import 'package:vittix_wallet/features/dashboard/presentation/dashboard_providers.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/core/providers/repository_providers.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/family/domain/family_finance_models.dart';
+import 'package:vittix_wallet/features/family/domain/wallet_permissions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

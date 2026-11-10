@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mediapipe_genai/mediapipe_genai.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart'; // Reusing this generic candidate format
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/pdf/pdf_transaction_candidate.dart'; // Reusing this generic candidate format
 
 final llmServiceProvider = Provider<LlmService>((ref) {
   return LlmService();

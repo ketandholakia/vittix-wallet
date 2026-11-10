@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/theme/vittix_colors.dart';
+import 'package:vittix_wallet/core/theme/vittix_colors.dart';
 
 class AppTypography {
   AppTypography._();

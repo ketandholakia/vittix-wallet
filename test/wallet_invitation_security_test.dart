@@ -1,5 +1,5 @@
-import 'package:expense_tracker/core/database/app_database.dart' hide isNotNull, isNull;
-import 'package:expense_tracker/features/family/data/wallet_invitation_repository.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' hide isNotNull, isNull;
+import 'package:vittix_wallet/features/family/data/wallet_invitation_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:drift/native.dart';

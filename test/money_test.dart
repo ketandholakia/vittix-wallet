@@ -1,4 +1,4 @@
-import 'package:expense_tracker/core/money/money.dart';
+import 'package:vittix_wallet/core/money/money.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// A6 — integer minor units and the rounding/allocation policy.

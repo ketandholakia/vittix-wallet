@@ -1,4 +1,4 @@
-import 'package:expense_tracker/sms/sms_transaction_parser.dart';
+import 'package:vittix_wallet/sms/sms_transaction_parser.dart';
 
 /// Base class for all bank-specific SMS parsers
 abstract class BankSmsParser {

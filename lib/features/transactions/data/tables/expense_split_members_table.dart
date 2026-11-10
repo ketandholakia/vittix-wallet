@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/core/money/money.dart';
-import 'package:expense_tracker/features/family/data/tables/wallet_members_table.dart';
-import 'package:expense_tracker/features/transactions/data/tables/expense_splits_table.dart';
+import 'package:vittix_wallet/core/money/money.dart';
+import 'package:vittix_wallet/features/family/data/tables/wallet_members_table.dart';
+import 'package:vittix_wallet/features/transactions/data/tables/expense_splits_table.dart';
 
 @DataClassName('WalletExpenseSplitMember')
 class WalletExpenseSplitMembers extends Table {

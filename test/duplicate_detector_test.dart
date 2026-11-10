@@ -1,7 +1,7 @@
-import 'package:expense_tracker/core/utils/duplicate_detector.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/categories/domain/category.dart';
+import 'package:vittix_wallet/core/utils/duplicate_detector.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/categories/domain/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -1,9 +1,9 @@
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/features/reports/domain/trend_data_point.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/features/reports/domain/trend_data_point.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:expense_tracker/core/presentation/empty_state_widget.dart';
-import 'package:expense_tracker/core/presentation/error_display_widget.dart';
+import 'package:vittix_wallet/core/presentation/empty_state_widget.dart';
+import 'package:vittix_wallet/core/presentation/error_display_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

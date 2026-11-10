@@ -1,9 +1,9 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:expense_tracker/features/security/presentation/lock_screen.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/features/security/presentation/security_providers.dart';
+import 'package:vittix_wallet/features/security/presentation/lock_screen.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/security/presentation/security_providers.dart';
 
 class AppLockWrapper extends ConsumerStatefulWidget {
   final Widget child;

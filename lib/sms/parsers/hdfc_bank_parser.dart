@@ -1,6 +1,6 @@
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/sms/parsers/bank_sms_parser.dart';
-import 'package:expense_tracker/sms/sms_transaction_parser.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/sms/parsers/bank_sms_parser.dart';
+import 'package:vittix_wallet/sms/sms_transaction_parser.dart';
 
 class HdfcBankParser extends BankSmsParser {
   @override

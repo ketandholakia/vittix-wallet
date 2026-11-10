@@ -1,6 +1,6 @@
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/features/transactions/data/tables/merchant_mappings_table.dart';
-import 'package:expense_tracker/features/transactions/data/tables/unrecognized_sms_table.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/features/transactions/data/tables/merchant_mappings_table.dart';
+import 'package:vittix_wallet/features/transactions/data/tables/unrecognized_sms_table.dart';
 
 part 'sms_parsing_dao.g.dart';
 

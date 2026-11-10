@@ -1,16 +1,16 @@
 // BROKEN DEPENDENCY: Experimental
 
-import 'package:expense_tracker/features/budgets/presentation/budget_form_dialog.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/domain/entities/budget.dart';
-import 'package:expense_tracker/features/budgets/presentation/budget_list_item.dart';
-import 'package:expense_tracker/core/presentation/empty_state_widget.dart';
-import 'package:expense_tracker/core/presentation/shimmer_list.dart';
-import 'package:expense_tracker/features/budgets/domain/budget.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/budgets/presentation/budget_form_dialog.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/domain/entities/budget.dart';
+import 'package:vittix_wallet/features/budgets/presentation/budget_list_item.dart';
+import 'package:vittix_wallet/core/presentation/empty_state_widget.dart';
+import 'package:vittix_wallet/core/presentation/shimmer_list.dart';
+import 'package:vittix_wallet/features/budgets/domain/budget.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:expense_tracker/core/presentation/app_drawer.dart';
+import 'package:vittix_wallet/core/presentation/app_drawer.dart';
 
 class BudgetScreen extends ConsumerWidget {
   const BudgetScreen({super.key});

@@ -1,4 +1,4 @@
-import 'package:expense_tracker/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
 
 /// "Looks like a duplicate" detection shared by every entry path.
 ///

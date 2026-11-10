@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/features/family/data/wallet_invitation_repository.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/features/family/data/wallet_invitation_repository.dart';
 
 class WalletInvitationService {
   final WalletInvitationRepository _repository;

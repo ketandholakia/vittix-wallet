@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/features/transactions/data/tables/transactions_table.dart';
+import 'package:vittix_wallet/features/transactions/data/tables/transactions_table.dart';
 
 @DataClassName('Attachment')
 class Attachments extends Table {

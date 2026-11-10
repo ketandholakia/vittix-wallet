@@ -1,6 +1,6 @@
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/features/debts/data/tables/loans_table.dart';
-import 'package:expense_tracker/features/debts/data/tables/peer_debts_table.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/features/debts/data/tables/loans_table.dart';
+import 'package:vittix_wallet/features/debts/data/tables/peer_debts_table.dart';
 
 part 'debts_dao.g.dart';
 

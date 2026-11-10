@@ -6,10 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/core/utils/app_logger.dart';
-import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/core/utils/app_logger.dart';
+import 'package:vittix_wallet/features/security/data/secure_key_value_store.dart';
 
 final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) {
   return SharedPreferences.getInstance();

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:isolate';
 import 'dart:math';
 
-import 'package:expense_tracker/core/utils/app_logger.dart';
+import 'package:vittix_wallet/core/utils/app_logger.dart';
 import 'package:crypto/crypto.dart' as legacy_crypto;
 import 'package:cryptography/cryptography.dart';
 

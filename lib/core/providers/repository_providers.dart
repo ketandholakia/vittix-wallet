@@ -1,20 +1,20 @@
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/data/repositories/category_repository_impl.dart';
-import 'package:expense_tracker/domain/repositories/category_repository.dart';
-import 'package:expense_tracker/data/repositories/transaction_repository_impl.dart';
-import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
-import 'package:expense_tracker/features/accounts/data/account_repository_impl.dart';
-import 'package:expense_tracker/features/accounts/domain/account_repository.dart';
-import 'package:expense_tracker/data/repositories/budget_repository_impl.dart';
-import 'package:expense_tracker/domain/repositories/budget_repository.dart';
-import 'package:expense_tracker/domain/repositories/recurring_transaction_repository.dart';
-import 'package:expense_tracker/features/recurring/data/recurring_transaction_repository_impl.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/data/repositories/category_repository_impl.dart';
+import 'package:vittix_wallet/domain/repositories/category_repository.dart';
+import 'package:vittix_wallet/data/repositories/transaction_repository_impl.dart';
+import 'package:vittix_wallet/domain/repositories/transaction_repository.dart';
+import 'package:vittix_wallet/features/accounts/data/account_repository_impl.dart';
+import 'package:vittix_wallet/features/accounts/domain/account_repository.dart';
+import 'package:vittix_wallet/data/repositories/budget_repository_impl.dart';
+import 'package:vittix_wallet/domain/repositories/budget_repository.dart';
+import 'package:vittix_wallet/domain/repositories/recurring_transaction_repository.dart';
+import 'package:vittix_wallet/features/recurring/data/recurring_transaction_repository_impl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 
-import 'package:expense_tracker/features/goals/data/goal_repository_impl.dart';
-import 'package:expense_tracker/features/bills/data/bill_repository_impl.dart';
-import 'package:expense_tracker/features/family/data/allowance_repository_impl.dart';
+import 'package:vittix_wallet/features/goals/data/goal_repository_impl.dart';
+import 'package:vittix_wallet/features/bills/data/bill_repository_impl.dart';
+import 'package:vittix_wallet/features/family/data/allowance_repository_impl.dart';
 
 final categoryRepositoryProvider = Provider<CategoryRepository>((ref) {
   final dao = ref.watch(categoryDaoProvider);

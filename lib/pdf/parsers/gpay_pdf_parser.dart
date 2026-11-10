@@ -1,6 +1,6 @@
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/pdf/parsers/pdf_statement_parser.dart';
-import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/pdf/parsers/pdf_statement_parser.dart';
+import 'package:vittix_wallet/pdf/pdf_transaction_candidate.dart';
 import 'package:intl/intl.dart';
 
 class GPayPdfParser extends PdfStatementParser {

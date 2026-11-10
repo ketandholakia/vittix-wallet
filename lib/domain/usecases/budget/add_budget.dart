@@ -1,1 +1,1 @@
-export 'package:expense_tracker/features/budgets/domain/usecases/add_budget.dart';
+export 'package:vittix_wallet/features/budgets/domain/usecases/add_budget.dart';

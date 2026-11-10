@@ -1,4 +1,4 @@
-import 'package:expense_tracker/domain/repositories/category_repository.dart';
+import 'package:vittix_wallet/domain/repositories/category_repository.dart';
 
 class DeleteCategory {
   final CategoryRepository repository;

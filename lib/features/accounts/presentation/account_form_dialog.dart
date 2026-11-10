@@ -1,9 +1,9 @@
-import 'package:expense_tracker/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 
 IconData iconForAccountType(AccountType type) => switch (type) {
       AccountType.bank => Symbols.account_balance,

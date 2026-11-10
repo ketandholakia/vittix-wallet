@@ -1,8 +1,8 @@
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/categories/domain/category.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/core/providers/repository_providers.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/categories/domain/category.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/core/providers/repository_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

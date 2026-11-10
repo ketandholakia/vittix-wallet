@@ -1,4 +1,4 @@
-import 'package:expense_tracker/domain/entities/budget.dart';
+import 'package:vittix_wallet/domain/entities/budget.dart';
 
 abstract class BudgetRepository {
   Stream<List<Budget>> watchAllBudgets();

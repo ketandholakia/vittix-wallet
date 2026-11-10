@@ -1,6 +1,6 @@
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/features/accounts/domain/default_accounts.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/features/accounts/domain/default_accounts.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

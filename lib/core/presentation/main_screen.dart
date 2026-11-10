@@ -1,9 +1,9 @@
 // BROKEN DEPENDENCY: Experimental
-import 'package:expense_tracker/features/budgets/presentation/budget_screen.dart';
-import 'package:expense_tracker/features/dashboard/presentation/dashboard_screen.dart';
-import 'package:expense_tracker/features/reports/presentation/reports_screen.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_screen.dart';
-import 'package:expense_tracker/features/transactions/presentation/transaction_list_screen.dart';
+import 'package:vittix_wallet/features/budgets/presentation/budget_screen.dart';
+import 'package:vittix_wallet/features/dashboard/presentation/dashboard_screen.dart';
+import 'package:vittix_wallet/features/reports/presentation/reports_screen.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_screen.dart';
+import 'package:vittix_wallet/features/transactions/presentation/transaction_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {

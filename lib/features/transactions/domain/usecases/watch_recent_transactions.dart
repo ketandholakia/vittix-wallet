@@ -1,5 +1,5 @@
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/repositories/transaction_repository.dart';
 
 class WatchRecentTransactions {
   final TransactionRepository repository;

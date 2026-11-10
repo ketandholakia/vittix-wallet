@@ -2,14 +2,14 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/core/services/backup_service.dart';
-import 'package:expense_tracker/features/sync/data/sync_merge.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/core/services/backup_service.dart';
+import 'package:vittix_wallet/features/sync/data/sync_merge.dart';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/core/database/database_provider.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/database/database_provider.dart';
 
 // Per-entity handlers and the simulated server are parts of this library.
 part 'sync_entity_upserts.dart';

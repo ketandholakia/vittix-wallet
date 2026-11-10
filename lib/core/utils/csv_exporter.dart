@@ -1,5 +1,5 @@
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/domain/entities/category.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
 import 'package:intl/intl.dart';
 
 /// Escapes a single CSV field for RFC 4180 and neutralises spreadsheet formula

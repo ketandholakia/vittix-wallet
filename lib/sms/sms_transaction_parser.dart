@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/sms/parsers/bank_sms_parser.dart';
-import 'package:expense_tracker/sms/parsers/hdfc_bank_parser.dart';
-import 'package:expense_tracker/sms/parsers/icici_bank_parser.dart';
-import 'package:expense_tracker/sms/parsers/sbi_bank_parser.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/sms/parsers/bank_sms_parser.dart';
+import 'package:vittix_wallet/sms/parsers/hdfc_bank_parser.dart';
+import 'package:vittix_wallet/sms/parsers/icici_bank_parser.dart';
+import 'package:vittix_wallet/sms/parsers/sbi_bank_parser.dart';
 
 class SmsTransactionCandidate {
   final String smsId;

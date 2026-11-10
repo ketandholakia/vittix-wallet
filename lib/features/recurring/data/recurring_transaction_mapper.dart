@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/features/accounts/data/account_mapper.dart';
-import 'package:expense_tracker/data/local/app_database.dart' as db;
-import 'package:expense_tracker/data/local/mappers/category_mapper.dart';
-import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
-import 'package:expense_tracker/features/transactions/domain/transaction.dart';
+import 'package:vittix_wallet/features/accounts/data/account_mapper.dart';
+import 'package:vittix_wallet/data/local/app_database.dart' as db;
+import 'package:vittix_wallet/data/local/mappers/category_mapper.dart';
+import 'package:vittix_wallet/features/recurring/domain/recurring_transaction.dart';
+import 'package:vittix_wallet/features/transactions/domain/transaction.dart';
 
 extension RecurringWithDetailsMapper on db.RecurringTransactionWithDetails {
   RecurringTransaction toDomain() {

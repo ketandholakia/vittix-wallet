@@ -1,4 +1,4 @@
-import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
 
 abstract class WalletInvitationRepository {
   Future<int> createInvitation({

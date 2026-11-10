@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/data/local/app_database.dart' as db;
-import 'package:expense_tracker/domain/entities/category.dart' as domain;
-import 'package:expense_tracker/shared/icon_codepoint.dart';
+import 'package:vittix_wallet/data/local/app_database.dart' as db;
+import 'package:vittix_wallet/domain/entities/category.dart' as domain;
+import 'package:vittix_wallet/shared/icon_codepoint.dart';
 import 'package:flutter/material.dart';
 
 // Helper to convert hex string to Color

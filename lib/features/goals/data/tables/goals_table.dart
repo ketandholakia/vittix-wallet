@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/core/money/money.dart';
-import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
-import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
+import 'package:vittix_wallet/core/money/money.dart';
+import 'package:vittix_wallet/features/accounts/data/tables/accounts_table.dart';
+import 'package:vittix_wallet/features/family/data/tables/wallets_table.dart';
 
 @DataClassName('WalletGoal')
 class WalletGoals extends Table {

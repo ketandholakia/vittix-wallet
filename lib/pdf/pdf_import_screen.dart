@@ -1,19 +1,19 @@
 
 import 'dart:io';
 
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/categories/domain/category.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/core/utils/app_logger.dart';
-import 'package:expense_tracker/core/utils/duplicate_detector.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/pdf/pdf_text_extractor.dart';
-import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
-import 'package:expense_tracker/pdf/parsers/pdf_statement_parser.dart';
-import 'package:expense_tracker/pdf/parsers/gpay_pdf_parser.dart';
-import 'package:expense_tracker/pdf/parsers/phonepe_pdf_parser.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/categories/domain/category.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/core/utils/app_logger.dart';
+import 'package:vittix_wallet/core/utils/duplicate_detector.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/pdf/pdf_text_extractor.dart';
+import 'package:vittix_wallet/pdf/pdf_transaction_candidate.dart';
+import 'package:vittix_wallet/pdf/parsers/pdf_statement_parser.dart';
+import 'package:vittix_wallet/pdf/parsers/gpay_pdf_parser.dart';
+import 'package:vittix_wallet/pdf/parsers/phonepe_pdf_parser.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

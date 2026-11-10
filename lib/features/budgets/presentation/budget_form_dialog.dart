@@ -1,11 +1,11 @@
-import 'package:expense_tracker/domain/entities/budget.dart';
-import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/domain/entities/budget.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 
 /// Shows a dialog to add or edit a budget.
 /// Returns the [Budget] if the user saves, or `null` if cancelled.

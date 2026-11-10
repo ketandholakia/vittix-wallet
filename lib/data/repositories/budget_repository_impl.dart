@@ -1,1 +1,1 @@
-export 'package:expense_tracker/features/budgets/data/budget_repository_impl.dart';
+export 'package:vittix_wallet/features/budgets/data/budget_repository_impl.dart';

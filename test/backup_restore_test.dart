@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart'
+import 'package:vittix_wallet/core/database/app_database.dart'
     hide Transaction, Category, Account, TransactionType, AccountType, isNull, isNotNull;
-import 'package:expense_tracker/core/services/backup_service.dart';
+import 'package:vittix_wallet/core/services/backup_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 

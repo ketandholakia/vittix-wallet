@@ -1,5 +1,5 @@
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/core/services/auto_backup.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/core/services/auto_backup.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

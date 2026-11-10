@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/features/security/data/pin_attempt_limiter.dart';
-import 'package:expense_tracker/features/security/data/pin_hasher.dart';
-import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
-import 'package:expense_tracker/features/security/presentation/security_providers.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/security/data/pin_attempt_limiter.dart';
+import 'package:vittix_wallet/features/security/data/pin_hasher.dart';
+import 'package:vittix_wallet/features/security/data/secure_key_value_store.dart';
+import 'package:vittix_wallet/features/security/presentation/security_providers.dart';
 
 enum LockScreenMode { unlock, setup, verify }
 

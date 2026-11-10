@@ -1,5 +1,5 @@
-import 'package:expense_tracker/domain/entities/trend_data_point.dart';
-import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
+import 'package:vittix_wallet/domain/entities/trend_data_point.dart';
+import 'package:vittix_wallet/domain/repositories/transaction_repository.dart';
 
 class GetTrendReport {
   final TransactionRepository repository;

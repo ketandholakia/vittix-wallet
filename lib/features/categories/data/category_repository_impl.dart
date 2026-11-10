@@ -1,7 +1,7 @@
-import 'package:expense_tracker/data/local/app_database.dart' as db;
-import 'package:expense_tracker/data/local/mappers/category_mapper.dart';
-import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/domain/repositories/category_repository.dart';
+import 'package:vittix_wallet/data/local/app_database.dart' as db;
+import 'package:vittix_wallet/data/local/mappers/category_mapper.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
+import 'package:vittix_wallet/domain/repositories/category_repository.dart';
 
 class CategoryRepositoryImpl implements CategoryRepository {
   final db.CategoryDao _categoryDao;

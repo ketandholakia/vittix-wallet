@@ -1,6 +1,6 @@
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
-import 'package:expense_tracker/domain/usecases/budget/check_budget_thresholds.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/repositories/transaction_repository.dart';
+import 'package:vittix_wallet/domain/usecases/budget/check_budget_thresholds.dart';
 
 class AddTransaction {
   final TransactionRepository repository;

@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:expense_tracker/core/database/app_database.dart' hide Column;
-import 'package:expense_tracker/core/database/database_encryption.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/core/services/backup_service.dart';
-import 'package:expense_tracker/core/services/database_recovery_service.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' hide Column;
+import 'package:vittix_wallet/core/database/database_encryption.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/core/services/backup_service.dart';
+import 'package:vittix_wallet/core/services/database_recovery_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

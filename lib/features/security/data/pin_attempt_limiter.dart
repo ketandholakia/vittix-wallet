@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
+import 'package:vittix_wallet/features/security/data/secure_key_value_store.dart';
 
 /// Progressive lockout for PIN entry.
 ///

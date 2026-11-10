@@ -1,4 +1,4 @@
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
 
 class PdfTransactionCandidate {
   final String merchant;

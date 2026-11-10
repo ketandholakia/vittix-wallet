@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/features/categories/data/tables/categories_table.dart';
-import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
+import 'package:vittix_wallet/features/categories/data/tables/categories_table.dart';
+import 'package:vittix_wallet/features/family/data/tables/wallets_table.dart';
 
 @DataClassName('MerchantMapping')
 class MerchantMappings extends Table {

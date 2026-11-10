@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:expense_tracker/llm/llm_service.dart';
-import 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';
-import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
+import 'package:vittix_wallet/llm/llm_service.dart';
+import 'package:vittix_wallet/features/transactions/presentation/add_transaction_screen.dart';
+import 'package:vittix_wallet/pdf/pdf_transaction_candidate.dart';
 
 class ReceiptScannerScreen extends ConsumerStatefulWidget {
   /// When true, the parsed candidate is returned to the caller via

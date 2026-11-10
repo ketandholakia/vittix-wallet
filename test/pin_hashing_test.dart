@@ -1,6 +1,6 @@
-import 'package:expense_tracker/features/security/data/pin_attempt_limiter.dart';
-import 'package:expense_tracker/features/security/data/pin_hasher.dart';
-import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
+import 'package:vittix_wallet/features/security/data/pin_attempt_limiter.dart';
+import 'package:vittix_wallet/features/security/data/pin_hasher.dart';
+import 'package:vittix_wallet/features/security/data/secure_key_value_store.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// A3 (PIN hardening): real key derivation, versioned hashes, attempt limits.

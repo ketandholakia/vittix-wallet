@@ -1,12 +1,12 @@
 // BROKEN DEPENDENCY: Experimental
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';
-import 'package:expense_tracker/receipt/receipt_scanner_screen.dart';
-import 'package:expense_tracker/calendar/subscription_calendar_screen.dart';
-import 'package:expense_tracker/features/accounts/presentation/account_screen.dart';
-import 'package:expense_tracker/features/categories/presentation/category_screen.dart';
-import 'package:expense_tracker/core/domain/brand_assets.dart';
+import 'package:vittix_wallet/features/transactions/presentation/add_transaction_screen.dart';
+import 'package:vittix_wallet/receipt/receipt_scanner_screen.dart';
+import 'package:vittix_wallet/calendar/subscription_calendar_screen.dart';
+import 'package:vittix_wallet/features/accounts/presentation/account_screen.dart';
+import 'package:vittix_wallet/features/categories/presentation/category_screen.dart';
+import 'package:vittix_wallet/core/domain/brand_assets.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});

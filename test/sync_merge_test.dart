@@ -1,4 +1,4 @@
-import 'package:expense_tracker/features/sync/data/sync_merge.dart';
+import 'package:vittix_wallet/features/sync/data/sync_merge.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

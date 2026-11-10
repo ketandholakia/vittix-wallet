@@ -5,9 +5,9 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:expense_tracker/domain/entities/transaction.dart' as _i4;
-import 'package:expense_tracker/domain/entities/trend_data_point.dart' as _i5;
-import 'package:expense_tracker/features/transactions/domain/transaction_repository.dart'
+import 'package:vittix_wallet/domain/entities/transaction.dart' as _i4;
+import 'package:vittix_wallet/domain/entities/trend_data_point.dart' as _i5;
+import 'package:vittix_wallet/features/transactions/domain/transaction_repository.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 

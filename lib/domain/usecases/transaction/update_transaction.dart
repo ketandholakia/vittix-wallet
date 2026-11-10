@@ -1,1 +1,1 @@
-export 'package:expense_tracker/features/transactions/domain/usecases/update_transaction.dart';
+export 'package:vittix_wallet/features/transactions/domain/usecases/update_transaction.dart';

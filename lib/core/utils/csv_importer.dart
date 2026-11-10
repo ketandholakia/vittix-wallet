@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/accounts/domain/account_repository.dart';
-import 'package:expense_tracker/features/categories/domain/category.dart';
-import 'package:expense_tracker/features/categories/data/category_repository.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
-import 'package:expense_tracker/core/utils/app_logger.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/accounts/domain/account_repository.dart';
+import 'package:vittix_wallet/features/categories/domain/category.dart';
+import 'package:vittix_wallet/features/categories/data/category_repository.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/repositories/transaction_repository.dart';
+import 'package:vittix_wallet/core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

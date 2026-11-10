@@ -1,1 +1,1 @@
-export 'package:expense_tracker/features/categories/domain/usecases/watch_all_categories.dart';
+export 'package:vittix_wallet/features/categories/domain/usecases/watch_all_categories.dart';

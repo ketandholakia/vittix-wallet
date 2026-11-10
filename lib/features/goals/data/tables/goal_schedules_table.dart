@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/core/money/money.dart';
-import 'package:expense_tracker/core/database/database_enums.dart';
-import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
-import 'package:expense_tracker/features/family/data/tables/wallet_members_table.dart';
-import 'package:expense_tracker/features/goals/data/tables/goals_table.dart';
+import 'package:vittix_wallet/core/money/money.dart';
+import 'package:vittix_wallet/core/database/database_enums.dart';
+import 'package:vittix_wallet/features/accounts/data/tables/accounts_table.dart';
+import 'package:vittix_wallet/features/family/data/tables/wallet_members_table.dart';
+import 'package:vittix_wallet/features/goals/data/tables/goals_table.dart';
 
 @DataClassName('WalletGoalSchedule')
 class WalletGoalSchedules extends Table {

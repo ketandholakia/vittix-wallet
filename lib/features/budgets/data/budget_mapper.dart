@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/data/local/app_database.dart' as db;
-import 'package:expense_tracker/data/local/mappers/category_mapper.dart';
-import 'package:expense_tracker/domain/entities/budget.dart' as domain;
+import 'package:vittix_wallet/data/local/app_database.dart' as db;
+import 'package:vittix_wallet/data/local/mappers/category_mapper.dart';
+import 'package:vittix_wallet/domain/entities/budget.dart' as domain;
 
 extension BudgetWithCategoryMapper on db.BudgetWithCategory {
   domain.Budget toDomain() {

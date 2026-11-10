@@ -1,6 +1,6 @@
-import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/features/sync/data/sync_service.dart';
+import 'package:vittix_wallet/features/security/data/secure_key_value_store.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/sync/data/sync_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,8 +1,8 @@
-import 'package:expense_tracker/domain/entities/account.dart';
-import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
-import 'package:expense_tracker/domain/usecases/summary/get_monthly_summary.dart';
+import 'package:vittix_wallet/domain/entities/account.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/repositories/transaction_repository.dart';
+import 'package:vittix_wallet/domain/usecases/summary/get_monthly_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

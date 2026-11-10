@@ -1,4 +1,4 @@
-import 'package:expense_tracker/features/recurring/data/recurring_transaction_repository.dart';
+import 'package:vittix_wallet/features/recurring/data/recurring_transaction_repository.dart';
 
 class DeleteRecurring {
   final RecurringTransactionRepository repository;

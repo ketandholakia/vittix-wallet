@@ -1,6 +1,6 @@
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide isNull, isNotNull, Budget, Transaction, TransactionType, Category;
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' hide isNull, isNotNull, Budget, Transaction, TransactionType, Category;
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

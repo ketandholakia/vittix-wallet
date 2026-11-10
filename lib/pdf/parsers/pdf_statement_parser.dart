@@ -1,4 +1,4 @@
-import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
+import 'package:vittix_wallet/pdf/pdf_transaction_candidate.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 

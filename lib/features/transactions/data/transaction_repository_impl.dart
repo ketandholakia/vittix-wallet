@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/data/local/app_database.dart' as db;
-import 'package:expense_tracker/data/local/mappers/transaction_mapper.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/domain/entities/trend_data_point.dart';
-import 'package:expense_tracker/domain/repositories/transaction_repository.dart';
+import 'package:vittix_wallet/data/local/app_database.dart' as db;
+import 'package:vittix_wallet/data/local/mappers/transaction_mapper.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/entities/trend_data_point.dart';
+import 'package:vittix_wallet/domain/repositories/transaction_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {

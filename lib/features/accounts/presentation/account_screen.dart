@@ -1,9 +1,9 @@
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/accounts/presentation/account_form_dialog.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/core/providers/repository_providers.dart';
-import 'package:expense_tracker/core/presentation/empty_state_widget.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/accounts/presentation/account_form_dialog.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/core/providers/repository_providers.dart';
+import 'package:vittix_wallet/core/presentation/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

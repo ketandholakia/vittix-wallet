@@ -1,7 +1,7 @@
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart'
+import 'package:vittix_wallet/core/database/app_database.dart'
     hide Transaction, Category, Account, TransactionType, AccountType, isNull, isNotNull;
-import 'package:expense_tracker/core/database/database_enums.dart' as db_enums;
+import 'package:vittix_wallet/core/database/database_enums.dart' as db_enums;
 import 'package:flutter_test/flutter_test.dart';
 
 /// A7 step 3, slice 2 — an audit event can be attributed to a real user

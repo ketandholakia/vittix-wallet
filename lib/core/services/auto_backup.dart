@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:expense_tracker/core/services/backup_service.dart';
-import 'package:expense_tracker/core/utils/app_logger.dart';
+import 'package:vittix_wallet/core/services/backup_service.dart';
+import 'package:vittix_wallet/core/utils/app_logger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';

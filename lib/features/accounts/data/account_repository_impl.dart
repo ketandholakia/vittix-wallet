@@ -1,7 +1,7 @@
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/accounts/data/account_mapper.dart';
-import 'package:expense_tracker/features/accounts/domain/account_repository.dart';
-import 'package:expense_tracker/data/local/app_database.dart' as db;
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/accounts/data/account_mapper.dart';
+import 'package:vittix_wallet/features/accounts/domain/account_repository.dart';
+import 'package:vittix_wallet/data/local/app_database.dart' as db;
 
 class AccountRepositoryImpl implements AccountRepository {
   final db.AccountDao _accountDao;

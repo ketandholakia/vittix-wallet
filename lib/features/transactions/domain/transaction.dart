@@ -1,8 +1,8 @@
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/categories/domain/category.dart';
-import 'package:expense_tracker/core/domain/payee.dart';
-import 'package:expense_tracker/core/domain/tag.dart';
-import 'package:expense_tracker/core/domain/attachment.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/categories/domain/category.dart';
+import 'package:vittix_wallet/core/domain/payee.dart';
+import 'package:vittix_wallet/core/domain/tag.dart';
+import 'package:vittix_wallet/core/domain/attachment.dart';
 
 enum TransactionType {
   income,

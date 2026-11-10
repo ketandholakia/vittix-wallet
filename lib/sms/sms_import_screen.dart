@@ -1,16 +1,16 @@
 
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/categories/domain/category.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/core/config/feature_flags.dart';
-import 'package:expense_tracker/core/utils/app_logger.dart';
-import 'package:expense_tracker/core/utils/duplicate_detector.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
-import 'package:expense_tracker/sms/sms_transaction_parser.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide Column, Category, Account, AccountType;
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/categories/domain/category.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/core/config/feature_flags.dart';
+import 'package:vittix_wallet/core/utils/app_logger.dart';
+import 'package:vittix_wallet/core/utils/duplicate_detector.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/features/recurring/domain/recurring_transaction.dart';
+import 'package:vittix_wallet/sms/sms_transaction_parser.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' hide Column, Category, Account, AccountType;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,6 +1,6 @@
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';

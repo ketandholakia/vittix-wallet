@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/features/accounts/data/account_mapper.dart';
-import 'package:expense_tracker/data/local/app_database.dart' as db;
-import 'package:expense_tracker/data/local/mappers/category_mapper.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/features/accounts/data/account_mapper.dart';
+import 'package:vittix_wallet/data/local/app_database.dart' as db;
+import 'package:vittix_wallet/data/local/mappers/category_mapper.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
 
 extension TransactionWithDetailsMapper on db.TransactionWithDetails {
   domain.Transaction toDomain() {

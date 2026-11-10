@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/features/users/data/tables/users_table.dart';
-import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
-import 'package:expense_tracker/features/family/data/tables/wallet_members_table.dart';
-import 'package:expense_tracker/features/family/data/tables/wallets_table.dart';
+import 'package:vittix_wallet/features/users/data/tables/users_table.dart';
+import 'package:vittix_wallet/features/accounts/data/tables/accounts_table.dart';
+import 'package:vittix_wallet/features/family/data/tables/wallet_members_table.dart';
+import 'package:vittix_wallet/features/family/data/tables/wallets_table.dart';
 import 'package:uuid/uuid.dart';
 
 @DataClassName('WalletActivity')

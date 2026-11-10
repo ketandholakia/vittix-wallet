@@ -1,8 +1,8 @@
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide Budget, Category;
-import 'package:expense_tracker/features/budgets/data/budget_repository_impl.dart';
-import 'package:expense_tracker/domain/entities/budget.dart';
-import 'package:expense_tracker/domain/entities/category.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' hide Budget, Category;
+import 'package:vittix_wallet/features/budgets/data/budget_repository_impl.dart';
+import 'package:vittix_wallet/domain/entities/budget.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

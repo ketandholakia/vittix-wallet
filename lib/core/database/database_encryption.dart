@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:expense_tracker/core/utils/app_logger.dart';
-import 'package:expense_tracker/features/security/data/secure_key_value_store.dart';
+import 'package:vittix_wallet/core/utils/app_logger.dart';
+import 'package:vittix_wallet/features/security/data/secure_key_value_store.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 /// Thrown when the database is encrypted at rest but the app cannot obtain a

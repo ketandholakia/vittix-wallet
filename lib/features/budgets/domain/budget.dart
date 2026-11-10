@@ -1,4 +1,4 @@
-import 'package:expense_tracker/domain/entities/category.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
 
 class Budget {
   final int id;

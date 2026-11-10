@@ -1,6 +1,6 @@
 // BROKEN DEPENDENCY: Experimental
 
-import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
 
 class RecurrenceOccurrence {
   final DateTime date;

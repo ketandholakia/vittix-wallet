@@ -1,4 +1,4 @@
-import 'package:expense_tracker/features/transactions/domain/transaction.dart';
+import 'package:vittix_wallet/features/transactions/domain/transaction.dart';
 import 'package:flutter/material.dart';
 
 enum AccountType {

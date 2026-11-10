@@ -1,21 +1,21 @@
 // BROKEN DEPENDENCY RESOLVED
 
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/core/domain/payee.dart' as domain_payee;
-import 'package:expense_tracker/core/domain/tag.dart' as domain_tag;
-import 'package:expense_tracker/core/domain/attachment.dart' as domain_attachment;
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/core/domain/payee.dart' as domain_payee;
+import 'package:vittix_wallet/core/domain/tag.dart' as domain_tag;
+import 'package:vittix_wallet/core/domain/attachment.dart' as domain_attachment;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/receipt/receipt_scanner_screen.dart';
-import 'package:expense_tracker/pdf/pdf_transaction_candidate.dart';
-import 'package:expense_tracker/core/utils/app_logger.dart';
-import 'package:expense_tracker/core/utils/duplicate_detector.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/receipt/receipt_scanner_screen.dart';
+import 'package:vittix_wallet/pdf/pdf_transaction_candidate.dart';
+import 'package:vittix_wallet/core/utils/app_logger.dart';
+import 'package:vittix_wallet/core/utils/duplicate_detector.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
   final domain.Transaction? existingTransaction;

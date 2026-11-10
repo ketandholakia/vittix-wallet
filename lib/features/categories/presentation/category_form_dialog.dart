@@ -1,5 +1,5 @@
-import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';

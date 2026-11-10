@@ -1,1 +1,1 @@
-export 'package:expense_tracker/features/categories/data/category_mapper.dart';
+export 'package:vittix_wallet/features/categories/data/category_mapper.dart';

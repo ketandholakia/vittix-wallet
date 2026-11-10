@@ -1,13 +1,13 @@
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/categories/domain/category.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
-import 'package:expense_tracker/features/transactions/domain/transaction.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/categories/domain/category.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/features/recurring/domain/recurring_transaction.dart';
+import 'package:vittix_wallet/features/transactions/domain/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 
 class AddRecurringTransactionScreen extends ConsumerStatefulWidget {
   const AddRecurringTransactionScreen({super.key});

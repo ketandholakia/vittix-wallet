@@ -1,7 +1,7 @@
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide isNull, isNotNull, Budget, Transaction, TransactionType, Category, Account;
-import 'package:expense_tracker/features/accounts/data/account_repository_impl.dart';
-import 'package:expense_tracker/features/accounts/domain/account.dart' as account_domain;
+import 'package:vittix_wallet/core/database/app_database.dart' hide isNull, isNotNull, Budget, Transaction, TransactionType, Category, Account;
+import 'package:vittix_wallet/features/accounts/data/account_repository_impl.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart' as account_domain;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

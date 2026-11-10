@@ -1,1 +1,1 @@
-export 'package:expense_tracker/core/database/database_provider.dart';
+export 'package:vittix_wallet/core/database/database_provider.dart';

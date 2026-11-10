@@ -1,4 +1,4 @@
-import 'package:expense_tracker/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
 
 abstract class AccountRepository {
   Stream<List<Account>> watchAllAccounts();

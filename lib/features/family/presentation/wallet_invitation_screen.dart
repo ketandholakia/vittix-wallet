@@ -1,10 +1,10 @@
-import 'package:expense_tracker/core/database/app_database.dart' as db;
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/core/providers/database_provider.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/features/family/data/wallet_invitation_repository.dart';
-import 'package:expense_tracker/features/family/data/wallet_invitation_service.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' as db;
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/core/providers/database_provider.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/family/data/wallet_invitation_repository.dart';
+import 'package:vittix_wallet/features/family/data/wallet_invitation_service.dart';
 import 'package:flutter/material.dart' as m;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

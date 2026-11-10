@@ -1,1 +1,1 @@
-export 'package:expense_tracker/features/recurring/data/recurring_transaction_repository_impl.dart';
+export 'package:vittix_wallet/features/recurring/data/recurring_transaction_repository_impl.dart';

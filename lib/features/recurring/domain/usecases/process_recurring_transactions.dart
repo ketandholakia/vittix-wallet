@@ -1,8 +1,8 @@
-import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
-import 'package:expense_tracker/features/recurring/data/recurring_transaction_repository.dart';
-import 'package:expense_tracker/features/transactions/domain/usecases/add_transaction.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/features/notifications/data/notification_service.dart';
+import 'package:vittix_wallet/features/recurring/domain/recurring_transaction.dart';
+import 'package:vittix_wallet/features/recurring/data/recurring_transaction_repository.dart';
+import 'package:vittix_wallet/features/transactions/domain/usecases/add_transaction.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/features/notifications/data/notification_service.dart';
 
 class ProcessRecurringTransactions {
   final RecurringTransactionRepository recurringRepository;

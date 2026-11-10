@@ -1,18 +1,18 @@
 // BROKEN DEPENDENCY: Experimental
 
-import 'package:expense_tracker/features/transactions/presentation/add_transaction_screen.dart';
-import 'package:expense_tracker/core/providers/repository_providers.dart';
-import 'package:expense_tracker/core/providers/usecase_providers.dart';
-import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/features/accounts/domain/account.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/core/presentation/empty_state_widget.dart';
-import 'package:expense_tracker/features/transactions/presentation/transaction_list_item.dart';
-import 'package:expense_tracker/core/presentation/shimmer_list.dart';
+import 'package:vittix_wallet/features/transactions/presentation/add_transaction_screen.dart';
+import 'package:vittix_wallet/core/providers/repository_providers.dart';
+import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/domain/entities/category.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/features/accounts/domain/account.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/core/presentation/empty_state_widget.dart';
+import 'package:vittix_wallet/features/transactions/presentation/transaction_list_item.dart';
+import 'package:vittix_wallet/core/presentation/shimmer_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:expense_tracker/core/presentation/app_drawer.dart';
+import 'package:vittix_wallet/core/presentation/app_drawer.dart';
 import 'package:intl/intl.dart';
 import 'package:grouped_list/grouped_list.dart';
 

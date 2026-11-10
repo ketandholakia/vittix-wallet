@@ -1,6 +1,6 @@
-import 'package:expense_tracker/domain/entities/transaction.dart' as domain;
-import 'package:expense_tracker/features/transactions/presentation/transaction_list_item.dart';
-import 'package:expense_tracker/core/presentation/empty_state_widget.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
+import 'package:vittix_wallet/features/transactions/presentation/transaction_list_item.dart';
+import 'package:vittix_wallet/core/presentation/empty_state_widget.dart';
 import 'package:flutter/material.dart';
 
 class RecentTransactionsList extends StatelessWidget {

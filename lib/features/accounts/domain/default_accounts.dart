@@ -1,4 +1,4 @@
-import 'package:expense_tracker/core/database/app_database.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class DefaultAccounts {

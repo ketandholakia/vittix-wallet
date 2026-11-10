@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/core/database/database_encryption.dart';
-import 'package:expense_tracker/core/services/auto_backup.dart';
-import 'package:expense_tracker/core/services/backup_service.dart';
-import 'package:expense_tracker/sms/data/sms_import_metrics_dao.dart';
-import 'package:expense_tracker/sms/data/sms_parsing_dao.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/core/database/database_encryption.dart';
+import 'package:vittix_wallet/core/services/auto_backup.dart';
+import 'package:vittix_wallet/core/services/backup_service.dart';
+import 'package:vittix_wallet/sms/data/sms_import_metrics_dao.dart';
+import 'package:vittix_wallet/sms/data/sms_parsing_dao.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';

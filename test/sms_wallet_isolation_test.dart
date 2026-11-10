@@ -1,12 +1,12 @@
 import 'package:drift/native.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide isNull, isNotNull, Budget, Transaction, TransactionType, Category;
-import 'package:expense_tracker/domain/entities/category.dart';
-import 'package:expense_tracker/features/accounts/domain/account.dart' as account_domain;
-import 'package:expense_tracker/features/transactions/data/transaction_repository_impl.dart';
-import 'package:expense_tracker/features/transactions/domain/transaction.dart';
-import 'package:expense_tracker/sms/data/sms_import_metrics_dao.dart';
-import 'package:expense_tracker/sms/data/sms_parsing_dao.dart';
-import 'package:expense_tracker/sms/sms_transaction_parser.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' hide isNull, isNotNull, Budget, Transaction, TransactionType, Category;
+import 'package:vittix_wallet/domain/entities/category.dart';
+import 'package:vittix_wallet/features/accounts/domain/account.dart' as account_domain;
+import 'package:vittix_wallet/features/transactions/data/transaction_repository_impl.dart';
+import 'package:vittix_wallet/features/transactions/domain/transaction.dart';
+import 'package:vittix_wallet/sms/data/sms_import_metrics_dao.dart';
+import 'package:vittix_wallet/sms/data/sms_parsing_dao.dart';
+import 'package:vittix_wallet/sms/sms_transaction_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

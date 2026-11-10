@@ -1,1 +1,1 @@
-export 'package:expense_tracker/features/notifications/data/notification_provider.dart';
+export 'package:vittix_wallet/features/notifications/data/notification_provider.dart';

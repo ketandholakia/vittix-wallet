@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:expense_tracker/core/money/money.dart';
-import 'package:expense_tracker/features/accounts/data/tables/accounts_table.dart';
+import 'package:vittix_wallet/core/money/money.dart';
+import 'package:vittix_wallet/features/accounts/data/tables/accounts_table.dart';
 import 'package:uuid/uuid.dart';
 
 @DataClassName('LoanDb')

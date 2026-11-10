@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:expense_tracker/core/database/database_provider.dart';
-import 'package:expense_tracker/core/database/app_database.dart' hide Column;
-import 'package:expense_tracker/features/debts/data/debts_dao.dart';
-import 'package:expense_tracker/features/debts/data/tables/peer_debts_table.dart';
-import 'package:expense_tracker/features/settings/presentation/settings_providers.dart';
-import 'package:expense_tracker/features/debts/presentation/debts_loans_screen.dart';
+import 'package:vittix_wallet/core/database/database_provider.dart';
+import 'package:vittix_wallet/core/database/app_database.dart' hide Column;
+import 'package:vittix_wallet/features/debts/data/debts_dao.dart';
+import 'package:vittix_wallet/features/debts/data/tables/peer_debts_table.dart';
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
+import 'package:vittix_wallet/features/debts/presentation/debts_loans_screen.dart';
 
 final debtsSummaryProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final db = ref.watch(databaseProvider);

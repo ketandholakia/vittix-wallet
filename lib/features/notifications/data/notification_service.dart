@@ -1,4 +1,4 @@
-import 'package:expense_tracker/core/utils/app_logger.dart';
+import 'package:vittix_wallet/core/utils/app_logger.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;

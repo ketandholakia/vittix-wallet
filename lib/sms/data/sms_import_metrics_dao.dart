@@ -1,5 +1,5 @@
-import 'package:expense_tracker/core/database/app_database.dart';
-import 'package:expense_tracker/features/transactions/data/tables/sms_import_metrics_table.dart';
+import 'package:vittix_wallet/core/database/app_database.dart';
+import 'package:vittix_wallet/features/transactions/data/tables/sms_import_metrics_table.dart';
 
 part 'sms_import_metrics_dao.g.dart';
 

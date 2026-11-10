@@ -1,4 +1,4 @@
-import 'package:expense_tracker/features/recurring/domain/recurring_transaction.dart';
+import 'package:vittix_wallet/features/recurring/domain/recurring_transaction.dart';
 
 abstract class RecurringTransactionRepository {
   Stream<List<RecurringTransaction>> watchAll();

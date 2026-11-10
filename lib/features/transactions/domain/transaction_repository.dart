@@ -1,5 +1,5 @@
-import 'package:expense_tracker/domain/entities/transaction.dart';
-import 'package:expense_tracker/domain/entities/trend_data_point.dart';
+import 'package:vittix_wallet/domain/entities/transaction.dart';
+import 'package:vittix_wallet/domain/entities/trend_data_point.dart';
 
 abstract class TransactionRepository {
   Stream<List<Transaction>> watchTransactionsInMonth(DateTime month);
