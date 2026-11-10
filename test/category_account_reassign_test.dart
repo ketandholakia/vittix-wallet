@@ -177,9 +177,19 @@ void main() {
         reason: 'a non-existent target would orphan the history',
       );
 
-      // Neither rejected call may mutate anything.
-      expect(await db.select(db.transactions).get(), hasLength(4));
-      expect(await db.select(db.categories).get(), hasLength(3));
+      // Neither rejected call may mutate anything. Counts are scoped to the
+      // records this test created — schema creation seeds default categories.
+      final rows = await db.select(db.transactions).get();
+      expect(rows, hasLength(4), reason: 'no transaction may be lost');
+      expect(rows.where((t) => t.categoryId == foodId), hasLength(2),
+          reason: 'no transaction may be reassigned away from Food');
+      expect(rows.where((t) => t.categoryId == travelId), hasLength(1));
+      expect(rows.where((t) => t.categoryId == diningId), hasLength(1));
+
+      final categoriesAfter = await db.select(db.categories).get();
+      expect(categoriesAfter.map((c) => c.id),
+          containsAll([foodId, travelId, diningId]),
+          reason: 'no test category may be deleted');
     });
 
     test('deleteCategory removes subcategories even without foreign keys',
@@ -209,7 +219,17 @@ void main() {
         accounts.reassignAndDeleteAccount(cashId, cashId),
         throwsArgumentError,
       );
-      expect(await db.select(db.accounts).get(), hasLength(2));
+
+      // Scoped to the records this test created — schema creation seeds
+      // default accounts.
+      final rows = await db.select(db.transactions).get();
+      expect(rows.where((t) => t.accountId == cashId), hasLength(3),
+          reason: 'no transaction may be reassigned away from Cash');
+      expect(rows.where((t) => t.accountId == bankId), hasLength(1));
+
+      final accountsAfter = await db.select(db.accounts).get();
+      expect(accountsAfter.map((a) => a.id), containsAll([cashId, bankId]),
+          reason: 'no test account may be deleted');
     });
 
     test('reassignAndDeleteAccount rejects a target in another wallet', () async {
@@ -228,8 +248,19 @@ void main() {
         accounts.reassignAndDeleteAccount(cashId, foreignId),
         throwsStateError,
       );
-      expect(await db.select(db.transactions).get(), hasLength(4));
-      expect(await db.select(db.accounts).get(), hasLength(3));
+
+      // Scoped to the records this test created — schema creation seeds
+      // default accounts.
+      final rows = await db.select(db.transactions).get();
+      expect(rows, hasLength(4), reason: 'no transaction may be lost');
+      expect(rows.where((t) => t.accountId == cashId), hasLength(3),
+          reason: 'no transaction may be reassigned away from Cash');
+      expect(rows.where((t) => t.accountId == bankId), hasLength(1));
+
+      final accountsAfter = await db.select(db.accounts).get();
+      expect(accountsAfter.map((a) => a.id),
+          containsAll([cashId, bankId, foreignId]),
+          reason: 'no test account may be deleted');
     });
   });
 }
