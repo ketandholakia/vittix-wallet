@@ -3,292 +3,6 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
-mixin _$WalletDaoMixin on DatabaseAccessor<AppDatabase> {
-  $WalletsTable get wallets => attachedDatabase.wallets;
-  $WalletMembersTable get walletMembers => attachedDatabase.walletMembers;
-  $WalletInvitationsTable get walletInvitations =>
-      attachedDatabase.walletInvitations;
-  $WalletSettlementsTable get walletSettlements =>
-      attachedDatabase.walletSettlements;
-  $WalletExpenseSplitsTable get walletExpenseSplits =>
-      attachedDatabase.walletExpenseSplits;
-  $WalletExpenseSplitMembersTable get walletExpenseSplitMembers =>
-      attachedDatabase.walletExpenseSplitMembers;
-  $PeerDebtsTable get peerDebts => attachedDatabase.peerDebts;
-  $TransactionsTable get transactions => attachedDatabase.transactions;
-  $WalletActivitiesTable get walletActivities =>
-      attachedDatabase.walletActivities;
-  WalletDaoManager get managers => WalletDaoManager(this);
-}
-
-class WalletDaoManager {
-  final _$WalletDaoMixin _db;
-  WalletDaoManager(this._db);
-  $$WalletsTableTableManager get wallets =>
-      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
-  $$WalletMembersTableTableManager get walletMembers =>
-      $$WalletMembersTableTableManager(_db.attachedDatabase, _db.walletMembers);
-  $$WalletInvitationsTableTableManager get walletInvitations =>
-      $$WalletInvitationsTableTableManager(
-        _db.attachedDatabase,
-        _db.walletInvitations,
-      );
-  $$WalletSettlementsTableTableManager get walletSettlements =>
-      $$WalletSettlementsTableTableManager(
-        _db.attachedDatabase,
-        _db.walletSettlements,
-      );
-  $$WalletExpenseSplitsTableTableManager get walletExpenseSplits =>
-      $$WalletExpenseSplitsTableTableManager(
-        _db.attachedDatabase,
-        _db.walletExpenseSplits,
-      );
-  $$WalletExpenseSplitMembersTableTableManager get walletExpenseSplitMembers =>
-      $$WalletExpenseSplitMembersTableTableManager(
-        _db.attachedDatabase,
-        _db.walletExpenseSplitMembers,
-      );
-  $$PeerDebtsTableTableManager get peerDebts =>
-      $$PeerDebtsTableTableManager(_db.attachedDatabase, _db.peerDebts);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
-  $$WalletActivitiesTableTableManager get walletActivities =>
-      $$WalletActivitiesTableTableManager(
-        _db.attachedDatabase,
-        _db.walletActivities,
-      );
-}
-
-mixin _$PayeeDaoMixin on DatabaseAccessor<AppDatabase> {
-  $TagsTable get tags => attachedDatabase.tags;
-  $TransactionsTable get transactions => attachedDatabase.transactions;
-  PayeeDaoManager get managers => PayeeDaoManager(this);
-}
-
-class PayeeDaoManager {
-  final _$PayeeDaoMixin _db;
-  PayeeDaoManager(this._db);
-  $$TagsTableTableManager get tags =>
-      $$TagsTableTableManager(_db.attachedDatabase, _db.tags);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
-}
-
-mixin _$TransactionTagDaoMixin on DatabaseAccessor<AppDatabase> {
-  $TagsTable get tags => attachedDatabase.tags;
-  TransactionTagDaoManager get managers => TransactionTagDaoManager(this);
-}
-
-class TransactionTagDaoManager {
-  final _$TransactionTagDaoMixin _db;
-  TransactionTagDaoManager(this._db);
-  $$TagsTableTableManager get tags =>
-      $$TagsTableTableManager(_db.attachedDatabase, _db.tags);
-}
-
-mixin _$AttachmentDaoMixin on DatabaseAccessor<AppDatabase> {
-  $AttachmentsTable get attachments => attachedDatabase.attachments;
-  $TransactionsTable get transactions => attachedDatabase.transactions;
-  AttachmentDaoManager get managers => AttachmentDaoManager(this);
-}
-
-class AttachmentDaoManager {
-  final _$AttachmentDaoMixin _db;
-  AttachmentDaoManager(this._db);
-  $$AttachmentsTableTableManager get attachments =>
-      $$AttachmentsTableTableManager(_db.attachedDatabase, _db.attachments);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
-}
-
-mixin _$UserDaoMixin on DatabaseAccessor<AppDatabase> {
-  $UsersTable get users => attachedDatabase.users;
-  UserDaoManager get managers => UserDaoManager(this);
-}
-
-class UserDaoManager {
-  final _$UserDaoMixin _db;
-  UserDaoManager(this._db);
-  $$UsersTableTableManager get users =>
-      $$UsersTableTableManager(_db.attachedDatabase, _db.users);
-}
-
-mixin _$AllowanceDaoMixin on DatabaseAccessor<AppDatabase> {
-  $WalletAllowancesTable get walletAllowances =>
-      attachedDatabase.walletAllowances;
-  $WalletAllowancePaymentsTable get walletAllowancePayments =>
-      attachedDatabase.walletAllowancePayments;
-  AllowanceDaoManager get managers => AllowanceDaoManager(this);
-}
-
-class AllowanceDaoManager {
-  final _$AllowanceDaoMixin _db;
-  AllowanceDaoManager(this._db);
-  $$WalletAllowancesTableTableManager get walletAllowances =>
-      $$WalletAllowancesTableTableManager(
-        _db.attachedDatabase,
-        _db.walletAllowances,
-      );
-  $$WalletAllowancePaymentsTableTableManager get walletAllowancePayments =>
-      $$WalletAllowancePaymentsTableTableManager(
-        _db.attachedDatabase,
-        _db.walletAllowancePayments,
-      );
-}
-
-mixin _$BillDaoMixin on DatabaseAccessor<AppDatabase> {
-  $WalletBillsTable get walletBills => attachedDatabase.walletBills;
-  BillDaoManager get managers => BillDaoManager(this);
-}
-
-class BillDaoManager {
-  final _$BillDaoMixin _db;
-  BillDaoManager(this._db);
-  $$WalletBillsTableTableManager get walletBills =>
-      $$WalletBillsTableTableManager(_db.attachedDatabase, _db.walletBills);
-}
-
-mixin _$CategoryDaoMixin on DatabaseAccessor<AppDatabase> {
-  $CategoriesTable get categories => attachedDatabase.categories;
-  $AccountsTable get accounts => attachedDatabase.accounts;
-  $TransactionsTable get transactions => attachedDatabase.transactions;
-  $BudgetsTable get budgets => attachedDatabase.budgets;
-  $RecurringTransactionsTable get recurringTransactions =>
-      attachedDatabase.recurringTransactions;
-  CategoryDaoManager get managers => CategoryDaoManager(this);
-}
-
-class CategoryDaoManager {
-  final _$CategoryDaoMixin _db;
-  CategoryDaoManager(this._db);
-  $$CategoriesTableTableManager get categories =>
-      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
-  $$AccountsTableTableManager get accounts =>
-      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
-  $$BudgetsTableTableManager get budgets =>
-      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
-  $$RecurringTransactionsTableTableManager get recurringTransactions =>
-      $$RecurringTransactionsTableTableManager(
-        _db.attachedDatabase,
-        _db.recurringTransactions,
-      );
-}
-
-mixin _$AccountDaoMixin on DatabaseAccessor<AppDatabase> {
-  $CategoriesTable get categories => attachedDatabase.categories;
-  $AccountsTable get accounts => attachedDatabase.accounts;
-  $TransactionsTable get transactions => attachedDatabase.transactions;
-  $BudgetsTable get budgets => attachedDatabase.budgets;
-  $RecurringTransactionsTable get recurringTransactions =>
-      attachedDatabase.recurringTransactions;
-  AccountDaoManager get managers => AccountDaoManager(this);
-}
-
-class AccountDaoManager {
-  final _$AccountDaoMixin _db;
-  AccountDaoManager(this._db);
-  $$CategoriesTableTableManager get categories =>
-      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
-  $$AccountsTableTableManager get accounts =>
-      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
-  $$BudgetsTableTableManager get budgets =>
-      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
-  $$RecurringTransactionsTableTableManager get recurringTransactions =>
-      $$RecurringTransactionsTableTableManager(
-        _db.attachedDatabase,
-        _db.recurringTransactions,
-      );
-}
-
-mixin _$TransactionDaoMixin on DatabaseAccessor<AppDatabase> {
-  $CategoriesTable get categories => attachedDatabase.categories;
-  $AccountsTable get accounts => attachedDatabase.accounts;
-  $TransactionsTable get transactions => attachedDatabase.transactions;
-  $BudgetsTable get budgets => attachedDatabase.budgets;
-  $RecurringTransactionsTable get recurringTransactions =>
-      attachedDatabase.recurringTransactions;
-  TransactionDaoManager get managers => TransactionDaoManager(this);
-}
-
-class TransactionDaoManager {
-  final _$TransactionDaoMixin _db;
-  TransactionDaoManager(this._db);
-  $$CategoriesTableTableManager get categories =>
-      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
-  $$AccountsTableTableManager get accounts =>
-      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
-  $$BudgetsTableTableManager get budgets =>
-      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
-  $$RecurringTransactionsTableTableManager get recurringTransactions =>
-      $$RecurringTransactionsTableTableManager(
-        _db.attachedDatabase,
-        _db.recurringTransactions,
-      );
-}
-
-mixin _$BudgetDaoMixin on DatabaseAccessor<AppDatabase> {
-  $CategoriesTable get categories => attachedDatabase.categories;
-  $AccountsTable get accounts => attachedDatabase.accounts;
-  $TransactionsTable get transactions => attachedDatabase.transactions;
-  $BudgetsTable get budgets => attachedDatabase.budgets;
-  $RecurringTransactionsTable get recurringTransactions =>
-      attachedDatabase.recurringTransactions;
-  BudgetDaoManager get managers => BudgetDaoManager(this);
-}
-
-class BudgetDaoManager {
-  final _$BudgetDaoMixin _db;
-  BudgetDaoManager(this._db);
-  $$CategoriesTableTableManager get categories =>
-      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
-  $$AccountsTableTableManager get accounts =>
-      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
-  $$BudgetsTableTableManager get budgets =>
-      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
-  $$RecurringTransactionsTableTableManager get recurringTransactions =>
-      $$RecurringTransactionsTableTableManager(
-        _db.attachedDatabase,
-        _db.recurringTransactions,
-      );
-}
-
-mixin _$RecurringTransactionDaoMixin on DatabaseAccessor<AppDatabase> {
-  $CategoriesTable get categories => attachedDatabase.categories;
-  $AccountsTable get accounts => attachedDatabase.accounts;
-  $TransactionsTable get transactions => attachedDatabase.transactions;
-  $BudgetsTable get budgets => attachedDatabase.budgets;
-  $RecurringTransactionsTable get recurringTransactions =>
-      attachedDatabase.recurringTransactions;
-  RecurringTransactionDaoManager get managers =>
-      RecurringTransactionDaoManager(this);
-}
-
-class RecurringTransactionDaoManager {
-  final _$RecurringTransactionDaoMixin _db;
-  RecurringTransactionDaoManager(this._db);
-  $$CategoriesTableTableManager get categories =>
-      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
-  $$AccountsTableTableManager get accounts =>
-      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
-  $$BudgetsTableTableManager get budgets =>
-      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
-  $$RecurringTransactionsTableTableManager get recurringTransactions =>
-      $$RecurringTransactionsTableTableManager(
-        _db.attachedDatabase,
-        _db.recurringTransactions,
-      );
-}
-
 class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -882,6 +596,405 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   }
 }
 
+class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WalletsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+    'uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: () => const Uuid().v4(),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 80,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('personal'),
+  );
+  static const VerificationMeta _createdByAccountIdMeta =
+      const VerificationMeta('createdByAccountId');
+  @override
+  late final GeneratedColumn<int> createdByAccountId = GeneratedColumn<int>(
+    'created_by_account_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now(),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    uuid,
+    name,
+    type,
+    createdByAccountId,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'wallets';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Wallet> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+        _uuidMeta,
+        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
+    if (data.containsKey('created_by_account_id')) {
+      context.handle(
+        _createdByAccountIdMeta,
+        createdByAccountId.isAcceptableOrUnknown(
+          data['created_by_account_id']!,
+          _createdByAccountIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Wallet map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Wallet(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      uuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}uuid'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      createdByAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_by_account_id'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $WalletsTable createAlias(String alias) {
+    return $WalletsTable(attachedDatabase, alias);
+  }
+}
+
+class Wallet extends DataClass implements Insertable<Wallet> {
+  final int id;
+  final String uuid;
+  final String name;
+  final String type;
+  final int? createdByAccountId;
+  final DateTime createdAt;
+  const Wallet({
+    required this.id,
+    required this.uuid,
+    required this.name,
+    required this.type,
+    this.createdByAccountId,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['uuid'] = Variable<String>(uuid);
+    map['name'] = Variable<String>(name);
+    map['type'] = Variable<String>(type);
+    if (!nullToAbsent || createdByAccountId != null) {
+      map['created_by_account_id'] = Variable<int>(createdByAccountId);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  WalletsCompanion toCompanion(bool nullToAbsent) {
+    return WalletsCompanion(
+      id: Value(id),
+      uuid: Value(uuid),
+      name: Value(name),
+      type: Value(type),
+      createdByAccountId: createdByAccountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdByAccountId),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory Wallet.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Wallet(
+      id: serializer.fromJson<int>(json['id']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      name: serializer.fromJson<String>(json['name']),
+      type: serializer.fromJson<String>(json['type']),
+      createdByAccountId: serializer.fromJson<int?>(json['createdByAccountId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'uuid': serializer.toJson<String>(uuid),
+      'name': serializer.toJson<String>(name),
+      'type': serializer.toJson<String>(type),
+      'createdByAccountId': serializer.toJson<int?>(createdByAccountId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  Wallet copyWith({
+    int? id,
+    String? uuid,
+    String? name,
+    String? type,
+    Value<int?> createdByAccountId = const Value.absent(),
+    DateTime? createdAt,
+  }) => Wallet(
+    id: id ?? this.id,
+    uuid: uuid ?? this.uuid,
+    name: name ?? this.name,
+    type: type ?? this.type,
+    createdByAccountId: createdByAccountId.present
+        ? createdByAccountId.value
+        : this.createdByAccountId,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  Wallet copyWithCompanion(WalletsCompanion data) {
+    return Wallet(
+      id: data.id.present ? data.id.value : this.id,
+      uuid: data.uuid.present ? data.uuid.value : this.uuid,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      createdByAccountId: data.createdByAccountId.present
+          ? data.createdByAccountId.value
+          : this.createdByAccountId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Wallet(')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('createdByAccountId: $createdByAccountId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, uuid, name, type, createdByAccountId, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Wallet &&
+          other.id == this.id &&
+          other.uuid == this.uuid &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.createdByAccountId == this.createdByAccountId &&
+          other.createdAt == this.createdAt);
+}
+
+class WalletsCompanion extends UpdateCompanion<Wallet> {
+  final Value<int> id;
+  final Value<String> uuid;
+  final Value<String> name;
+  final Value<String> type;
+  final Value<int?> createdByAccountId;
+  final Value<DateTime> createdAt;
+  const WalletsCompanion({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.createdByAccountId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  WalletsCompanion.insert({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    required String name,
+    this.type = const Value.absent(),
+    this.createdByAccountId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<Wallet> custom({
+    Expression<int>? id,
+    Expression<String>? uuid,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<int>? createdByAccountId,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (uuid != null) 'uuid': uuid,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (createdByAccountId != null)
+        'created_by_account_id': createdByAccountId,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  WalletsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? uuid,
+    Value<String>? name,
+    Value<String>? type,
+    Value<int?>? createdByAccountId,
+    Value<DateTime>? createdAt,
+  }) {
+    return WalletsCompanion(
+      id: id ?? this.id,
+      uuid: uuid ?? this.uuid,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      createdByAccountId: createdByAccountId ?? this.createdByAccountId,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (createdByAccountId.present) {
+      map['created_by_account_id'] = Variable<int>(createdByAccountId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletsCompanion(')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('createdByAccountId: $createdByAccountId, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $WalletBillsTable extends WalletBills
     with TableInfo<$WalletBillsTable, WalletBill> {
   @override
@@ -911,6 +1024,9 @@ class $WalletBillsTable extends WalletBills
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -1012,6 +1128,9 @@ class $WalletBillsTable extends WalletBills
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _updatedByAccountIdMeta =
       const VerificationMeta('updatedByAccountId');
@@ -1022,6 +1141,9 @@ class $WalletBillsTable extends WalletBills
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -1700,444 +1822,6 @@ class WalletBillsCompanion extends UpdateCompanion<WalletBill> {
   }
 }
 
-class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $BudgetsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _walletIdMeta = const VerificationMeta(
-    'walletId',
-  );
-  @override
-  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
-    'wallet_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(1),
-  );
-  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
-  @override
-  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
-    'uuid',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    clientDefault: () => const Uuid().v4(),
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<double, int> amount =
-      GeneratedColumn<int>(
-        'amount',
-        aliasedName,
-        false,
-        type: DriftSqlType.int,
-        requiredDuringInsert: true,
-      ).withConverter<double>($BudgetsTable.$converteramount);
-  static const VerificationMeta _periodMeta = const VerificationMeta('period');
-  @override
-  late final GeneratedColumn<String> period = GeneratedColumn<String>(
-    'period',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
-    'categoryId',
-  );
-  @override
-  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
-    'category_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: () => DateTime.now(),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    walletId,
-    uuid,
-    amount,
-    period,
-    categoryId,
-    updatedAt,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'budgets';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<Budget> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('wallet_id')) {
-      context.handle(
-        _walletIdMeta,
-        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
-      );
-    }
-    if (data.containsKey('uuid')) {
-      context.handle(
-        _uuidMeta,
-        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
-      );
-    }
-    if (data.containsKey('period')) {
-      context.handle(
-        _periodMeta,
-        period.isAcceptableOrUnknown(data['period']!, _periodMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_periodMeta);
-    }
-    if (data.containsKey('category_id')) {
-      context.handle(
-        _categoryIdMeta,
-        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_categoryIdMeta);
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Budget map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Budget(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      walletId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}wallet_id'],
-      )!,
-      uuid: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}uuid'],
-      )!,
-      amount: $BudgetsTable.$converteramount.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.int,
-          data['${effectivePrefix}amount'],
-        )!,
-      ),
-      period: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}period'],
-      )!,
-      categoryId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}category_id'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-    );
-  }
-
-  @override
-  $BudgetsTable createAlias(String alias) {
-    return $BudgetsTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<double, int> $converteramount = const MoneyConverter();
-}
-
-class Budget extends DataClass implements Insertable<Budget> {
-  final int id;
-  final int walletId;
-  final String uuid;
-  final double amount;
-  final String period;
-  final int categoryId;
-  final DateTime updatedAt;
-  const Budget({
-    required this.id,
-    required this.walletId,
-    required this.uuid,
-    required this.amount,
-    required this.period,
-    required this.categoryId,
-    required this.updatedAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['wallet_id'] = Variable<int>(walletId);
-    map['uuid'] = Variable<String>(uuid);
-    {
-      map['amount'] = Variable<int>(
-        $BudgetsTable.$converteramount.toSql(amount),
-      );
-    }
-    map['period'] = Variable<String>(period);
-    map['category_id'] = Variable<int>(categoryId);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  BudgetsCompanion toCompanion(bool nullToAbsent) {
-    return BudgetsCompanion(
-      id: Value(id),
-      walletId: Value(walletId),
-      uuid: Value(uuid),
-      amount: Value(amount),
-      period: Value(period),
-      categoryId: Value(categoryId),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory Budget.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Budget(
-      id: serializer.fromJson<int>(json['id']),
-      walletId: serializer.fromJson<int>(json['walletId']),
-      uuid: serializer.fromJson<String>(json['uuid']),
-      amount: serializer.fromJson<double>(json['amount']),
-      period: serializer.fromJson<String>(json['period']),
-      categoryId: serializer.fromJson<int>(json['categoryId']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'walletId': serializer.toJson<int>(walletId),
-      'uuid': serializer.toJson<String>(uuid),
-      'amount': serializer.toJson<double>(amount),
-      'period': serializer.toJson<String>(period),
-      'categoryId': serializer.toJson<int>(categoryId),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  Budget copyWith({
-    int? id,
-    int? walletId,
-    String? uuid,
-    double? amount,
-    String? period,
-    int? categoryId,
-    DateTime? updatedAt,
-  }) => Budget(
-    id: id ?? this.id,
-    walletId: walletId ?? this.walletId,
-    uuid: uuid ?? this.uuid,
-    amount: amount ?? this.amount,
-    period: period ?? this.period,
-    categoryId: categoryId ?? this.categoryId,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
-  Budget copyWithCompanion(BudgetsCompanion data) {
-    return Budget(
-      id: data.id.present ? data.id.value : this.id,
-      walletId: data.walletId.present ? data.walletId.value : this.walletId,
-      uuid: data.uuid.present ? data.uuid.value : this.uuid,
-      amount: data.amount.present ? data.amount.value : this.amount,
-      period: data.period.present ? data.period.value : this.period,
-      categoryId: data.categoryId.present
-          ? data.categoryId.value
-          : this.categoryId,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Budget(')
-          ..write('id: $id, ')
-          ..write('walletId: $walletId, ')
-          ..write('uuid: $uuid, ')
-          ..write('amount: $amount, ')
-          ..write('period: $period, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, walletId, uuid, amount, period, categoryId, updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Budget &&
-          other.id == this.id &&
-          other.walletId == this.walletId &&
-          other.uuid == this.uuid &&
-          other.amount == this.amount &&
-          other.period == this.period &&
-          other.categoryId == this.categoryId &&
-          other.updatedAt == this.updatedAt);
-}
-
-class BudgetsCompanion extends UpdateCompanion<Budget> {
-  final Value<int> id;
-  final Value<int> walletId;
-  final Value<String> uuid;
-  final Value<double> amount;
-  final Value<String> period;
-  final Value<int> categoryId;
-  final Value<DateTime> updatedAt;
-  const BudgetsCompanion({
-    this.id = const Value.absent(),
-    this.walletId = const Value.absent(),
-    this.uuid = const Value.absent(),
-    this.amount = const Value.absent(),
-    this.period = const Value.absent(),
-    this.categoryId = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  BudgetsCompanion.insert({
-    this.id = const Value.absent(),
-    this.walletId = const Value.absent(),
-    this.uuid = const Value.absent(),
-    required double amount,
-    required String period,
-    required int categoryId,
-    this.updatedAt = const Value.absent(),
-  }) : amount = Value(amount),
-       period = Value(period),
-       categoryId = Value(categoryId);
-  static Insertable<Budget> custom({
-    Expression<int>? id,
-    Expression<int>? walletId,
-    Expression<String>? uuid,
-    Expression<int>? amount,
-    Expression<String>? period,
-    Expression<int>? categoryId,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (walletId != null) 'wallet_id': walletId,
-      if (uuid != null) 'uuid': uuid,
-      if (amount != null) 'amount': amount,
-      if (period != null) 'period': period,
-      if (categoryId != null) 'category_id': categoryId,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  BudgetsCompanion copyWith({
-    Value<int>? id,
-    Value<int>? walletId,
-    Value<String>? uuid,
-    Value<double>? amount,
-    Value<String>? period,
-    Value<int>? categoryId,
-    Value<DateTime>? updatedAt,
-  }) {
-    return BudgetsCompanion(
-      id: id ?? this.id,
-      walletId: walletId ?? this.walletId,
-      uuid: uuid ?? this.uuid,
-      amount: amount ?? this.amount,
-      period: period ?? this.period,
-      categoryId: categoryId ?? this.categoryId,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (walletId.present) {
-      map['wallet_id'] = Variable<int>(walletId.value);
-    }
-    if (uuid.present) {
-      map['uuid'] = Variable<String>(uuid.value);
-    }
-    if (amount.present) {
-      map['amount'] = Variable<int>(
-        $BudgetsTable.$converteramount.toSql(amount.value),
-      );
-    }
-    if (period.present) {
-      map['period'] = Variable<String>(period.value);
-    }
-    if (categoryId.present) {
-      map['category_id'] = Variable<int>(categoryId.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('BudgetsCompanion(')
-          ..write('id: $id, ')
-          ..write('walletId: $walletId, ')
-          ..write('uuid: $uuid, ')
-          ..write('amount: $amount, ')
-          ..write('period: $period, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $CategoriesTable extends Categories
     with TableInfo<$CategoriesTable, Category> {
   @override
@@ -2223,6 +1907,9 @@ class $CategoriesTable extends Categories
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES categories (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -2626,6 +2313,1317 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
   }
 }
 
+class $BudgetsTable extends Budgets with TableInfo<$BudgetsTable, Budget> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BudgetsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _walletIdMeta = const VerificationMeta(
+    'walletId',
+  );
+  @override
+  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+    'wallet_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+    'uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: () => const Uuid().v4(),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($BudgetsTable.$converteramount);
+  static const VerificationMeta _periodMeta = const VerificationMeta('period');
+  @override
+  late final GeneratedColumn<String> period = GeneratedColumn<String>(
+    'period',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
+    'category_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES categories (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now(),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    walletId,
+    uuid,
+    amount,
+    period,
+    categoryId,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'budgets';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Budget> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('wallet_id')) {
+      context.handle(
+        _walletIdMeta,
+        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
+      );
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+        _uuidMeta,
+        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
+      );
+    }
+    if (data.containsKey('period')) {
+      context.handle(
+        _periodMeta,
+        period.isAcceptableOrUnknown(data['period']!, _periodMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_periodMeta);
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryIdMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Budget map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Budget(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      walletId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wallet_id'],
+      )!,
+      uuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}uuid'],
+      )!,
+      amount: $BudgetsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
+      period: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}period'],
+      )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}category_id'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $BudgetsTable createAlias(String alias) {
+    return $BudgetsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
+}
+
+class Budget extends DataClass implements Insertable<Budget> {
+  final int id;
+  final int walletId;
+  final String uuid;
+  final double amount;
+  final String period;
+  final int categoryId;
+  final DateTime updatedAt;
+  const Budget({
+    required this.id,
+    required this.walletId,
+    required this.uuid,
+    required this.amount,
+    required this.period,
+    required this.categoryId,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['wallet_id'] = Variable<int>(walletId);
+    map['uuid'] = Variable<String>(uuid);
+    {
+      map['amount'] = Variable<int>(
+        $BudgetsTable.$converteramount.toSql(amount),
+      );
+    }
+    map['period'] = Variable<String>(period);
+    map['category_id'] = Variable<int>(categoryId);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  BudgetsCompanion toCompanion(bool nullToAbsent) {
+    return BudgetsCompanion(
+      id: Value(id),
+      walletId: Value(walletId),
+      uuid: Value(uuid),
+      amount: Value(amount),
+      period: Value(period),
+      categoryId: Value(categoryId),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Budget.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Budget(
+      id: serializer.fromJson<int>(json['id']),
+      walletId: serializer.fromJson<int>(json['walletId']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      amount: serializer.fromJson<double>(json['amount']),
+      period: serializer.fromJson<String>(json['period']),
+      categoryId: serializer.fromJson<int>(json['categoryId']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'walletId': serializer.toJson<int>(walletId),
+      'uuid': serializer.toJson<String>(uuid),
+      'amount': serializer.toJson<double>(amount),
+      'period': serializer.toJson<String>(period),
+      'categoryId': serializer.toJson<int>(categoryId),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Budget copyWith({
+    int? id,
+    int? walletId,
+    String? uuid,
+    double? amount,
+    String? period,
+    int? categoryId,
+    DateTime? updatedAt,
+  }) => Budget(
+    id: id ?? this.id,
+    walletId: walletId ?? this.walletId,
+    uuid: uuid ?? this.uuid,
+    amount: amount ?? this.amount,
+    period: period ?? this.period,
+    categoryId: categoryId ?? this.categoryId,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  Budget copyWithCompanion(BudgetsCompanion data) {
+    return Budget(
+      id: data.id.present ? data.id.value : this.id,
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
+      uuid: data.uuid.present ? data.uuid.value : this.uuid,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      period: data.period.present ? data.period.value : this.period,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Budget(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('uuid: $uuid, ')
+          ..write('amount: $amount, ')
+          ..write('period: $period, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, walletId, uuid, amount, period, categoryId, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Budget &&
+          other.id == this.id &&
+          other.walletId == this.walletId &&
+          other.uuid == this.uuid &&
+          other.amount == this.amount &&
+          other.period == this.period &&
+          other.categoryId == this.categoryId &&
+          other.updatedAt == this.updatedAt);
+}
+
+class BudgetsCompanion extends UpdateCompanion<Budget> {
+  final Value<int> id;
+  final Value<int> walletId;
+  final Value<String> uuid;
+  final Value<double> amount;
+  final Value<String> period;
+  final Value<int> categoryId;
+  final Value<DateTime> updatedAt;
+  const BudgetsCompanion({
+    this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.period = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  BudgetsCompanion.insert({
+    this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
+    this.uuid = const Value.absent(),
+    required double amount,
+    required String period,
+    required int categoryId,
+    this.updatedAt = const Value.absent(),
+  }) : amount = Value(amount),
+       period = Value(period),
+       categoryId = Value(categoryId);
+  static Insertable<Budget> custom({
+    Expression<int>? id,
+    Expression<int>? walletId,
+    Expression<String>? uuid,
+    Expression<int>? amount,
+    Expression<String>? period,
+    Expression<int>? categoryId,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (walletId != null) 'wallet_id': walletId,
+      if (uuid != null) 'uuid': uuid,
+      if (amount != null) 'amount': amount,
+      if (period != null) 'period': period,
+      if (categoryId != null) 'category_id': categoryId,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  BudgetsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? walletId,
+    Value<String>? uuid,
+    Value<double>? amount,
+    Value<String>? period,
+    Value<int>? categoryId,
+    Value<DateTime>? updatedAt,
+  }) {
+    return BudgetsCompanion(
+      id: id ?? this.id,
+      walletId: walletId ?? this.walletId,
+      uuid: uuid ?? this.uuid,
+      amount: amount ?? this.amount,
+      period: period ?? this.period,
+      categoryId: categoryId ?? this.categoryId,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (walletId.present) {
+      map['wallet_id'] = Variable<int>(walletId.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(
+        $BudgetsTable.$converteramount.toSql(amount.value),
+      );
+    }
+    if (period.present) {
+      map['period'] = Variable<String>(period.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BudgetsCompanion(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('uuid: $uuid, ')
+          ..write('amount: $amount, ')
+          ..write('period: $period, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+    'uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: () => const Uuid().v4(),
+  );
+  static const VerificationMeta _displayNameMeta = const VerificationMeta(
+    'displayName',
+  );
+  @override
+  late final GeneratedColumn<String> displayName = GeneratedColumn<String>(
+    'display_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    uuid,
+    displayName,
+    email,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'users';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<User> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+        _uuidMeta,
+        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
+      );
+    }
+    if (data.containsKey('display_name')) {
+      context.handle(
+        _displayNameMeta,
+        displayName.isAcceptableOrUnknown(
+          data['display_name']!,
+          _displayNameMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_displayNameMeta);
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return User(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      uuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}uuid'],
+      )!,
+      displayName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}display_name'],
+      )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $UsersTable createAlias(String alias) {
+    return $UsersTable(attachedDatabase, alias);
+  }
+}
+
+class User extends DataClass implements Insertable<User> {
+  final int id;
+  final String uuid;
+
+  /// Name shown in member lists, split sheets and audit entries.
+  final String displayName;
+
+  /// Optional contact detail for invitations. Null when the user was created
+  /// locally without an address.
+  final String? email;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const User({
+    required this.id,
+    required this.uuid,
+    required this.displayName,
+    this.email,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['uuid'] = Variable<String>(uuid);
+    map['display_name'] = Variable<String>(displayName);
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  UsersCompanion toCompanion(bool nullToAbsent) {
+    return UsersCompanion(
+      id: Value(id),
+      uuid: Value(uuid),
+      displayName: Value(displayName),
+      email: email == null && nullToAbsent
+          ? const Value.absent()
+          : Value(email),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory User.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return User(
+      id: serializer.fromJson<int>(json['id']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      displayName: serializer.fromJson<String>(json['displayName']),
+      email: serializer.fromJson<String?>(json['email']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'uuid': serializer.toJson<String>(uuid),
+      'displayName': serializer.toJson<String>(displayName),
+      'email': serializer.toJson<String?>(email),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  User copyWith({
+    int? id,
+    String? uuid,
+    String? displayName,
+    Value<String?> email = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => User(
+    id: id ?? this.id,
+    uuid: uuid ?? this.uuid,
+    displayName: displayName ?? this.displayName,
+    email: email.present ? email.value : this.email,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  User copyWithCompanion(UsersCompanion data) {
+    return User(
+      id: data.id.present ? data.id.value : this.id,
+      uuid: data.uuid.present ? data.uuid.value : this.uuid,
+      displayName: data.displayName.present
+          ? data.displayName.value
+          : this.displayName,
+      email: data.email.present ? data.email.value : this.email,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('User(')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('displayName: $displayName, ')
+          ..write('email: $email, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, uuid, displayName, email, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is User &&
+          other.id == this.id &&
+          other.uuid == this.uuid &&
+          other.displayName == this.displayName &&
+          other.email == this.email &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class UsersCompanion extends UpdateCompanion<User> {
+  final Value<int> id;
+  final Value<String> uuid;
+  final Value<String> displayName;
+  final Value<String?> email;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const UsersCompanion({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.displayName = const Value.absent(),
+    this.email = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  UsersCompanion.insert({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    required String displayName,
+    this.email = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : displayName = Value(displayName);
+  static Insertable<User> custom({
+    Expression<int>? id,
+    Expression<String>? uuid,
+    Expression<String>? displayName,
+    Expression<String>? email,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (uuid != null) 'uuid': uuid,
+      if (displayName != null) 'display_name': displayName,
+      if (email != null) 'email': email,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  UsersCompanion copyWith({
+    Value<int>? id,
+    Value<String>? uuid,
+    Value<String>? displayName,
+    Value<String?>? email,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return UsersCompanion(
+      id: id ?? this.id,
+      uuid: uuid ?? this.uuid,
+      displayName: displayName ?? this.displayName,
+      email: email ?? this.email,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (displayName.present) {
+      map['display_name'] = Variable<String>(displayName.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersCompanion(')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('displayName: $displayName, ')
+          ..write('email: $email, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $WalletMembersTable extends WalletMembers
+    with TableInfo<$WalletMembersTable, WalletMember> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WalletMembersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _walletIdMeta = const VerificationMeta(
+    'walletId',
+  );
+  @override
+  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+    'wallet_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<int> accountId = GeneratedColumn<int>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+    'user_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES users (id) ON DELETE SET NULL',
+    ),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<WalletRole, String> role =
+      GeneratedColumn<String>(
+        'role',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<WalletRole>($WalletMembersTable.$converterrole);
+  static const VerificationMeta _joinedAtMeta = const VerificationMeta(
+    'joinedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> joinedAt = GeneratedColumn<DateTime>(
+    'joined_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now(),
+  );
+  static const VerificationMeta _isActiveMeta = const VerificationMeta(
+    'isActive',
+  );
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+    'is_active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    walletId,
+    accountId,
+    userId,
+    role,
+    joinedAt,
+    isActive,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'wallet_members';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WalletMember> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('wallet_id')) {
+      context.handle(
+        _walletIdMeta,
+        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_walletIdMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    }
+    if (data.containsKey('joined_at')) {
+      context.handle(
+        _joinedAtMeta,
+        joinedAt.isAcceptableOrUnknown(data['joined_at']!, _joinedAtMeta),
+      );
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(
+        _isActiveMeta,
+        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WalletMember map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WalletMember(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      walletId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wallet_id'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}account_id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}user_id'],
+      ),
+      role: $WalletMembersTable.$converterrole.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}role'],
+        )!,
+      ),
+      joinedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}joined_at'],
+      )!,
+      isActive: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_active'],
+      )!,
+    );
+  }
+
+  @override
+  $WalletMembersTable createAlias(String alias) {
+    return $WalletMembersTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<WalletRole, String, String> $converterrole =
+      const EnumNameConverter(WalletRole.values);
+}
+
+class WalletMember extends DataClass implements Insertable<WalletMember> {
+  final int id;
+  final int walletId;
+  final int accountId;
+
+  /// A7 bridge: the real identity of this member.
+  ///
+  /// `accountId` above is a money container, not a person - that conflation is
+  /// why collaboration could not be built. This column is the successor and is
+  /// nullable so membership rows can carry a user identity while every existing
+  /// `actorAccountId` call site is migrated across. Once step 3 is complete,
+  /// `accountId` can be dropped.
+  final int? userId;
+  final WalletRole role;
+  final DateTime joinedAt;
+  final bool isActive;
+  const WalletMember({
+    required this.id,
+    required this.walletId,
+    required this.accountId,
+    this.userId,
+    required this.role,
+    required this.joinedAt,
+    required this.isActive,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['wallet_id'] = Variable<int>(walletId);
+    map['account_id'] = Variable<int>(accountId);
+    if (!nullToAbsent || userId != null) {
+      map['user_id'] = Variable<int>(userId);
+    }
+    {
+      map['role'] = Variable<String>(
+        $WalletMembersTable.$converterrole.toSql(role),
+      );
+    }
+    map['joined_at'] = Variable<DateTime>(joinedAt);
+    map['is_active'] = Variable<bool>(isActive);
+    return map;
+  }
+
+  WalletMembersCompanion toCompanion(bool nullToAbsent) {
+    return WalletMembersCompanion(
+      id: Value(id),
+      walletId: Value(walletId),
+      accountId: Value(accountId),
+      userId: userId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userId),
+      role: Value(role),
+      joinedAt: Value(joinedAt),
+      isActive: Value(isActive),
+    );
+  }
+
+  factory WalletMember.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WalletMember(
+      id: serializer.fromJson<int>(json['id']),
+      walletId: serializer.fromJson<int>(json['walletId']),
+      accountId: serializer.fromJson<int>(json['accountId']),
+      userId: serializer.fromJson<int?>(json['userId']),
+      role: $WalletMembersTable.$converterrole.fromJson(
+        serializer.fromJson<String>(json['role']),
+      ),
+      joinedAt: serializer.fromJson<DateTime>(json['joinedAt']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'walletId': serializer.toJson<int>(walletId),
+      'accountId': serializer.toJson<int>(accountId),
+      'userId': serializer.toJson<int?>(userId),
+      'role': serializer.toJson<String>(
+        $WalletMembersTable.$converterrole.toJson(role),
+      ),
+      'joinedAt': serializer.toJson<DateTime>(joinedAt),
+      'isActive': serializer.toJson<bool>(isActive),
+    };
+  }
+
+  WalletMember copyWith({
+    int? id,
+    int? walletId,
+    int? accountId,
+    Value<int?> userId = const Value.absent(),
+    WalletRole? role,
+    DateTime? joinedAt,
+    bool? isActive,
+  }) => WalletMember(
+    id: id ?? this.id,
+    walletId: walletId ?? this.walletId,
+    accountId: accountId ?? this.accountId,
+    userId: userId.present ? userId.value : this.userId,
+    role: role ?? this.role,
+    joinedAt: joinedAt ?? this.joinedAt,
+    isActive: isActive ?? this.isActive,
+  );
+  WalletMember copyWithCompanion(WalletMembersCompanion data) {
+    return WalletMember(
+      id: data.id.present ? data.id.value : this.id,
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      role: data.role.present ? data.role.value : this.role,
+      joinedAt: data.joinedAt.present ? data.joinedAt.value : this.joinedAt,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletMember(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('accountId: $accountId, ')
+          ..write('userId: $userId, ')
+          ..write('role: $role, ')
+          ..write('joinedAt: $joinedAt, ')
+          ..write('isActive: $isActive')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, walletId, accountId, userId, role, joinedAt, isActive);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WalletMember &&
+          other.id == this.id &&
+          other.walletId == this.walletId &&
+          other.accountId == this.accountId &&
+          other.userId == this.userId &&
+          other.role == this.role &&
+          other.joinedAt == this.joinedAt &&
+          other.isActive == this.isActive);
+}
+
+class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
+  final Value<int> id;
+  final Value<int> walletId;
+  final Value<int> accountId;
+  final Value<int?> userId;
+  final Value<WalletRole> role;
+  final Value<DateTime> joinedAt;
+  final Value<bool> isActive;
+  const WalletMembersCompanion({
+    this.id = const Value.absent(),
+    this.walletId = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.role = const Value.absent(),
+    this.joinedAt = const Value.absent(),
+    this.isActive = const Value.absent(),
+  });
+  WalletMembersCompanion.insert({
+    this.id = const Value.absent(),
+    required int walletId,
+    required int accountId,
+    this.userId = const Value.absent(),
+    required WalletRole role,
+    this.joinedAt = const Value.absent(),
+    this.isActive = const Value.absent(),
+  }) : walletId = Value(walletId),
+       accountId = Value(accountId),
+       role = Value(role);
+  static Insertable<WalletMember> custom({
+    Expression<int>? id,
+    Expression<int>? walletId,
+    Expression<int>? accountId,
+    Expression<int>? userId,
+    Expression<String>? role,
+    Expression<DateTime>? joinedAt,
+    Expression<bool>? isActive,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (walletId != null) 'wallet_id': walletId,
+      if (accountId != null) 'account_id': accountId,
+      if (userId != null) 'user_id': userId,
+      if (role != null) 'role': role,
+      if (joinedAt != null) 'joined_at': joinedAt,
+      if (isActive != null) 'is_active': isActive,
+    });
+  }
+
+  WalletMembersCompanion copyWith({
+    Value<int>? id,
+    Value<int>? walletId,
+    Value<int>? accountId,
+    Value<int?>? userId,
+    Value<WalletRole>? role,
+    Value<DateTime>? joinedAt,
+    Value<bool>? isActive,
+  }) {
+    return WalletMembersCompanion(
+      id: id ?? this.id,
+      walletId: walletId ?? this.walletId,
+      accountId: accountId ?? this.accountId,
+      userId: userId ?? this.userId,
+      role: role ?? this.role,
+      joinedAt: joinedAt ?? this.joinedAt,
+      isActive: isActive ?? this.isActive,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (walletId.present) {
+      map['wallet_id'] = Variable<int>(walletId.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<int>(accountId.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (role.present) {
+      map['role'] = Variable<String>(
+        $WalletMembersTable.$converterrole.toSql(role.value),
+      );
+    }
+    if (joinedAt.present) {
+      map['joined_at'] = Variable<DateTime>(joinedAt.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WalletMembersCompanion(')
+          ..write('id: $id, ')
+          ..write('walletId: $walletId, ')
+          ..write('accountId: $accountId, ')
+          ..write('userId: $userId, ')
+          ..write('role: $role, ')
+          ..write('joinedAt: $joinedAt, ')
+          ..write('isActive: $isActive')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $WalletNotificationsTable extends WalletNotifications
     with TableInfo<$WalletNotificationsTable, WalletNotification> {
   @override
@@ -2655,6 +3653,9 @@ class $WalletNotificationsTable extends WalletNotifications
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _memberIdMeta = const VerificationMeta(
     'memberId',
@@ -2666,6 +3667,9 @@ class $WalletNotificationsTable extends WalletNotifications
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_members (id) ON DELETE SET NULL',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<WalletNotificationType, String>
@@ -3314,6 +4318,9 @@ class $LoansTable extends Loans with TableInfo<$LoansTable, LoanDb> {
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE CASCADE',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<double, int> principalAmount =
@@ -4006,6 +5013,709 @@ class LoansCompanion extends UpdateCompanion<LoanDb> {
   }
 }
 
+class $TransactionsTable extends Transactions
+    with TableInfo<$TransactionsTable, Transaction> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TransactionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _walletIdMeta = const VerificationMeta(
+    'walletId',
+  );
+  @override
+  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+    'wallet_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+    'uuid',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: () => const Uuid().v4(),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<double, int> amount =
+      GeneratedColumn<int>(
+        'amount',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<double>($TransactionsTable.$converteramount);
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<TransactionType, String> type =
+      GeneratedColumn<String>(
+        'type',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<TransactionType>($TransactionsTable.$convertertype);
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
+    'category_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES categories (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<int> accountId = GeneratedColumn<int>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE RESTRICT',
+    ),
+  );
+  static const VerificationMeta _transferGroupIdMeta = const VerificationMeta(
+    'transferGroupId',
+  );
+  @override
+  late final GeneratedColumn<String> transferGroupId = GeneratedColumn<String>(
+    'transfer_group_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    walletId,
+    id,
+    uuid,
+    amount,
+    date,
+    note,
+    type,
+    categoryId,
+    accountId,
+    transferGroupId,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'transactions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Transaction> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('wallet_id')) {
+      context.handle(
+        _walletIdMeta,
+        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+        _uuidMeta,
+        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
+      );
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+        _noteMeta,
+        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+      );
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryIdMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('transfer_group_id')) {
+      context.handle(
+        _transferGroupIdMeta,
+        transferGroupId.isAcceptableOrUnknown(
+          data['transfer_group_id']!,
+          _transferGroupIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Transaction map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Transaction(
+      walletId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wallet_id'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      uuid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}uuid'],
+      )!,
+      amount: $TransactionsTable.$converteramount.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}amount'],
+        )!,
+      ),
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      ),
+      type: $TransactionsTable.$convertertype.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}type'],
+        )!,
+      ),
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}category_id'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}account_id'],
+      )!,
+      transferGroupId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transfer_group_id'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $TransactionsTable createAlias(String alias) {
+    return $TransactionsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<double, int> $converteramount = const MoneyConverter();
+  static JsonTypeConverter2<TransactionType, String, String> $convertertype =
+      const EnumNameConverter(TransactionType.values);
+}
+
+class Transaction extends DataClass implements Insertable<Transaction> {
+  final int walletId;
+  final int id;
+  final String uuid;
+  final double amount;
+  final DateTime date;
+  final String? note;
+  final TransactionType type;
+  final int categoryId;
+  final int accountId;
+
+  /// Groups the two legs of a transfer. Both rows share one value, which is
+  /// what makes a transfer first-class: it can be excluded from income/expense
+  /// reporting and edited or deleted as a unit. Null for ordinary entries.
+  final String? transferGroupId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Transaction({
+    required this.walletId,
+    required this.id,
+    required this.uuid,
+    required this.amount,
+    required this.date,
+    this.note,
+    required this.type,
+    required this.categoryId,
+    required this.accountId,
+    this.transferGroupId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['wallet_id'] = Variable<int>(walletId);
+    map['id'] = Variable<int>(id);
+    map['uuid'] = Variable<String>(uuid);
+    {
+      map['amount'] = Variable<int>(
+        $TransactionsTable.$converteramount.toSql(amount),
+      );
+    }
+    map['date'] = Variable<DateTime>(date);
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    {
+      map['type'] = Variable<String>(
+        $TransactionsTable.$convertertype.toSql(type),
+      );
+    }
+    map['category_id'] = Variable<int>(categoryId);
+    map['account_id'] = Variable<int>(accountId);
+    if (!nullToAbsent || transferGroupId != null) {
+      map['transfer_group_id'] = Variable<String>(transferGroupId);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  TransactionsCompanion toCompanion(bool nullToAbsent) {
+    return TransactionsCompanion(
+      walletId: Value(walletId),
+      id: Value(id),
+      uuid: Value(uuid),
+      amount: Value(amount),
+      date: Value(date),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      type: Value(type),
+      categoryId: Value(categoryId),
+      accountId: Value(accountId),
+      transferGroupId: transferGroupId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(transferGroupId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Transaction.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Transaction(
+      walletId: serializer.fromJson<int>(json['walletId']),
+      id: serializer.fromJson<int>(json['id']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      amount: serializer.fromJson<double>(json['amount']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      note: serializer.fromJson<String?>(json['note']),
+      type: $TransactionsTable.$convertertype.fromJson(
+        serializer.fromJson<String>(json['type']),
+      ),
+      categoryId: serializer.fromJson<int>(json['categoryId']),
+      accountId: serializer.fromJson<int>(json['accountId']),
+      transferGroupId: serializer.fromJson<String?>(json['transferGroupId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'walletId': serializer.toJson<int>(walletId),
+      'id': serializer.toJson<int>(id),
+      'uuid': serializer.toJson<String>(uuid),
+      'amount': serializer.toJson<double>(amount),
+      'date': serializer.toJson<DateTime>(date),
+      'note': serializer.toJson<String?>(note),
+      'type': serializer.toJson<String>(
+        $TransactionsTable.$convertertype.toJson(type),
+      ),
+      'categoryId': serializer.toJson<int>(categoryId),
+      'accountId': serializer.toJson<int>(accountId),
+      'transferGroupId': serializer.toJson<String?>(transferGroupId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Transaction copyWith({
+    int? walletId,
+    int? id,
+    String? uuid,
+    double? amount,
+    DateTime? date,
+    Value<String?> note = const Value.absent(),
+    TransactionType? type,
+    int? categoryId,
+    int? accountId,
+    Value<String?> transferGroupId = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => Transaction(
+    walletId: walletId ?? this.walletId,
+    id: id ?? this.id,
+    uuid: uuid ?? this.uuid,
+    amount: amount ?? this.amount,
+    date: date ?? this.date,
+    note: note.present ? note.value : this.note,
+    type: type ?? this.type,
+    categoryId: categoryId ?? this.categoryId,
+    accountId: accountId ?? this.accountId,
+    transferGroupId: transferGroupId.present
+        ? transferGroupId.value
+        : this.transferGroupId,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  Transaction copyWithCompanion(TransactionsCompanion data) {
+    return Transaction(
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
+      id: data.id.present ? data.id.value : this.id,
+      uuid: data.uuid.present ? data.uuid.value : this.uuid,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      date: data.date.present ? data.date.value : this.date,
+      note: data.note.present ? data.note.value : this.note,
+      type: data.type.present ? data.type.value : this.type,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      transferGroupId: data.transferGroupId.present
+          ? data.transferGroupId.value
+          : this.transferGroupId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Transaction(')
+          ..write('walletId: $walletId, ')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('amount: $amount, ')
+          ..write('date: $date, ')
+          ..write('note: $note, ')
+          ..write('type: $type, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('accountId: $accountId, ')
+          ..write('transferGroupId: $transferGroupId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    walletId,
+    id,
+    uuid,
+    amount,
+    date,
+    note,
+    type,
+    categoryId,
+    accountId,
+    transferGroupId,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Transaction &&
+          other.walletId == this.walletId &&
+          other.id == this.id &&
+          other.uuid == this.uuid &&
+          other.amount == this.amount &&
+          other.date == this.date &&
+          other.note == this.note &&
+          other.type == this.type &&
+          other.categoryId == this.categoryId &&
+          other.accountId == this.accountId &&
+          other.transferGroupId == this.transferGroupId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class TransactionsCompanion extends UpdateCompanion<Transaction> {
+  final Value<int> walletId;
+  final Value<int> id;
+  final Value<String> uuid;
+  final Value<double> amount;
+  final Value<DateTime> date;
+  final Value<String?> note;
+  final Value<TransactionType> type;
+  final Value<int> categoryId;
+  final Value<int> accountId;
+  final Value<String?> transferGroupId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const TransactionsCompanion({
+    this.walletId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.date = const Value.absent(),
+    this.note = const Value.absent(),
+    this.type = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.transferGroupId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  TransactionsCompanion.insert({
+    this.walletId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    required double amount,
+    required DateTime date,
+    this.note = const Value.absent(),
+    required TransactionType type,
+    required int categoryId,
+    required int accountId,
+    this.transferGroupId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : amount = Value(amount),
+       date = Value(date),
+       type = Value(type),
+       categoryId = Value(categoryId),
+       accountId = Value(accountId);
+  static Insertable<Transaction> custom({
+    Expression<int>? walletId,
+    Expression<int>? id,
+    Expression<String>? uuid,
+    Expression<int>? amount,
+    Expression<DateTime>? date,
+    Expression<String>? note,
+    Expression<String>? type,
+    Expression<int>? categoryId,
+    Expression<int>? accountId,
+    Expression<String>? transferGroupId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (walletId != null) 'wallet_id': walletId,
+      if (id != null) 'id': id,
+      if (uuid != null) 'uuid': uuid,
+      if (amount != null) 'amount': amount,
+      if (date != null) 'date': date,
+      if (note != null) 'note': note,
+      if (type != null) 'type': type,
+      if (categoryId != null) 'category_id': categoryId,
+      if (accountId != null) 'account_id': accountId,
+      if (transferGroupId != null) 'transfer_group_id': transferGroupId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  TransactionsCompanion copyWith({
+    Value<int>? walletId,
+    Value<int>? id,
+    Value<String>? uuid,
+    Value<double>? amount,
+    Value<DateTime>? date,
+    Value<String?>? note,
+    Value<TransactionType>? type,
+    Value<int>? categoryId,
+    Value<int>? accountId,
+    Value<String?>? transferGroupId,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return TransactionsCompanion(
+      walletId: walletId ?? this.walletId,
+      id: id ?? this.id,
+      uuid: uuid ?? this.uuid,
+      amount: amount ?? this.amount,
+      date: date ?? this.date,
+      note: note ?? this.note,
+      type: type ?? this.type,
+      categoryId: categoryId ?? this.categoryId,
+      accountId: accountId ?? this.accountId,
+      transferGroupId: transferGroupId ?? this.transferGroupId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (walletId.present) {
+      map['wallet_id'] = Variable<int>(walletId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(
+        $TransactionsTable.$converteramount.toSql(amount.value),
+      );
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(
+        $TransactionsTable.$convertertype.toSql(type.value),
+      );
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<int>(accountId.value);
+    }
+    if (transferGroupId.present) {
+      map['transfer_group_id'] = Variable<String>(transferGroupId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TransactionsCompanion(')
+          ..write('walletId: $walletId, ')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('amount: $amount, ')
+          ..write('date: $date, ')
+          ..write('note: $note, ')
+          ..write('type: $type, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('accountId: $accountId, ')
+          ..write('transferGroupId: $transferGroupId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $PeerDebtsTable extends PeerDebts
     with TableInfo<$PeerDebtsTable, PeerDebtDb> {
   @override
@@ -4035,6 +5745,9 @@ class $PeerDebtsTable extends PeerDebts
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   @override
@@ -4122,6 +5835,9 @@ class $PeerDebtsTable extends PeerDebts
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES transactions (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -4687,6 +6403,9 @@ class $WalletAllowancesTable extends WalletAllowances
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _memberIdMeta = const VerificationMeta(
     'memberId',
@@ -4698,6 +6417,9 @@ class $WalletAllowancesTable extends WalletAllowances
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_members (id) ON DELETE CASCADE',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<double, int> amount =
@@ -4766,6 +6488,9 @@ class $WalletAllowancesTable extends WalletAllowances
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _updatedByAccountIdMeta =
       const VerificationMeta('updatedByAccountId');
@@ -4776,6 +6501,9 @@ class $WalletAllowancesTable extends WalletAllowances
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -5404,6 +7132,9 @@ class $WalletAllowancePaymentsTable extends WalletAllowancePayments
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_allowances (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _memberIdMeta = const VerificationMeta(
     'memberId',
@@ -5415,6 +7146,9 @@ class $WalletAllowancePaymentsTable extends WalletAllowancePayments
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_members (id) ON DELETE CASCADE',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<double, int> amount =
@@ -5810,6 +7544,9 @@ class $WalletSettlementsTable extends WalletSettlements
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   @override
@@ -5831,6 +7568,9 @@ class $WalletSettlementsTable extends WalletSettlements
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_members (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _receiverMemberIdMeta = const VerificationMeta(
     'receiverMemberId',
@@ -5842,6 +7582,9 @@ class $WalletSettlementsTable extends WalletSettlements
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_members (id) ON DELETE CASCADE',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<double, int> amount =
@@ -5883,6 +7626,9 @@ class $WalletSettlementsTable extends WalletSettlements
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -6395,405 +8141,6 @@ class WalletSettlementsCompanion extends UpdateCompanion<WalletSettlement> {
   }
 }
 
-class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $WalletsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
-  @override
-  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
-    'uuid',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    clientDefault: () => const Uuid().v4(),
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 80,
-    ),
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _typeMeta = const VerificationMeta('type');
-  @override
-  late final GeneratedColumn<String> type = GeneratedColumn<String>(
-    'type',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('personal'),
-  );
-  static const VerificationMeta _createdByAccountIdMeta =
-      const VerificationMeta('createdByAccountId');
-  @override
-  late final GeneratedColumn<int> createdByAccountId = GeneratedColumn<int>(
-    'created_by_account_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: () => DateTime.now(),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    uuid,
-    name,
-    type,
-    createdByAccountId,
-    createdAt,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'wallets';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<Wallet> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('uuid')) {
-      context.handle(
-        _uuidMeta,
-        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
-      );
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('type')) {
-      context.handle(
-        _typeMeta,
-        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
-      );
-    }
-    if (data.containsKey('created_by_account_id')) {
-      context.handle(
-        _createdByAccountIdMeta,
-        createdByAccountId.isAcceptableOrUnknown(
-          data['created_by_account_id']!,
-          _createdByAccountIdMeta,
-        ),
-      );
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Wallet map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Wallet(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      uuid: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}uuid'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-      type: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}type'],
-      )!,
-      createdByAccountId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}created_by_account_id'],
-      ),
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-    );
-  }
-
-  @override
-  $WalletsTable createAlias(String alias) {
-    return $WalletsTable(attachedDatabase, alias);
-  }
-}
-
-class Wallet extends DataClass implements Insertable<Wallet> {
-  final int id;
-  final String uuid;
-  final String name;
-  final String type;
-  final int? createdByAccountId;
-  final DateTime createdAt;
-  const Wallet({
-    required this.id,
-    required this.uuid,
-    required this.name,
-    required this.type,
-    this.createdByAccountId,
-    required this.createdAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['uuid'] = Variable<String>(uuid);
-    map['name'] = Variable<String>(name);
-    map['type'] = Variable<String>(type);
-    if (!nullToAbsent || createdByAccountId != null) {
-      map['created_by_account_id'] = Variable<int>(createdByAccountId);
-    }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    return map;
-  }
-
-  WalletsCompanion toCompanion(bool nullToAbsent) {
-    return WalletsCompanion(
-      id: Value(id),
-      uuid: Value(uuid),
-      name: Value(name),
-      type: Value(type),
-      createdByAccountId: createdByAccountId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdByAccountId),
-      createdAt: Value(createdAt),
-    );
-  }
-
-  factory Wallet.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Wallet(
-      id: serializer.fromJson<int>(json['id']),
-      uuid: serializer.fromJson<String>(json['uuid']),
-      name: serializer.fromJson<String>(json['name']),
-      type: serializer.fromJson<String>(json['type']),
-      createdByAccountId: serializer.fromJson<int?>(json['createdByAccountId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'uuid': serializer.toJson<String>(uuid),
-      'name': serializer.toJson<String>(name),
-      'type': serializer.toJson<String>(type),
-      'createdByAccountId': serializer.toJson<int?>(createdByAccountId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-    };
-  }
-
-  Wallet copyWith({
-    int? id,
-    String? uuid,
-    String? name,
-    String? type,
-    Value<int?> createdByAccountId = const Value.absent(),
-    DateTime? createdAt,
-  }) => Wallet(
-    id: id ?? this.id,
-    uuid: uuid ?? this.uuid,
-    name: name ?? this.name,
-    type: type ?? this.type,
-    createdByAccountId: createdByAccountId.present
-        ? createdByAccountId.value
-        : this.createdByAccountId,
-    createdAt: createdAt ?? this.createdAt,
-  );
-  Wallet copyWithCompanion(WalletsCompanion data) {
-    return Wallet(
-      id: data.id.present ? data.id.value : this.id,
-      uuid: data.uuid.present ? data.uuid.value : this.uuid,
-      name: data.name.present ? data.name.value : this.name,
-      type: data.type.present ? data.type.value : this.type,
-      createdByAccountId: data.createdByAccountId.present
-          ? data.createdByAccountId.value
-          : this.createdByAccountId,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Wallet(')
-          ..write('id: $id, ')
-          ..write('uuid: $uuid, ')
-          ..write('name: $name, ')
-          ..write('type: $type, ')
-          ..write('createdByAccountId: $createdByAccountId, ')
-          ..write('createdAt: $createdAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, uuid, name, type, createdByAccountId, createdAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Wallet &&
-          other.id == this.id &&
-          other.uuid == this.uuid &&
-          other.name == this.name &&
-          other.type == this.type &&
-          other.createdByAccountId == this.createdByAccountId &&
-          other.createdAt == this.createdAt);
-}
-
-class WalletsCompanion extends UpdateCompanion<Wallet> {
-  final Value<int> id;
-  final Value<String> uuid;
-  final Value<String> name;
-  final Value<String> type;
-  final Value<int?> createdByAccountId;
-  final Value<DateTime> createdAt;
-  const WalletsCompanion({
-    this.id = const Value.absent(),
-    this.uuid = const Value.absent(),
-    this.name = const Value.absent(),
-    this.type = const Value.absent(),
-    this.createdByAccountId = const Value.absent(),
-    this.createdAt = const Value.absent(),
-  });
-  WalletsCompanion.insert({
-    this.id = const Value.absent(),
-    this.uuid = const Value.absent(),
-    required String name,
-    this.type = const Value.absent(),
-    this.createdByAccountId = const Value.absent(),
-    this.createdAt = const Value.absent(),
-  }) : name = Value(name);
-  static Insertable<Wallet> custom({
-    Expression<int>? id,
-    Expression<String>? uuid,
-    Expression<String>? name,
-    Expression<String>? type,
-    Expression<int>? createdByAccountId,
-    Expression<DateTime>? createdAt,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (uuid != null) 'uuid': uuid,
-      if (name != null) 'name': name,
-      if (type != null) 'type': type,
-      if (createdByAccountId != null)
-        'created_by_account_id': createdByAccountId,
-      if (createdAt != null) 'created_at': createdAt,
-    });
-  }
-
-  WalletsCompanion copyWith({
-    Value<int>? id,
-    Value<String>? uuid,
-    Value<String>? name,
-    Value<String>? type,
-    Value<int?>? createdByAccountId,
-    Value<DateTime>? createdAt,
-  }) {
-    return WalletsCompanion(
-      id: id ?? this.id,
-      uuid: uuid ?? this.uuid,
-      name: name ?? this.name,
-      type: type ?? this.type,
-      createdByAccountId: createdByAccountId ?? this.createdByAccountId,
-      createdAt: createdAt ?? this.createdAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (uuid.present) {
-      map['uuid'] = Variable<String>(uuid.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (type.present) {
-      map['type'] = Variable<String>(type.value);
-    }
-    if (createdByAccountId.present) {
-      map['created_by_account_id'] = Variable<int>(createdByAccountId.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('WalletsCompanion(')
-          ..write('id: $id, ')
-          ..write('uuid: $uuid, ')
-          ..write('name: $name, ')
-          ..write('type: $type, ')
-          ..write('createdByAccountId: $createdByAccountId, ')
-          ..write('createdAt: $createdAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $WalletInvitationsTable extends WalletInvitations
     with TableInfo<$WalletInvitationsTable, WalletInvitation> {
   @override
@@ -6834,6 +8181,9 @@ class $WalletInvitationsTable extends WalletInvitations
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _invitedByAccountIdMeta =
       const VerificationMeta('invitedByAccountId');
@@ -6844,6 +8194,9 @@ class $WalletInvitationsTable extends WalletInvitations
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _accountIdMeta = const VerificationMeta(
     'accountId',
@@ -6855,6 +8208,9 @@ class $WalletInvitationsTable extends WalletInvitations
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE CASCADE',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<WalletInvitationStatus, String>
@@ -7415,464 +8771,6 @@ class WalletInvitationsCompanion extends UpdateCompanion<WalletInvitation> {
   }
 }
 
-class $WalletMembersTable extends WalletMembers
-    with TableInfo<$WalletMembersTable, WalletMember> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $WalletMembersTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _walletIdMeta = const VerificationMeta(
-    'walletId',
-  );
-  @override
-  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
-    'wallet_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _accountIdMeta = const VerificationMeta(
-    'accountId',
-  );
-  @override
-  late final GeneratedColumn<int> accountId = GeneratedColumn<int>(
-    'account_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
-  @override
-  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
-    'user_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<WalletRole, String> role =
-      GeneratedColumn<String>(
-        'role',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: true,
-      ).withConverter<WalletRole>($WalletMembersTable.$converterrole);
-  static const VerificationMeta _joinedAtMeta = const VerificationMeta(
-    'joinedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> joinedAt = GeneratedColumn<DateTime>(
-    'joined_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    clientDefault: () => DateTime.now(),
-  );
-  static const VerificationMeta _isActiveMeta = const VerificationMeta(
-    'isActive',
-  );
-  @override
-  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
-    'is_active',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_active" IN (0, 1))',
-    ),
-    defaultValue: const Constant(true),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    walletId,
-    accountId,
-    userId,
-    role,
-    joinedAt,
-    isActive,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'wallet_members';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<WalletMember> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('wallet_id')) {
-      context.handle(
-        _walletIdMeta,
-        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_walletIdMeta);
-    }
-    if (data.containsKey('account_id')) {
-      context.handle(
-        _accountIdMeta,
-        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_accountIdMeta);
-    }
-    if (data.containsKey('user_id')) {
-      context.handle(
-        _userIdMeta,
-        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
-      );
-    }
-    if (data.containsKey('joined_at')) {
-      context.handle(
-        _joinedAtMeta,
-        joinedAt.isAcceptableOrUnknown(data['joined_at']!, _joinedAtMeta),
-      );
-    }
-    if (data.containsKey('is_active')) {
-      context.handle(
-        _isActiveMeta,
-        isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  WalletMember map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return WalletMember(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      walletId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}wallet_id'],
-      )!,
-      accountId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}account_id'],
-      )!,
-      userId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}user_id'],
-      ),
-      role: $WalletMembersTable.$converterrole.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}role'],
-        )!,
-      ),
-      joinedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}joined_at'],
-      )!,
-      isActive: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_active'],
-      )!,
-    );
-  }
-
-  @override
-  $WalletMembersTable createAlias(String alias) {
-    return $WalletMembersTable(attachedDatabase, alias);
-  }
-
-  static JsonTypeConverter2<WalletRole, String, String> $converterrole =
-      const EnumNameConverter(WalletRole.values);
-}
-
-class WalletMember extends DataClass implements Insertable<WalletMember> {
-  final int id;
-  final int walletId;
-  final int accountId;
-
-  /// A7 bridge: the real identity of this member.
-  ///
-  /// `accountId` above is a money container, not a person - that conflation is
-  /// why collaboration could not be built. This column is the successor and is
-  /// nullable so membership rows can carry a user identity while every existing
-  /// `actorAccountId` call site is migrated across. Once step 3 is complete,
-  /// `accountId` can be dropped.
-  final int? userId;
-  final WalletRole role;
-  final DateTime joinedAt;
-  final bool isActive;
-  const WalletMember({
-    required this.id,
-    required this.walletId,
-    required this.accountId,
-    this.userId,
-    required this.role,
-    required this.joinedAt,
-    required this.isActive,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['wallet_id'] = Variable<int>(walletId);
-    map['account_id'] = Variable<int>(accountId);
-    if (!nullToAbsent || userId != null) {
-      map['user_id'] = Variable<int>(userId);
-    }
-    {
-      map['role'] = Variable<String>(
-        $WalletMembersTable.$converterrole.toSql(role),
-      );
-    }
-    map['joined_at'] = Variable<DateTime>(joinedAt);
-    map['is_active'] = Variable<bool>(isActive);
-    return map;
-  }
-
-  WalletMembersCompanion toCompanion(bool nullToAbsent) {
-    return WalletMembersCompanion(
-      id: Value(id),
-      walletId: Value(walletId),
-      accountId: Value(accountId),
-      userId: userId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userId),
-      role: Value(role),
-      joinedAt: Value(joinedAt),
-      isActive: Value(isActive),
-    );
-  }
-
-  factory WalletMember.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return WalletMember(
-      id: serializer.fromJson<int>(json['id']),
-      walletId: serializer.fromJson<int>(json['walletId']),
-      accountId: serializer.fromJson<int>(json['accountId']),
-      userId: serializer.fromJson<int?>(json['userId']),
-      role: $WalletMembersTable.$converterrole.fromJson(
-        serializer.fromJson<String>(json['role']),
-      ),
-      joinedAt: serializer.fromJson<DateTime>(json['joinedAt']),
-      isActive: serializer.fromJson<bool>(json['isActive']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'walletId': serializer.toJson<int>(walletId),
-      'accountId': serializer.toJson<int>(accountId),
-      'userId': serializer.toJson<int?>(userId),
-      'role': serializer.toJson<String>(
-        $WalletMembersTable.$converterrole.toJson(role),
-      ),
-      'joinedAt': serializer.toJson<DateTime>(joinedAt),
-      'isActive': serializer.toJson<bool>(isActive),
-    };
-  }
-
-  WalletMember copyWith({
-    int? id,
-    int? walletId,
-    int? accountId,
-    Value<int?> userId = const Value.absent(),
-    WalletRole? role,
-    DateTime? joinedAt,
-    bool? isActive,
-  }) => WalletMember(
-    id: id ?? this.id,
-    walletId: walletId ?? this.walletId,
-    accountId: accountId ?? this.accountId,
-    userId: userId.present ? userId.value : this.userId,
-    role: role ?? this.role,
-    joinedAt: joinedAt ?? this.joinedAt,
-    isActive: isActive ?? this.isActive,
-  );
-  WalletMember copyWithCompanion(WalletMembersCompanion data) {
-    return WalletMember(
-      id: data.id.present ? data.id.value : this.id,
-      walletId: data.walletId.present ? data.walletId.value : this.walletId,
-      accountId: data.accountId.present ? data.accountId.value : this.accountId,
-      userId: data.userId.present ? data.userId.value : this.userId,
-      role: data.role.present ? data.role.value : this.role,
-      joinedAt: data.joinedAt.present ? data.joinedAt.value : this.joinedAt,
-      isActive: data.isActive.present ? data.isActive.value : this.isActive,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('WalletMember(')
-          ..write('id: $id, ')
-          ..write('walletId: $walletId, ')
-          ..write('accountId: $accountId, ')
-          ..write('userId: $userId, ')
-          ..write('role: $role, ')
-          ..write('joinedAt: $joinedAt, ')
-          ..write('isActive: $isActive')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, walletId, accountId, userId, role, joinedAt, isActive);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is WalletMember &&
-          other.id == this.id &&
-          other.walletId == this.walletId &&
-          other.accountId == this.accountId &&
-          other.userId == this.userId &&
-          other.role == this.role &&
-          other.joinedAt == this.joinedAt &&
-          other.isActive == this.isActive);
-}
-
-class WalletMembersCompanion extends UpdateCompanion<WalletMember> {
-  final Value<int> id;
-  final Value<int> walletId;
-  final Value<int> accountId;
-  final Value<int?> userId;
-  final Value<WalletRole> role;
-  final Value<DateTime> joinedAt;
-  final Value<bool> isActive;
-  const WalletMembersCompanion({
-    this.id = const Value.absent(),
-    this.walletId = const Value.absent(),
-    this.accountId = const Value.absent(),
-    this.userId = const Value.absent(),
-    this.role = const Value.absent(),
-    this.joinedAt = const Value.absent(),
-    this.isActive = const Value.absent(),
-  });
-  WalletMembersCompanion.insert({
-    this.id = const Value.absent(),
-    required int walletId,
-    required int accountId,
-    this.userId = const Value.absent(),
-    required WalletRole role,
-    this.joinedAt = const Value.absent(),
-    this.isActive = const Value.absent(),
-  }) : walletId = Value(walletId),
-       accountId = Value(accountId),
-       role = Value(role);
-  static Insertable<WalletMember> custom({
-    Expression<int>? id,
-    Expression<int>? walletId,
-    Expression<int>? accountId,
-    Expression<int>? userId,
-    Expression<String>? role,
-    Expression<DateTime>? joinedAt,
-    Expression<bool>? isActive,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (walletId != null) 'wallet_id': walletId,
-      if (accountId != null) 'account_id': accountId,
-      if (userId != null) 'user_id': userId,
-      if (role != null) 'role': role,
-      if (joinedAt != null) 'joined_at': joinedAt,
-      if (isActive != null) 'is_active': isActive,
-    });
-  }
-
-  WalletMembersCompanion copyWith({
-    Value<int>? id,
-    Value<int>? walletId,
-    Value<int>? accountId,
-    Value<int?>? userId,
-    Value<WalletRole>? role,
-    Value<DateTime>? joinedAt,
-    Value<bool>? isActive,
-  }) {
-    return WalletMembersCompanion(
-      id: id ?? this.id,
-      walletId: walletId ?? this.walletId,
-      accountId: accountId ?? this.accountId,
-      userId: userId ?? this.userId,
-      role: role ?? this.role,
-      joinedAt: joinedAt ?? this.joinedAt,
-      isActive: isActive ?? this.isActive,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (walletId.present) {
-      map['wallet_id'] = Variable<int>(walletId.value);
-    }
-    if (accountId.present) {
-      map['account_id'] = Variable<int>(accountId.value);
-    }
-    if (userId.present) {
-      map['user_id'] = Variable<int>(userId.value);
-    }
-    if (role.present) {
-      map['role'] = Variable<String>(
-        $WalletMembersTable.$converterrole.toSql(role.value),
-      );
-    }
-    if (joinedAt.present) {
-      map['joined_at'] = Variable<DateTime>(joinedAt.value);
-    }
-    if (isActive.present) {
-      map['is_active'] = Variable<bool>(isActive.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('WalletMembersCompanion(')
-          ..write('id: $id, ')
-          ..write('walletId: $walletId, ')
-          ..write('accountId: $accountId, ')
-          ..write('userId: $userId, ')
-          ..write('role: $role, ')
-          ..write('joinedAt: $joinedAt, ')
-          ..write('isActive: $isActive')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $WalletGoalsTable extends WalletGoals
     with TableInfo<$WalletGoalsTable, WalletGoal> {
   @override
@@ -7902,6 +8800,9 @@ class $WalletGoalsTable extends WalletGoals
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -7955,6 +8856,9 @@ class $WalletGoalsTable extends WalletGoals
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _updatedByAccountIdMeta =
       const VerificationMeta('updatedByAccountId');
@@ -7965,6 +8869,9 @@ class $WalletGoalsTable extends WalletGoals
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -8522,6 +9429,9 @@ class $WalletGoalContributionsTable extends WalletGoalContributions
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _goalIdMeta = const VerificationMeta('goalId');
   @override
@@ -8531,6 +9441,9 @@ class $WalletGoalContributionsTable extends WalletGoalContributions
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_goals (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _contributedByAccountIdMeta =
       const VerificationMeta('contributedByAccountId');
@@ -8541,6 +9454,9 @@ class $WalletGoalContributionsTable extends WalletGoalContributions
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<double, int> amount =
@@ -8947,6 +9863,9 @@ class $WalletGoalSchedulesTable extends WalletGoalSchedules
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_goals (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _memberIdMeta = const VerificationMeta(
     'memberId',
@@ -8958,6 +9877,9 @@ class $WalletGoalSchedulesTable extends WalletGoalSchedules
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_members (id) ON DELETE CASCADE',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<double, int> amount =
@@ -9029,6 +9951,9 @@ class $WalletGoalSchedulesTable extends WalletGoalSchedules
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _updatedByAccountIdMeta =
       const VerificationMeta('updatedByAccountId');
@@ -9039,6 +9964,9 @@ class $WalletGoalSchedulesTable extends WalletGoalSchedules
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -9677,6 +10605,9 @@ class $FeedbackEntriesTable extends FeedbackEntries
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<FeedbackCategory, String>
@@ -10266,6 +11197,9 @@ class $WalletNotificationPreferencesTable extends WalletNotificationPreferences
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _billRemindersMeta = const VerificationMeta(
     'billReminders',
@@ -11617,6 +12551,9 @@ class $AttachmentsTable extends Attachments
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES transactions (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _filePathMeta = const VerificationMeta(
     'filePath',
@@ -11974,6 +12911,9 @@ class $WalletExpenseSplitsTable extends WalletExpenseSplits
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   @override
@@ -11995,6 +12935,9 @@ class $WalletExpenseSplitsTable extends WalletExpenseSplits
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES transactions (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _paidByMemberIdMeta = const VerificationMeta(
     'paidByMemberId',
@@ -12006,6 +12949,9 @@ class $WalletExpenseSplitsTable extends WalletExpenseSplits
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_members (id) ON DELETE CASCADE',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<WalletExpenseSplitMethod, String>
@@ -12028,6 +12974,9 @@ class $WalletExpenseSplitsTable extends WalletExpenseSplits
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -12503,6 +13452,9 @@ class $WalletExpenseSplitMembersTable extends WalletExpenseSplitMembers
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_expense_splits (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _memberIdMeta = const VerificationMeta(
     'memberId',
@@ -12514,6 +13466,9 @@ class $WalletExpenseSplitMembersTable extends WalletExpenseSplitMembers
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_members (id) ON DELETE CASCADE',
+    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<double, int> amountOwed =
@@ -12926,6 +13881,9 @@ class $MerchantMappingsTable extends MerchantMappings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _originalPatternMeta = const VerificationMeta(
     'originalPattern',
@@ -12959,6 +13917,9 @@ class $MerchantMappingsTable extends MerchantMappings
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES categories (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -13342,6 +14303,9 @@ class $PayeesTable extends Payees with TableInfo<$PayeesTable, Payee> {
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
     defaultValue: const Constant(1),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
@@ -13588,6 +14552,9 @@ class $RecurringTransactionsTable extends RecurringTransactions
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
     defaultValue: const Constant(1),
   );
   static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
@@ -13643,6 +14610,9 @@ class $RecurringTransactionsTable extends RecurringTransactions
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES categories (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _accountIdMeta = const VerificationMeta(
     'accountId',
@@ -13654,6 +14624,9 @@ class $RecurringTransactionsTable extends RecurringTransactions
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE RESTRICT',
+    ),
   );
   static const VerificationMeta _intervalMeta = const VerificationMeta(
     'interval',
@@ -14401,6 +15374,9 @@ class $SmsImportMetricsTable extends SmsImportMetrics
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _acceptedImportsMeta = const VerificationMeta(
     'acceptedImports',
@@ -14815,6 +15791,9 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
     defaultValue: const Constant(1),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
@@ -15085,703 +16064,6 @@ class TagsCompanion extends UpdateCompanion<Tag> {
   }
 }
 
-class $TransactionsTable extends Transactions
-    with TableInfo<$TransactionsTable, Transaction> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $TransactionsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _walletIdMeta = const VerificationMeta(
-    'walletId',
-  );
-  @override
-  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
-    'wallet_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(1),
-  );
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
-  @override
-  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
-    'uuid',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    clientDefault: () => const Uuid().v4(),
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<double, int> amount =
-      GeneratedColumn<int>(
-        'amount',
-        aliasedName,
-        false,
-        type: DriftSqlType.int,
-        requiredDuringInsert: true,
-      ).withConverter<double>($TransactionsTable.$converteramount);
-  static const VerificationMeta _dateMeta = const VerificationMeta('date');
-  @override
-  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
-    'date',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _noteMeta = const VerificationMeta('note');
-  @override
-  late final GeneratedColumn<String> note = GeneratedColumn<String>(
-    'note',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<TransactionType, String> type =
-      GeneratedColumn<String>(
-        'type',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: true,
-      ).withConverter<TransactionType>($TransactionsTable.$convertertype);
-  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
-    'categoryId',
-  );
-  @override
-  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
-    'category_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _accountIdMeta = const VerificationMeta(
-    'accountId',
-  );
-  @override
-  late final GeneratedColumn<int> accountId = GeneratedColumn<int>(
-    'account_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _transferGroupIdMeta = const VerificationMeta(
-    'transferGroupId',
-  );
-  @override
-  late final GeneratedColumn<String> transferGroupId = GeneratedColumn<String>(
-    'transfer_group_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    walletId,
-    id,
-    uuid,
-    amount,
-    date,
-    note,
-    type,
-    categoryId,
-    accountId,
-    transferGroupId,
-    createdAt,
-    updatedAt,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'transactions';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<Transaction> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('wallet_id')) {
-      context.handle(
-        _walletIdMeta,
-        walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta),
-      );
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('uuid')) {
-      context.handle(
-        _uuidMeta,
-        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
-      );
-    }
-    if (data.containsKey('date')) {
-      context.handle(
-        _dateMeta,
-        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_dateMeta);
-    }
-    if (data.containsKey('note')) {
-      context.handle(
-        _noteMeta,
-        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
-      );
-    }
-    if (data.containsKey('category_id')) {
-      context.handle(
-        _categoryIdMeta,
-        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_categoryIdMeta);
-    }
-    if (data.containsKey('account_id')) {
-      context.handle(
-        _accountIdMeta,
-        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_accountIdMeta);
-    }
-    if (data.containsKey('transfer_group_id')) {
-      context.handle(
-        _transferGroupIdMeta,
-        transferGroupId.isAcceptableOrUnknown(
-          data['transfer_group_id']!,
-          _transferGroupIdMeta,
-        ),
-      );
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Transaction map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Transaction(
-      walletId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}wallet_id'],
-      )!,
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      uuid: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}uuid'],
-      )!,
-      amount: $TransactionsTable.$converteramount.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.int,
-          data['${effectivePrefix}amount'],
-        )!,
-      ),
-      date: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}date'],
-      )!,
-      note: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}note'],
-      ),
-      type: $TransactionsTable.$convertertype.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}type'],
-        )!,
-      ),
-      categoryId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}category_id'],
-      )!,
-      accountId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}account_id'],
-      )!,
-      transferGroupId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}transfer_group_id'],
-      ),
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-    );
-  }
-
-  @override
-  $TransactionsTable createAlias(String alias) {
-    return $TransactionsTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<double, int> $converteramount = const MoneyConverter();
-  static JsonTypeConverter2<TransactionType, String, String> $convertertype =
-      const EnumNameConverter(TransactionType.values);
-}
-
-class Transaction extends DataClass implements Insertable<Transaction> {
-  final int walletId;
-  final int id;
-  final String uuid;
-  final double amount;
-  final DateTime date;
-  final String? note;
-  final TransactionType type;
-  final int categoryId;
-  final int accountId;
-
-  /// Groups the two legs of a transfer. Both rows share one value, which is
-  /// what makes a transfer first-class: it can be excluded from income/expense
-  /// reporting and edited or deleted as a unit. Null for ordinary entries.
-  final String? transferGroupId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  const Transaction({
-    required this.walletId,
-    required this.id,
-    required this.uuid,
-    required this.amount,
-    required this.date,
-    this.note,
-    required this.type,
-    required this.categoryId,
-    required this.accountId,
-    this.transferGroupId,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['wallet_id'] = Variable<int>(walletId);
-    map['id'] = Variable<int>(id);
-    map['uuid'] = Variable<String>(uuid);
-    {
-      map['amount'] = Variable<int>(
-        $TransactionsTable.$converteramount.toSql(amount),
-      );
-    }
-    map['date'] = Variable<DateTime>(date);
-    if (!nullToAbsent || note != null) {
-      map['note'] = Variable<String>(note);
-    }
-    {
-      map['type'] = Variable<String>(
-        $TransactionsTable.$convertertype.toSql(type),
-      );
-    }
-    map['category_id'] = Variable<int>(categoryId);
-    map['account_id'] = Variable<int>(accountId);
-    if (!nullToAbsent || transferGroupId != null) {
-      map['transfer_group_id'] = Variable<String>(transferGroupId);
-    }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  TransactionsCompanion toCompanion(bool nullToAbsent) {
-    return TransactionsCompanion(
-      walletId: Value(walletId),
-      id: Value(id),
-      uuid: Value(uuid),
-      amount: Value(amount),
-      date: Value(date),
-      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
-      type: Value(type),
-      categoryId: Value(categoryId),
-      accountId: Value(accountId),
-      transferGroupId: transferGroupId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(transferGroupId),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory Transaction.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Transaction(
-      walletId: serializer.fromJson<int>(json['walletId']),
-      id: serializer.fromJson<int>(json['id']),
-      uuid: serializer.fromJson<String>(json['uuid']),
-      amount: serializer.fromJson<double>(json['amount']),
-      date: serializer.fromJson<DateTime>(json['date']),
-      note: serializer.fromJson<String?>(json['note']),
-      type: $TransactionsTable.$convertertype.fromJson(
-        serializer.fromJson<String>(json['type']),
-      ),
-      categoryId: serializer.fromJson<int>(json['categoryId']),
-      accountId: serializer.fromJson<int>(json['accountId']),
-      transferGroupId: serializer.fromJson<String?>(json['transferGroupId']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'walletId': serializer.toJson<int>(walletId),
-      'id': serializer.toJson<int>(id),
-      'uuid': serializer.toJson<String>(uuid),
-      'amount': serializer.toJson<double>(amount),
-      'date': serializer.toJson<DateTime>(date),
-      'note': serializer.toJson<String?>(note),
-      'type': serializer.toJson<String>(
-        $TransactionsTable.$convertertype.toJson(type),
-      ),
-      'categoryId': serializer.toJson<int>(categoryId),
-      'accountId': serializer.toJson<int>(accountId),
-      'transferGroupId': serializer.toJson<String?>(transferGroupId),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  Transaction copyWith({
-    int? walletId,
-    int? id,
-    String? uuid,
-    double? amount,
-    DateTime? date,
-    Value<String?> note = const Value.absent(),
-    TransactionType? type,
-    int? categoryId,
-    int? accountId,
-    Value<String?> transferGroupId = const Value.absent(),
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) => Transaction(
-    walletId: walletId ?? this.walletId,
-    id: id ?? this.id,
-    uuid: uuid ?? this.uuid,
-    amount: amount ?? this.amount,
-    date: date ?? this.date,
-    note: note.present ? note.value : this.note,
-    type: type ?? this.type,
-    categoryId: categoryId ?? this.categoryId,
-    accountId: accountId ?? this.accountId,
-    transferGroupId: transferGroupId.present
-        ? transferGroupId.value
-        : this.transferGroupId,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
-  Transaction copyWithCompanion(TransactionsCompanion data) {
-    return Transaction(
-      walletId: data.walletId.present ? data.walletId.value : this.walletId,
-      id: data.id.present ? data.id.value : this.id,
-      uuid: data.uuid.present ? data.uuid.value : this.uuid,
-      amount: data.amount.present ? data.amount.value : this.amount,
-      date: data.date.present ? data.date.value : this.date,
-      note: data.note.present ? data.note.value : this.note,
-      type: data.type.present ? data.type.value : this.type,
-      categoryId: data.categoryId.present
-          ? data.categoryId.value
-          : this.categoryId,
-      accountId: data.accountId.present ? data.accountId.value : this.accountId,
-      transferGroupId: data.transferGroupId.present
-          ? data.transferGroupId.value
-          : this.transferGroupId,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('Transaction(')
-          ..write('walletId: $walletId, ')
-          ..write('id: $id, ')
-          ..write('uuid: $uuid, ')
-          ..write('amount: $amount, ')
-          ..write('date: $date, ')
-          ..write('note: $note, ')
-          ..write('type: $type, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('accountId: $accountId, ')
-          ..write('transferGroupId: $transferGroupId, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    walletId,
-    id,
-    uuid,
-    amount,
-    date,
-    note,
-    type,
-    categoryId,
-    accountId,
-    transferGroupId,
-    createdAt,
-    updatedAt,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Transaction &&
-          other.walletId == this.walletId &&
-          other.id == this.id &&
-          other.uuid == this.uuid &&
-          other.amount == this.amount &&
-          other.date == this.date &&
-          other.note == this.note &&
-          other.type == this.type &&
-          other.categoryId == this.categoryId &&
-          other.accountId == this.accountId &&
-          other.transferGroupId == this.transferGroupId &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
-}
-
-class TransactionsCompanion extends UpdateCompanion<Transaction> {
-  final Value<int> walletId;
-  final Value<int> id;
-  final Value<String> uuid;
-  final Value<double> amount;
-  final Value<DateTime> date;
-  final Value<String?> note;
-  final Value<TransactionType> type;
-  final Value<int> categoryId;
-  final Value<int> accountId;
-  final Value<String?> transferGroupId;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  const TransactionsCompanion({
-    this.walletId = const Value.absent(),
-    this.id = const Value.absent(),
-    this.uuid = const Value.absent(),
-    this.amount = const Value.absent(),
-    this.date = const Value.absent(),
-    this.note = const Value.absent(),
-    this.type = const Value.absent(),
-    this.categoryId = const Value.absent(),
-    this.accountId = const Value.absent(),
-    this.transferGroupId = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  TransactionsCompanion.insert({
-    this.walletId = const Value.absent(),
-    this.id = const Value.absent(),
-    this.uuid = const Value.absent(),
-    required double amount,
-    required DateTime date,
-    this.note = const Value.absent(),
-    required TransactionType type,
-    required int categoryId,
-    required int accountId,
-    this.transferGroupId = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  }) : amount = Value(amount),
-       date = Value(date),
-       type = Value(type),
-       categoryId = Value(categoryId),
-       accountId = Value(accountId);
-  static Insertable<Transaction> custom({
-    Expression<int>? walletId,
-    Expression<int>? id,
-    Expression<String>? uuid,
-    Expression<int>? amount,
-    Expression<DateTime>? date,
-    Expression<String>? note,
-    Expression<String>? type,
-    Expression<int>? categoryId,
-    Expression<int>? accountId,
-    Expression<String>? transferGroupId,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (walletId != null) 'wallet_id': walletId,
-      if (id != null) 'id': id,
-      if (uuid != null) 'uuid': uuid,
-      if (amount != null) 'amount': amount,
-      if (date != null) 'date': date,
-      if (note != null) 'note': note,
-      if (type != null) 'type': type,
-      if (categoryId != null) 'category_id': categoryId,
-      if (accountId != null) 'account_id': accountId,
-      if (transferGroupId != null) 'transfer_group_id': transferGroupId,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  TransactionsCompanion copyWith({
-    Value<int>? walletId,
-    Value<int>? id,
-    Value<String>? uuid,
-    Value<double>? amount,
-    Value<DateTime>? date,
-    Value<String?>? note,
-    Value<TransactionType>? type,
-    Value<int>? categoryId,
-    Value<int>? accountId,
-    Value<String?>? transferGroupId,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-  }) {
-    return TransactionsCompanion(
-      walletId: walletId ?? this.walletId,
-      id: id ?? this.id,
-      uuid: uuid ?? this.uuid,
-      amount: amount ?? this.amount,
-      date: date ?? this.date,
-      note: note ?? this.note,
-      type: type ?? this.type,
-      categoryId: categoryId ?? this.categoryId,
-      accountId: accountId ?? this.accountId,
-      transferGroupId: transferGroupId ?? this.transferGroupId,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (walletId.present) {
-      map['wallet_id'] = Variable<int>(walletId.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (uuid.present) {
-      map['uuid'] = Variable<String>(uuid.value);
-    }
-    if (amount.present) {
-      map['amount'] = Variable<int>(
-        $TransactionsTable.$converteramount.toSql(amount.value),
-      );
-    }
-    if (date.present) {
-      map['date'] = Variable<DateTime>(date.value);
-    }
-    if (note.present) {
-      map['note'] = Variable<String>(note.value);
-    }
-    if (type.present) {
-      map['type'] = Variable<String>(
-        $TransactionsTable.$convertertype.toSql(type.value),
-      );
-    }
-    if (categoryId.present) {
-      map['category_id'] = Variable<int>(categoryId.value);
-    }
-    if (accountId.present) {
-      map['account_id'] = Variable<int>(accountId.value);
-    }
-    if (transferGroupId.present) {
-      map['transfer_group_id'] = Variable<String>(transferGroupId.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('TransactionsCompanion(')
-          ..write('walletId: $walletId, ')
-          ..write('id: $id, ')
-          ..write('uuid: $uuid, ')
-          ..write('amount: $amount, ')
-          ..write('date: $date, ')
-          ..write('note: $note, ')
-          ..write('type: $type, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('accountId: $accountId, ')
-          ..write('transferGroupId: $transferGroupId, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $UnrecognizedSmsEntriesTable extends UnrecognizedSmsEntries
     with TableInfo<$UnrecognizedSmsEntriesTable, UnrecognizedSms> {
   @override
@@ -15811,6 +16093,9 @@ class $UnrecognizedSmsEntriesTable extends UnrecognizedSmsEntries
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _smsBodyMeta = const VerificationMeta(
     'smsBody',
@@ -16266,6 +16551,9 @@ class $WalletActivitiesTable extends WalletActivities
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallets (id) ON DELETE CASCADE',
+    ),
   );
   static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   @override
@@ -16287,6 +16575,9 @@ class $WalletActivitiesTable extends WalletActivities
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES accounts (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _actorMemberIdMeta = const VerificationMeta(
     'actorMemberId',
@@ -16298,6 +16589,9 @@ class $WalletActivitiesTable extends WalletActivities
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES wallet_members (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _actorUserIdMeta = const VerificationMeta(
     'actorUserId',
@@ -16309,6 +16603,9 @@ class $WalletActivitiesTable extends WalletActivities
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES users (id) ON DELETE SET NULL',
+    ),
   );
   static const VerificationMeta _actionMeta = const VerificationMeta('action');
   @override
@@ -17061,416 +17358,20 @@ class WalletActivitiesCompanion extends UpdateCompanion<WalletActivity> {
   }
 }
 
-class $UsersTable extends Users with TableInfo<$UsersTable, User> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $UsersTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
-  @override
-  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
-    'uuid',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    clientDefault: () => const Uuid().v4(),
-  );
-  static const VerificationMeta _displayNameMeta = const VerificationMeta(
-    'displayName',
-  );
-  @override
-  late final GeneratedColumn<String> displayName = GeneratedColumn<String>(
-    'display_name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _emailMeta = const VerificationMeta('email');
-  @override
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-    'email',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    uuid,
-    displayName,
-    email,
-    createdAt,
-    updatedAt,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'users';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<User> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('uuid')) {
-      context.handle(
-        _uuidMeta,
-        uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta),
-      );
-    }
-    if (data.containsKey('display_name')) {
-      context.handle(
-        _displayNameMeta,
-        displayName.isAcceptableOrUnknown(
-          data['display_name']!,
-          _displayNameMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_displayNameMeta);
-    }
-    if (data.containsKey('email')) {
-      context.handle(
-        _emailMeta,
-        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
-      );
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  User map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return User(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      uuid: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}uuid'],
-      )!,
-      displayName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}display_name'],
-      )!,
-      email: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}email'],
-      ),
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-    );
-  }
-
-  @override
-  $UsersTable createAlias(String alias) {
-    return $UsersTable(attachedDatabase, alias);
-  }
-}
-
-class User extends DataClass implements Insertable<User> {
-  final int id;
-  final String uuid;
-
-  /// Name shown in member lists, split sheets and audit entries.
-  final String displayName;
-
-  /// Optional contact detail for invitations. Null when the user was created
-  /// locally without an address.
-  final String? email;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  const User({
-    required this.id,
-    required this.uuid,
-    required this.displayName,
-    this.email,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['uuid'] = Variable<String>(uuid);
-    map['display_name'] = Variable<String>(displayName);
-    if (!nullToAbsent || email != null) {
-      map['email'] = Variable<String>(email);
-    }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    return map;
-  }
-
-  UsersCompanion toCompanion(bool nullToAbsent) {
-    return UsersCompanion(
-      id: Value(id),
-      uuid: Value(uuid),
-      displayName: Value(displayName),
-      email: email == null && nullToAbsent
-          ? const Value.absent()
-          : Value(email),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-    );
-  }
-
-  factory User.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return User(
-      id: serializer.fromJson<int>(json['id']),
-      uuid: serializer.fromJson<String>(json['uuid']),
-      displayName: serializer.fromJson<String>(json['displayName']),
-      email: serializer.fromJson<String?>(json['email']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'uuid': serializer.toJson<String>(uuid),
-      'displayName': serializer.toJson<String>(displayName),
-      'email': serializer.toJson<String?>(email),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
-    };
-  }
-
-  User copyWith({
-    int? id,
-    String? uuid,
-    String? displayName,
-    Value<String?> email = const Value.absent(),
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) => User(
-    id: id ?? this.id,
-    uuid: uuid ?? this.uuid,
-    displayName: displayName ?? this.displayName,
-    email: email.present ? email.value : this.email,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
-  User copyWithCompanion(UsersCompanion data) {
-    return User(
-      id: data.id.present ? data.id.value : this.id,
-      uuid: data.uuid.present ? data.uuid.value : this.uuid,
-      displayName: data.displayName.present
-          ? data.displayName.value
-          : this.displayName,
-      email: data.email.present ? data.email.value : this.email,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('User(')
-          ..write('id: $id, ')
-          ..write('uuid: $uuid, ')
-          ..write('displayName: $displayName, ')
-          ..write('email: $email, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, uuid, displayName, email, createdAt, updatedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is User &&
-          other.id == this.id &&
-          other.uuid == this.uuid &&
-          other.displayName == this.displayName &&
-          other.email == this.email &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
-}
-
-class UsersCompanion extends UpdateCompanion<User> {
-  final Value<int> id;
-  final Value<String> uuid;
-  final Value<String> displayName;
-  final Value<String?> email;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  const UsersCompanion({
-    this.id = const Value.absent(),
-    this.uuid = const Value.absent(),
-    this.displayName = const Value.absent(),
-    this.email = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  });
-  UsersCompanion.insert({
-    this.id = const Value.absent(),
-    this.uuid = const Value.absent(),
-    required String displayName,
-    this.email = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-  }) : displayName = Value(displayName);
-  static Insertable<User> custom({
-    Expression<int>? id,
-    Expression<String>? uuid,
-    Expression<String>? displayName,
-    Expression<String>? email,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (uuid != null) 'uuid': uuid,
-      if (displayName != null) 'display_name': displayName,
-      if (email != null) 'email': email,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-    });
-  }
-
-  UsersCompanion copyWith({
-    Value<int>? id,
-    Value<String>? uuid,
-    Value<String>? displayName,
-    Value<String?>? email,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-  }) {
-    return UsersCompanion(
-      id: id ?? this.id,
-      uuid: uuid ?? this.uuid,
-      displayName: displayName ?? this.displayName,
-      email: email ?? this.email,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (uuid.present) {
-      map['uuid'] = Variable<String>(uuid.value);
-    }
-    if (displayName.present) {
-      map['display_name'] = Variable<String>(displayName.value);
-    }
-    if (email.present) {
-      map['email'] = Variable<String>(email.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('UsersCompanion(')
-          ..write('id: $id, ')
-          ..write('uuid: $uuid, ')
-          ..write('displayName: $displayName, ')
-          ..write('email: $email, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
-          ..write(')'))
-        .toString();
-  }
-}
-
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $AccountsTable accounts = $AccountsTable(this);
+  late final $WalletsTable wallets = $WalletsTable(this);
   late final $WalletBillsTable walletBills = $WalletBillsTable(this);
-  late final $BudgetsTable budgets = $BudgetsTable(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
+  late final $BudgetsTable budgets = $BudgetsTable(this);
+  late final $UsersTable users = $UsersTable(this);
+  late final $WalletMembersTable walletMembers = $WalletMembersTable(this);
   late final $WalletNotificationsTable walletNotifications =
       $WalletNotificationsTable(this);
   late final $LoansTable loans = $LoansTable(this);
+  late final $TransactionsTable transactions = $TransactionsTable(this);
   late final $PeerDebtsTable peerDebts = $PeerDebtsTable(this);
   late final $WalletAllowancesTable walletAllowances = $WalletAllowancesTable(
     this,
@@ -17479,10 +17380,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $WalletAllowancePaymentsTable(this);
   late final $WalletSettlementsTable walletSettlements =
       $WalletSettlementsTable(this);
-  late final $WalletsTable wallets = $WalletsTable(this);
   late final $WalletInvitationsTable walletInvitations =
       $WalletInvitationsTable(this);
-  late final $WalletMembersTable walletMembers = $WalletMembersTable(this);
   late final $WalletGoalsTable walletGoals = $WalletGoalsTable(this);
   late final $WalletGoalContributionsTable walletGoalContributions =
       $WalletGoalContributionsTable(this);
@@ -17510,13 +17409,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $TagsTable tags = $TagsTable(this);
-  late final $TransactionsTable transactions = $TransactionsTable(this);
   late final $UnrecognizedSmsEntriesTable unrecognizedSmsEntries =
       $UnrecognizedSmsEntriesTable(this);
   late final $WalletActivitiesTable walletActivities = $WalletActivitiesTable(
     this,
   );
-  late final $UsersTable users = $UsersTable(this);
   late final CategoryDao categoryDao = CategoryDao(this as AppDatabase);
   late final AccountDao accountDao = AccountDao(this as AppDatabase);
   late final TransactionDao transactionDao = TransactionDao(
@@ -17546,18 +17443,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     accounts,
+    wallets,
     walletBills,
-    budgets,
     categories,
+    budgets,
+    users,
+    walletMembers,
     walletNotifications,
     loans,
+    transactions,
     peerDebts,
     walletAllowances,
     walletAllowancePayments,
     walletSettlements,
-    wallets,
     walletInvitations,
-    walletMembers,
     walletGoals,
     walletGoalContributions,
     walletGoalSchedules,
@@ -17573,11 +17472,443 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     recurringTransactions,
     smsImportMetrics,
     tags,
-    transactions,
     unrecognizedSmsEntries,
     walletActivities,
-    users,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_bills', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_bills', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_bills', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'categories',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('categories', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('budgets', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'categories',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('budgets', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_members', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_members', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'users',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_members', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_notifications', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_notifications', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('loans', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'categories',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('transactions', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('peer_debts', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'transactions',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('peer_debts', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_allowances', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_allowances', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_allowances', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_allowances', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_allowances',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('wallet_allowance_payments', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('wallet_allowance_payments', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_settlements', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_settlements', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_settlements', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_settlements', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_invitations', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_invitations', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_invitations', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_goals', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_goals', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_goals', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('wallet_goal_contributions', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_goals',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('wallet_goal_contributions', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('wallet_goal_contributions', kind: UpdateKind.update),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_goals',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_goal_schedules', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_goal_schedules', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_goal_schedules', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_goal_schedules', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('feedback_entries', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('wallet_notification_preferences', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'transactions',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('attachments', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_expense_splits', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'transactions',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_expense_splits', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_expense_splits', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_expense_splits', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_expense_splits',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('wallet_expense_split_members', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('wallet_expense_split_members', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('merchant_mappings', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'categories',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('merchant_mappings', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('payees', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('recurring_transactions', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'categories',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('recurring_transactions', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('sms_import_metrics', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('tags', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('unrecognized_sms_entries', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallets',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_activities', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'accounts',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_activities', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'wallet_members',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_activities', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'users',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('wallet_activities', kind: UpdateKind.update)],
+    ),
+  ]);
 }
 
 typedef $$AccountsTableCreateCompanionBuilder =
@@ -17606,6 +17937,206 @@ typedef $$AccountsTableUpdateCompanionBuilder =
       Value<bool> isDefault,
       Value<DateTime> updatedAt,
     });
+
+final class $$AccountsTableReferences
+    extends BaseReferences<_$AppDatabase, $AccountsTable, Account> {
+  $$AccountsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$WalletMembersTable, List<WalletMember>>
+  _walletMembersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletMembers,
+    aliasName: $_aliasNameGenerator(db.accounts.id, db.walletMembers.accountId),
+  );
+
+  $$WalletMembersTableProcessedTableManager get walletMembersRefs {
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.accountId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_walletMembersRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$LoansTable, List<LoanDb>> _loansRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.loans,
+    aliasName: $_aliasNameGenerator(db.accounts.id, db.loans.accountId),
+  );
+
+  $$LoansTableProcessedTableManager get loansRefs {
+    final manager = $$LoansTableTableManager(
+      $_db,
+      $_db.loans,
+    ).filter((f) => f.accountId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_loansRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TransactionsTable, List<Transaction>>
+  _transactionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.transactions,
+    aliasName: $_aliasNameGenerator(db.accounts.id, db.transactions.accountId),
+  );
+
+  $$TransactionsTableProcessedTableManager get transactionsRefs {
+    final manager = $$TransactionsTableTableManager(
+      $_db,
+      $_db.transactions,
+    ).filter((f) => f.accountId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_transactionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletSettlementsTable, List<WalletSettlement>>
+  _walletSettlementsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletSettlements,
+        aliasName: $_aliasNameGenerator(
+          db.accounts.id,
+          db.walletSettlements.createdByAccountId,
+        ),
+      );
+
+  $$WalletSettlementsTableProcessedTableManager get walletSettlementsRefs {
+    final manager =
+        $$WalletSettlementsTableTableManager(
+          $_db,
+          $_db.walletSettlements,
+        ).filter(
+          (f) => f.createdByAccountId.id.sqlEquals($_itemColumn<int>('id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletSettlementsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletGoalContributionsTable,
+    List<WalletGoalContribution>
+  >
+  _walletGoalContributionsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletGoalContributions,
+        aliasName: $_aliasNameGenerator(
+          db.accounts.id,
+          db.walletGoalContributions.contributedByAccountId,
+        ),
+      );
+
+  $$WalletGoalContributionsTableProcessedTableManager
+  get walletGoalContributionsRefs {
+    final manager =
+        $$WalletGoalContributionsTableTableManager(
+          $_db,
+          $_db.walletGoalContributions,
+        ).filter(
+          (f) =>
+              f.contributedByAccountId.id.sqlEquals($_itemColumn<int>('id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletGoalContributionsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletExpenseSplitsTable,
+    List<WalletExpenseSplit>
+  >
+  _walletExpenseSplitsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletExpenseSplits,
+        aliasName: $_aliasNameGenerator(
+          db.accounts.id,
+          db.walletExpenseSplits.createdByAccountId,
+        ),
+      );
+
+  $$WalletExpenseSplitsTableProcessedTableManager get walletExpenseSplitsRefs {
+    final manager =
+        $$WalletExpenseSplitsTableTableManager(
+          $_db,
+          $_db.walletExpenseSplits,
+        ).filter(
+          (f) => f.createdByAccountId.id.sqlEquals($_itemColumn<int>('id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletExpenseSplitsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $RecurringTransactionsTable,
+    List<RecurringTransactionDb>
+  >
+  _recurringTransactionsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.recurringTransactions,
+        aliasName: $_aliasNameGenerator(
+          db.accounts.id,
+          db.recurringTransactions.accountId,
+        ),
+      );
+
+  $$RecurringTransactionsTableProcessedTableManager
+  get recurringTransactionsRefs {
+    final manager = $$RecurringTransactionsTableTableManager(
+      $_db,
+      $_db.recurringTransactions,
+    ).filter((f) => f.accountId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _recurringTransactionsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletActivitiesTable, List<WalletActivity>>
+  _walletActivitiesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletActivities,
+    aliasName: $_aliasNameGenerator(
+      db.accounts.id,
+      db.walletActivities.actorAccountId,
+    ),
+  );
+
+  $$WalletActivitiesTableProcessedTableManager get walletActivitiesRefs {
+    final manager = $$WalletActivitiesTableTableManager(
+      $_db,
+      $_db.walletActivities,
+    ).filter((f) => f.actorAccountId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletActivitiesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
 
 class $$AccountsTableFilterComposer
     extends Composer<_$AppDatabase, $AccountsTable> {
@@ -17667,6 +18198,208 @@ class $$AccountsTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> walletMembersRefs(
+    Expression<bool> Function($$WalletMembersTableFilterComposer f) f,
+  ) {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.accountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> loansRefs(
+    Expression<bool> Function($$LoansTableFilterComposer f) f,
+  ) {
+    final $$LoansTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.loans,
+      getReferencedColumn: (t) => t.accountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LoansTableFilterComposer(
+            $db: $db,
+            $table: $db.loans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> transactionsRefs(
+    Expression<bool> Function($$TransactionsTableFilterComposer f) f,
+  ) {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.accountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableFilterComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletSettlementsRefs(
+    Expression<bool> Function($$WalletSettlementsTableFilterComposer f) f,
+  ) {
+    final $$WalletSettlementsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletSettlements,
+      getReferencedColumn: (t) => t.createdByAccountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletSettlementsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletSettlements,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletGoalContributionsRefs(
+    Expression<bool> Function($$WalletGoalContributionsTableFilterComposer f) f,
+  ) {
+    final $$WalletGoalContributionsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletGoalContributions,
+          getReferencedColumn: (t) => t.contributedByAccountId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletGoalContributionsTableFilterComposer(
+                $db: $db,
+                $table: $db.walletGoalContributions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> walletExpenseSplitsRefs(
+    Expression<bool> Function($$WalletExpenseSplitsTableFilterComposer f) f,
+  ) {
+    final $$WalletExpenseSplitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletExpenseSplits,
+      getReferencedColumn: (t) => t.createdByAccountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletExpenseSplitsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletExpenseSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> recurringTransactionsRefs(
+    Expression<bool> Function($$RecurringTransactionsTableFilterComposer f) f,
+  ) {
+    final $$RecurringTransactionsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.recurringTransactions,
+          getReferencedColumn: (t) => t.accountId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringTransactionsTableFilterComposer(
+                $db: $db,
+                $table: $db.recurringTransactions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> walletActivitiesRefs(
+    Expression<bool> Function($$WalletActivitiesTableFilterComposer f) f,
+  ) {
+    final $$WalletActivitiesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletActivities,
+      getReferencedColumn: (t) => t.actorAccountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletActivitiesTableFilterComposer(
+            $db: $db,
+            $table: $db.walletActivities,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$AccountsTableOrderingComposer
@@ -17770,6 +18503,211 @@ class $$AccountsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> walletMembersRefs<T extends Object>(
+    Expression<T> Function($$WalletMembersTableAnnotationComposer a) f,
+  ) {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.accountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> loansRefs<T extends Object>(
+    Expression<T> Function($$LoansTableAnnotationComposer a) f,
+  ) {
+    final $$LoansTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.loans,
+      getReferencedColumn: (t) => t.accountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LoansTableAnnotationComposer(
+            $db: $db,
+            $table: $db.loans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> transactionsRefs<T extends Object>(
+    Expression<T> Function($$TransactionsTableAnnotationComposer a) f,
+  ) {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.accountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletSettlementsRefs<T extends Object>(
+    Expression<T> Function($$WalletSettlementsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletSettlementsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletSettlements,
+          getReferencedColumn: (t) => t.createdByAccountId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletSettlementsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletSettlements,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletGoalContributionsRefs<T extends Object>(
+    Expression<T> Function($$WalletGoalContributionsTableAnnotationComposer a)
+    f,
+  ) {
+    final $$WalletGoalContributionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletGoalContributions,
+          getReferencedColumn: (t) => t.contributedByAccountId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletGoalContributionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletGoalContributions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletExpenseSplitsRefs<T extends Object>(
+    Expression<T> Function($$WalletExpenseSplitsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletExpenseSplitsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletExpenseSplits,
+          getReferencedColumn: (t) => t.createdByAccountId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> recurringTransactionsRefs<T extends Object>(
+    Expression<T> Function($$RecurringTransactionsTableAnnotationComposer a) f,
+  ) {
+    final $$RecurringTransactionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.recurringTransactions,
+          getReferencedColumn: (t) => t.accountId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringTransactionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.recurringTransactions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletActivitiesRefs<T extends Object>(
+    Expression<T> Function($$WalletActivitiesTableAnnotationComposer a) f,
+  ) {
+    final $$WalletActivitiesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletActivities,
+      getReferencedColumn: (t) => t.actorAccountId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletActivitiesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletActivities,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$AccountsTableTableManager
@@ -17783,9 +18721,18 @@ class $$AccountsTableTableManager
           $$AccountsTableAnnotationComposer,
           $$AccountsTableCreateCompanionBuilder,
           $$AccountsTableUpdateCompanionBuilder,
-          (Account, BaseReferences<_$AppDatabase, $AccountsTable, Account>),
+          (Account, $$AccountsTableReferences),
           Account,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletMembersRefs,
+            bool loansRefs,
+            bool transactionsRefs,
+            bool walletSettlementsRefs,
+            bool walletGoalContributionsRefs,
+            bool walletExpenseSplitsRefs,
+            bool recurringTransactionsRefs,
+            bool walletActivitiesRefs,
+          })
         > {
   $$AccountsTableTableManager(_$AppDatabase db, $AccountsTable table)
     : super(
@@ -17847,9 +18794,211 @@ class $$AccountsTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AccountsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletMembersRefs = false,
+                loansRefs = false,
+                transactionsRefs = false,
+                walletSettlementsRefs = false,
+                walletGoalContributionsRefs = false,
+                walletExpenseSplitsRefs = false,
+                recurringTransactionsRefs = false,
+                walletActivitiesRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (walletMembersRefs) db.walletMembers,
+                    if (loansRefs) db.loans,
+                    if (transactionsRefs) db.transactions,
+                    if (walletSettlementsRefs) db.walletSettlements,
+                    if (walletGoalContributionsRefs) db.walletGoalContributions,
+                    if (walletExpenseSplitsRefs) db.walletExpenseSplits,
+                    if (recurringTransactionsRefs) db.recurringTransactions,
+                    if (walletActivitiesRefs) db.walletActivities,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (walletMembersRefs)
+                        await $_getPrefetchedData<
+                          Account,
+                          $AccountsTable,
+                          WalletMember
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AccountsTableReferences
+                              ._walletMembersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AccountsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletMembersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.accountId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (loansRefs)
+                        await $_getPrefetchedData<
+                          Account,
+                          $AccountsTable,
+                          LoanDb
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AccountsTableReferences
+                              ._loansRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AccountsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).loansRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.accountId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (transactionsRefs)
+                        await $_getPrefetchedData<
+                          Account,
+                          $AccountsTable,
+                          Transaction
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AccountsTableReferences
+                              ._transactionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AccountsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).transactionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.accountId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletSettlementsRefs)
+                        await $_getPrefetchedData<
+                          Account,
+                          $AccountsTable,
+                          WalletSettlement
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AccountsTableReferences
+                              ._walletSettlementsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AccountsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletSettlementsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.createdByAccountId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletGoalContributionsRefs)
+                        await $_getPrefetchedData<
+                          Account,
+                          $AccountsTable,
+                          WalletGoalContribution
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AccountsTableReferences
+                              ._walletGoalContributionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AccountsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletGoalContributionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.contributedByAccountId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletExpenseSplitsRefs)
+                        await $_getPrefetchedData<
+                          Account,
+                          $AccountsTable,
+                          WalletExpenseSplit
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AccountsTableReferences
+                              ._walletExpenseSplitsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AccountsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletExpenseSplitsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.createdByAccountId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (recurringTransactionsRefs)
+                        await $_getPrefetchedData<
+                          Account,
+                          $AccountsTable,
+                          RecurringTransactionDb
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AccountsTableReferences
+                              ._recurringTransactionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AccountsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).recurringTransactionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.accountId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletActivitiesRefs)
+                        await $_getPrefetchedData<
+                          Account,
+                          $AccountsTable,
+                          WalletActivity
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AccountsTableReferences
+                              ._walletActivitiesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AccountsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletActivitiesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.actorAccountId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
@@ -17864,9 +19013,2215 @@ typedef $$AccountsTableProcessedTableManager =
       $$AccountsTableAnnotationComposer,
       $$AccountsTableCreateCompanionBuilder,
       $$AccountsTableUpdateCompanionBuilder,
-      (Account, BaseReferences<_$AppDatabase, $AccountsTable, Account>),
+      (Account, $$AccountsTableReferences),
       Account,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletMembersRefs,
+        bool loansRefs,
+        bool transactionsRefs,
+        bool walletSettlementsRefs,
+        bool walletGoalContributionsRefs,
+        bool walletExpenseSplitsRefs,
+        bool recurringTransactionsRefs,
+        bool walletActivitiesRefs,
+      })
+    >;
+typedef $$WalletsTableCreateCompanionBuilder =
+    WalletsCompanion Function({
+      Value<int> id,
+      Value<String> uuid,
+      required String name,
+      Value<String> type,
+      Value<int?> createdByAccountId,
+      Value<DateTime> createdAt,
+    });
+typedef $$WalletsTableUpdateCompanionBuilder =
+    WalletsCompanion Function({
+      Value<int> id,
+      Value<String> uuid,
+      Value<String> name,
+      Value<String> type,
+      Value<int?> createdByAccountId,
+      Value<DateTime> createdAt,
+    });
+
+final class $$WalletsTableReferences
+    extends BaseReferences<_$AppDatabase, $WalletsTable, Wallet> {
+  $$WalletsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$WalletBillsTable, List<WalletBill>>
+  _walletBillsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletBills,
+    aliasName: $_aliasNameGenerator(db.wallets.id, db.walletBills.walletId),
+  );
+
+  $$WalletBillsTableProcessedTableManager get walletBillsRefs {
+    final manager = $$WalletBillsTableTableManager(
+      $_db,
+      $_db.walletBills,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_walletBillsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$BudgetsTable, List<Budget>> _budgetsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.budgets,
+    aliasName: $_aliasNameGenerator(db.wallets.id, db.budgets.walletId),
+  );
+
+  $$BudgetsTableProcessedTableManager get budgetsRefs {
+    final manager = $$BudgetsTableTableManager(
+      $_db,
+      $_db.budgets,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_budgetsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletMembersTable, List<WalletMember>>
+  _walletMembersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletMembers,
+    aliasName: $_aliasNameGenerator(db.wallets.id, db.walletMembers.walletId),
+  );
+
+  $$WalletMembersTableProcessedTableManager get walletMembersRefs {
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_walletMembersRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletNotificationsTable,
+    List<WalletNotification>
+  >
+  _walletNotificationsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletNotifications,
+        aliasName: $_aliasNameGenerator(
+          db.wallets.id,
+          db.walletNotifications.walletId,
+        ),
+      );
+
+  $$WalletNotificationsTableProcessedTableManager get walletNotificationsRefs {
+    final manager = $$WalletNotificationsTableTableManager(
+      $_db,
+      $_db.walletNotifications,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletNotificationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PeerDebtsTable, List<PeerDebtDb>>
+  _peerDebtsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.peerDebts,
+    aliasName: $_aliasNameGenerator(db.wallets.id, db.peerDebts.walletId),
+  );
+
+  $$PeerDebtsTableProcessedTableManager get peerDebtsRefs {
+    final manager = $$PeerDebtsTableTableManager(
+      $_db,
+      $_db.peerDebts,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_peerDebtsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletAllowancesTable, List<WalletAllowance>>
+  _walletAllowancesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletAllowances,
+    aliasName: $_aliasNameGenerator(
+      db.wallets.id,
+      db.walletAllowances.walletId,
+    ),
+  );
+
+  $$WalletAllowancesTableProcessedTableManager get walletAllowancesRefs {
+    final manager = $$WalletAllowancesTableTableManager(
+      $_db,
+      $_db.walletAllowances,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletAllowancesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletSettlementsTable, List<WalletSettlement>>
+  _walletSettlementsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletSettlements,
+        aliasName: $_aliasNameGenerator(
+          db.wallets.id,
+          db.walletSettlements.walletId,
+        ),
+      );
+
+  $$WalletSettlementsTableProcessedTableManager get walletSettlementsRefs {
+    final manager = $$WalletSettlementsTableTableManager(
+      $_db,
+      $_db.walletSettlements,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletSettlementsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletInvitationsTable, List<WalletInvitation>>
+  _walletInvitationsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletInvitations,
+        aliasName: $_aliasNameGenerator(
+          db.wallets.id,
+          db.walletInvitations.walletId,
+        ),
+      );
+
+  $$WalletInvitationsTableProcessedTableManager get walletInvitationsRefs {
+    final manager = $$WalletInvitationsTableTableManager(
+      $_db,
+      $_db.walletInvitations,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletInvitationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletGoalsTable, List<WalletGoal>>
+  _walletGoalsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletGoals,
+    aliasName: $_aliasNameGenerator(db.wallets.id, db.walletGoals.walletId),
+  );
+
+  $$WalletGoalsTableProcessedTableManager get walletGoalsRefs {
+    final manager = $$WalletGoalsTableTableManager(
+      $_db,
+      $_db.walletGoals,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_walletGoalsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletGoalContributionsTable,
+    List<WalletGoalContribution>
+  >
+  _walletGoalContributionsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletGoalContributions,
+        aliasName: $_aliasNameGenerator(
+          db.wallets.id,
+          db.walletGoalContributions.walletId,
+        ),
+      );
+
+  $$WalletGoalContributionsTableProcessedTableManager
+  get walletGoalContributionsRefs {
+    final manager = $$WalletGoalContributionsTableTableManager(
+      $_db,
+      $_db.walletGoalContributions,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletGoalContributionsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$FeedbackEntriesTable, List<FeedbackEntry>>
+  _feedbackEntriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.feedbackEntries,
+    aliasName: $_aliasNameGenerator(db.wallets.id, db.feedbackEntries.walletId),
+  );
+
+  $$FeedbackEntriesTableProcessedTableManager get feedbackEntriesRefs {
+    final manager = $$FeedbackEntriesTableTableManager(
+      $_db,
+      $_db.feedbackEntries,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _feedbackEntriesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletNotificationPreferencesTable,
+    List<WalletNotificationPreference>
+  >
+  _walletNotificationPreferencesRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletNotificationPreferences,
+        aliasName: $_aliasNameGenerator(
+          db.wallets.id,
+          db.walletNotificationPreferences.walletId,
+        ),
+      );
+
+  $$WalletNotificationPreferencesTableProcessedTableManager
+  get walletNotificationPreferencesRefs {
+    final manager = $$WalletNotificationPreferencesTableTableManager(
+      $_db,
+      $_db.walletNotificationPreferences,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletNotificationPreferencesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletExpenseSplitsTable,
+    List<WalletExpenseSplit>
+  >
+  _walletExpenseSplitsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletExpenseSplits,
+        aliasName: $_aliasNameGenerator(
+          db.wallets.id,
+          db.walletExpenseSplits.walletId,
+        ),
+      );
+
+  $$WalletExpenseSplitsTableProcessedTableManager get walletExpenseSplitsRefs {
+    final manager = $$WalletExpenseSplitsTableTableManager(
+      $_db,
+      $_db.walletExpenseSplits,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletExpenseSplitsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$MerchantMappingsTable, List<MerchantMapping>>
+  _merchantMappingsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.merchantMappings,
+    aliasName: $_aliasNameGenerator(
+      db.wallets.id,
+      db.merchantMappings.walletId,
+    ),
+  );
+
+  $$MerchantMappingsTableProcessedTableManager get merchantMappingsRefs {
+    final manager = $$MerchantMappingsTableTableManager(
+      $_db,
+      $_db.merchantMappings,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _merchantMappingsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PayeesTable, List<Payee>> _payeesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.payees,
+    aliasName: $_aliasNameGenerator(db.wallets.id, db.payees.walletId),
+  );
+
+  $$PayeesTableProcessedTableManager get payeesRefs {
+    final manager = $$PayeesTableTableManager(
+      $_db,
+      $_db.payees,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_payeesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $RecurringTransactionsTable,
+    List<RecurringTransactionDb>
+  >
+  _recurringTransactionsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.recurringTransactions,
+        aliasName: $_aliasNameGenerator(
+          db.wallets.id,
+          db.recurringTransactions.walletId,
+        ),
+      );
+
+  $$RecurringTransactionsTableProcessedTableManager
+  get recurringTransactionsRefs {
+    final manager = $$RecurringTransactionsTableTableManager(
+      $_db,
+      $_db.recurringTransactions,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _recurringTransactionsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$SmsImportMetricsTable, List<SmsImportMetric>>
+  _smsImportMetricsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.smsImportMetrics,
+    aliasName: $_aliasNameGenerator(
+      db.wallets.id,
+      db.smsImportMetrics.walletId,
+    ),
+  );
+
+  $$SmsImportMetricsTableProcessedTableManager get smsImportMetricsRefs {
+    final manager = $$SmsImportMetricsTableTableManager(
+      $_db,
+      $_db.smsImportMetrics,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _smsImportMetricsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TagsTable, List<Tag>> _tagsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.tags,
+    aliasName: $_aliasNameGenerator(db.wallets.id, db.tags.walletId),
+  );
+
+  $$TagsTableProcessedTableManager get tagsRefs {
+    final manager = $$TagsTableTableManager(
+      $_db,
+      $_db.tags,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_tagsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $UnrecognizedSmsEntriesTable,
+    List<UnrecognizedSms>
+  >
+  _unrecognizedSmsEntriesRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.unrecognizedSmsEntries,
+        aliasName: $_aliasNameGenerator(
+          db.wallets.id,
+          db.unrecognizedSmsEntries.walletId,
+        ),
+      );
+
+  $$UnrecognizedSmsEntriesTableProcessedTableManager
+  get unrecognizedSmsEntriesRefs {
+    final manager = $$UnrecognizedSmsEntriesTableTableManager(
+      $_db,
+      $_db.unrecognizedSmsEntries,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _unrecognizedSmsEntriesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletActivitiesTable, List<WalletActivity>>
+  _walletActivitiesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletActivities,
+    aliasName: $_aliasNameGenerator(
+      db.wallets.id,
+      db.walletActivities.walletId,
+    ),
+  );
+
+  $$WalletActivitiesTableProcessedTableManager get walletActivitiesRefs {
+    final manager = $$WalletActivitiesTableTableManager(
+      $_db,
+      $_db.walletActivities,
+    ).filter((f) => f.walletId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletActivitiesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$WalletsTableFilterComposer
+    extends Composer<_$AppDatabase, $WalletsTable> {
+  $$WalletsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get createdByAccountId => $composableBuilder(
+    column: $table.createdByAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> walletBillsRefs(
+    Expression<bool> Function($$WalletBillsTableFilterComposer f) f,
+  ) {
+    final $$WalletBillsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletBills,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletBillsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletBills,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> budgetsRefs(
+    Expression<bool> Function($$BudgetsTableFilterComposer f) f,
+  ) {
+    final $$BudgetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableFilterComposer(
+            $db: $db,
+            $table: $db.budgets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletMembersRefs(
+    Expression<bool> Function($$WalletMembersTableFilterComposer f) f,
+  ) {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletNotificationsRefs(
+    Expression<bool> Function($$WalletNotificationsTableFilterComposer f) f,
+  ) {
+    final $$WalletNotificationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletNotifications,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletNotificationsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletNotifications,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> peerDebtsRefs(
+    Expression<bool> Function($$PeerDebtsTableFilterComposer f) f,
+  ) {
+    final $$PeerDebtsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.peerDebts,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PeerDebtsTableFilterComposer(
+            $db: $db,
+            $table: $db.peerDebts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletAllowancesRefs(
+    Expression<bool> Function($$WalletAllowancesTableFilterComposer f) f,
+  ) {
+    final $$WalletAllowancesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletAllowances,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletAllowancesTableFilterComposer(
+            $db: $db,
+            $table: $db.walletAllowances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletSettlementsRefs(
+    Expression<bool> Function($$WalletSettlementsTableFilterComposer f) f,
+  ) {
+    final $$WalletSettlementsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletSettlements,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletSettlementsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletSettlements,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletInvitationsRefs(
+    Expression<bool> Function($$WalletInvitationsTableFilterComposer f) f,
+  ) {
+    final $$WalletInvitationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletInvitations,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletInvitationsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletInvitations,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletGoalsRefs(
+    Expression<bool> Function($$WalletGoalsTableFilterComposer f) f,
+  ) {
+    final $$WalletGoalsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletGoals,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletGoals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletGoalContributionsRefs(
+    Expression<bool> Function($$WalletGoalContributionsTableFilterComposer f) f,
+  ) {
+    final $$WalletGoalContributionsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletGoalContributions,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletGoalContributionsTableFilterComposer(
+                $db: $db,
+                $table: $db.walletGoalContributions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> feedbackEntriesRefs(
+    Expression<bool> Function($$FeedbackEntriesTableFilterComposer f) f,
+  ) {
+    final $$FeedbackEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.feedbackEntries,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FeedbackEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.feedbackEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletNotificationPreferencesRefs(
+    Expression<bool> Function(
+      $$WalletNotificationPreferencesTableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$WalletNotificationPreferencesTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletNotificationPreferences,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletNotificationPreferencesTableFilterComposer(
+                $db: $db,
+                $table: $db.walletNotificationPreferences,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> walletExpenseSplitsRefs(
+    Expression<bool> Function($$WalletExpenseSplitsTableFilterComposer f) f,
+  ) {
+    final $$WalletExpenseSplitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletExpenseSplits,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletExpenseSplitsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletExpenseSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> merchantMappingsRefs(
+    Expression<bool> Function($$MerchantMappingsTableFilterComposer f) f,
+  ) {
+    final $$MerchantMappingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.merchantMappings,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MerchantMappingsTableFilterComposer(
+            $db: $db,
+            $table: $db.merchantMappings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> payeesRefs(
+    Expression<bool> Function($$PayeesTableFilterComposer f) f,
+  ) {
+    final $$PayeesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.payees,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PayeesTableFilterComposer(
+            $db: $db,
+            $table: $db.payees,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> recurringTransactionsRefs(
+    Expression<bool> Function($$RecurringTransactionsTableFilterComposer f) f,
+  ) {
+    final $$RecurringTransactionsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.recurringTransactions,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringTransactionsTableFilterComposer(
+                $db: $db,
+                $table: $db.recurringTransactions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> smsImportMetricsRefs(
+    Expression<bool> Function($$SmsImportMetricsTableFilterComposer f) f,
+  ) {
+    final $$SmsImportMetricsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.smsImportMetrics,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SmsImportMetricsTableFilterComposer(
+            $db: $db,
+            $table: $db.smsImportMetrics,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> tagsRefs(
+    Expression<bool> Function($$TagsTableFilterComposer f) f,
+  ) {
+    final $$TagsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.tags,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TagsTableFilterComposer(
+            $db: $db,
+            $table: $db.tags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> unrecognizedSmsEntriesRefs(
+    Expression<bool> Function($$UnrecognizedSmsEntriesTableFilterComposer f) f,
+  ) {
+    final $$UnrecognizedSmsEntriesTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.unrecognizedSmsEntries,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UnrecognizedSmsEntriesTableFilterComposer(
+                $db: $db,
+                $table: $db.unrecognizedSmsEntries,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> walletActivitiesRefs(
+    Expression<bool> Function($$WalletActivitiesTableFilterComposer f) f,
+  ) {
+    final $$WalletActivitiesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletActivities,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletActivitiesTableFilterComposer(
+            $db: $db,
+            $table: $db.walletActivities,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$WalletsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WalletsTable> {
+  $$WalletsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get createdByAccountId => $composableBuilder(
+    column: $table.createdByAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WalletsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WalletsTable> {
+  $$WalletsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<int> get createdByAccountId => $composableBuilder(
+    column: $table.createdByAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> walletBillsRefs<T extends Object>(
+    Expression<T> Function($$WalletBillsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletBillsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletBills,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletBillsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletBills,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> budgetsRefs<T extends Object>(
+    Expression<T> Function($$BudgetsTableAnnotationComposer a) f,
+  ) {
+    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletMembersRefs<T extends Object>(
+    Expression<T> Function($$WalletMembersTableAnnotationComposer a) f,
+  ) {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletNotificationsRefs<T extends Object>(
+    Expression<T> Function($$WalletNotificationsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletNotificationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletNotifications,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletNotificationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletNotifications,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> peerDebtsRefs<T extends Object>(
+    Expression<T> Function($$PeerDebtsTableAnnotationComposer a) f,
+  ) {
+    final $$PeerDebtsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.peerDebts,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PeerDebtsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.peerDebts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletAllowancesRefs<T extends Object>(
+    Expression<T> Function($$WalletAllowancesTableAnnotationComposer a) f,
+  ) {
+    final $$WalletAllowancesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletAllowances,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletAllowancesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletAllowances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletSettlementsRefs<T extends Object>(
+    Expression<T> Function($$WalletSettlementsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletSettlementsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletSettlements,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletSettlementsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletSettlements,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletInvitationsRefs<T extends Object>(
+    Expression<T> Function($$WalletInvitationsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletInvitationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletInvitations,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletInvitationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletInvitations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletGoalsRefs<T extends Object>(
+    Expression<T> Function($$WalletGoalsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletGoalsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletGoals,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletGoals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletGoalContributionsRefs<T extends Object>(
+    Expression<T> Function($$WalletGoalContributionsTableAnnotationComposer a)
+    f,
+  ) {
+    final $$WalletGoalContributionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletGoalContributions,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletGoalContributionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletGoalContributions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> feedbackEntriesRefs<T extends Object>(
+    Expression<T> Function($$FeedbackEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$FeedbackEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.feedbackEntries,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FeedbackEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.feedbackEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletNotificationPreferencesRefs<T extends Object>(
+    Expression<T> Function(
+      $$WalletNotificationPreferencesTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$WalletNotificationPreferencesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletNotificationPreferences,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletNotificationPreferencesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletNotificationPreferences,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletExpenseSplitsRefs<T extends Object>(
+    Expression<T> Function($$WalletExpenseSplitsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletExpenseSplitsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletExpenseSplits,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> merchantMappingsRefs<T extends Object>(
+    Expression<T> Function($$MerchantMappingsTableAnnotationComposer a) f,
+  ) {
+    final $$MerchantMappingsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.merchantMappings,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MerchantMappingsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.merchantMappings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> payeesRefs<T extends Object>(
+    Expression<T> Function($$PayeesTableAnnotationComposer a) f,
+  ) {
+    final $$PayeesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.payees,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PayeesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.payees,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> recurringTransactionsRefs<T extends Object>(
+    Expression<T> Function($$RecurringTransactionsTableAnnotationComposer a) f,
+  ) {
+    final $$RecurringTransactionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.recurringTransactions,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringTransactionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.recurringTransactions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> smsImportMetricsRefs<T extends Object>(
+    Expression<T> Function($$SmsImportMetricsTableAnnotationComposer a) f,
+  ) {
+    final $$SmsImportMetricsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.smsImportMetrics,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SmsImportMetricsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.smsImportMetrics,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> tagsRefs<T extends Object>(
+    Expression<T> Function($$TagsTableAnnotationComposer a) f,
+  ) {
+    final $$TagsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.tags,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TagsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.tags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> unrecognizedSmsEntriesRefs<T extends Object>(
+    Expression<T> Function($$UnrecognizedSmsEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$UnrecognizedSmsEntriesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.unrecognizedSmsEntries,
+          getReferencedColumn: (t) => t.walletId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$UnrecognizedSmsEntriesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.unrecognizedSmsEntries,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletActivitiesRefs<T extends Object>(
+    Expression<T> Function($$WalletActivitiesTableAnnotationComposer a) f,
+  ) {
+    final $$WalletActivitiesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletActivities,
+      getReferencedColumn: (t) => t.walletId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletActivitiesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletActivities,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$WalletsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WalletsTable,
+          Wallet,
+          $$WalletsTableFilterComposer,
+          $$WalletsTableOrderingComposer,
+          $$WalletsTableAnnotationComposer,
+          $$WalletsTableCreateCompanionBuilder,
+          $$WalletsTableUpdateCompanionBuilder,
+          (Wallet, $$WalletsTableReferences),
+          Wallet,
+          PrefetchHooks Function({
+            bool walletBillsRefs,
+            bool budgetsRefs,
+            bool walletMembersRefs,
+            bool walletNotificationsRefs,
+            bool peerDebtsRefs,
+            bool walletAllowancesRefs,
+            bool walletSettlementsRefs,
+            bool walletInvitationsRefs,
+            bool walletGoalsRefs,
+            bool walletGoalContributionsRefs,
+            bool feedbackEntriesRefs,
+            bool walletNotificationPreferencesRefs,
+            bool walletExpenseSplitsRefs,
+            bool merchantMappingsRefs,
+            bool payeesRefs,
+            bool recurringTransactionsRefs,
+            bool smsImportMetricsRefs,
+            bool tagsRefs,
+            bool unrecognizedSmsEntriesRefs,
+            bool walletActivitiesRefs,
+          })
+        > {
+  $$WalletsTableTableManager(_$AppDatabase db, $WalletsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WalletsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WalletsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WalletsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<int?> createdByAccountId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => WalletsCompanion(
+                id: id,
+                uuid: uuid,
+                name: name,
+                type: type,
+                createdByAccountId: createdByAccountId,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                required String name,
+                Value<String> type = const Value.absent(),
+                Value<int?> createdByAccountId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => WalletsCompanion.insert(
+                id: id,
+                uuid: uuid,
+                name: name,
+                type: type,
+                createdByAccountId: createdByAccountId,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                walletBillsRefs = false,
+                budgetsRefs = false,
+                walletMembersRefs = false,
+                walletNotificationsRefs = false,
+                peerDebtsRefs = false,
+                walletAllowancesRefs = false,
+                walletSettlementsRefs = false,
+                walletInvitationsRefs = false,
+                walletGoalsRefs = false,
+                walletGoalContributionsRefs = false,
+                feedbackEntriesRefs = false,
+                walletNotificationPreferencesRefs = false,
+                walletExpenseSplitsRefs = false,
+                merchantMappingsRefs = false,
+                payeesRefs = false,
+                recurringTransactionsRefs = false,
+                smsImportMetricsRefs = false,
+                tagsRefs = false,
+                unrecognizedSmsEntriesRefs = false,
+                walletActivitiesRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (walletBillsRefs) db.walletBills,
+                    if (budgetsRefs) db.budgets,
+                    if (walletMembersRefs) db.walletMembers,
+                    if (walletNotificationsRefs) db.walletNotifications,
+                    if (peerDebtsRefs) db.peerDebts,
+                    if (walletAllowancesRefs) db.walletAllowances,
+                    if (walletSettlementsRefs) db.walletSettlements,
+                    if (walletInvitationsRefs) db.walletInvitations,
+                    if (walletGoalsRefs) db.walletGoals,
+                    if (walletGoalContributionsRefs) db.walletGoalContributions,
+                    if (feedbackEntriesRefs) db.feedbackEntries,
+                    if (walletNotificationPreferencesRefs)
+                      db.walletNotificationPreferences,
+                    if (walletExpenseSplitsRefs) db.walletExpenseSplits,
+                    if (merchantMappingsRefs) db.merchantMappings,
+                    if (payeesRefs) db.payees,
+                    if (recurringTransactionsRefs) db.recurringTransactions,
+                    if (smsImportMetricsRefs) db.smsImportMetrics,
+                    if (tagsRefs) db.tags,
+                    if (unrecognizedSmsEntriesRefs) db.unrecognizedSmsEntries,
+                    if (walletActivitiesRefs) db.walletActivities,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (walletBillsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletBill
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletBillsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletBillsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (budgetsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          Budget
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._budgetsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).budgetsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletMembersRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletMember
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletMembersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletMembersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletNotificationsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletNotification
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletNotificationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletNotificationsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (peerDebtsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          PeerDebtDb
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._peerDebtsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).peerDebtsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletAllowancesRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletAllowance
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletAllowancesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletAllowancesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletSettlementsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletSettlement
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletSettlementsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletSettlementsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletInvitationsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletInvitation
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletInvitationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletInvitationsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletGoalsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletGoal
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletGoalsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletGoalsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletGoalContributionsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletGoalContribution
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletGoalContributionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletGoalContributionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (feedbackEntriesRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          FeedbackEntry
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._feedbackEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).feedbackEntriesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletNotificationPreferencesRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletNotificationPreference
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletNotificationPreferencesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletNotificationPreferencesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletExpenseSplitsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletExpenseSplit
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletExpenseSplitsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletExpenseSplitsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (merchantMappingsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          MerchantMapping
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._merchantMappingsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).merchantMappingsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (payeesRefs)
+                        await $_getPrefetchedData<Wallet, $WalletsTable, Payee>(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._payeesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).payeesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (recurringTransactionsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          RecurringTransactionDb
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._recurringTransactionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).recurringTransactionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (smsImportMetricsRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          SmsImportMetric
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._smsImportMetricsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).smsImportMetricsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (tagsRefs)
+                        await $_getPrefetchedData<Wallet, $WalletsTable, Tag>(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._tagsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(db, table, p0).tagsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (unrecognizedSmsEntriesRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          UnrecognizedSms
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._unrecognizedSmsEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).unrecognizedSmsEntriesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletActivitiesRefs)
+                        await $_getPrefetchedData<
+                          Wallet,
+                          $WalletsTable,
+                          WalletActivity
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletsTableReferences
+                              ._walletActivitiesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletActivitiesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$WalletsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WalletsTable,
+      Wallet,
+      $$WalletsTableFilterComposer,
+      $$WalletsTableOrderingComposer,
+      $$WalletsTableAnnotationComposer,
+      $$WalletsTableCreateCompanionBuilder,
+      $$WalletsTableUpdateCompanionBuilder,
+      (Wallet, $$WalletsTableReferences),
+      Wallet,
+      PrefetchHooks Function({
+        bool walletBillsRefs,
+        bool budgetsRefs,
+        bool walletMembersRefs,
+        bool walletNotificationsRefs,
+        bool peerDebtsRefs,
+        bool walletAllowancesRefs,
+        bool walletSettlementsRefs,
+        bool walletInvitationsRefs,
+        bool walletGoalsRefs,
+        bool walletGoalContributionsRefs,
+        bool feedbackEntriesRefs,
+        bool walletNotificationPreferencesRefs,
+        bool walletExpenseSplitsRefs,
+        bool merchantMappingsRefs,
+        bool payeesRefs,
+        bool recurringTransactionsRefs,
+        bool smsImportMetricsRefs,
+        bool tagsRefs,
+        bool unrecognizedSmsEntriesRefs,
+        bool walletActivitiesRefs,
+      })
     >;
 typedef $$WalletBillsTableCreateCompanionBuilder =
     WalletBillsCompanion Function({
@@ -17903,6 +21258,68 @@ typedef $$WalletBillsTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$WalletBillsTableReferences
+    extends BaseReferences<_$AppDatabase, $WalletBillsTable, WalletBill> {
+  $$WalletBillsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletBills.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _createdByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(db.walletBills.createdByAccountId, db.accounts.id),
+      );
+
+  $$AccountsTableProcessedTableManager? get createdByAccountId {
+    final $_column = $_itemColumn<int>('created_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_createdByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _updatedByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(db.walletBills.updatedByAccountId, db.accounts.id),
+      );
+
+  $$AccountsTableProcessedTableManager? get updatedByAccountId {
+    final $_column = $_itemColumn<int>('updated_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_updatedByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletBillsTableFilterComposer
     extends Composer<_$AppDatabase, $WalletBillsTable> {
   $$WalletBillsTableFilterComposer({
@@ -17914,11 +21331,6 @@ class $$WalletBillsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -17969,16 +21381,6 @@ class $$WalletBillsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -17988,6 +21390,75 @@ class $$WalletBillsTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get createdByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get updatedByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletBillsTableOrderingComposer
@@ -18001,11 +21472,6 @@ class $$WalletBillsTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -18049,16 +21515,6 @@ class $$WalletBillsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -18068,6 +21524,75 @@ class $$WalletBillsTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get createdByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get updatedByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletBillsTableAnnotationComposer
@@ -18081,9 +21606,6 @@ class $$WalletBillsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -18112,21 +21634,80 @@ class $$WalletBillsTableAnnotationComposer
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
 
-  GeneratedColumn<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get createdByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get updatedByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletBillsTableTableManager
@@ -18140,12 +21721,13 @@ class $$WalletBillsTableTableManager
           $$WalletBillsTableAnnotationComposer,
           $$WalletBillsTableCreateCompanionBuilder,
           $$WalletBillsTableUpdateCompanionBuilder,
-          (
-            WalletBill,
-            BaseReferences<_$AppDatabase, $WalletBillsTable, WalletBill>,
-          ),
+          (WalletBill, $$WalletBillsTableReferences),
           WalletBill,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletId,
+            bool createdByAccountId,
+            bool updatedByAccountId,
+          })
         > {
   $$WalletBillsTableTableManager(_$AppDatabase db, $WalletBillsTable table)
     : super(
@@ -18223,9 +21805,91 @@ class $$WalletBillsTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletBillsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletId = false,
+                createdByAccountId = false,
+                updatedByAccountId = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$WalletBillsTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$WalletBillsTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (createdByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.createdByAccountId,
+                                    referencedTable:
+                                        $$WalletBillsTableReferences
+                                            ._createdByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletBillsTableReferences
+                                            ._createdByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (updatedByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.updatedByAccountId,
+                                    referencedTable:
+                                        $$WalletBillsTableReferences
+                                            ._updatedByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletBillsTableReferences
+                                            ._updatedByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -18240,241 +21904,13 @@ typedef $$WalletBillsTableProcessedTableManager =
       $$WalletBillsTableAnnotationComposer,
       $$WalletBillsTableCreateCompanionBuilder,
       $$WalletBillsTableUpdateCompanionBuilder,
-      (
-        WalletBill,
-        BaseReferences<_$AppDatabase, $WalletBillsTable, WalletBill>,
-      ),
+      (WalletBill, $$WalletBillsTableReferences),
       WalletBill,
-      PrefetchHooks Function()
-    >;
-typedef $$BudgetsTableCreateCompanionBuilder =
-    BudgetsCompanion Function({
-      Value<int> id,
-      Value<int> walletId,
-      Value<String> uuid,
-      required double amount,
-      required String period,
-      required int categoryId,
-      Value<DateTime> updatedAt,
-    });
-typedef $$BudgetsTableUpdateCompanionBuilder =
-    BudgetsCompanion Function({
-      Value<int> id,
-      Value<int> walletId,
-      Value<String> uuid,
-      Value<double> amount,
-      Value<String> period,
-      Value<int> categoryId,
-      Value<DateTime> updatedAt,
-    });
-
-class $$BudgetsTableFilterComposer
-    extends Composer<_$AppDatabase, $BudgetsTable> {
-  $$BudgetsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get uuid => $composableBuilder(
-    column: $table.uuid,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<double, double, int> get amount =>
-      $composableBuilder(
-        column: $table.amount,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
-
-  ColumnFilters<String> get period => $composableBuilder(
-    column: $table.period,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get categoryId => $composableBuilder(
-    column: $table.categoryId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$BudgetsTableOrderingComposer
-    extends Composer<_$AppDatabase, $BudgetsTable> {
-  $$BudgetsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get uuid => $composableBuilder(
-    column: $table.uuid,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get period => $composableBuilder(
-    column: $table.period,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get categoryId => $composableBuilder(
-    column: $table.categoryId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$BudgetsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $BudgetsTable> {
-  $$BudgetsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
-  GeneratedColumn<String> get uuid =>
-      $composableBuilder(column: $table.uuid, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<double, int> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => column);
-
-  GeneratedColumn<String> get period =>
-      $composableBuilder(column: $table.period, builder: (column) => column);
-
-  GeneratedColumn<int> get categoryId => $composableBuilder(
-    column: $table.categoryId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-}
-
-class $$BudgetsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $BudgetsTable,
-          Budget,
-          $$BudgetsTableFilterComposer,
-          $$BudgetsTableOrderingComposer,
-          $$BudgetsTableAnnotationComposer,
-          $$BudgetsTableCreateCompanionBuilder,
-          $$BudgetsTableUpdateCompanionBuilder,
-          (Budget, BaseReferences<_$AppDatabase, $BudgetsTable, Budget>),
-          Budget,
-          PrefetchHooks Function()
-        > {
-  $$BudgetsTableTableManager(_$AppDatabase db, $BudgetsTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$BudgetsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$BudgetsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$BudgetsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> walletId = const Value.absent(),
-                Value<String> uuid = const Value.absent(),
-                Value<double> amount = const Value.absent(),
-                Value<String> period = const Value.absent(),
-                Value<int> categoryId = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-              }) => BudgetsCompanion(
-                id: id,
-                walletId: walletId,
-                uuid: uuid,
-                amount: amount,
-                period: period,
-                categoryId: categoryId,
-                updatedAt: updatedAt,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> walletId = const Value.absent(),
-                Value<String> uuid = const Value.absent(),
-                required double amount,
-                required String period,
-                required int categoryId,
-                Value<DateTime> updatedAt = const Value.absent(),
-              }) => BudgetsCompanion.insert(
-                id: id,
-                walletId: walletId,
-                uuid: uuid,
-                amount: amount,
-                period: period,
-                categoryId: categoryId,
-                updatedAt: updatedAt,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$BudgetsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $BudgetsTable,
-      Budget,
-      $$BudgetsTableFilterComposer,
-      $$BudgetsTableOrderingComposer,
-      $$BudgetsTableAnnotationComposer,
-      $$BudgetsTableCreateCompanionBuilder,
-      $$BudgetsTableUpdateCompanionBuilder,
-      (Budget, BaseReferences<_$AppDatabase, $BudgetsTable, Budget>),
-      Budget,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletId,
+        bool createdByAccountId,
+        bool updatedByAccountId,
+      })
     >;
 typedef $$CategoriesTableCreateCompanionBuilder =
     CategoriesCompanion Function({
@@ -18498,6 +21934,121 @@ typedef $$CategoriesTableUpdateCompanionBuilder =
       Value<int?> parentId,
       Value<DateTime> updatedAt,
     });
+
+final class $$CategoriesTableReferences
+    extends BaseReferences<_$AppDatabase, $CategoriesTable, Category> {
+  $$CategoriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CategoriesTable _parentIdTable(_$AppDatabase db) =>
+      db.categories.createAlias(
+        $_aliasNameGenerator(db.categories.parentId, db.categories.id),
+      );
+
+  $$CategoriesTableProcessedTableManager? get parentId {
+    final $_column = $_itemColumn<int>('parent_id');
+    if ($_column == null) return null;
+    final manager = $$CategoriesTableTableManager(
+      $_db,
+      $_db.categories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_parentIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$BudgetsTable, List<Budget>> _budgetsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.budgets,
+    aliasName: $_aliasNameGenerator(db.categories.id, db.budgets.categoryId),
+  );
+
+  $$BudgetsTableProcessedTableManager get budgetsRefs {
+    final manager = $$BudgetsTableTableManager(
+      $_db,
+      $_db.budgets,
+    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_budgetsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TransactionsTable, List<Transaction>>
+  _transactionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.transactions,
+    aliasName: $_aliasNameGenerator(
+      db.categories.id,
+      db.transactions.categoryId,
+    ),
+  );
+
+  $$TransactionsTableProcessedTableManager get transactionsRefs {
+    final manager = $$TransactionsTableTableManager(
+      $_db,
+      $_db.transactions,
+    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_transactionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$MerchantMappingsTable, List<MerchantMapping>>
+  _merchantMappingsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.merchantMappings,
+    aliasName: $_aliasNameGenerator(
+      db.categories.id,
+      db.merchantMappings.defaultCategoryId,
+    ),
+  );
+
+  $$MerchantMappingsTableProcessedTableManager get merchantMappingsRefs {
+    final manager = $$MerchantMappingsTableTableManager(
+      $_db,
+      $_db.merchantMappings,
+    ).filter((f) => f.defaultCategoryId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _merchantMappingsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $RecurringTransactionsTable,
+    List<RecurringTransactionDb>
+  >
+  _recurringTransactionsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.recurringTransactions,
+        aliasName: $_aliasNameGenerator(
+          db.categories.id,
+          db.recurringTransactions.categoryId,
+        ),
+      );
+
+  $$RecurringTransactionsTableProcessedTableManager
+  get recurringTransactionsRefs {
+    final manager = $$RecurringTransactionsTableTableManager(
+      $_db,
+      $_db.recurringTransactions,
+    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _recurringTransactionsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
 
 class $$CategoriesTableFilterComposer
     extends Composer<_$AppDatabase, $CategoriesTable> {
@@ -18538,15 +22089,134 @@ class $$CategoriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get parentId => $composableBuilder(
-    column: $table.parentId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$CategoriesTableFilterComposer get parentId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.parentId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> budgetsRefs(
+    Expression<bool> Function($$BudgetsTableFilterComposer f) f,
+  ) {
+    final $$BudgetsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableFilterComposer(
+            $db: $db,
+            $table: $db.budgets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> transactionsRefs(
+    Expression<bool> Function($$TransactionsTableFilterComposer f) f,
+  ) {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableFilterComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> merchantMappingsRefs(
+    Expression<bool> Function($$MerchantMappingsTableFilterComposer f) f,
+  ) {
+    final $$MerchantMappingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.merchantMappings,
+      getReferencedColumn: (t) => t.defaultCategoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MerchantMappingsTableFilterComposer(
+            $db: $db,
+            $table: $db.merchantMappings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> recurringTransactionsRefs(
+    Expression<bool> Function($$RecurringTransactionsTableFilterComposer f) f,
+  ) {
+    final $$RecurringTransactionsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.recurringTransactions,
+          getReferencedColumn: (t) => t.categoryId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringTransactionsTableFilterComposer(
+                $db: $db,
+                $table: $db.recurringTransactions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$CategoriesTableOrderingComposer
@@ -18588,15 +22258,33 @@ class $$CategoriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get parentId => $composableBuilder(
-    column: $table.parentId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$CategoriesTableOrderingComposer get parentId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.parentId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$CategoriesTableAnnotationComposer
@@ -18626,11 +22314,132 @@ class $$CategoriesTableAnnotationComposer
   GeneratedColumn<bool> get isDefault =>
       $composableBuilder(column: $table.isDefault, builder: (column) => column);
 
-  GeneratedColumn<int> get parentId =>
-      $composableBuilder(column: $table.parentId, builder: (column) => column);
-
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$CategoriesTableAnnotationComposer get parentId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.parentId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> budgetsRefs<T extends Object>(
+    Expression<T> Function($$BudgetsTableAnnotationComposer a) f,
+  ) {
+    final $$BudgetsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.budgets,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> transactionsRefs<T extends Object>(
+    Expression<T> Function($$TransactionsTableAnnotationComposer a) f,
+  ) {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> merchantMappingsRefs<T extends Object>(
+    Expression<T> Function($$MerchantMappingsTableAnnotationComposer a) f,
+  ) {
+    final $$MerchantMappingsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.merchantMappings,
+      getReferencedColumn: (t) => t.defaultCategoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MerchantMappingsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.merchantMappings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> recurringTransactionsRefs<T extends Object>(
+    Expression<T> Function($$RecurringTransactionsTableAnnotationComposer a) f,
+  ) {
+    final $$RecurringTransactionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.recurringTransactions,
+          getReferencedColumn: (t) => t.categoryId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$RecurringTransactionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.recurringTransactions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$CategoriesTableTableManager
@@ -18644,9 +22453,15 @@ class $$CategoriesTableTableManager
           $$CategoriesTableAnnotationComposer,
           $$CategoriesTableCreateCompanionBuilder,
           $$CategoriesTableUpdateCompanionBuilder,
-          (Category, BaseReferences<_$AppDatabase, $CategoriesTable, Category>),
+          (Category, $$CategoriesTableReferences),
           Category,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool parentId,
+            bool budgetsRefs,
+            bool transactionsRefs,
+            bool merchantMappingsRefs,
+            bool recurringTransactionsRefs,
+          })
         > {
   $$CategoriesTableTableManager(_$AppDatabase db, $CategoriesTable table)
     : super(
@@ -18700,9 +22515,152 @@ class $$CategoriesTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$CategoriesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                parentId = false,
+                budgetsRefs = false,
+                transactionsRefs = false,
+                merchantMappingsRefs = false,
+                recurringTransactionsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (budgetsRefs) db.budgets,
+                    if (transactionsRefs) db.transactions,
+                    if (merchantMappingsRefs) db.merchantMappings,
+                    if (recurringTransactionsRefs) db.recurringTransactions,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (parentId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.parentId,
+                                    referencedTable: $$CategoriesTableReferences
+                                        ._parentIdTable(db),
+                                    referencedColumn:
+                                        $$CategoriesTableReferences
+                                            ._parentIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (budgetsRefs)
+                        await $_getPrefetchedData<
+                          Category,
+                          $CategoriesTable,
+                          Budget
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CategoriesTableReferences
+                              ._budgetsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CategoriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).budgetsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.categoryId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (transactionsRefs)
+                        await $_getPrefetchedData<
+                          Category,
+                          $CategoriesTable,
+                          Transaction
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CategoriesTableReferences
+                              ._transactionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CategoriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).transactionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.categoryId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (merchantMappingsRefs)
+                        await $_getPrefetchedData<
+                          Category,
+                          $CategoriesTable,
+                          MerchantMapping
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CategoriesTableReferences
+                              ._merchantMappingsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CategoriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).merchantMappingsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.defaultCategoryId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (recurringTransactionsRefs)
+                        await $_getPrefetchedData<
+                          Category,
+                          $CategoriesTable,
+                          RecurringTransactionDb
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CategoriesTableReferences
+                              ._recurringTransactionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CategoriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).recurringTransactionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.categoryId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
@@ -18717,9 +22675,2143 @@ typedef $$CategoriesTableProcessedTableManager =
       $$CategoriesTableAnnotationComposer,
       $$CategoriesTableCreateCompanionBuilder,
       $$CategoriesTableUpdateCompanionBuilder,
-      (Category, BaseReferences<_$AppDatabase, $CategoriesTable, Category>),
+      (Category, $$CategoriesTableReferences),
       Category,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool parentId,
+        bool budgetsRefs,
+        bool transactionsRefs,
+        bool merchantMappingsRefs,
+        bool recurringTransactionsRefs,
+      })
+    >;
+typedef $$BudgetsTableCreateCompanionBuilder =
+    BudgetsCompanion Function({
+      Value<int> id,
+      Value<int> walletId,
+      Value<String> uuid,
+      required double amount,
+      required String period,
+      required int categoryId,
+      Value<DateTime> updatedAt,
+    });
+typedef $$BudgetsTableUpdateCompanionBuilder =
+    BudgetsCompanion Function({
+      Value<int> id,
+      Value<int> walletId,
+      Value<String> uuid,
+      Value<double> amount,
+      Value<String> period,
+      Value<int> categoryId,
+      Value<DateTime> updatedAt,
+    });
+
+final class $$BudgetsTableReferences
+    extends BaseReferences<_$AppDatabase, $BudgetsTable, Budget> {
+  $$BudgetsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) => db.wallets
+      .createAlias($_aliasNameGenerator(db.budgets.walletId, db.wallets.id));
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
+      db.categories.createAlias(
+        $_aliasNameGenerator(db.budgets.categoryId, db.categories.id),
+      );
+
+  $$CategoriesTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<int>('category_id')!;
+
+    final manager = $$CategoriesTableTableManager(
+      $_db,
+      $_db.categories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$BudgetsTableFilterComposer
+    extends Composer<_$AppDatabase, $BudgetsTable> {
+  $$BudgetsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<String> get period => $composableBuilder(
+    column: $table.period,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableFilterComposer get categoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BudgetsTableOrderingComposer
+    extends Composer<_$AppDatabase, $BudgetsTable> {
+  $$BudgetsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get period => $composableBuilder(
+    column: $table.period,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableOrderingComposer get categoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BudgetsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BudgetsTable> {
+  $$BudgetsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get period =>
+      $composableBuilder(column: $table.period, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableAnnotationComposer get categoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BudgetsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BudgetsTable,
+          Budget,
+          $$BudgetsTableFilterComposer,
+          $$BudgetsTableOrderingComposer,
+          $$BudgetsTableAnnotationComposer,
+          $$BudgetsTableCreateCompanionBuilder,
+          $$BudgetsTableUpdateCompanionBuilder,
+          (Budget, $$BudgetsTableReferences),
+          Budget,
+          PrefetchHooks Function({bool walletId, bool categoryId})
+        > {
+  $$BudgetsTableTableManager(_$AppDatabase db, $BudgetsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BudgetsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BudgetsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BudgetsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> walletId = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<String> period = const Value.absent(),
+                Value<int> categoryId = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => BudgetsCompanion(
+                id: id,
+                walletId: walletId,
+                uuid: uuid,
+                amount: amount,
+                period: period,
+                categoryId: categoryId,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> walletId = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                required double amount,
+                required String period,
+                required int categoryId,
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => BudgetsCompanion.insert(
+                id: id,
+                walletId: walletId,
+                uuid: uuid,
+                amount: amount,
+                period: period,
+                categoryId: categoryId,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$BudgetsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({walletId = false, categoryId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable: $$BudgetsTableReferences
+                                    ._walletIdTable(db),
+                                referencedColumn: $$BudgetsTableReferences
+                                    ._walletIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+                    if (categoryId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.categoryId,
+                                referencedTable: $$BudgetsTableReferences
+                                    ._categoryIdTable(db),
+                                referencedColumn: $$BudgetsTableReferences
+                                    ._categoryIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$BudgetsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BudgetsTable,
+      Budget,
+      $$BudgetsTableFilterComposer,
+      $$BudgetsTableOrderingComposer,
+      $$BudgetsTableAnnotationComposer,
+      $$BudgetsTableCreateCompanionBuilder,
+      $$BudgetsTableUpdateCompanionBuilder,
+      (Budget, $$BudgetsTableReferences),
+      Budget,
+      PrefetchHooks Function({bool walletId, bool categoryId})
+    >;
+typedef $$UsersTableCreateCompanionBuilder =
+    UsersCompanion Function({
+      Value<int> id,
+      Value<String> uuid,
+      required String displayName,
+      Value<String?> email,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+typedef $$UsersTableUpdateCompanionBuilder =
+    UsersCompanion Function({
+      Value<int> id,
+      Value<String> uuid,
+      Value<String> displayName,
+      Value<String?> email,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+final class $$UsersTableReferences
+    extends BaseReferences<_$AppDatabase, $UsersTable, User> {
+  $$UsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$WalletMembersTable, List<WalletMember>>
+  _walletMembersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletMembers,
+    aliasName: $_aliasNameGenerator(db.users.id, db.walletMembers.userId),
+  );
+
+  $$WalletMembersTableProcessedTableManager get walletMembersRefs {
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.userId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_walletMembersRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletActivitiesTable, List<WalletActivity>>
+  _walletActivitiesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletActivities,
+    aliasName: $_aliasNameGenerator(
+      db.users.id,
+      db.walletActivities.actorUserId,
+    ),
+  );
+
+  $$WalletActivitiesTableProcessedTableManager get walletActivitiesRefs {
+    final manager = $$WalletActivitiesTableTableManager(
+      $_db,
+      $_db.walletActivities,
+    ).filter((f) => f.actorUserId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletActivitiesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get displayName => $composableBuilder(
+    column: $table.displayName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> walletMembersRefs(
+    Expression<bool> Function($$WalletMembersTableFilterComposer f) f,
+  ) {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletActivitiesRefs(
+    Expression<bool> Function($$WalletActivitiesTableFilterComposer f) f,
+  ) {
+    final $$WalletActivitiesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletActivities,
+      getReferencedColumn: (t) => t.actorUserId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletActivitiesTableFilterComposer(
+            $db: $db,
+            $table: $db.walletActivities,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$UsersTableOrderingComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get displayName => $composableBuilder(
+    column: $table.displayName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UsersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
+
+  GeneratedColumn<String> get displayName => $composableBuilder(
+    column: $table.displayName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> walletMembersRefs<T extends Object>(
+    Expression<T> Function($$WalletMembersTableAnnotationComposer a) f,
+  ) {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.userId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletActivitiesRefs<T extends Object>(
+    Expression<T> Function($$WalletActivitiesTableAnnotationComposer a) f,
+  ) {
+    final $$WalletActivitiesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletActivities,
+      getReferencedColumn: (t) => t.actorUserId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletActivitiesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletActivities,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$UsersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UsersTable,
+          User,
+          $$UsersTableFilterComposer,
+          $$UsersTableOrderingComposer,
+          $$UsersTableAnnotationComposer,
+          $$UsersTableCreateCompanionBuilder,
+          $$UsersTableUpdateCompanionBuilder,
+          (User, $$UsersTableReferences),
+          User,
+          PrefetchHooks Function({
+            bool walletMembersRefs,
+            bool walletActivitiesRefs,
+          })
+        > {
+  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UsersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UsersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UsersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                Value<String> displayName = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => UsersCompanion(
+                id: id,
+                uuid: uuid,
+                displayName: displayName,
+                email: email,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                required String displayName,
+                Value<String?> email = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => UsersCompanion.insert(
+                id: id,
+                uuid: uuid,
+                displayName: displayName,
+                email: email,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) =>
+                    (e.readTable(table), $$UsersTableReferences(db, table, e)),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({walletMembersRefs = false, walletActivitiesRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (walletMembersRefs) db.walletMembers,
+                    if (walletActivitiesRefs) db.walletActivities,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (walletMembersRefs)
+                        await $_getPrefetchedData<
+                          User,
+                          $UsersTable,
+                          WalletMember
+                        >(
+                          currentTable: table,
+                          referencedTable: $$UsersTableReferences
+                              ._walletMembersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$UsersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletMembersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletActivitiesRefs)
+                        await $_getPrefetchedData<
+                          User,
+                          $UsersTable,
+                          WalletActivity
+                        >(
+                          currentTable: table,
+                          referencedTable: $$UsersTableReferences
+                              ._walletActivitiesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$UsersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletActivitiesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.actorUserId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$UsersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UsersTable,
+      User,
+      $$UsersTableFilterComposer,
+      $$UsersTableOrderingComposer,
+      $$UsersTableAnnotationComposer,
+      $$UsersTableCreateCompanionBuilder,
+      $$UsersTableUpdateCompanionBuilder,
+      (User, $$UsersTableReferences),
+      User,
+      PrefetchHooks Function({
+        bool walletMembersRefs,
+        bool walletActivitiesRefs,
+      })
+    >;
+typedef $$WalletMembersTableCreateCompanionBuilder =
+    WalletMembersCompanion Function({
+      Value<int> id,
+      required int walletId,
+      required int accountId,
+      Value<int?> userId,
+      required WalletRole role,
+      Value<DateTime> joinedAt,
+      Value<bool> isActive,
+    });
+typedef $$WalletMembersTableUpdateCompanionBuilder =
+    WalletMembersCompanion Function({
+      Value<int> id,
+      Value<int> walletId,
+      Value<int> accountId,
+      Value<int?> userId,
+      Value<WalletRole> role,
+      Value<DateTime> joinedAt,
+      Value<bool> isActive,
+    });
+
+final class $$WalletMembersTableReferences
+    extends BaseReferences<_$AppDatabase, $WalletMembersTable, WalletMember> {
+  $$WalletMembersTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletMembers.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _accountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(db.walletMembers.accountId, db.accounts.id),
+      );
+
+  $$AccountsTableProcessedTableManager get accountId {
+    final $_column = $_itemColumn<int>('account_id')!;
+
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_accountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $UsersTable _userIdTable(_$AppDatabase db) => db.users.createAlias(
+    $_aliasNameGenerator(db.walletMembers.userId, db.users.id),
+  );
+
+  $$UsersTableProcessedTableManager? get userId {
+    final $_column = $_itemColumn<int>('user_id');
+    if ($_column == null) return null;
+    final manager = $$UsersTableTableManager(
+      $_db,
+      $_db.users,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletNotificationsTable,
+    List<WalletNotification>
+  >
+  _walletNotificationsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletNotifications,
+        aliasName: $_aliasNameGenerator(
+          db.walletMembers.id,
+          db.walletNotifications.memberId,
+        ),
+      );
+
+  $$WalletNotificationsTableProcessedTableManager get walletNotificationsRefs {
+    final manager = $$WalletNotificationsTableTableManager(
+      $_db,
+      $_db.walletNotifications,
+    ).filter((f) => f.memberId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletNotificationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletAllowancesTable, List<WalletAllowance>>
+  _walletAllowancesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletAllowances,
+    aliasName: $_aliasNameGenerator(
+      db.walletMembers.id,
+      db.walletAllowances.memberId,
+    ),
+  );
+
+  $$WalletAllowancesTableProcessedTableManager get walletAllowancesRefs {
+    final manager = $$WalletAllowancesTableTableManager(
+      $_db,
+      $_db.walletAllowances,
+    ).filter((f) => f.memberId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletAllowancesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletAllowancePaymentsTable,
+    List<WalletAllowancePayment>
+  >
+  _walletAllowancePaymentsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletAllowancePayments,
+        aliasName: $_aliasNameGenerator(
+          db.walletMembers.id,
+          db.walletAllowancePayments.memberId,
+        ),
+      );
+
+  $$WalletAllowancePaymentsTableProcessedTableManager
+  get walletAllowancePaymentsRefs {
+    final manager = $$WalletAllowancePaymentsTableTableManager(
+      $_db,
+      $_db.walletAllowancePayments,
+    ).filter((f) => f.memberId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletAllowancePaymentsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletGoalSchedulesTable,
+    List<WalletGoalSchedule>
+  >
+  _walletGoalSchedulesRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletGoalSchedules,
+        aliasName: $_aliasNameGenerator(
+          db.walletMembers.id,
+          db.walletGoalSchedules.memberId,
+        ),
+      );
+
+  $$WalletGoalSchedulesTableProcessedTableManager get walletGoalSchedulesRefs {
+    final manager = $$WalletGoalSchedulesTableTableManager(
+      $_db,
+      $_db.walletGoalSchedules,
+    ).filter((f) => f.memberId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletGoalSchedulesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletExpenseSplitsTable,
+    List<WalletExpenseSplit>
+  >
+  _walletExpenseSplitsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletExpenseSplits,
+        aliasName: $_aliasNameGenerator(
+          db.walletMembers.id,
+          db.walletExpenseSplits.paidByMemberId,
+        ),
+      );
+
+  $$WalletExpenseSplitsTableProcessedTableManager get walletExpenseSplitsRefs {
+    final manager = $$WalletExpenseSplitsTableTableManager(
+      $_db,
+      $_db.walletExpenseSplits,
+    ).filter((f) => f.paidByMemberId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletExpenseSplitsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletExpenseSplitMembersTable,
+    List<WalletExpenseSplitMember>
+  >
+  _walletExpenseSplitMembersRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletExpenseSplitMembers,
+        aliasName: $_aliasNameGenerator(
+          db.walletMembers.id,
+          db.walletExpenseSplitMembers.memberId,
+        ),
+      );
+
+  $$WalletExpenseSplitMembersTableProcessedTableManager
+  get walletExpenseSplitMembersRefs {
+    final manager = $$WalletExpenseSplitMembersTableTableManager(
+      $_db,
+      $_db.walletExpenseSplitMembers,
+    ).filter((f) => f.memberId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletExpenseSplitMembersRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$WalletActivitiesTable, List<WalletActivity>>
+  _walletActivitiesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.walletActivities,
+    aliasName: $_aliasNameGenerator(
+      db.walletMembers.id,
+      db.walletActivities.actorMemberId,
+    ),
+  );
+
+  $$WalletActivitiesTableProcessedTableManager get walletActivitiesRefs {
+    final manager = $$WalletActivitiesTableTableManager(
+      $_db,
+      $_db.walletActivities,
+    ).filter((f) => f.actorMemberId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletActivitiesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$WalletMembersTableFilterComposer
+    extends Composer<_$AppDatabase, $WalletMembersTable> {
+  $$WalletMembersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<WalletRole, WalletRole, String> get role =>
+      $composableBuilder(
+        column: $table.role,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<DateTime> get joinedAt => $composableBuilder(
+    column: $table.joinedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get accountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableFilterComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> walletNotificationsRefs(
+    Expression<bool> Function($$WalletNotificationsTableFilterComposer f) f,
+  ) {
+    final $$WalletNotificationsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletNotifications,
+      getReferencedColumn: (t) => t.memberId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletNotificationsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletNotifications,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletAllowancesRefs(
+    Expression<bool> Function($$WalletAllowancesTableFilterComposer f) f,
+  ) {
+    final $$WalletAllowancesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletAllowances,
+      getReferencedColumn: (t) => t.memberId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletAllowancesTableFilterComposer(
+            $db: $db,
+            $table: $db.walletAllowances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletAllowancePaymentsRefs(
+    Expression<bool> Function($$WalletAllowancePaymentsTableFilterComposer f) f,
+  ) {
+    final $$WalletAllowancePaymentsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletAllowancePayments,
+          getReferencedColumn: (t) => t.memberId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletAllowancePaymentsTableFilterComposer(
+                $db: $db,
+                $table: $db.walletAllowancePayments,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> walletGoalSchedulesRefs(
+    Expression<bool> Function($$WalletGoalSchedulesTableFilterComposer f) f,
+  ) {
+    final $$WalletGoalSchedulesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletGoalSchedules,
+      getReferencedColumn: (t) => t.memberId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalSchedulesTableFilterComposer(
+            $db: $db,
+            $table: $db.walletGoalSchedules,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletExpenseSplitsRefs(
+    Expression<bool> Function($$WalletExpenseSplitsTableFilterComposer f) f,
+  ) {
+    final $$WalletExpenseSplitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletExpenseSplits,
+      getReferencedColumn: (t) => t.paidByMemberId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletExpenseSplitsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletExpenseSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletExpenseSplitMembersRefs(
+    Expression<bool> Function($$WalletExpenseSplitMembersTableFilterComposer f)
+    f,
+  ) {
+    final $$WalletExpenseSplitMembersTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletExpenseSplitMembers,
+          getReferencedColumn: (t) => t.memberId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitMembersTableFilterComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplitMembers,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> walletActivitiesRefs(
+    Expression<bool> Function($$WalletActivitiesTableFilterComposer f) f,
+  ) {
+    final $$WalletActivitiesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletActivities,
+      getReferencedColumn: (t) => t.actorMemberId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletActivitiesTableFilterComposer(
+            $db: $db,
+            $table: $db.walletActivities,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$WalletMembersTableOrderingComposer
+    extends Composer<_$AppDatabase, $WalletMembersTable> {
+  $$WalletMembersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get joinedAt => $composableBuilder(
+    column: $table.joinedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+    column: $table.isActive,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get accountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableOrderingComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$WalletMembersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WalletMembersTable> {
+  $$WalletMembersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<WalletRole, String> get role =>
+      $composableBuilder(column: $table.role, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get joinedAt =>
+      $composableBuilder(column: $table.joinedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get accountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> walletNotificationsRefs<T extends Object>(
+    Expression<T> Function($$WalletNotificationsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletNotificationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletNotifications,
+          getReferencedColumn: (t) => t.memberId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletNotificationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletNotifications,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletAllowancesRefs<T extends Object>(
+    Expression<T> Function($$WalletAllowancesTableAnnotationComposer a) f,
+  ) {
+    final $$WalletAllowancesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletAllowances,
+      getReferencedColumn: (t) => t.memberId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletAllowancesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletAllowances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletAllowancePaymentsRefs<T extends Object>(
+    Expression<T> Function($$WalletAllowancePaymentsTableAnnotationComposer a)
+    f,
+  ) {
+    final $$WalletAllowancePaymentsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletAllowancePayments,
+          getReferencedColumn: (t) => t.memberId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletAllowancePaymentsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletAllowancePayments,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletGoalSchedulesRefs<T extends Object>(
+    Expression<T> Function($$WalletGoalSchedulesTableAnnotationComposer a) f,
+  ) {
+    final $$WalletGoalSchedulesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletGoalSchedules,
+          getReferencedColumn: (t) => t.memberId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletGoalSchedulesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletGoalSchedules,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletExpenseSplitsRefs<T extends Object>(
+    Expression<T> Function($$WalletExpenseSplitsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletExpenseSplitsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletExpenseSplits,
+          getReferencedColumn: (t) => t.paidByMemberId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletExpenseSplitMembersRefs<T extends Object>(
+    Expression<T> Function($$WalletExpenseSplitMembersTableAnnotationComposer a)
+    f,
+  ) {
+    final $$WalletExpenseSplitMembersTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletExpenseSplitMembers,
+          getReferencedColumn: (t) => t.memberId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitMembersTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplitMembers,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletActivitiesRefs<T extends Object>(
+    Expression<T> Function($$WalletActivitiesTableAnnotationComposer a) f,
+  ) {
+    final $$WalletActivitiesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletActivities,
+      getReferencedColumn: (t) => t.actorMemberId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletActivitiesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletActivities,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$WalletMembersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WalletMembersTable,
+          WalletMember,
+          $$WalletMembersTableFilterComposer,
+          $$WalletMembersTableOrderingComposer,
+          $$WalletMembersTableAnnotationComposer,
+          $$WalletMembersTableCreateCompanionBuilder,
+          $$WalletMembersTableUpdateCompanionBuilder,
+          (WalletMember, $$WalletMembersTableReferences),
+          WalletMember,
+          PrefetchHooks Function({
+            bool walletId,
+            bool accountId,
+            bool userId,
+            bool walletNotificationsRefs,
+            bool walletAllowancesRefs,
+            bool walletAllowancePaymentsRefs,
+            bool walletGoalSchedulesRefs,
+            bool walletExpenseSplitsRefs,
+            bool walletExpenseSplitMembersRefs,
+            bool walletActivitiesRefs,
+          })
+        > {
+  $$WalletMembersTableTableManager(_$AppDatabase db, $WalletMembersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WalletMembersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WalletMembersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WalletMembersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> walletId = const Value.absent(),
+                Value<int> accountId = const Value.absent(),
+                Value<int?> userId = const Value.absent(),
+                Value<WalletRole> role = const Value.absent(),
+                Value<DateTime> joinedAt = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+              }) => WalletMembersCompanion(
+                id: id,
+                walletId: walletId,
+                accountId: accountId,
+                userId: userId,
+                role: role,
+                joinedAt: joinedAt,
+                isActive: isActive,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int walletId,
+                required int accountId,
+                Value<int?> userId = const Value.absent(),
+                required WalletRole role,
+                Value<DateTime> joinedAt = const Value.absent(),
+                Value<bool> isActive = const Value.absent(),
+              }) => WalletMembersCompanion.insert(
+                id: id,
+                walletId: walletId,
+                accountId: accountId,
+                userId: userId,
+                role: role,
+                joinedAt: joinedAt,
+                isActive: isActive,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletMembersTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                walletId = false,
+                accountId = false,
+                userId = false,
+                walletNotificationsRefs = false,
+                walletAllowancesRefs = false,
+                walletAllowancePaymentsRefs = false,
+                walletGoalSchedulesRefs = false,
+                walletExpenseSplitsRefs = false,
+                walletExpenseSplitMembersRefs = false,
+                walletActivitiesRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (walletNotificationsRefs) db.walletNotifications,
+                    if (walletAllowancesRefs) db.walletAllowances,
+                    if (walletAllowancePaymentsRefs) db.walletAllowancePayments,
+                    if (walletGoalSchedulesRefs) db.walletGoalSchedules,
+                    if (walletExpenseSplitsRefs) db.walletExpenseSplits,
+                    if (walletExpenseSplitMembersRefs)
+                      db.walletExpenseSplitMembers,
+                    if (walletActivitiesRefs) db.walletActivities,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$WalletMembersTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$WalletMembersTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (accountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.accountId,
+                                    referencedTable:
+                                        $$WalletMembersTableReferences
+                                            ._accountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletMembersTableReferences
+                                            ._accountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (userId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.userId,
+                                    referencedTable:
+                                        $$WalletMembersTableReferences
+                                            ._userIdTable(db),
+                                    referencedColumn:
+                                        $$WalletMembersTableReferences
+                                            ._userIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (walletNotificationsRefs)
+                        await $_getPrefetchedData<
+                          WalletMember,
+                          $WalletMembersTable,
+                          WalletNotification
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletMembersTableReferences
+                              ._walletNotificationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletMembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletNotificationsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.memberId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletAllowancesRefs)
+                        await $_getPrefetchedData<
+                          WalletMember,
+                          $WalletMembersTable,
+                          WalletAllowance
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletMembersTableReferences
+                              ._walletAllowancesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletMembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletAllowancesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.memberId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletAllowancePaymentsRefs)
+                        await $_getPrefetchedData<
+                          WalletMember,
+                          $WalletMembersTable,
+                          WalletAllowancePayment
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletMembersTableReferences
+                              ._walletAllowancePaymentsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletMembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletAllowancePaymentsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.memberId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletGoalSchedulesRefs)
+                        await $_getPrefetchedData<
+                          WalletMember,
+                          $WalletMembersTable,
+                          WalletGoalSchedule
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletMembersTableReferences
+                              ._walletGoalSchedulesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletMembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletGoalSchedulesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.memberId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletExpenseSplitsRefs)
+                        await $_getPrefetchedData<
+                          WalletMember,
+                          $WalletMembersTable,
+                          WalletExpenseSplit
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletMembersTableReferences
+                              ._walletExpenseSplitsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletMembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletExpenseSplitsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.paidByMemberId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletExpenseSplitMembersRefs)
+                        await $_getPrefetchedData<
+                          WalletMember,
+                          $WalletMembersTable,
+                          WalletExpenseSplitMember
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletMembersTableReferences
+                              ._walletExpenseSplitMembersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletMembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletExpenseSplitMembersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.memberId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletActivitiesRefs)
+                        await $_getPrefetchedData<
+                          WalletMember,
+                          $WalletMembersTable,
+                          WalletActivity
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletMembersTableReferences
+                              ._walletActivitiesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletMembersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletActivitiesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.actorMemberId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$WalletMembersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WalletMembersTable,
+      WalletMember,
+      $$WalletMembersTableFilterComposer,
+      $$WalletMembersTableOrderingComposer,
+      $$WalletMembersTableAnnotationComposer,
+      $$WalletMembersTableCreateCompanionBuilder,
+      $$WalletMembersTableUpdateCompanionBuilder,
+      (WalletMember, $$WalletMembersTableReferences),
+      WalletMember,
+      PrefetchHooks Function({
+        bool walletId,
+        bool accountId,
+        bool userId,
+        bool walletNotificationsRefs,
+        bool walletAllowancesRefs,
+        bool walletAllowancePaymentsRefs,
+        bool walletGoalSchedulesRefs,
+        bool walletExpenseSplitsRefs,
+        bool walletExpenseSplitMembersRefs,
+        bool walletActivitiesRefs,
+      })
     >;
 typedef $$WalletNotificationsTableCreateCompanionBuilder =
     WalletNotificationsCompanion Function({
@@ -18748,6 +24840,61 @@ typedef $$WalletNotificationsTableUpdateCompanionBuilder =
       Value<DateTime?> dismissedAt,
     });
 
+final class $$WalletNotificationsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletNotificationsTable,
+          WalletNotification
+        > {
+  $$WalletNotificationsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletNotifications.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletMembersTable _memberIdTable(_$AppDatabase db) =>
+      db.walletMembers.createAlias(
+        $_aliasNameGenerator(
+          db.walletNotifications.memberId,
+          db.walletMembers.id,
+        ),
+      );
+
+  $$WalletMembersTableProcessedTableManager? get memberId {
+    final $_column = $_itemColumn<int>('member_id');
+    if ($_column == null) return null;
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_memberIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletNotificationsTableFilterComposer
     extends Composer<_$AppDatabase, $WalletNotificationsTable> {
   $$WalletNotificationsTableFilterComposer({
@@ -18759,16 +24906,6 @@ class $$WalletNotificationsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18811,6 +24948,52 @@ class $$WalletNotificationsTableFilterComposer
     column: $table.dismissedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableFilterComposer get memberId {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletNotificationsTableOrderingComposer
@@ -18824,16 +25007,6 @@ class $$WalletNotificationsTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -18871,6 +25044,52 @@ class $$WalletNotificationsTableOrderingComposer
     column: $table.dismissedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableOrderingComposer get memberId {
+    final $$WalletMembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletNotificationsTableAnnotationComposer
@@ -18884,12 +25103,6 @@ class $$WalletNotificationsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
-  GeneratedColumn<int> get memberId =>
-      $composableBuilder(column: $table.memberId, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<WalletNotificationType, String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
@@ -18915,6 +25128,52 @@ class $$WalletNotificationsTableAnnotationComposer
     column: $table.dismissedAt,
     builder: (column) => column,
   );
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableAnnotationComposer get memberId {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletNotificationsTableTableManager
@@ -18928,16 +25187,9 @@ class $$WalletNotificationsTableTableManager
           $$WalletNotificationsTableAnnotationComposer,
           $$WalletNotificationsTableCreateCompanionBuilder,
           $$WalletNotificationsTableUpdateCompanionBuilder,
-          (
-            WalletNotification,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletNotificationsTable,
-              WalletNotification
-            >,
-          ),
+          (WalletNotification, $$WalletNotificationsTableReferences),
           WalletNotification,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId, bool memberId})
         > {
   $$WalletNotificationsTableTableManager(
     _$AppDatabase db,
@@ -19007,9 +25259,71 @@ class $$WalletNotificationsTableTableManager
                 dismissedAt: dismissedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletNotificationsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletId = false, memberId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable:
+                                    $$WalletNotificationsTableReferences
+                                        ._walletIdTable(db),
+                                referencedColumn:
+                                    $$WalletNotificationsTableReferences
+                                        ._walletIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (memberId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.memberId,
+                                referencedTable:
+                                    $$WalletNotificationsTableReferences
+                                        ._memberIdTable(db),
+                                referencedColumn:
+                                    $$WalletNotificationsTableReferences
+                                        ._memberIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -19024,16 +25338,9 @@ typedef $$WalletNotificationsTableProcessedTableManager =
       $$WalletNotificationsTableAnnotationComposer,
       $$WalletNotificationsTableCreateCompanionBuilder,
       $$WalletNotificationsTableUpdateCompanionBuilder,
-      (
-        WalletNotification,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletNotificationsTable,
-          WalletNotification
-        >,
-      ),
+      (WalletNotification, $$WalletNotificationsTableReferences),
       WalletNotification,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId, bool memberId})
     >;
 typedef $$LoansTableCreateCompanionBuilder =
     LoansCompanion Function({
@@ -19068,6 +25375,28 @@ typedef $$LoansTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$LoansTableReferences
+    extends BaseReferences<_$AppDatabase, $LoansTable, LoanDb> {
+  $$LoansTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $AccountsTable _accountIdTable(_$AppDatabase db) => db.accounts
+      .createAlias($_aliasNameGenerator(db.loans.accountId, db.accounts.id));
+
+  $$AccountsTableProcessedTableManager get accountId {
+    final $_column = $_itemColumn<int>('account_id')!;
+
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_accountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$LoansTableFilterComposer extends Composer<_$AppDatabase, $LoansTable> {
   $$LoansTableFilterComposer({
     required super.$db,
@@ -19093,11 +25422,6 @@ class $$LoansTableFilterComposer extends Composer<_$AppDatabase, $LoansTable> {
 
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get accountId => $composableBuilder(
-    column: $table.accountId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -19142,6 +25466,29 @@ class $$LoansTableFilterComposer extends Composer<_$AppDatabase, $LoansTable> {
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$AccountsTableFilterComposer get accountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$LoansTableOrderingComposer
@@ -19170,11 +25517,6 @@ class $$LoansTableOrderingComposer
 
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get accountId => $composableBuilder(
-    column: $table.accountId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -19217,6 +25559,29 @@ class $$LoansTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$AccountsTableOrderingComposer get accountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$LoansTableAnnotationComposer
@@ -19239,9 +25604,6 @@ class $$LoansTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<int> get accountId =>
-      $composableBuilder(column: $table.accountId, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<double, int> get principalAmount =>
       $composableBuilder(
@@ -19275,6 +25637,29 @@ class $$LoansTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$AccountsTableAnnotationComposer get accountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$LoansTableTableManager
@@ -19288,9 +25673,9 @@ class $$LoansTableTableManager
           $$LoansTableAnnotationComposer,
           $$LoansTableCreateCompanionBuilder,
           $$LoansTableUpdateCompanionBuilder,
-          (LoanDb, BaseReferences<_$AppDatabase, $LoansTable, LoanDb>),
+          (LoanDb, $$LoansTableReferences),
           LoanDb,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool accountId})
         > {
   $$LoansTableTableManager(_$AppDatabase db, $LoansTable table)
     : super(
@@ -19364,9 +25749,52 @@ class $$LoansTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) =>
+                    (e.readTable(table), $$LoansTableReferences(db, table, e)),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({accountId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (accountId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.accountId,
+                                referencedTable: $$LoansTableReferences
+                                    ._accountIdTable(db),
+                                referencedColumn: $$LoansTableReferences
+                                    ._accountIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -19381,9 +25809,858 @@ typedef $$LoansTableProcessedTableManager =
       $$LoansTableAnnotationComposer,
       $$LoansTableCreateCompanionBuilder,
       $$LoansTableUpdateCompanionBuilder,
-      (LoanDb, BaseReferences<_$AppDatabase, $LoansTable, LoanDb>),
+      (LoanDb, $$LoansTableReferences),
       LoanDb,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool accountId})
+    >;
+typedef $$TransactionsTableCreateCompanionBuilder =
+    TransactionsCompanion Function({
+      Value<int> walletId,
+      Value<int> id,
+      Value<String> uuid,
+      required double amount,
+      required DateTime date,
+      Value<String?> note,
+      required TransactionType type,
+      required int categoryId,
+      required int accountId,
+      Value<String?> transferGroupId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+typedef $$TransactionsTableUpdateCompanionBuilder =
+    TransactionsCompanion Function({
+      Value<int> walletId,
+      Value<int> id,
+      Value<String> uuid,
+      Value<double> amount,
+      Value<DateTime> date,
+      Value<String?> note,
+      Value<TransactionType> type,
+      Value<int> categoryId,
+      Value<int> accountId,
+      Value<String?> transferGroupId,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+final class $$TransactionsTableReferences
+    extends BaseReferences<_$AppDatabase, $TransactionsTable, Transaction> {
+  $$TransactionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
+      db.categories.createAlias(
+        $_aliasNameGenerator(db.transactions.categoryId, db.categories.id),
+      );
+
+  $$CategoriesTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<int>('category_id')!;
+
+    final manager = $$CategoriesTableTableManager(
+      $_db,
+      $_db.categories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _accountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(db.transactions.accountId, db.accounts.id),
+      );
+
+  $$AccountsTableProcessedTableManager get accountId {
+    final $_column = $_itemColumn<int>('account_id')!;
+
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_accountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$PeerDebtsTable, List<PeerDebtDb>>
+  _peerDebtsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.peerDebts,
+    aliasName: $_aliasNameGenerator(
+      db.transactions.id,
+      db.peerDebts.transactionId,
+    ),
+  );
+
+  $$PeerDebtsTableProcessedTableManager get peerDebtsRefs {
+    final manager = $$PeerDebtsTableTableManager(
+      $_db,
+      $_db.peerDebts,
+    ).filter((f) => f.transactionId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_peerDebtsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$AttachmentsTable, List<Attachment>>
+  _attachmentsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.attachments,
+    aliasName: $_aliasNameGenerator(
+      db.transactions.id,
+      db.attachments.transactionId,
+    ),
+  );
+
+  $$AttachmentsTableProcessedTableManager get attachmentsRefs {
+    final manager = $$AttachmentsTableTableManager(
+      $_db,
+      $_db.attachments,
+    ).filter((f) => f.transactionId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_attachmentsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletExpenseSplitsTable,
+    List<WalletExpenseSplit>
+  >
+  _walletExpenseSplitsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletExpenseSplits,
+        aliasName: $_aliasNameGenerator(
+          db.transactions.id,
+          db.walletExpenseSplits.transactionId,
+        ),
+      );
+
+  $$WalletExpenseSplitsTableProcessedTableManager get walletExpenseSplitsRefs {
+    final manager = $$WalletExpenseSplitsTableTableManager(
+      $_db,
+      $_db.walletExpenseSplits,
+    ).filter((f) => f.transactionId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletExpenseSplitsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TransactionsTableFilterComposer
+    extends Composer<_$AppDatabase, $TransactionsTable> {
+  $$TransactionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<double, double, int> get amount =>
+      $composableBuilder(
+        column: $table.amount,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<TransactionType, TransactionType, String>
+  get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get transferGroupId => $composableBuilder(
+    column: $table.transferGroupId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CategoriesTableFilterComposer get categoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get accountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> peerDebtsRefs(
+    Expression<bool> Function($$PeerDebtsTableFilterComposer f) f,
+  ) {
+    final $$PeerDebtsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.peerDebts,
+      getReferencedColumn: (t) => t.transactionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PeerDebtsTableFilterComposer(
+            $db: $db,
+            $table: $db.peerDebts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> attachmentsRefs(
+    Expression<bool> Function($$AttachmentsTableFilterComposer f) f,
+  ) {
+    final $$AttachmentsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attachments,
+      getReferencedColumn: (t) => t.transactionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttachmentsTableFilterComposer(
+            $db: $db,
+            $table: $db.attachments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> walletExpenseSplitsRefs(
+    Expression<bool> Function($$WalletExpenseSplitsTableFilterComposer f) f,
+  ) {
+    final $$WalletExpenseSplitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletExpenseSplits,
+      getReferencedColumn: (t) => t.transactionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletExpenseSplitsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletExpenseSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TransactionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TransactionsTable> {
+  $$TransactionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get walletId => $composableBuilder(
+    column: $table.walletId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get uuid => $composableBuilder(
+    column: $table.uuid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get transferGroupId => $composableBuilder(
+    column: $table.transferGroupId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CategoriesTableOrderingComposer get categoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get accountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TransactionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TransactionsTable> {
+  $$TransactionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get walletId =>
+      $composableBuilder(column: $table.walletId, builder: (column) => column);
+
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get uuid =>
+      $composableBuilder(column: $table.uuid, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<double, int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<TransactionType, String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get transferGroupId => $composableBuilder(
+    column: $table.transferGroupId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$CategoriesTableAnnotationComposer get categoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get accountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> peerDebtsRefs<T extends Object>(
+    Expression<T> Function($$PeerDebtsTableAnnotationComposer a) f,
+  ) {
+    final $$PeerDebtsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.peerDebts,
+      getReferencedColumn: (t) => t.transactionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PeerDebtsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.peerDebts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> attachmentsRefs<T extends Object>(
+    Expression<T> Function($$AttachmentsTableAnnotationComposer a) f,
+  ) {
+    final $$AttachmentsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.attachments,
+      getReferencedColumn: (t) => t.transactionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AttachmentsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.attachments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> walletExpenseSplitsRefs<T extends Object>(
+    Expression<T> Function($$WalletExpenseSplitsTableAnnotationComposer a) f,
+  ) {
+    final $$WalletExpenseSplitsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletExpenseSplits,
+          getReferencedColumn: (t) => t.transactionId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$TransactionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TransactionsTable,
+          Transaction,
+          $$TransactionsTableFilterComposer,
+          $$TransactionsTableOrderingComposer,
+          $$TransactionsTableAnnotationComposer,
+          $$TransactionsTableCreateCompanionBuilder,
+          $$TransactionsTableUpdateCompanionBuilder,
+          (Transaction, $$TransactionsTableReferences),
+          Transaction,
+          PrefetchHooks Function({
+            bool categoryId,
+            bool accountId,
+            bool peerDebtsRefs,
+            bool attachmentsRefs,
+            bool walletExpenseSplitsRefs,
+          })
+        > {
+  $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TransactionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TransactionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TransactionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> walletId = const Value.absent(),
+                Value<int> id = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<TransactionType> type = const Value.absent(),
+                Value<int> categoryId = const Value.absent(),
+                Value<int> accountId = const Value.absent(),
+                Value<String?> transferGroupId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => TransactionsCompanion(
+                walletId: walletId,
+                id: id,
+                uuid: uuid,
+                amount: amount,
+                date: date,
+                note: note,
+                type: type,
+                categoryId: categoryId,
+                accountId: accountId,
+                transferGroupId: transferGroupId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> walletId = const Value.absent(),
+                Value<int> id = const Value.absent(),
+                Value<String> uuid = const Value.absent(),
+                required double amount,
+                required DateTime date,
+                Value<String?> note = const Value.absent(),
+                required TransactionType type,
+                required int categoryId,
+                required int accountId,
+                Value<String?> transferGroupId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => TransactionsCompanion.insert(
+                walletId: walletId,
+                id: id,
+                uuid: uuid,
+                amount: amount,
+                date: date,
+                note: note,
+                type: type,
+                categoryId: categoryId,
+                accountId: accountId,
+                transferGroupId: transferGroupId,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TransactionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                categoryId = false,
+                accountId = false,
+                peerDebtsRefs = false,
+                attachmentsRefs = false,
+                walletExpenseSplitsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (peerDebtsRefs) db.peerDebts,
+                    if (attachmentsRefs) db.attachments,
+                    if (walletExpenseSplitsRefs) db.walletExpenseSplits,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (categoryId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.categoryId,
+                                    referencedTable:
+                                        $$TransactionsTableReferences
+                                            ._categoryIdTable(db),
+                                    referencedColumn:
+                                        $$TransactionsTableReferences
+                                            ._categoryIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (accountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.accountId,
+                                    referencedTable:
+                                        $$TransactionsTableReferences
+                                            ._accountIdTable(db),
+                                    referencedColumn:
+                                        $$TransactionsTableReferences
+                                            ._accountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (peerDebtsRefs)
+                        await $_getPrefetchedData<
+                          Transaction,
+                          $TransactionsTable,
+                          PeerDebtDb
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TransactionsTableReferences
+                              ._peerDebtsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TransactionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).peerDebtsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.transactionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (attachmentsRefs)
+                        await $_getPrefetchedData<
+                          Transaction,
+                          $TransactionsTable,
+                          Attachment
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TransactionsTableReferences
+                              ._attachmentsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TransactionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).attachmentsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.transactionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletExpenseSplitsRefs)
+                        await $_getPrefetchedData<
+                          Transaction,
+                          $TransactionsTable,
+                          WalletExpenseSplit
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TransactionsTableReferences
+                              ._walletExpenseSplitsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TransactionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletExpenseSplitsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.transactionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$TransactionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TransactionsTable,
+      Transaction,
+      $$TransactionsTableFilterComposer,
+      $$TransactionsTableOrderingComposer,
+      $$TransactionsTableAnnotationComposer,
+      $$TransactionsTableCreateCompanionBuilder,
+      $$TransactionsTableUpdateCompanionBuilder,
+      (Transaction, $$TransactionsTableReferences),
+      Transaction,
+      PrefetchHooks Function({
+        bool categoryId,
+        bool accountId,
+        bool peerDebtsRefs,
+        bool attachmentsRefs,
+        bool walletExpenseSplitsRefs,
+      })
     >;
 typedef $$PeerDebtsTableCreateCompanionBuilder =
     PeerDebtsCompanion Function({
@@ -19414,6 +26691,47 @@ typedef $$PeerDebtsTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$PeerDebtsTableReferences
+    extends BaseReferences<_$AppDatabase, $PeerDebtsTable, PeerDebtDb> {
+  $$PeerDebtsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) => db.wallets
+      .createAlias($_aliasNameGenerator(db.peerDebts.walletId, db.wallets.id));
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $TransactionsTable _transactionIdTable(_$AppDatabase db) =>
+      db.transactions.createAlias(
+        $_aliasNameGenerator(db.peerDebts.transactionId, db.transactions.id),
+      );
+
+  $$TransactionsTableProcessedTableManager? get transactionId {
+    final $_column = $_itemColumn<int>('transaction_id');
+    if ($_column == null) return null;
+    final manager = $$TransactionsTableTableManager(
+      $_db,
+      $_db.transactions,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_transactionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$PeerDebtsTableFilterComposer
     extends Composer<_$AppDatabase, $PeerDebtsTable> {
   $$PeerDebtsTableFilterComposer({
@@ -19425,11 +26743,6 @@ class $$PeerDebtsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -19470,15 +26783,56 @@ class $$PeerDebtsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get transactionId => $composableBuilder(
-    column: $table.transactionId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TransactionsTableFilterComposer get transactionId {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transactionId,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableFilterComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$PeerDebtsTableOrderingComposer
@@ -19492,11 +26846,6 @@ class $$PeerDebtsTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -19535,15 +26884,56 @@ class $$PeerDebtsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get transactionId => $composableBuilder(
-    column: $table.transactionId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TransactionsTableOrderingComposer get transactionId {
+    final $$TransactionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transactionId,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$PeerDebtsTableAnnotationComposer
@@ -19557,9 +26947,6 @@ class $$PeerDebtsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
@@ -19584,13 +26971,54 @@ class $$PeerDebtsTableAnnotationComposer
   GeneratedColumn<bool> get isSettled =>
       $composableBuilder(column: $table.isSettled, builder: (column) => column);
 
-  GeneratedColumn<int> get transactionId => $composableBuilder(
-    column: $table.transactionId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TransactionsTableAnnotationComposer get transactionId {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transactionId,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$PeerDebtsTableTableManager
@@ -19604,12 +27032,9 @@ class $$PeerDebtsTableTableManager
           $$PeerDebtsTableAnnotationComposer,
           $$PeerDebtsTableCreateCompanionBuilder,
           $$PeerDebtsTableUpdateCompanionBuilder,
-          (
-            PeerDebtDb,
-            BaseReferences<_$AppDatabase, $PeerDebtsTable, PeerDebtDb>,
-          ),
+          (PeerDebtDb, $$PeerDebtsTableReferences),
           PeerDebtDb,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId, bool transactionId})
         > {
   $$PeerDebtsTableTableManager(_$AppDatabase db, $PeerDebtsTable table)
     : super(
@@ -19675,9 +27100,67 @@ class $$PeerDebtsTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PeerDebtsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletId = false, transactionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable: $$PeerDebtsTableReferences
+                                    ._walletIdTable(db),
+                                referencedColumn: $$PeerDebtsTableReferences
+                                    ._walletIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+                    if (transactionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.transactionId,
+                                referencedTable: $$PeerDebtsTableReferences
+                                    ._transactionIdTable(db),
+                                referencedColumn: $$PeerDebtsTableReferences
+                                    ._transactionIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -19692,9 +27175,9 @@ typedef $$PeerDebtsTableProcessedTableManager =
       $$PeerDebtsTableAnnotationComposer,
       $$PeerDebtsTableCreateCompanionBuilder,
       $$PeerDebtsTableUpdateCompanionBuilder,
-      (PeerDebtDb, BaseReferences<_$AppDatabase, $PeerDebtsTable, PeerDebtDb>),
+      (PeerDebtDb, $$PeerDebtsTableReferences),
       PeerDebtDb,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId, bool transactionId})
     >;
 typedef $$WalletAllowancesTableCreateCompanionBuilder =
     WalletAllowancesCompanion Function({
@@ -19727,6 +27210,126 @@ typedef $$WalletAllowancesTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$WalletAllowancesTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $WalletAllowancesTable, WalletAllowance> {
+  $$WalletAllowancesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletAllowances.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletMembersTable _memberIdTable(_$AppDatabase db) =>
+      db.walletMembers.createAlias(
+        $_aliasNameGenerator(db.walletAllowances.memberId, db.walletMembers.id),
+      );
+
+  $$WalletMembersTableProcessedTableManager get memberId {
+    final $_column = $_itemColumn<int>('member_id')!;
+
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_memberIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _createdByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.walletAllowances.createdByAccountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager? get createdByAccountId {
+    final $_column = $_itemColumn<int>('created_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_createdByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _updatedByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.walletAllowances.updatedByAccountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager? get updatedByAccountId {
+    final $_column = $_itemColumn<int>('updated_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_updatedByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletAllowancePaymentsTable,
+    List<WalletAllowancePayment>
+  >
+  _walletAllowancePaymentsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletAllowancePayments,
+        aliasName: $_aliasNameGenerator(
+          db.walletAllowances.id,
+          db.walletAllowancePayments.allowanceId,
+        ),
+      );
+
+  $$WalletAllowancePaymentsTableProcessedTableManager
+  get walletAllowancePaymentsRefs {
+    final manager = $$WalletAllowancePaymentsTableTableManager(
+      $_db,
+      $_db.walletAllowancePayments,
+    ).filter((f) => f.allowanceId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletAllowancePaymentsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$WalletAllowancesTableFilterComposer
     extends Composer<_$AppDatabase, $WalletAllowancesTable> {
   $$WalletAllowancesTableFilterComposer({
@@ -19738,16 +27341,6 @@ class $$WalletAllowancesTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -19782,16 +27375,6 @@ class $$WalletAllowancesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -19801,6 +27384,124 @@ class $$WalletAllowancesTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableFilterComposer get memberId {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get createdByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get updatedByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> walletAllowancePaymentsRefs(
+    Expression<bool> Function($$WalletAllowancePaymentsTableFilterComposer f) f,
+  ) {
+    final $$WalletAllowancePaymentsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletAllowancePayments,
+          getReferencedColumn: (t) => t.allowanceId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletAllowancePaymentsTableFilterComposer(
+                $db: $db,
+                $table: $db.walletAllowancePayments,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$WalletAllowancesTableOrderingComposer
@@ -19814,16 +27515,6 @@ class $$WalletAllowancesTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -19852,16 +27543,6 @@ class $$WalletAllowancesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -19871,6 +27552,98 @@ class $$WalletAllowancesTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableOrderingComposer get memberId {
+    final $$WalletMembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get createdByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get updatedByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletAllowancesTableAnnotationComposer
@@ -19884,12 +27657,6 @@ class $$WalletAllowancesTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
-  GeneratedColumn<int> get memberId =>
-      $composableBuilder(column: $table.memberId, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
@@ -19907,21 +27674,130 @@ class $$WalletAllowancesTableAnnotationComposer
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
 
-  GeneratedColumn<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableAnnotationComposer get memberId {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get createdByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get updatedByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> walletAllowancePaymentsRefs<T extends Object>(
+    Expression<T> Function($$WalletAllowancePaymentsTableAnnotationComposer a)
+    f,
+  ) {
+    final $$WalletAllowancePaymentsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletAllowancePayments,
+          getReferencedColumn: (t) => t.allowanceId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletAllowancePaymentsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletAllowancePayments,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$WalletAllowancesTableTableManager
@@ -19935,16 +27811,15 @@ class $$WalletAllowancesTableTableManager
           $$WalletAllowancesTableAnnotationComposer,
           $$WalletAllowancesTableCreateCompanionBuilder,
           $$WalletAllowancesTableUpdateCompanionBuilder,
-          (
-            WalletAllowance,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletAllowancesTable,
-              WalletAllowance
-            >,
-          ),
+          (WalletAllowance, $$WalletAllowancesTableReferences),
           WalletAllowance,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletId,
+            bool memberId,
+            bool createdByAccountId,
+            bool updatedByAccountId,
+            bool walletAllowancePaymentsRefs,
+          })
         > {
   $$WalletAllowancesTableTableManager(
     _$AppDatabase db,
@@ -20017,9 +27892,132 @@ class $$WalletAllowancesTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletAllowancesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletId = false,
+                memberId = false,
+                createdByAccountId = false,
+                updatedByAccountId = false,
+                walletAllowancePaymentsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (walletAllowancePaymentsRefs) db.walletAllowancePayments,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$WalletAllowancesTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$WalletAllowancesTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (memberId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.memberId,
+                                    referencedTable:
+                                        $$WalletAllowancesTableReferences
+                                            ._memberIdTable(db),
+                                    referencedColumn:
+                                        $$WalletAllowancesTableReferences
+                                            ._memberIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (createdByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.createdByAccountId,
+                                    referencedTable:
+                                        $$WalletAllowancesTableReferences
+                                            ._createdByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletAllowancesTableReferences
+                                            ._createdByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (updatedByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.updatedByAccountId,
+                                    referencedTable:
+                                        $$WalletAllowancesTableReferences
+                                            ._updatedByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletAllowancesTableReferences
+                                            ._updatedByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (walletAllowancePaymentsRefs)
+                        await $_getPrefetchedData<
+                          WalletAllowance,
+                          $WalletAllowancesTable,
+                          WalletAllowancePayment
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletAllowancesTableReferences
+                              ._walletAllowancePaymentsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletAllowancesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletAllowancePaymentsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.allowanceId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
@@ -20034,12 +28032,15 @@ typedef $$WalletAllowancesTableProcessedTableManager =
       $$WalletAllowancesTableAnnotationComposer,
       $$WalletAllowancesTableCreateCompanionBuilder,
       $$WalletAllowancesTableUpdateCompanionBuilder,
-      (
-        WalletAllowance,
-        BaseReferences<_$AppDatabase, $WalletAllowancesTable, WalletAllowance>,
-      ),
+      (WalletAllowance, $$WalletAllowancesTableReferences),
       WalletAllowance,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletId,
+        bool memberId,
+        bool createdByAccountId,
+        bool updatedByAccountId,
+        bool walletAllowancePaymentsRefs,
+      })
     >;
 typedef $$WalletAllowancePaymentsTableCreateCompanionBuilder =
     WalletAllowancePaymentsCompanion Function({
@@ -20060,6 +28061,64 @@ typedef $$WalletAllowancePaymentsTableUpdateCompanionBuilder =
       Value<String?> notes,
     });
 
+final class $$WalletAllowancePaymentsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletAllowancePaymentsTable,
+          WalletAllowancePayment
+        > {
+  $$WalletAllowancePaymentsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletAllowancesTable _allowanceIdTable(_$AppDatabase db) =>
+      db.walletAllowances.createAlias(
+        $_aliasNameGenerator(
+          db.walletAllowancePayments.allowanceId,
+          db.walletAllowances.id,
+        ),
+      );
+
+  $$WalletAllowancesTableProcessedTableManager get allowanceId {
+    final $_column = $_itemColumn<int>('allowance_id')!;
+
+    final manager = $$WalletAllowancesTableTableManager(
+      $_db,
+      $_db.walletAllowances,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_allowanceIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletMembersTable _memberIdTable(_$AppDatabase db) =>
+      db.walletMembers.createAlias(
+        $_aliasNameGenerator(
+          db.walletAllowancePayments.memberId,
+          db.walletMembers.id,
+        ),
+      );
+
+  $$WalletMembersTableProcessedTableManager get memberId {
+    final $_column = $_itemColumn<int>('member_id')!;
+
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_memberIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletAllowancePaymentsTableFilterComposer
     extends Composer<_$AppDatabase, $WalletAllowancePaymentsTable> {
   $$WalletAllowancePaymentsTableFilterComposer({
@@ -20071,16 +28130,6 @@ class $$WalletAllowancePaymentsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get allowanceId => $composableBuilder(
-    column: $table.allowanceId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -20099,6 +28148,52 @@ class $$WalletAllowancePaymentsTableFilterComposer
     column: $table.notes,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletAllowancesTableFilterComposer get allowanceId {
+    final $$WalletAllowancesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.allowanceId,
+      referencedTable: $db.walletAllowances,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletAllowancesTableFilterComposer(
+            $db: $db,
+            $table: $db.walletAllowances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableFilterComposer get memberId {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletAllowancePaymentsTableOrderingComposer
@@ -20112,16 +28207,6 @@ class $$WalletAllowancePaymentsTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get allowanceId => $composableBuilder(
-    column: $table.allowanceId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -20139,6 +28224,52 @@ class $$WalletAllowancePaymentsTableOrderingComposer
     column: $table.notes,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletAllowancesTableOrderingComposer get allowanceId {
+    final $$WalletAllowancesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.allowanceId,
+      referencedTable: $db.walletAllowances,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletAllowancesTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletAllowances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableOrderingComposer get memberId {
+    final $$WalletMembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletAllowancePaymentsTableAnnotationComposer
@@ -20153,14 +28284,6 @@ class $$WalletAllowancePaymentsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get allowanceId => $composableBuilder(
-    column: $table.allowanceId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get memberId =>
-      $composableBuilder(column: $table.memberId, builder: (column) => column);
-
   GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
@@ -20169,6 +28292,52 @@ class $$WalletAllowancePaymentsTableAnnotationComposer
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  $$WalletAllowancesTableAnnotationComposer get allowanceId {
+    final $$WalletAllowancesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.allowanceId,
+      referencedTable: $db.walletAllowances,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletAllowancesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletAllowances,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableAnnotationComposer get memberId {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletAllowancePaymentsTableTableManager
@@ -20182,16 +28351,9 @@ class $$WalletAllowancePaymentsTableTableManager
           $$WalletAllowancePaymentsTableAnnotationComposer,
           $$WalletAllowancePaymentsTableCreateCompanionBuilder,
           $$WalletAllowancePaymentsTableUpdateCompanionBuilder,
-          (
-            WalletAllowancePayment,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletAllowancePaymentsTable,
-              WalletAllowancePayment
-            >,
-          ),
+          (WalletAllowancePayment, $$WalletAllowancePaymentsTableReferences),
           WalletAllowancePayment,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool allowanceId, bool memberId})
         > {
   $$WalletAllowancePaymentsTableTableManager(
     _$AppDatabase db,
@@ -20248,9 +28410,71 @@ class $$WalletAllowancePaymentsTableTableManager
                 notes: notes,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletAllowancePaymentsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({allowanceId = false, memberId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (allowanceId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.allowanceId,
+                                referencedTable:
+                                    $$WalletAllowancePaymentsTableReferences
+                                        ._allowanceIdTable(db),
+                                referencedColumn:
+                                    $$WalletAllowancePaymentsTableReferences
+                                        ._allowanceIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (memberId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.memberId,
+                                referencedTable:
+                                    $$WalletAllowancePaymentsTableReferences
+                                        ._memberIdTable(db),
+                                referencedColumn:
+                                    $$WalletAllowancePaymentsTableReferences
+                                        ._memberIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -20265,16 +28489,9 @@ typedef $$WalletAllowancePaymentsTableProcessedTableManager =
       $$WalletAllowancePaymentsTableAnnotationComposer,
       $$WalletAllowancePaymentsTableCreateCompanionBuilder,
       $$WalletAllowancePaymentsTableUpdateCompanionBuilder,
-      (
-        WalletAllowancePayment,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletAllowancePaymentsTable,
-          WalletAllowancePayment
-        >,
-      ),
+      (WalletAllowancePayment, $$WalletAllowancePaymentsTableReferences),
       WalletAllowancePayment,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool allowanceId, bool memberId})
     >;
 typedef $$WalletSettlementsTableCreateCompanionBuilder =
     WalletSettlementsCompanion Function({
@@ -20303,6 +28520,105 @@ typedef $$WalletSettlementsTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
+final class $$WalletSettlementsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletSettlementsTable,
+          WalletSettlement
+        > {
+  $$WalletSettlementsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletSettlements.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletMembersTable _payerMemberIdTable(_$AppDatabase db) =>
+      db.walletMembers.createAlias(
+        $_aliasNameGenerator(
+          db.walletSettlements.payerMemberId,
+          db.walletMembers.id,
+        ),
+      );
+
+  $$WalletMembersTableProcessedTableManager get payerMemberId {
+    final $_column = $_itemColumn<int>('payer_member_id')!;
+
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_payerMemberIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletMembersTable _receiverMemberIdTable(_$AppDatabase db) =>
+      db.walletMembers.createAlias(
+        $_aliasNameGenerator(
+          db.walletSettlements.receiverMemberId,
+          db.walletMembers.id,
+        ),
+      );
+
+  $$WalletMembersTableProcessedTableManager get receiverMemberId {
+    final $_column = $_itemColumn<int>('receiver_member_id')!;
+
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_receiverMemberIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _createdByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.walletSettlements.createdByAccountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager? get createdByAccountId {
+    final $_column = $_itemColumn<int>('created_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_createdByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletSettlementsTableFilterComposer
     extends Composer<_$AppDatabase, $WalletSettlementsTable> {
   $$WalletSettlementsTableFilterComposer({
@@ -20317,23 +28633,8 @@ class $$WalletSettlementsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get uuid => $composableBuilder(
     column: $table.uuid,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get payerMemberId => $composableBuilder(
-    column: $table.payerMemberId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get receiverMemberId => $composableBuilder(
-    column: $table.receiverMemberId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -20353,15 +28654,102 @@ class $$WalletSettlementsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableFilterComposer get payerMemberId {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.payerMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableFilterComposer get receiverMemberId {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.receiverMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get createdByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletSettlementsTableOrderingComposer
@@ -20378,23 +28766,8 @@ class $$WalletSettlementsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get uuid => $composableBuilder(
     column: $table.uuid,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get payerMemberId => $composableBuilder(
-    column: $table.payerMemberId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get receiverMemberId => $composableBuilder(
-    column: $table.receiverMemberId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -20413,15 +28786,102 @@ class $$WalletSettlementsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableOrderingComposer get payerMemberId {
+    final $$WalletMembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.payerMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableOrderingComposer get receiverMemberId {
+    final $$WalletMembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.receiverMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get createdByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletSettlementsTableAnnotationComposer
@@ -20436,21 +28896,8 @@ class $$WalletSettlementsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
-
-  GeneratedColumn<int> get payerMemberId => $composableBuilder(
-    column: $table.payerMemberId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get receiverMemberId => $composableBuilder(
-    column: $table.receiverMemberId,
-    builder: (column) => column,
-  );
 
   GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
@@ -20463,13 +28910,100 @@ class $$WalletSettlementsTableAnnotationComposer
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
 
-  GeneratedColumn<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableAnnotationComposer get payerMemberId {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.payerMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableAnnotationComposer get receiverMemberId {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.receiverMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get createdByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletSettlementsTableTableManager
@@ -20483,16 +29017,14 @@ class $$WalletSettlementsTableTableManager
           $$WalletSettlementsTableAnnotationComposer,
           $$WalletSettlementsTableCreateCompanionBuilder,
           $$WalletSettlementsTableUpdateCompanionBuilder,
-          (
-            WalletSettlement,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletSettlementsTable,
-              WalletSettlement
-            >,
-          ),
+          (WalletSettlement, $$WalletSettlementsTableReferences),
           WalletSettlement,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletId,
+            bool payerMemberId,
+            bool receiverMemberId,
+            bool createdByAccountId,
+          })
         > {
   $$WalletSettlementsTableTableManager(
     _$AppDatabase db,
@@ -20559,9 +29091,107 @@ class $$WalletSettlementsTableTableManager
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletSettlementsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletId = false,
+                payerMemberId = false,
+                receiverMemberId = false,
+                createdByAccountId = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$WalletSettlementsTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$WalletSettlementsTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (payerMemberId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.payerMemberId,
+                                    referencedTable:
+                                        $$WalletSettlementsTableReferences
+                                            ._payerMemberIdTable(db),
+                                    referencedColumn:
+                                        $$WalletSettlementsTableReferences
+                                            ._payerMemberIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (receiverMemberId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.receiverMemberId,
+                                    referencedTable:
+                                        $$WalletSettlementsTableReferences
+                                            ._receiverMemberIdTable(db),
+                                    referencedColumn:
+                                        $$WalletSettlementsTableReferences
+                                            ._receiverMemberIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (createdByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.createdByAccountId,
+                                    referencedTable:
+                                        $$WalletSettlementsTableReferences
+                                            ._createdByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletSettlementsTableReferences
+                                            ._createdByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -20576,225 +29206,14 @@ typedef $$WalletSettlementsTableProcessedTableManager =
       $$WalletSettlementsTableAnnotationComposer,
       $$WalletSettlementsTableCreateCompanionBuilder,
       $$WalletSettlementsTableUpdateCompanionBuilder,
-      (
-        WalletSettlement,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletSettlementsTable,
-          WalletSettlement
-        >,
-      ),
+      (WalletSettlement, $$WalletSettlementsTableReferences),
       WalletSettlement,
-      PrefetchHooks Function()
-    >;
-typedef $$WalletsTableCreateCompanionBuilder =
-    WalletsCompanion Function({
-      Value<int> id,
-      Value<String> uuid,
-      required String name,
-      Value<String> type,
-      Value<int?> createdByAccountId,
-      Value<DateTime> createdAt,
-    });
-typedef $$WalletsTableUpdateCompanionBuilder =
-    WalletsCompanion Function({
-      Value<int> id,
-      Value<String> uuid,
-      Value<String> name,
-      Value<String> type,
-      Value<int?> createdByAccountId,
-      Value<DateTime> createdAt,
-    });
-
-class $$WalletsTableFilterComposer
-    extends Composer<_$AppDatabase, $WalletsTable> {
-  $$WalletsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get uuid => $composableBuilder(
-    column: $table.uuid,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get type => $composableBuilder(
-    column: $table.type,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$WalletsTableOrderingComposer
-    extends Composer<_$AppDatabase, $WalletsTable> {
-  $$WalletsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get uuid => $composableBuilder(
-    column: $table.uuid,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get type => $composableBuilder(
-    column: $table.type,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$WalletsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $WalletsTable> {
-  $$WalletsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get uuid =>
-      $composableBuilder(column: $table.uuid, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get type =>
-      $composableBuilder(column: $table.type, builder: (column) => column);
-
-  GeneratedColumn<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-}
-
-class $$WalletsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $WalletsTable,
-          Wallet,
-          $$WalletsTableFilterComposer,
-          $$WalletsTableOrderingComposer,
-          $$WalletsTableAnnotationComposer,
-          $$WalletsTableCreateCompanionBuilder,
-          $$WalletsTableUpdateCompanionBuilder,
-          (Wallet, BaseReferences<_$AppDatabase, $WalletsTable, Wallet>),
-          Wallet,
-          PrefetchHooks Function()
-        > {
-  $$WalletsTableTableManager(_$AppDatabase db, $WalletsTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$WalletsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$WalletsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$WalletsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> uuid = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> type = const Value.absent(),
-                Value<int?> createdByAccountId = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-              }) => WalletsCompanion(
-                id: id,
-                uuid: uuid,
-                name: name,
-                type: type,
-                createdByAccountId: createdByAccountId,
-                createdAt: createdAt,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> uuid = const Value.absent(),
-                required String name,
-                Value<String> type = const Value.absent(),
-                Value<int?> createdByAccountId = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-              }) => WalletsCompanion.insert(
-                id: id,
-                uuid: uuid,
-                name: name,
-                type: type,
-                createdByAccountId: createdByAccountId,
-                createdAt: createdAt,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$WalletsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $WalletsTable,
-      Wallet,
-      $$WalletsTableFilterComposer,
-      $$WalletsTableOrderingComposer,
-      $$WalletsTableAnnotationComposer,
-      $$WalletsTableCreateCompanionBuilder,
-      $$WalletsTableUpdateCompanionBuilder,
-      (Wallet, BaseReferences<_$AppDatabase, $WalletsTable, Wallet>),
-      Wallet,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletId,
+        bool payerMemberId,
+        bool receiverMemberId,
+        bool createdByAccountId,
+      })
     >;
 typedef $$WalletInvitationsTableCreateCompanionBuilder =
     WalletInvitationsCompanion Function({
@@ -20823,6 +29242,80 @@ typedef $$WalletInvitationsTableUpdateCompanionBuilder =
       Value<DateTime?> respondedAt,
     });
 
+final class $$WalletInvitationsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletInvitationsTable,
+          WalletInvitation
+        > {
+  $$WalletInvitationsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletInvitations.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _invitedByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.walletInvitations.invitedByAccountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager? get invitedByAccountId {
+    final $_column = $_itemColumn<int>('invited_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_invitedByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _accountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(db.walletInvitations.accountId, db.accounts.id),
+      );
+
+  $$AccountsTableProcessedTableManager get accountId {
+    final $_column = $_itemColumn<int>('account_id')!;
+
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_accountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletInvitationsTableFilterComposer
     extends Composer<_$AppDatabase, $WalletInvitationsTable> {
   $$WalletInvitationsTableFilterComposer({
@@ -20839,21 +29332,6 @@ class $$WalletInvitationsTableFilterComposer
 
   ColumnFilters<String> get token => $composableBuilder(
     column: $table.token,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get invitedByAccountId => $composableBuilder(
-    column: $table.invitedByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get accountId => $composableBuilder(
-    column: $table.accountId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -20887,6 +29365,75 @@ class $$WalletInvitationsTableFilterComposer
     column: $table.respondedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get invitedByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.invitedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get accountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletInvitationsTableOrderingComposer
@@ -20905,21 +29452,6 @@ class $$WalletInvitationsTableOrderingComposer
 
   ColumnOrderings<String> get token => $composableBuilder(
     column: $table.token,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get invitedByAccountId => $composableBuilder(
-    column: $table.invitedByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get accountId => $composableBuilder(
-    column: $table.accountId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -20947,6 +29479,75 @@ class $$WalletInvitationsTableOrderingComposer
     column: $table.respondedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get invitedByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.invitedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get accountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletInvitationsTableAnnotationComposer
@@ -20964,17 +29565,6 @@ class $$WalletInvitationsTableAnnotationComposer
   GeneratedColumn<String> get token =>
       $composableBuilder(column: $table.token, builder: (column) => column);
 
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
-  GeneratedColumn<int> get invitedByAccountId => $composableBuilder(
-    column: $table.invitedByAccountId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get accountId =>
-      $composableBuilder(column: $table.accountId, builder: (column) => column);
-
   GeneratedColumnWithTypeConverter<WalletInvitationStatus, String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
 
@@ -20991,6 +29581,75 @@ class $$WalletInvitationsTableAnnotationComposer
     column: $table.respondedAt,
     builder: (column) => column,
   );
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get invitedByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.invitedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get accountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletInvitationsTableTableManager
@@ -21004,16 +29663,13 @@ class $$WalletInvitationsTableTableManager
           $$WalletInvitationsTableAnnotationComposer,
           $$WalletInvitationsTableCreateCompanionBuilder,
           $$WalletInvitationsTableUpdateCompanionBuilder,
-          (
-            WalletInvitation,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletInvitationsTable,
-              WalletInvitation
-            >,
-          ),
+          (WalletInvitation, $$WalletInvitationsTableReferences),
           WalletInvitation,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletId,
+            bool invitedByAccountId,
+            bool accountId,
+          })
         > {
   $$WalletInvitationsTableTableManager(
     _$AppDatabase db,
@@ -21080,9 +29736,91 @@ class $$WalletInvitationsTableTableManager
                 respondedAt: respondedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletInvitationsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletId = false,
+                invitedByAccountId = false,
+                accountId = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$WalletInvitationsTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$WalletInvitationsTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (invitedByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.invitedByAccountId,
+                                    referencedTable:
+                                        $$WalletInvitationsTableReferences
+                                            ._invitedByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletInvitationsTableReferences
+                                            ._invitedByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (accountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.accountId,
+                                    referencedTable:
+                                        $$WalletInvitationsTableReferences
+                                            ._accountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletInvitationsTableReferences
+                                            ._accountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -21097,249 +29835,13 @@ typedef $$WalletInvitationsTableProcessedTableManager =
       $$WalletInvitationsTableAnnotationComposer,
       $$WalletInvitationsTableCreateCompanionBuilder,
       $$WalletInvitationsTableUpdateCompanionBuilder,
-      (
-        WalletInvitation,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletInvitationsTable,
-          WalletInvitation
-        >,
-      ),
+      (WalletInvitation, $$WalletInvitationsTableReferences),
       WalletInvitation,
-      PrefetchHooks Function()
-    >;
-typedef $$WalletMembersTableCreateCompanionBuilder =
-    WalletMembersCompanion Function({
-      Value<int> id,
-      required int walletId,
-      required int accountId,
-      Value<int?> userId,
-      required WalletRole role,
-      Value<DateTime> joinedAt,
-      Value<bool> isActive,
-    });
-typedef $$WalletMembersTableUpdateCompanionBuilder =
-    WalletMembersCompanion Function({
-      Value<int> id,
-      Value<int> walletId,
-      Value<int> accountId,
-      Value<int?> userId,
-      Value<WalletRole> role,
-      Value<DateTime> joinedAt,
-      Value<bool> isActive,
-    });
-
-class $$WalletMembersTableFilterComposer
-    extends Composer<_$AppDatabase, $WalletMembersTable> {
-  $$WalletMembersTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get accountId => $composableBuilder(
-    column: $table.accountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<WalletRole, WalletRole, String> get role =>
-      $composableBuilder(
-        column: $table.role,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
-
-  ColumnFilters<DateTime> get joinedAt => $composableBuilder(
-    column: $table.joinedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isActive => $composableBuilder(
-    column: $table.isActive,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$WalletMembersTableOrderingComposer
-    extends Composer<_$AppDatabase, $WalletMembersTable> {
-  $$WalletMembersTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get accountId => $composableBuilder(
-    column: $table.accountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get role => $composableBuilder(
-    column: $table.role,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get joinedAt => $composableBuilder(
-    column: $table.joinedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isActive => $composableBuilder(
-    column: $table.isActive,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$WalletMembersTableAnnotationComposer
-    extends Composer<_$AppDatabase, $WalletMembersTable> {
-  $$WalletMembersTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
-  GeneratedColumn<int> get accountId =>
-      $composableBuilder(column: $table.accountId, builder: (column) => column);
-
-  GeneratedColumn<int> get userId =>
-      $composableBuilder(column: $table.userId, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<WalletRole, String> get role =>
-      $composableBuilder(column: $table.role, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get joinedAt =>
-      $composableBuilder(column: $table.joinedAt, builder: (column) => column);
-
-  GeneratedColumn<bool> get isActive =>
-      $composableBuilder(column: $table.isActive, builder: (column) => column);
-}
-
-class $$WalletMembersTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $WalletMembersTable,
-          WalletMember,
-          $$WalletMembersTableFilterComposer,
-          $$WalletMembersTableOrderingComposer,
-          $$WalletMembersTableAnnotationComposer,
-          $$WalletMembersTableCreateCompanionBuilder,
-          $$WalletMembersTableUpdateCompanionBuilder,
-          (
-            WalletMember,
-            BaseReferences<_$AppDatabase, $WalletMembersTable, WalletMember>,
-          ),
-          WalletMember,
-          PrefetchHooks Function()
-        > {
-  $$WalletMembersTableTableManager(_$AppDatabase db, $WalletMembersTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$WalletMembersTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$WalletMembersTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$WalletMembersTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> walletId = const Value.absent(),
-                Value<int> accountId = const Value.absent(),
-                Value<int?> userId = const Value.absent(),
-                Value<WalletRole> role = const Value.absent(),
-                Value<DateTime> joinedAt = const Value.absent(),
-                Value<bool> isActive = const Value.absent(),
-              }) => WalletMembersCompanion(
-                id: id,
-                walletId: walletId,
-                accountId: accountId,
-                userId: userId,
-                role: role,
-                joinedAt: joinedAt,
-                isActive: isActive,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required int walletId,
-                required int accountId,
-                Value<int?> userId = const Value.absent(),
-                required WalletRole role,
-                Value<DateTime> joinedAt = const Value.absent(),
-                Value<bool> isActive = const Value.absent(),
-              }) => WalletMembersCompanion.insert(
-                id: id,
-                walletId: walletId,
-                accountId: accountId,
-                userId: userId,
-                role: role,
-                joinedAt: joinedAt,
-                isActive: isActive,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$WalletMembersTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $WalletMembersTable,
-      WalletMember,
-      $$WalletMembersTableFilterComposer,
-      $$WalletMembersTableOrderingComposer,
-      $$WalletMembersTableAnnotationComposer,
-      $$WalletMembersTableCreateCompanionBuilder,
-      $$WalletMembersTableUpdateCompanionBuilder,
-      (
-        WalletMember,
-        BaseReferences<_$AppDatabase, $WalletMembersTable, WalletMember>,
-      ),
-      WalletMember,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletId,
+        bool invitedByAccountId,
+        bool accountId,
+      })
     >;
 typedef $$WalletGoalsTableCreateCompanionBuilder =
     WalletGoalsCompanion Function({
@@ -21368,6 +29870,123 @@ typedef $$WalletGoalsTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$WalletGoalsTableReferences
+    extends BaseReferences<_$AppDatabase, $WalletGoalsTable, WalletGoal> {
+  $$WalletGoalsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletGoals.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _createdByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(db.walletGoals.createdByAccountId, db.accounts.id),
+      );
+
+  $$AccountsTableProcessedTableManager? get createdByAccountId {
+    final $_column = $_itemColumn<int>('created_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_createdByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _updatedByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(db.walletGoals.updatedByAccountId, db.accounts.id),
+      );
+
+  $$AccountsTableProcessedTableManager? get updatedByAccountId {
+    final $_column = $_itemColumn<int>('updated_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_updatedByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletGoalContributionsTable,
+    List<WalletGoalContribution>
+  >
+  _walletGoalContributionsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletGoalContributions,
+        aliasName: $_aliasNameGenerator(
+          db.walletGoals.id,
+          db.walletGoalContributions.goalId,
+        ),
+      );
+
+  $$WalletGoalContributionsTableProcessedTableManager
+  get walletGoalContributionsRefs {
+    final manager = $$WalletGoalContributionsTableTableManager(
+      $_db,
+      $_db.walletGoalContributions,
+    ).filter((f) => f.goalId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletGoalContributionsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletGoalSchedulesTable,
+    List<WalletGoalSchedule>
+  >
+  _walletGoalSchedulesRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletGoalSchedules,
+        aliasName: $_aliasNameGenerator(
+          db.walletGoals.id,
+          db.walletGoalSchedules.walletGoalId,
+        ),
+      );
+
+  $$WalletGoalSchedulesTableProcessedTableManager get walletGoalSchedulesRefs {
+    final manager = $$WalletGoalSchedulesTableTableManager(
+      $_db,
+      $_db.walletGoalSchedules,
+    ).filter((f) => f.walletGoalId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletGoalSchedulesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$WalletGoalsTableFilterComposer
     extends Composer<_$AppDatabase, $WalletGoalsTable> {
   $$WalletGoalsTableFilterComposer({
@@ -21379,11 +29998,6 @@ class $$WalletGoalsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -21409,16 +30023,6 @@ class $$WalletGoalsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -21428,6 +30032,126 @@ class $$WalletGoalsTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get createdByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get updatedByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> walletGoalContributionsRefs(
+    Expression<bool> Function($$WalletGoalContributionsTableFilterComposer f) f,
+  ) {
+    final $$WalletGoalContributionsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletGoalContributions,
+          getReferencedColumn: (t) => t.goalId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletGoalContributionsTableFilterComposer(
+                $db: $db,
+                $table: $db.walletGoalContributions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> walletGoalSchedulesRefs(
+    Expression<bool> Function($$WalletGoalSchedulesTableFilterComposer f) f,
+  ) {
+    final $$WalletGoalSchedulesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.walletGoalSchedules,
+      getReferencedColumn: (t) => t.walletGoalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalSchedulesTableFilterComposer(
+            $db: $db,
+            $table: $db.walletGoalSchedules,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$WalletGoalsTableOrderingComposer
@@ -21441,11 +30165,6 @@ class $$WalletGoalsTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -21469,16 +30188,6 @@ class $$WalletGoalsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -21488,6 +30197,75 @@ class $$WalletGoalsTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get createdByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get updatedByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletGoalsTableAnnotationComposer
@@ -21501,9 +30279,6 @@ class $$WalletGoalsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -21525,21 +30300,133 @@ class $$WalletGoalsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get createdByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get updatedByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> walletGoalContributionsRefs<T extends Object>(
+    Expression<T> Function($$WalletGoalContributionsTableAnnotationComposer a)
+    f,
+  ) {
+    final $$WalletGoalContributionsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletGoalContributions,
+          getReferencedColumn: (t) => t.goalId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletGoalContributionsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletGoalContributions,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> walletGoalSchedulesRefs<T extends Object>(
+    Expression<T> Function($$WalletGoalSchedulesTableAnnotationComposer a) f,
+  ) {
+    final $$WalletGoalSchedulesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletGoalSchedules,
+          getReferencedColumn: (t) => t.walletGoalId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletGoalSchedulesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletGoalSchedules,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$WalletGoalsTableTableManager
@@ -21553,12 +30440,15 @@ class $$WalletGoalsTableTableManager
           $$WalletGoalsTableAnnotationComposer,
           $$WalletGoalsTableCreateCompanionBuilder,
           $$WalletGoalsTableUpdateCompanionBuilder,
-          (
-            WalletGoal,
-            BaseReferences<_$AppDatabase, $WalletGoalsTable, WalletGoal>,
-          ),
+          (WalletGoal, $$WalletGoalsTableReferences),
           WalletGoal,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletId,
+            bool createdByAccountId,
+            bool updatedByAccountId,
+            bool walletGoalContributionsRefs,
+            bool walletGoalSchedulesRefs,
+          })
         > {
   $$WalletGoalsTableTableManager(_$AppDatabase db, $WalletGoalsTable table)
     : super(
@@ -21620,9 +30510,139 @@ class $$WalletGoalsTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletGoalsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletId = false,
+                createdByAccountId = false,
+                updatedByAccountId = false,
+                walletGoalContributionsRefs = false,
+                walletGoalSchedulesRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (walletGoalContributionsRefs) db.walletGoalContributions,
+                    if (walletGoalSchedulesRefs) db.walletGoalSchedules,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$WalletGoalsTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalsTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (createdByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.createdByAccountId,
+                                    referencedTable:
+                                        $$WalletGoalsTableReferences
+                                            ._createdByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalsTableReferences
+                                            ._createdByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (updatedByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.updatedByAccountId,
+                                    referencedTable:
+                                        $$WalletGoalsTableReferences
+                                            ._updatedByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalsTableReferences
+                                            ._updatedByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (walletGoalContributionsRefs)
+                        await $_getPrefetchedData<
+                          WalletGoal,
+                          $WalletGoalsTable,
+                          WalletGoalContribution
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletGoalsTableReferences
+                              ._walletGoalContributionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletGoalsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletGoalContributionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.goalId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (walletGoalSchedulesRefs)
+                        await $_getPrefetchedData<
+                          WalletGoal,
+                          $WalletGoalsTable,
+                          WalletGoalSchedule
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletGoalsTableReferences
+                              ._walletGoalSchedulesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletGoalsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletGoalSchedulesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.walletGoalId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
@@ -21637,12 +30657,15 @@ typedef $$WalletGoalsTableProcessedTableManager =
       $$WalletGoalsTableAnnotationComposer,
       $$WalletGoalsTableCreateCompanionBuilder,
       $$WalletGoalsTableUpdateCompanionBuilder,
-      (
-        WalletGoal,
-        BaseReferences<_$AppDatabase, $WalletGoalsTable, WalletGoal>,
-      ),
+      (WalletGoal, $$WalletGoalsTableReferences),
       WalletGoal,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletId,
+        bool createdByAccountId,
+        bool updatedByAccountId,
+        bool walletGoalContributionsRefs,
+        bool walletGoalSchedulesRefs,
+      })
     >;
 typedef $$WalletGoalContributionsTableCreateCompanionBuilder =
     WalletGoalContributionsCompanion Function({
@@ -21663,6 +30686,88 @@ typedef $$WalletGoalContributionsTableUpdateCompanionBuilder =
       Value<DateTime> contributedAt,
     });
 
+final class $$WalletGoalContributionsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletGoalContributionsTable,
+          WalletGoalContribution
+        > {
+  $$WalletGoalContributionsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(
+          db.walletGoalContributions.walletId,
+          db.wallets.id,
+        ),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletGoalsTable _goalIdTable(_$AppDatabase db) =>
+      db.walletGoals.createAlias(
+        $_aliasNameGenerator(
+          db.walletGoalContributions.goalId,
+          db.walletGoals.id,
+        ),
+      );
+
+  $$WalletGoalsTableProcessedTableManager get goalId {
+    final $_column = $_itemColumn<int>('goal_id')!;
+
+    final manager = $$WalletGoalsTableTableManager(
+      $_db,
+      $_db.walletGoals,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_goalIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _contributedByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.walletGoalContributions.contributedByAccountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager? get contributedByAccountId {
+    final $_column = $_itemColumn<int>('contributed_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(
+      _contributedByAccountIdTable($_db),
+    );
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletGoalContributionsTableFilterComposer
     extends Composer<_$AppDatabase, $WalletGoalContributionsTable> {
   $$WalletGoalContributionsTableFilterComposer({
@@ -21677,21 +30782,6 @@ class $$WalletGoalContributionsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get goalId => $composableBuilder(
-    column: $table.goalId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get contributedByAccountId => $composableBuilder(
-    column: $table.contributedByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnWithTypeConverterFilters<double, double, int> get amount =>
       $composableBuilder(
         column: $table.amount,
@@ -21702,6 +30792,75 @@ class $$WalletGoalContributionsTableFilterComposer
     column: $table.contributedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletGoalsTableFilterComposer get goalId {
+    final $$WalletGoalsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.goalId,
+      referencedTable: $db.walletGoals,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletGoals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get contributedByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.contributedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletGoalContributionsTableOrderingComposer
@@ -21718,21 +30877,6 @@ class $$WalletGoalContributionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get goalId => $composableBuilder(
-    column: $table.goalId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get contributedByAccountId => $composableBuilder(
-    column: $table.contributedByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<int> get amount => $composableBuilder(
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
@@ -21742,6 +30886,75 @@ class $$WalletGoalContributionsTableOrderingComposer
     column: $table.contributedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletGoalsTableOrderingComposer get goalId {
+    final $$WalletGoalsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.goalId,
+      referencedTable: $db.walletGoals,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalsTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletGoals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get contributedByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.contributedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletGoalContributionsTableAnnotationComposer
@@ -21756,17 +30969,6 @@ class $$WalletGoalContributionsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
-  GeneratedColumn<int> get goalId =>
-      $composableBuilder(column: $table.goalId, builder: (column) => column);
-
-  GeneratedColumn<int> get contributedByAccountId => $composableBuilder(
-    column: $table.contributedByAccountId,
-    builder: (column) => column,
-  );
-
   GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
@@ -21774,6 +30976,75 @@ class $$WalletGoalContributionsTableAnnotationComposer
     column: $table.contributedAt,
     builder: (column) => column,
   );
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletGoalsTableAnnotationComposer get goalId {
+    final $$WalletGoalsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.goalId,
+      referencedTable: $db.walletGoals,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletGoals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get contributedByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.contributedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletGoalContributionsTableTableManager
@@ -21787,16 +31058,13 @@ class $$WalletGoalContributionsTableTableManager
           $$WalletGoalContributionsTableAnnotationComposer,
           $$WalletGoalContributionsTableCreateCompanionBuilder,
           $$WalletGoalContributionsTableUpdateCompanionBuilder,
-          (
-            WalletGoalContribution,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletGoalContributionsTable,
-              WalletGoalContribution
-            >,
-          ),
+          (WalletGoalContribution, $$WalletGoalContributionsTableReferences),
           WalletGoalContribution,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletId,
+            bool goalId,
+            bool contributedByAccountId,
+          })
         > {
   $$WalletGoalContributionsTableTableManager(
     _$AppDatabase db,
@@ -21853,9 +31121,91 @@ class $$WalletGoalContributionsTableTableManager
                 contributedAt: contributedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletGoalContributionsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletId = false,
+                goalId = false,
+                contributedByAccountId = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$WalletGoalContributionsTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalContributionsTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (goalId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.goalId,
+                                    referencedTable:
+                                        $$WalletGoalContributionsTableReferences
+                                            ._goalIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalContributionsTableReferences
+                                            ._goalIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (contributedByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.contributedByAccountId,
+                                    referencedTable:
+                                        $$WalletGoalContributionsTableReferences
+                                            ._contributedByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalContributionsTableReferences
+                                            ._contributedByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -21870,16 +31220,13 @@ typedef $$WalletGoalContributionsTableProcessedTableManager =
       $$WalletGoalContributionsTableAnnotationComposer,
       $$WalletGoalContributionsTableCreateCompanionBuilder,
       $$WalletGoalContributionsTableUpdateCompanionBuilder,
-      (
-        WalletGoalContribution,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletGoalContributionsTable,
-          WalletGoalContribution
-        >,
-      ),
+      (WalletGoalContribution, $$WalletGoalContributionsTableReferences),
       WalletGoalContribution,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletId,
+        bool goalId,
+        bool contributedByAccountId,
+      })
     >;
 typedef $$WalletGoalSchedulesTableCreateCompanionBuilder =
     WalletGoalSchedulesCompanion Function({
@@ -21912,6 +31259,108 @@ typedef $$WalletGoalSchedulesTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$WalletGoalSchedulesTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletGoalSchedulesTable,
+          WalletGoalSchedule
+        > {
+  $$WalletGoalSchedulesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletGoalsTable _walletGoalIdTable(_$AppDatabase db) =>
+      db.walletGoals.createAlias(
+        $_aliasNameGenerator(
+          db.walletGoalSchedules.walletGoalId,
+          db.walletGoals.id,
+        ),
+      );
+
+  $$WalletGoalsTableProcessedTableManager get walletGoalId {
+    final $_column = $_itemColumn<int>('wallet_goal_id')!;
+
+    final manager = $$WalletGoalsTableTableManager(
+      $_db,
+      $_db.walletGoals,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletGoalIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletMembersTable _memberIdTable(_$AppDatabase db) =>
+      db.walletMembers.createAlias(
+        $_aliasNameGenerator(
+          db.walletGoalSchedules.memberId,
+          db.walletMembers.id,
+        ),
+      );
+
+  $$WalletMembersTableProcessedTableManager get memberId {
+    final $_column = $_itemColumn<int>('member_id')!;
+
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_memberIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _createdByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.walletGoalSchedules.createdByAccountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager? get createdByAccountId {
+    final $_column = $_itemColumn<int>('created_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_createdByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _updatedByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.walletGoalSchedules.updatedByAccountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager? get updatedByAccountId {
+    final $_column = $_itemColumn<int>('updated_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_updatedByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletGoalSchedulesTableFilterComposer
     extends Composer<_$AppDatabase, $WalletGoalSchedulesTable> {
   $$WalletGoalSchedulesTableFilterComposer({
@@ -21923,16 +31372,6 @@ class $$WalletGoalSchedulesTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletGoalId => $composableBuilder(
-    column: $table.walletGoalId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -21967,16 +31406,6 @@ class $$WalletGoalSchedulesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -21986,6 +31415,98 @@ class $$WalletGoalSchedulesTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletGoalsTableFilterComposer get walletGoalId {
+    final $$WalletGoalsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletGoalId,
+      referencedTable: $db.walletGoals,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletGoals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableFilterComposer get memberId {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get createdByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get updatedByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletGoalSchedulesTableOrderingComposer
@@ -21999,16 +31520,6 @@ class $$WalletGoalSchedulesTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletGoalId => $composableBuilder(
-    column: $table.walletGoalId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -22037,16 +31548,6 @@ class $$WalletGoalSchedulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -22056,6 +31557,98 @@ class $$WalletGoalSchedulesTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletGoalsTableOrderingComposer get walletGoalId {
+    final $$WalletGoalsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletGoalId,
+      referencedTable: $db.walletGoals,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalsTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletGoals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableOrderingComposer get memberId {
+    final $$WalletMembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get createdByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get updatedByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletGoalSchedulesTableAnnotationComposer
@@ -22069,14 +31662,6 @@ class $$WalletGoalSchedulesTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletGoalId => $composableBuilder(
-    column: $table.walletGoalId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get memberId =>
-      $composableBuilder(column: $table.memberId, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<double, int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
@@ -22096,21 +31681,103 @@ class $$WalletGoalSchedulesTableAnnotationComposer
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
 
-  GeneratedColumn<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get updatedByAccountId => $composableBuilder(
-    column: $table.updatedByAccountId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletGoalsTableAnnotationComposer get walletGoalId {
+    final $$WalletGoalsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletGoalId,
+      referencedTable: $db.walletGoals,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletGoalsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletGoals,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableAnnotationComposer get memberId {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get createdByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get updatedByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.updatedByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletGoalSchedulesTableTableManager
@@ -22124,16 +31791,14 @@ class $$WalletGoalSchedulesTableTableManager
           $$WalletGoalSchedulesTableAnnotationComposer,
           $$WalletGoalSchedulesTableCreateCompanionBuilder,
           $$WalletGoalSchedulesTableUpdateCompanionBuilder,
-          (
-            WalletGoalSchedule,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletGoalSchedulesTable,
-              WalletGoalSchedule
-            >,
-          ),
+          (WalletGoalSchedule, $$WalletGoalSchedulesTableReferences),
           WalletGoalSchedule,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletGoalId,
+            bool memberId,
+            bool createdByAccountId,
+            bool updatedByAccountId,
+          })
         > {
   $$WalletGoalSchedulesTableTableManager(
     _$AppDatabase db,
@@ -22212,9 +31877,107 @@ class $$WalletGoalSchedulesTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletGoalSchedulesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletGoalId = false,
+                memberId = false,
+                createdByAccountId = false,
+                updatedByAccountId = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletGoalId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletGoalId,
+                                    referencedTable:
+                                        $$WalletGoalSchedulesTableReferences
+                                            ._walletGoalIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalSchedulesTableReferences
+                                            ._walletGoalIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (memberId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.memberId,
+                                    referencedTable:
+                                        $$WalletGoalSchedulesTableReferences
+                                            ._memberIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalSchedulesTableReferences
+                                            ._memberIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (createdByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.createdByAccountId,
+                                    referencedTable:
+                                        $$WalletGoalSchedulesTableReferences
+                                            ._createdByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalSchedulesTableReferences
+                                            ._createdByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (updatedByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.updatedByAccountId,
+                                    referencedTable:
+                                        $$WalletGoalSchedulesTableReferences
+                                            ._updatedByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletGoalSchedulesTableReferences
+                                            ._updatedByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -22229,16 +31992,14 @@ typedef $$WalletGoalSchedulesTableProcessedTableManager =
       $$WalletGoalSchedulesTableAnnotationComposer,
       $$WalletGoalSchedulesTableCreateCompanionBuilder,
       $$WalletGoalSchedulesTableUpdateCompanionBuilder,
-      (
-        WalletGoalSchedule,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletGoalSchedulesTable,
-          WalletGoalSchedule
-        >,
-      ),
+      (WalletGoalSchedule, $$WalletGoalSchedulesTableReferences),
       WalletGoalSchedule,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletGoalId,
+        bool memberId,
+        bool createdByAccountId,
+        bool updatedByAccountId,
+      })
     >;
 typedef $$FeedbackEntriesTableCreateCompanionBuilder =
     FeedbackEntriesCompanion Function({
@@ -22265,6 +32026,35 @@ typedef $$FeedbackEntriesTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$FeedbackEntriesTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $FeedbackEntriesTable, FeedbackEntry> {
+  $$FeedbackEntriesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.feedbackEntries.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$FeedbackEntriesTableFilterComposer
     extends Composer<_$AppDatabase, $FeedbackEntriesTable> {
   $$FeedbackEntriesTableFilterComposer({
@@ -22276,11 +32066,6 @@ class $$FeedbackEntriesTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22325,6 +32110,29 @@ class $$FeedbackEntriesTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$FeedbackEntriesTableOrderingComposer
@@ -22338,11 +32146,6 @@ class $$FeedbackEntriesTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -22380,6 +32183,29 @@ class $$FeedbackEntriesTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$FeedbackEntriesTableAnnotationComposer
@@ -22393,9 +32219,6 @@ class $$FeedbackEntriesTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<FeedbackCategory, String> get category =>
       $composableBuilder(column: $table.category, builder: (column) => column);
@@ -22422,6 +32245,29 @@ class $$FeedbackEntriesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$FeedbackEntriesTableTableManager
@@ -22435,12 +32281,9 @@ class $$FeedbackEntriesTableTableManager
           $$FeedbackEntriesTableAnnotationComposer,
           $$FeedbackEntriesTableCreateCompanionBuilder,
           $$FeedbackEntriesTableUpdateCompanionBuilder,
-          (
-            FeedbackEntry,
-            BaseReferences<_$AppDatabase, $FeedbackEntriesTable, FeedbackEntry>,
-          ),
+          (FeedbackEntry, $$FeedbackEntriesTableReferences),
           FeedbackEntry,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId})
         > {
   $$FeedbackEntriesTableTableManager(
     _$AppDatabase db,
@@ -22501,9 +32344,56 @@ class $$FeedbackEntriesTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$FeedbackEntriesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable:
+                                    $$FeedbackEntriesTableReferences
+                                        ._walletIdTable(db),
+                                referencedColumn:
+                                    $$FeedbackEntriesTableReferences
+                                        ._walletIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -22518,12 +32408,9 @@ typedef $$FeedbackEntriesTableProcessedTableManager =
       $$FeedbackEntriesTableAnnotationComposer,
       $$FeedbackEntriesTableCreateCompanionBuilder,
       $$FeedbackEntriesTableUpdateCompanionBuilder,
-      (
-        FeedbackEntry,
-        BaseReferences<_$AppDatabase, $FeedbackEntriesTable, FeedbackEntry>,
-      ),
+      (FeedbackEntry, $$FeedbackEntriesTableReferences),
       FeedbackEntry,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId})
     >;
 typedef $$WalletNotificationPreferencesTableCreateCompanionBuilder =
     WalletNotificationPreferencesCompanion Function({
@@ -22546,6 +32433,42 @@ typedef $$WalletNotificationPreferencesTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$WalletNotificationPreferencesTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletNotificationPreferencesTable,
+          WalletNotificationPreference
+        > {
+  $$WalletNotificationPreferencesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(
+          db.walletNotificationPreferences.walletId,
+          db.wallets.id,
+        ),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletNotificationPreferencesTableFilterComposer
     extends Composer<_$AppDatabase, $WalletNotificationPreferencesTable> {
   $$WalletNotificationPreferencesTableFilterComposer({
@@ -22557,11 +32480,6 @@ class $$WalletNotificationPreferencesTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -22589,6 +32507,29 @@ class $$WalletNotificationPreferencesTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletNotificationPreferencesTableOrderingComposer
@@ -22602,11 +32543,6 @@ class $$WalletNotificationPreferencesTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -22634,6 +32570,29 @@ class $$WalletNotificationPreferencesTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletNotificationPreferencesTableAnnotationComposer
@@ -22647,9 +32606,6 @@ class $$WalletNotificationPreferencesTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumn<bool> get billReminders => $composableBuilder(
     column: $table.billReminders,
@@ -22673,6 +32629,29 @@ class $$WalletNotificationPreferencesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletNotificationPreferencesTableTableManager
@@ -22688,14 +32667,10 @@ class $$WalletNotificationPreferencesTableTableManager
           $$WalletNotificationPreferencesTableUpdateCompanionBuilder,
           (
             WalletNotificationPreference,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletNotificationPreferencesTable,
-              WalletNotificationPreference
-            >,
+            $$WalletNotificationPreferencesTableReferences,
           ),
           WalletNotificationPreference,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId})
         > {
   $$WalletNotificationPreferencesTableTableManager(
     _$AppDatabase db,
@@ -22756,9 +32731,56 @@ class $$WalletNotificationPreferencesTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletNotificationPreferencesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable:
+                                    $$WalletNotificationPreferencesTableReferences
+                                        ._walletIdTable(db),
+                                referencedColumn:
+                                    $$WalletNotificationPreferencesTableReferences
+                                        ._walletIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -22775,14 +32797,10 @@ typedef $$WalletNotificationPreferencesTableProcessedTableManager =
       $$WalletNotificationPreferencesTableUpdateCompanionBuilder,
       (
         WalletNotificationPreference,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletNotificationPreferencesTable,
-          WalletNotificationPreference
-        >,
+        $$WalletNotificationPreferencesTableReferences,
       ),
       WalletNotificationPreference,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId})
     >;
 typedef $$DeletedRecordsTableCreateCompanionBuilder =
     DeletedRecordsCompanion Function({
@@ -23258,6 +33276,30 @@ typedef $$AttachmentsTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
+final class $$AttachmentsTableReferences
+    extends BaseReferences<_$AppDatabase, $AttachmentsTable, Attachment> {
+  $$AttachmentsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TransactionsTable _transactionIdTable(_$AppDatabase db) =>
+      db.transactions.createAlias(
+        $_aliasNameGenerator(db.attachments.transactionId, db.transactions.id),
+      );
+
+  $$TransactionsTableProcessedTableManager get transactionId {
+    final $_column = $_itemColumn<int>('transaction_id')!;
+
+    final manager = $$TransactionsTableTableManager(
+      $_db,
+      $_db.transactions,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_transactionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$AttachmentsTableFilterComposer
     extends Composer<_$AppDatabase, $AttachmentsTable> {
   $$AttachmentsTableFilterComposer({
@@ -23269,11 +33311,6 @@ class $$AttachmentsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get transactionId => $composableBuilder(
-    column: $table.transactionId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23291,6 +33328,29 @@ class $$AttachmentsTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$TransactionsTableFilterComposer get transactionId {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transactionId,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableFilterComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$AttachmentsTableOrderingComposer
@@ -23304,11 +33364,6 @@ class $$AttachmentsTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get transactionId => $composableBuilder(
-    column: $table.transactionId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -23326,6 +33381,29 @@ class $$AttachmentsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$TransactionsTableOrderingComposer get transactionId {
+    final $$TransactionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transactionId,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$AttachmentsTableAnnotationComposer
@@ -23340,11 +33418,6 @@ class $$AttachmentsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get transactionId => $composableBuilder(
-    column: $table.transactionId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get filePath =>
       $composableBuilder(column: $table.filePath, builder: (column) => column);
 
@@ -23353,6 +33426,29 @@ class $$AttachmentsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$TransactionsTableAnnotationComposer get transactionId {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transactionId,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$AttachmentsTableTableManager
@@ -23366,12 +33462,9 @@ class $$AttachmentsTableTableManager
           $$AttachmentsTableAnnotationComposer,
           $$AttachmentsTableCreateCompanionBuilder,
           $$AttachmentsTableUpdateCompanionBuilder,
-          (
-            Attachment,
-            BaseReferences<_$AppDatabase, $AttachmentsTable, Attachment>,
-          ),
+          (Attachment, $$AttachmentsTableReferences),
           Attachment,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool transactionId})
         > {
   $$AttachmentsTableTableManager(_$AppDatabase db, $AttachmentsTable table)
     : super(
@@ -23413,9 +33506,54 @@ class $$AttachmentsTableTableManager
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AttachmentsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({transactionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (transactionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.transactionId,
+                                referencedTable: $$AttachmentsTableReferences
+                                    ._transactionIdTable(db),
+                                referencedColumn: $$AttachmentsTableReferences
+                                    ._transactionIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -23430,12 +33568,9 @@ typedef $$AttachmentsTableProcessedTableManager =
       $$AttachmentsTableAnnotationComposer,
       $$AttachmentsTableCreateCompanionBuilder,
       $$AttachmentsTableUpdateCompanionBuilder,
-      (
-        Attachment,
-        BaseReferences<_$AppDatabase, $AttachmentsTable, Attachment>,
-      ),
+      (Attachment, $$AttachmentsTableReferences),
       Attachment,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool transactionId})
     >;
 typedef $$WalletExpenseSplitsTableCreateCompanionBuilder =
     WalletExpenseSplitsCompanion Function({
@@ -23460,6 +33595,133 @@ typedef $$WalletExpenseSplitsTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
+final class $$WalletExpenseSplitsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletExpenseSplitsTable,
+          WalletExpenseSplit
+        > {
+  $$WalletExpenseSplitsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletExpenseSplits.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $TransactionsTable _transactionIdTable(_$AppDatabase db) =>
+      db.transactions.createAlias(
+        $_aliasNameGenerator(
+          db.walletExpenseSplits.transactionId,
+          db.transactions.id,
+        ),
+      );
+
+  $$TransactionsTableProcessedTableManager get transactionId {
+    final $_column = $_itemColumn<int>('transaction_id')!;
+
+    final manager = $$TransactionsTableTableManager(
+      $_db,
+      $_db.transactions,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_transactionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletMembersTable _paidByMemberIdTable(_$AppDatabase db) =>
+      db.walletMembers.createAlias(
+        $_aliasNameGenerator(
+          db.walletExpenseSplits.paidByMemberId,
+          db.walletMembers.id,
+        ),
+      );
+
+  $$WalletMembersTableProcessedTableManager get paidByMemberId {
+    final $_column = $_itemColumn<int>('paid_by_member_id')!;
+
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_paidByMemberIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _createdByAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.walletExpenseSplits.createdByAccountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager? get createdByAccountId {
+    final $_column = $_itemColumn<int>('created_by_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_createdByAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $WalletExpenseSplitMembersTable,
+    List<WalletExpenseSplitMember>
+  >
+  _walletExpenseSplitMembersRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.walletExpenseSplitMembers,
+        aliasName: $_aliasNameGenerator(
+          db.walletExpenseSplits.id,
+          db.walletExpenseSplitMembers.splitId,
+        ),
+      );
+
+  $$WalletExpenseSplitMembersTableProcessedTableManager
+  get walletExpenseSplitMembersRefs {
+    final manager = $$WalletExpenseSplitMembersTableTableManager(
+      $_db,
+      $_db.walletExpenseSplitMembers,
+    ).filter((f) => f.splitId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _walletExpenseSplitMembersRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$WalletExpenseSplitsTableFilterComposer
     extends Composer<_$AppDatabase, $WalletExpenseSplitsTable> {
   $$WalletExpenseSplitsTableFilterComposer({
@@ -23474,23 +33736,8 @@ class $$WalletExpenseSplitsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get uuid => $composableBuilder(
     column: $table.uuid,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get transactionId => $composableBuilder(
-    column: $table.transactionId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get paidByMemberId => $composableBuilder(
-    column: $table.paidByMemberId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23504,15 +33751,129 @@ class $$WalletExpenseSplitsTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TransactionsTableFilterComposer get transactionId {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transactionId,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableFilterComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableFilterComposer get paidByMemberId {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paidByMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get createdByAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> walletExpenseSplitMembersRefs(
+    Expression<bool> Function($$WalletExpenseSplitMembersTableFilterComposer f)
+    f,
+  ) {
+    final $$WalletExpenseSplitMembersTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletExpenseSplitMembers,
+          getReferencedColumn: (t) => t.splitId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitMembersTableFilterComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplitMembers,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$WalletExpenseSplitsTableOrderingComposer
@@ -23529,23 +33890,8 @@ class $$WalletExpenseSplitsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get uuid => $composableBuilder(
     column: $table.uuid,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get transactionId => $composableBuilder(
-    column: $table.transactionId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get paidByMemberId => $composableBuilder(
-    column: $table.paidByMemberId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -23554,15 +33900,102 @@ class $$WalletExpenseSplitsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TransactionsTableOrderingComposer get transactionId {
+    final $$TransactionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transactionId,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableOrderingComposer get paidByMemberId {
+    final $$WalletMembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paidByMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get createdByAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletExpenseSplitsTableAnnotationComposer
@@ -23577,21 +34010,8 @@ class $$WalletExpenseSplitsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
-
-  GeneratedColumn<int> get transactionId => $composableBuilder(
-    column: $table.transactionId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get paidByMemberId => $composableBuilder(
-    column: $table.paidByMemberId,
-    builder: (column) => column,
-  );
 
   GeneratedColumnWithTypeConverter<WalletExpenseSplitMethod, String>
   get splitMethod => $composableBuilder(
@@ -23599,13 +34019,127 @@ class $$WalletExpenseSplitsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get createdByAccountId => $composableBuilder(
-    column: $table.createdByAccountId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TransactionsTableAnnotationComposer get transactionId {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transactionId,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableAnnotationComposer get paidByMemberId {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.paidByMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get createdByAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.createdByAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> walletExpenseSplitMembersRefs<T extends Object>(
+    Expression<T> Function($$WalletExpenseSplitMembersTableAnnotationComposer a)
+    f,
+  ) {
+    final $$WalletExpenseSplitMembersTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.walletExpenseSplitMembers,
+          getReferencedColumn: (t) => t.splitId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitMembersTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplitMembers,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$WalletExpenseSplitsTableTableManager
@@ -23619,16 +34153,15 @@ class $$WalletExpenseSplitsTableTableManager
           $$WalletExpenseSplitsTableAnnotationComposer,
           $$WalletExpenseSplitsTableCreateCompanionBuilder,
           $$WalletExpenseSplitsTableUpdateCompanionBuilder,
-          (
-            WalletExpenseSplit,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletExpenseSplitsTable,
-              WalletExpenseSplit
-            >,
-          ),
+          (WalletExpenseSplit, $$WalletExpenseSplitsTableReferences),
           WalletExpenseSplit,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletId,
+            bool transactionId,
+            bool paidByMemberId,
+            bool createdByAccountId,
+            bool walletExpenseSplitMembersRefs,
+          })
         > {
   $$WalletExpenseSplitsTableTableManager(
     _$AppDatabase db,
@@ -23691,9 +34224,133 @@ class $$WalletExpenseSplitsTableTableManager
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletExpenseSplitsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletId = false,
+                transactionId = false,
+                paidByMemberId = false,
+                createdByAccountId = false,
+                walletExpenseSplitMembersRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (walletExpenseSplitMembersRefs)
+                      db.walletExpenseSplitMembers,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$WalletExpenseSplitsTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$WalletExpenseSplitsTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (transactionId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.transactionId,
+                                    referencedTable:
+                                        $$WalletExpenseSplitsTableReferences
+                                            ._transactionIdTable(db),
+                                    referencedColumn:
+                                        $$WalletExpenseSplitsTableReferences
+                                            ._transactionIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (paidByMemberId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.paidByMemberId,
+                                    referencedTable:
+                                        $$WalletExpenseSplitsTableReferences
+                                            ._paidByMemberIdTable(db),
+                                    referencedColumn:
+                                        $$WalletExpenseSplitsTableReferences
+                                            ._paidByMemberIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (createdByAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.createdByAccountId,
+                                    referencedTable:
+                                        $$WalletExpenseSplitsTableReferences
+                                            ._createdByAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletExpenseSplitsTableReferences
+                                            ._createdByAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (walletExpenseSplitMembersRefs)
+                        await $_getPrefetchedData<
+                          WalletExpenseSplit,
+                          $WalletExpenseSplitsTable,
+                          WalletExpenseSplitMember
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WalletExpenseSplitsTableReferences
+                              ._walletExpenseSplitMembersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WalletExpenseSplitsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).walletExpenseSplitMembersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.splitId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
@@ -23708,16 +34365,15 @@ typedef $$WalletExpenseSplitsTableProcessedTableManager =
       $$WalletExpenseSplitsTableAnnotationComposer,
       $$WalletExpenseSplitsTableCreateCompanionBuilder,
       $$WalletExpenseSplitsTableUpdateCompanionBuilder,
-      (
-        WalletExpenseSplit,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletExpenseSplitsTable,
-          WalletExpenseSplit
-        >,
-      ),
+      (WalletExpenseSplit, $$WalletExpenseSplitsTableReferences),
       WalletExpenseSplit,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletId,
+        bool transactionId,
+        bool paidByMemberId,
+        bool createdByAccountId,
+        bool walletExpenseSplitMembersRefs,
+      })
     >;
 typedef $$WalletExpenseSplitMembersTableCreateCompanionBuilder =
     WalletExpenseSplitMembersCompanion Function({
@@ -23738,6 +34394,64 @@ typedef $$WalletExpenseSplitMembersTableUpdateCompanionBuilder =
       Value<double> settledAmount,
     });
 
+final class $$WalletExpenseSplitMembersTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $WalletExpenseSplitMembersTable,
+          WalletExpenseSplitMember
+        > {
+  $$WalletExpenseSplitMembersTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletExpenseSplitsTable _splitIdTable(_$AppDatabase db) =>
+      db.walletExpenseSplits.createAlias(
+        $_aliasNameGenerator(
+          db.walletExpenseSplitMembers.splitId,
+          db.walletExpenseSplits.id,
+        ),
+      );
+
+  $$WalletExpenseSplitsTableProcessedTableManager get splitId {
+    final $_column = $_itemColumn<int>('split_id')!;
+
+    final manager = $$WalletExpenseSplitsTableTableManager(
+      $_db,
+      $_db.walletExpenseSplits,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_splitIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletMembersTable _memberIdTable(_$AppDatabase db) =>
+      db.walletMembers.createAlias(
+        $_aliasNameGenerator(
+          db.walletExpenseSplitMembers.memberId,
+          db.walletMembers.id,
+        ),
+      );
+
+  $$WalletMembersTableProcessedTableManager get memberId {
+    final $_column = $_itemColumn<int>('member_id')!;
+
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_memberIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletExpenseSplitMembersTableFilterComposer
     extends Composer<_$AppDatabase, $WalletExpenseSplitMembersTable> {
   $$WalletExpenseSplitMembersTableFilterComposer({
@@ -23749,16 +34463,6 @@ class $$WalletExpenseSplitMembersTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get splitId => $composableBuilder(
-    column: $table.splitId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23778,6 +34482,52 @@ class $$WalletExpenseSplitMembersTableFilterComposer
         column: $table.settledAmount,
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
+
+  $$WalletExpenseSplitsTableFilterComposer get splitId {
+    final $$WalletExpenseSplitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.splitId,
+      referencedTable: $db.walletExpenseSplits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletExpenseSplitsTableFilterComposer(
+            $db: $db,
+            $table: $db.walletExpenseSplits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableFilterComposer get memberId {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletExpenseSplitMembersTableOrderingComposer
@@ -23791,16 +34541,6 @@ class $$WalletExpenseSplitMembersTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get splitId => $composableBuilder(
-    column: $table.splitId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get memberId => $composableBuilder(
-    column: $table.memberId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -23818,6 +34558,53 @@ class $$WalletExpenseSplitMembersTableOrderingComposer
     column: $table.settledAmount,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletExpenseSplitsTableOrderingComposer get splitId {
+    final $$WalletExpenseSplitsTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.splitId,
+          referencedTable: $db.walletExpenseSplits,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitsTableOrderingComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$WalletMembersTableOrderingComposer get memberId {
+    final $$WalletMembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletExpenseSplitMembersTableAnnotationComposer
@@ -23831,12 +34618,6 @@ class $$WalletExpenseSplitMembersTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get splitId =>
-      $composableBuilder(column: $table.splitId, builder: (column) => column);
-
-  GeneratedColumn<int> get memberId =>
-      $composableBuilder(column: $table.memberId, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<double, int> get amountOwed =>
       $composableBuilder(
@@ -23854,6 +34635,53 @@ class $$WalletExpenseSplitMembersTableAnnotationComposer
         column: $table.settledAmount,
         builder: (column) => column,
       );
+
+  $$WalletExpenseSplitsTableAnnotationComposer get splitId {
+    final $$WalletExpenseSplitsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.splitId,
+          referencedTable: $db.walletExpenseSplits,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$WalletExpenseSplitsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.walletExpenseSplits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  $$WalletMembersTableAnnotationComposer get memberId {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.memberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletExpenseSplitMembersTableTableManager
@@ -23869,14 +34697,10 @@ class $$WalletExpenseSplitMembersTableTableManager
           $$WalletExpenseSplitMembersTableUpdateCompanionBuilder,
           (
             WalletExpenseSplitMember,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletExpenseSplitMembersTable,
-              WalletExpenseSplitMember
-            >,
+            $$WalletExpenseSplitMembersTableReferences,
           ),
           WalletExpenseSplitMember,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool splitId, bool memberId})
         > {
   $$WalletExpenseSplitMembersTableTableManager(
     _$AppDatabase db,
@@ -23933,9 +34757,71 @@ class $$WalletExpenseSplitMembersTableTableManager
                 settledAmount: settledAmount,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletExpenseSplitMembersTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({splitId = false, memberId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (splitId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.splitId,
+                                referencedTable:
+                                    $$WalletExpenseSplitMembersTableReferences
+                                        ._splitIdTable(db),
+                                referencedColumn:
+                                    $$WalletExpenseSplitMembersTableReferences
+                                        ._splitIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (memberId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.memberId,
+                                referencedTable:
+                                    $$WalletExpenseSplitMembersTableReferences
+                                        ._memberIdTable(db),
+                                referencedColumn:
+                                    $$WalletExpenseSplitMembersTableReferences
+                                        ._memberIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -23950,16 +34836,9 @@ typedef $$WalletExpenseSplitMembersTableProcessedTableManager =
       $$WalletExpenseSplitMembersTableAnnotationComposer,
       $$WalletExpenseSplitMembersTableCreateCompanionBuilder,
       $$WalletExpenseSplitMembersTableUpdateCompanionBuilder,
-      (
-        WalletExpenseSplitMember,
-        BaseReferences<
-          _$AppDatabase,
-          $WalletExpenseSplitMembersTable,
-          WalletExpenseSplitMember
-        >,
-      ),
+      (WalletExpenseSplitMember, $$WalletExpenseSplitMembersTableReferences),
       WalletExpenseSplitMember,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool splitId, bool memberId})
     >;
 typedef $$MerchantMappingsTableCreateCompanionBuilder =
     MerchantMappingsCompanion Function({
@@ -23980,6 +34859,57 @@ typedef $$MerchantMappingsTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
+final class $$MerchantMappingsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $MerchantMappingsTable, MerchantMapping> {
+  $$MerchantMappingsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.merchantMappings.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CategoriesTable _defaultCategoryIdTable(_$AppDatabase db) =>
+      db.categories.createAlias(
+        $_aliasNameGenerator(
+          db.merchantMappings.defaultCategoryId,
+          db.categories.id,
+        ),
+      );
+
+  $$CategoriesTableProcessedTableManager? get defaultCategoryId {
+    final $_column = $_itemColumn<int>('default_category_id');
+    if ($_column == null) return null;
+    final manager = $$CategoriesTableTableManager(
+      $_db,
+      $_db.categories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_defaultCategoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$MerchantMappingsTableFilterComposer
     extends Composer<_$AppDatabase, $MerchantMappingsTable> {
   $$MerchantMappingsTableFilterComposer({
@@ -23994,11 +34924,6 @@ class $$MerchantMappingsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get originalPattern => $composableBuilder(
     column: $table.originalPattern,
     builder: (column) => ColumnFilters(column),
@@ -24009,15 +34934,56 @@ class $$MerchantMappingsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get defaultCategoryId => $composableBuilder(
-    column: $table.defaultCategoryId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableFilterComposer get defaultCategoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.defaultCategoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$MerchantMappingsTableOrderingComposer
@@ -24034,11 +35000,6 @@ class $$MerchantMappingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get originalPattern => $composableBuilder(
     column: $table.originalPattern,
     builder: (column) => ColumnOrderings(column),
@@ -24049,15 +35010,56 @@ class $$MerchantMappingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get defaultCategoryId => $composableBuilder(
-    column: $table.defaultCategoryId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableOrderingComposer get defaultCategoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.defaultCategoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$MerchantMappingsTableAnnotationComposer
@@ -24072,9 +35074,6 @@ class $$MerchantMappingsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
   GeneratedColumn<String> get originalPattern => $composableBuilder(
     column: $table.originalPattern,
     builder: (column) => column,
@@ -24083,13 +35082,54 @@ class $$MerchantMappingsTableAnnotationComposer
   GeneratedColumn<String> get cleanName =>
       $composableBuilder(column: $table.cleanName, builder: (column) => column);
 
-  GeneratedColumn<int> get defaultCategoryId => $composableBuilder(
-    column: $table.defaultCategoryId,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableAnnotationComposer get defaultCategoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.defaultCategoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$MerchantMappingsTableTableManager
@@ -24103,16 +35143,9 @@ class $$MerchantMappingsTableTableManager
           $$MerchantMappingsTableAnnotationComposer,
           $$MerchantMappingsTableCreateCompanionBuilder,
           $$MerchantMappingsTableUpdateCompanionBuilder,
-          (
-            MerchantMapping,
-            BaseReferences<
-              _$AppDatabase,
-              $MerchantMappingsTable,
-              MerchantMapping
-            >,
-          ),
+          (MerchantMapping, $$MerchantMappingsTableReferences),
           MerchantMapping,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId, bool defaultCategoryId})
         > {
   $$MerchantMappingsTableTableManager(
     _$AppDatabase db,
@@ -24160,9 +35193,72 @@ class $$MerchantMappingsTableTableManager
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$MerchantMappingsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({walletId = false, defaultCategoryId = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$MerchantMappingsTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$MerchantMappingsTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (defaultCategoryId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.defaultCategoryId,
+                                    referencedTable:
+                                        $$MerchantMappingsTableReferences
+                                            ._defaultCategoryIdTable(db),
+                                    referencedColumn:
+                                        $$MerchantMappingsTableReferences
+                                            ._defaultCategoryIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -24177,12 +35273,9 @@ typedef $$MerchantMappingsTableProcessedTableManager =
       $$MerchantMappingsTableAnnotationComposer,
       $$MerchantMappingsTableCreateCompanionBuilder,
       $$MerchantMappingsTableUpdateCompanionBuilder,
-      (
-        MerchantMapping,
-        BaseReferences<_$AppDatabase, $MerchantMappingsTable, MerchantMapping>,
-      ),
+      (MerchantMapping, $$MerchantMappingsTableReferences),
       MerchantMapping,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId, bool defaultCategoryId})
     >;
 typedef $$PayeesTableCreateCompanionBuilder =
     PayeesCompanion Function({
@@ -24196,6 +35289,28 @@ typedef $$PayeesTableUpdateCompanionBuilder =
       Value<int> walletId,
       Value<String> name,
     });
+
+final class $$PayeesTableReferences
+    extends BaseReferences<_$AppDatabase, $PayeesTable, Payee> {
+  $$PayeesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) => db.wallets
+      .createAlias($_aliasNameGenerator(db.payees.walletId, db.wallets.id));
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$PayeesTableFilterComposer
     extends Composer<_$AppDatabase, $PayeesTable> {
@@ -24211,15 +35326,33 @@ class $$PayeesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$PayeesTableOrderingComposer
@@ -24236,15 +35369,33 @@ class $$PayeesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$PayeesTableAnnotationComposer
@@ -24259,11 +35410,31 @@ class $$PayeesTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$PayeesTableTableManager
@@ -24277,9 +35448,9 @@ class $$PayeesTableTableManager
           $$PayeesTableAnnotationComposer,
           $$PayeesTableCreateCompanionBuilder,
           $$PayeesTableUpdateCompanionBuilder,
-          (Payee, BaseReferences<_$AppDatabase, $PayeesTable, Payee>),
+          (Payee, $$PayeesTableReferences),
           Payee,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId})
         > {
   $$PayeesTableTableManager(_$AppDatabase db, $PayeesTable table)
     : super(
@@ -24309,9 +35480,52 @@ class $$PayeesTableTableManager
                 name: name,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) =>
+                    (e.readTable(table), $$PayeesTableReferences(db, table, e)),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable: $$PayeesTableReferences
+                                    ._walletIdTable(db),
+                                referencedColumn: $$PayeesTableReferences
+                                    ._walletIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -24326,9 +35540,9 @@ typedef $$PayeesTableProcessedTableManager =
       $$PayeesTableAnnotationComposer,
       $$PayeesTableCreateCompanionBuilder,
       $$PayeesTableUpdateCompanionBuilder,
-      (Payee, BaseReferences<_$AppDatabase, $PayeesTable, Payee>),
+      (Payee, $$PayeesTableReferences),
       Payee,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId})
     >;
 typedef $$RecurringTransactionsTableCreateCompanionBuilder =
     RecurringTransactionsCompanion Function({
@@ -24365,6 +35579,83 @@ typedef $$RecurringTransactionsTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$RecurringTransactionsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $RecurringTransactionsTable,
+          RecurringTransactionDb
+        > {
+  $$RecurringTransactionsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.recurringTransactions.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
+      db.categories.createAlias(
+        $_aliasNameGenerator(
+          db.recurringTransactions.categoryId,
+          db.categories.id,
+        ),
+      );
+
+  $$CategoriesTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<int>('category_id')!;
+
+    final manager = $$CategoriesTableTableManager(
+      $_db,
+      $_db.categories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _accountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.recurringTransactions.accountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager get accountId {
+    final $_column = $_itemColumn<int>('account_id')!;
+
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_accountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$RecurringTransactionsTableFilterComposer
     extends Composer<_$AppDatabase, $RecurringTransactionsTable> {
   $$RecurringTransactionsTableFilterComposer({
@@ -24376,11 +35667,6 @@ class $$RecurringTransactionsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24404,16 +35690,6 @@ class $$RecurringTransactionsTableFilterComposer
   get type => $composableBuilder(
     column: $table.type,
     builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnFilters<int> get categoryId => $composableBuilder(
-    column: $table.categoryId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get accountId => $composableBuilder(
-    column: $table.accountId,
-    builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get interval => $composableBuilder(
@@ -24445,6 +35721,75 @@ class $$RecurringTransactionsTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableFilterComposer get categoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get accountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$RecurringTransactionsTableOrderingComposer
@@ -24458,11 +35803,6 @@ class $$RecurringTransactionsTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -24483,16 +35823,6 @@ class $$RecurringTransactionsTableOrderingComposer
 
   ColumnOrderings<String> get type => $composableBuilder(
     column: $table.type,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get categoryId => $composableBuilder(
-    column: $table.categoryId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get accountId => $composableBuilder(
-    column: $table.accountId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -24525,6 +35855,75 @@ class $$RecurringTransactionsTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableOrderingComposer get categoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get accountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$RecurringTransactionsTableAnnotationComposer
@@ -24539,9 +35938,6 @@ class $$RecurringTransactionsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
 
@@ -24553,14 +35949,6 @@ class $$RecurringTransactionsTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<TransactionType, String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
-
-  GeneratedColumn<int> get categoryId => $composableBuilder(
-    column: $table.categoryId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get accountId =>
-      $composableBuilder(column: $table.accountId, builder: (column) => column);
 
   GeneratedColumn<String> get interval =>
       $composableBuilder(column: $table.interval, builder: (column) => column);
@@ -24583,6 +35971,75 @@ class $$RecurringTransactionsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$CategoriesTableAnnotationComposer get categoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get accountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.accountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$RecurringTransactionsTableTableManager
@@ -24596,16 +36053,13 @@ class $$RecurringTransactionsTableTableManager
           $$RecurringTransactionsTableAnnotationComposer,
           $$RecurringTransactionsTableCreateCompanionBuilder,
           $$RecurringTransactionsTableUpdateCompanionBuilder,
-          (
-            RecurringTransactionDb,
-            BaseReferences<
-              _$AppDatabase,
-              $RecurringTransactionsTable,
-              RecurringTransactionDb
-            >,
-          ),
+          (RecurringTransactionDb, $$RecurringTransactionsTableReferences),
           RecurringTransactionDb,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletId,
+            bool categoryId,
+            bool accountId,
+          })
         > {
   $$RecurringTransactionsTableTableManager(
     _$AppDatabase db,
@@ -24694,9 +36148,87 @@ class $$RecurringTransactionsTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$RecurringTransactionsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({walletId = false, categoryId = false, accountId = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$RecurringTransactionsTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$RecurringTransactionsTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (categoryId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.categoryId,
+                                    referencedTable:
+                                        $$RecurringTransactionsTableReferences
+                                            ._categoryIdTable(db),
+                                    referencedColumn:
+                                        $$RecurringTransactionsTableReferences
+                                            ._categoryIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (accountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.accountId,
+                                    referencedTable:
+                                        $$RecurringTransactionsTableReferences
+                                            ._accountIdTable(db),
+                                    referencedColumn:
+                                        $$RecurringTransactionsTableReferences
+                                            ._accountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -24711,16 +36243,9 @@ typedef $$RecurringTransactionsTableProcessedTableManager =
       $$RecurringTransactionsTableAnnotationComposer,
       $$RecurringTransactionsTableCreateCompanionBuilder,
       $$RecurringTransactionsTableUpdateCompanionBuilder,
-      (
-        RecurringTransactionDb,
-        BaseReferences<
-          _$AppDatabase,
-          $RecurringTransactionsTable,
-          RecurringTransactionDb
-        >,
-      ),
+      (RecurringTransactionDb, $$RecurringTransactionsTableReferences),
       RecurringTransactionDb,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId, bool categoryId, bool accountId})
     >;
 typedef $$SmsImportMetricsTableCreateCompanionBuilder =
     SmsImportMetricsCompanion Function({
@@ -24741,6 +36266,35 @@ typedef $$SmsImportMetricsTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
     });
 
+final class $$SmsImportMetricsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $SmsImportMetricsTable, SmsImportMetric> {
+  $$SmsImportMetricsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.smsImportMetrics.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$SmsImportMetricsTableFilterComposer
     extends Composer<_$AppDatabase, $SmsImportMetricsTable> {
   $$SmsImportMetricsTableFilterComposer({
@@ -24752,11 +36306,6 @@ class $$SmsImportMetricsTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -24779,6 +36328,29 @@ class $$SmsImportMetricsTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$SmsImportMetricsTableOrderingComposer
@@ -24792,11 +36364,6 @@ class $$SmsImportMetricsTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -24819,6 +36386,29 @@ class $$SmsImportMetricsTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$SmsImportMetricsTableAnnotationComposer
@@ -24832,9 +36422,6 @@ class $$SmsImportMetricsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumn<int> get acceptedImports => $composableBuilder(
     column: $table.acceptedImports,
@@ -24853,6 +36440,29 @@ class $$SmsImportMetricsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$SmsImportMetricsTableTableManager
@@ -24866,16 +36476,9 @@ class $$SmsImportMetricsTableTableManager
           $$SmsImportMetricsTableAnnotationComposer,
           $$SmsImportMetricsTableCreateCompanionBuilder,
           $$SmsImportMetricsTableUpdateCompanionBuilder,
-          (
-            SmsImportMetric,
-            BaseReferences<
-              _$AppDatabase,
-              $SmsImportMetricsTable,
-              SmsImportMetric
-            >,
-          ),
+          (SmsImportMetric, $$SmsImportMetricsTableReferences),
           SmsImportMetric,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId})
         > {
   $$SmsImportMetricsTableTableManager(
     _$AppDatabase db,
@@ -24923,9 +36526,56 @@ class $$SmsImportMetricsTableTableManager
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SmsImportMetricsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable:
+                                    $$SmsImportMetricsTableReferences
+                                        ._walletIdTable(db),
+                                referencedColumn:
+                                    $$SmsImportMetricsTableReferences
+                                        ._walletIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -24940,12 +36590,9 @@ typedef $$SmsImportMetricsTableProcessedTableManager =
       $$SmsImportMetricsTableAnnotationComposer,
       $$SmsImportMetricsTableCreateCompanionBuilder,
       $$SmsImportMetricsTableUpdateCompanionBuilder,
-      (
-        SmsImportMetric,
-        BaseReferences<_$AppDatabase, $SmsImportMetricsTable, SmsImportMetric>,
-      ),
+      (SmsImportMetric, $$SmsImportMetricsTableReferences),
       SmsImportMetric,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId})
     >;
 typedef $$TagsTableCreateCompanionBuilder =
     TagsCompanion Function({
@@ -24962,6 +36609,28 @@ typedef $$TagsTableUpdateCompanionBuilder =
       Value<String?> color,
     });
 
+final class $$TagsTableReferences
+    extends BaseReferences<_$AppDatabase, $TagsTable, Tag> {
+  $$TagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) => db.wallets
+      .createAlias($_aliasNameGenerator(db.tags.walletId, db.wallets.id));
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$TagsTableFilterComposer extends Composer<_$AppDatabase, $TagsTable> {
   $$TagsTableFilterComposer({
     required super.$db,
@@ -24975,11 +36644,6 @@ class $$TagsTableFilterComposer extends Composer<_$AppDatabase, $TagsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
@@ -24989,6 +36653,29 @@ class $$TagsTableFilterComposer extends Composer<_$AppDatabase, $TagsTable> {
     column: $table.color,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$TagsTableOrderingComposer extends Composer<_$AppDatabase, $TagsTable> {
@@ -25004,11 +36691,6 @@ class $$TagsTableOrderingComposer extends Composer<_$AppDatabase, $TagsTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -25018,6 +36700,29 @@ class $$TagsTableOrderingComposer extends Composer<_$AppDatabase, $TagsTable> {
     column: $table.color,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$TagsTableAnnotationComposer
@@ -25032,14 +36737,34 @@ class $$TagsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
   GeneratedColumn<String> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$TagsTableTableManager
@@ -25053,9 +36778,9 @@ class $$TagsTableTableManager
           $$TagsTableAnnotationComposer,
           $$TagsTableCreateCompanionBuilder,
           $$TagsTableUpdateCompanionBuilder,
-          (Tag, BaseReferences<_$AppDatabase, $TagsTable, Tag>),
+          (Tag, $$TagsTableReferences),
           Tag,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId})
         > {
   $$TagsTableTableManager(_$AppDatabase db, $TagsTable table)
     : super(
@@ -25093,9 +36818,52 @@ class $$TagsTableTableManager
                 color: color,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) =>
+                    (e.readTable(table), $$TagsTableReferences(db, table, e)),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable: $$TagsTableReferences
+                                    ._walletIdTable(db),
+                                referencedColumn: $$TagsTableReferences
+                                    ._walletIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -25110,342 +36878,9 @@ typedef $$TagsTableProcessedTableManager =
       $$TagsTableAnnotationComposer,
       $$TagsTableCreateCompanionBuilder,
       $$TagsTableUpdateCompanionBuilder,
-      (Tag, BaseReferences<_$AppDatabase, $TagsTable, Tag>),
+      (Tag, $$TagsTableReferences),
       Tag,
-      PrefetchHooks Function()
-    >;
-typedef $$TransactionsTableCreateCompanionBuilder =
-    TransactionsCompanion Function({
-      Value<int> walletId,
-      Value<int> id,
-      Value<String> uuid,
-      required double amount,
-      required DateTime date,
-      Value<String?> note,
-      required TransactionType type,
-      required int categoryId,
-      required int accountId,
-      Value<String?> transferGroupId,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-    });
-typedef $$TransactionsTableUpdateCompanionBuilder =
-    TransactionsCompanion Function({
-      Value<int> walletId,
-      Value<int> id,
-      Value<String> uuid,
-      Value<double> amount,
-      Value<DateTime> date,
-      Value<String?> note,
-      Value<TransactionType> type,
-      Value<int> categoryId,
-      Value<int> accountId,
-      Value<String?> transferGroupId,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-    });
-
-class $$TransactionsTableFilterComposer
-    extends Composer<_$AppDatabase, $TransactionsTable> {
-  $$TransactionsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get uuid => $composableBuilder(
-    column: $table.uuid,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<double, double, int> get amount =>
-      $composableBuilder(
-        column: $table.amount,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
-
-  ColumnFilters<DateTime> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get note => $composableBuilder(
-    column: $table.note,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<TransactionType, TransactionType, String>
-  get type => $composableBuilder(
-    column: $table.type,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnFilters<int> get categoryId => $composableBuilder(
-    column: $table.categoryId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get accountId => $composableBuilder(
-    column: $table.accountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get transferGroupId => $composableBuilder(
-    column: $table.transferGroupId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$TransactionsTableOrderingComposer
-    extends Composer<_$AppDatabase, $TransactionsTable> {
-  $$TransactionsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get uuid => $composableBuilder(
-    column: $table.uuid,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get date => $composableBuilder(
-    column: $table.date,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get note => $composableBuilder(
-    column: $table.note,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get type => $composableBuilder(
-    column: $table.type,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get categoryId => $composableBuilder(
-    column: $table.categoryId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get accountId => $composableBuilder(
-    column: $table.accountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get transferGroupId => $composableBuilder(
-    column: $table.transferGroupId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$TransactionsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $TransactionsTable> {
-  $$TransactionsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get uuid =>
-      $composableBuilder(column: $table.uuid, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<double, int> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get date =>
-      $composableBuilder(column: $table.date, builder: (column) => column);
-
-  GeneratedColumn<String> get note =>
-      $composableBuilder(column: $table.note, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<TransactionType, String> get type =>
-      $composableBuilder(column: $table.type, builder: (column) => column);
-
-  GeneratedColumn<int> get categoryId => $composableBuilder(
-    column: $table.categoryId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get accountId =>
-      $composableBuilder(column: $table.accountId, builder: (column) => column);
-
-  GeneratedColumn<String> get transferGroupId => $composableBuilder(
-    column: $table.transferGroupId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-}
-
-class $$TransactionsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $TransactionsTable,
-          Transaction,
-          $$TransactionsTableFilterComposer,
-          $$TransactionsTableOrderingComposer,
-          $$TransactionsTableAnnotationComposer,
-          $$TransactionsTableCreateCompanionBuilder,
-          $$TransactionsTableUpdateCompanionBuilder,
-          (
-            Transaction,
-            BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>,
-          ),
-          Transaction,
-          PrefetchHooks Function()
-        > {
-  $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$TransactionsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$TransactionsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$TransactionsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> walletId = const Value.absent(),
-                Value<int> id = const Value.absent(),
-                Value<String> uuid = const Value.absent(),
-                Value<double> amount = const Value.absent(),
-                Value<DateTime> date = const Value.absent(),
-                Value<String?> note = const Value.absent(),
-                Value<TransactionType> type = const Value.absent(),
-                Value<int> categoryId = const Value.absent(),
-                Value<int> accountId = const Value.absent(),
-                Value<String?> transferGroupId = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-              }) => TransactionsCompanion(
-                walletId: walletId,
-                id: id,
-                uuid: uuid,
-                amount: amount,
-                date: date,
-                note: note,
-                type: type,
-                categoryId: categoryId,
-                accountId: accountId,
-                transferGroupId: transferGroupId,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> walletId = const Value.absent(),
-                Value<int> id = const Value.absent(),
-                Value<String> uuid = const Value.absent(),
-                required double amount,
-                required DateTime date,
-                Value<String?> note = const Value.absent(),
-                required TransactionType type,
-                required int categoryId,
-                required int accountId,
-                Value<String?> transferGroupId = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-              }) => TransactionsCompanion.insert(
-                walletId: walletId,
-                id: id,
-                uuid: uuid,
-                amount: amount,
-                date: date,
-                note: note,
-                type: type,
-                categoryId: categoryId,
-                accountId: accountId,
-                transferGroupId: transferGroupId,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$TransactionsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $TransactionsTable,
-      Transaction,
-      $$TransactionsTableFilterComposer,
-      $$TransactionsTableOrderingComposer,
-      $$TransactionsTableAnnotationComposer,
-      $$TransactionsTableCreateCompanionBuilder,
-      $$TransactionsTableUpdateCompanionBuilder,
-      (
-        Transaction,
-        BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>,
-      ),
-      Transaction,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId})
     >;
 typedef $$UnrecognizedSmsEntriesTableCreateCompanionBuilder =
     UnrecognizedSmsEntriesCompanion Function({
@@ -25468,6 +36903,39 @@ typedef $$UnrecognizedSmsEntriesTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
+final class $$UnrecognizedSmsEntriesTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $UnrecognizedSmsEntriesTable,
+          UnrecognizedSms
+        > {
+  $$UnrecognizedSmsEntriesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.unrecognizedSmsEntries.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$UnrecognizedSmsEntriesTableFilterComposer
     extends Composer<_$AppDatabase, $UnrecognizedSmsEntriesTable> {
   $$UnrecognizedSmsEntriesTableFilterComposer({
@@ -25479,11 +36947,6 @@ class $$UnrecognizedSmsEntriesTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -25511,6 +36974,29 @@ class $$UnrecognizedSmsEntriesTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$UnrecognizedSmsEntriesTableOrderingComposer
@@ -25524,11 +37010,6 @@ class $$UnrecognizedSmsEntriesTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -25556,6 +37037,29 @@ class $$UnrecognizedSmsEntriesTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$UnrecognizedSmsEntriesTableAnnotationComposer
@@ -25569,9 +37073,6 @@ class $$UnrecognizedSmsEntriesTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
 
   GeneratedColumn<String> get smsBody =>
       $composableBuilder(column: $table.smsBody, builder: (column) => column);
@@ -25591,6 +37092,29 @@ class $$UnrecognizedSmsEntriesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$UnrecognizedSmsEntriesTableTableManager
@@ -25604,16 +37128,9 @@ class $$UnrecognizedSmsEntriesTableTableManager
           $$UnrecognizedSmsEntriesTableAnnotationComposer,
           $$UnrecognizedSmsEntriesTableCreateCompanionBuilder,
           $$UnrecognizedSmsEntriesTableUpdateCompanionBuilder,
-          (
-            UnrecognizedSms,
-            BaseReferences<
-              _$AppDatabase,
-              $UnrecognizedSmsEntriesTable,
-              UnrecognizedSms
-            >,
-          ),
+          (UnrecognizedSms, $$UnrecognizedSmsEntriesTableReferences),
           UnrecognizedSms,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool walletId})
         > {
   $$UnrecognizedSmsEntriesTableTableManager(
     _$AppDatabase db,
@@ -25674,9 +37191,56 @@ class $$UnrecognizedSmsEntriesTableTableManager
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$UnrecognizedSmsEntriesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({walletId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (walletId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.walletId,
+                                referencedTable:
+                                    $$UnrecognizedSmsEntriesTableReferences
+                                        ._walletIdTable(db),
+                                referencedColumn:
+                                    $$UnrecognizedSmsEntriesTableReferences
+                                        ._walletIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -25691,16 +37255,9 @@ typedef $$UnrecognizedSmsEntriesTableProcessedTableManager =
       $$UnrecognizedSmsEntriesTableAnnotationComposer,
       $$UnrecognizedSmsEntriesTableCreateCompanionBuilder,
       $$UnrecognizedSmsEntriesTableUpdateCompanionBuilder,
-      (
-        UnrecognizedSms,
-        BaseReferences<
-          _$AppDatabase,
-          $UnrecognizedSmsEntriesTable,
-          UnrecognizedSms
-        >,
-      ),
+      (UnrecognizedSms, $$UnrecognizedSmsEntriesTableReferences),
       UnrecognizedSms,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool walletId})
     >;
 typedef $$WalletActivitiesTableCreateCompanionBuilder =
     WalletActivitiesCompanion Function({
@@ -25737,6 +37294,98 @@ typedef $$WalletActivitiesTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
+final class $$WalletActivitiesTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $WalletActivitiesTable, WalletActivity> {
+  $$WalletActivitiesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WalletsTable _walletIdTable(_$AppDatabase db) =>
+      db.wallets.createAlias(
+        $_aliasNameGenerator(db.walletActivities.walletId, db.wallets.id),
+      );
+
+  $$WalletsTableProcessedTableManager get walletId {
+    final $_column = $_itemColumn<int>('wallet_id')!;
+
+    final manager = $$WalletsTableTableManager(
+      $_db,
+      $_db.wallets,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_walletIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AccountsTable _actorAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias(
+        $_aliasNameGenerator(
+          db.walletActivities.actorAccountId,
+          db.accounts.id,
+        ),
+      );
+
+  $$AccountsTableProcessedTableManager? get actorAccountId {
+    final $_column = $_itemColumn<int>('actor_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager(
+      $_db,
+      $_db.accounts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_actorAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $WalletMembersTable _actorMemberIdTable(_$AppDatabase db) =>
+      db.walletMembers.createAlias(
+        $_aliasNameGenerator(
+          db.walletActivities.actorMemberId,
+          db.walletMembers.id,
+        ),
+      );
+
+  $$WalletMembersTableProcessedTableManager? get actorMemberId {
+    final $_column = $_itemColumn<int>('actor_member_id');
+    if ($_column == null) return null;
+    final manager = $$WalletMembersTableTableManager(
+      $_db,
+      $_db.walletMembers,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_actorMemberIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $UsersTable _actorUserIdTable(_$AppDatabase db) =>
+      db.users.createAlias(
+        $_aliasNameGenerator(db.walletActivities.actorUserId, db.users.id),
+      );
+
+  $$UsersTableProcessedTableManager? get actorUserId {
+    final $_column = $_itemColumn<int>('actor_user_id');
+    if ($_column == null) return null;
+    final manager = $$UsersTableTableManager(
+      $_db,
+      $_db.users,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_actorUserIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
 class $$WalletActivitiesTableFilterComposer
     extends Composer<_$AppDatabase, $WalletActivitiesTable> {
   $$WalletActivitiesTableFilterComposer({
@@ -25751,28 +37400,8 @@ class $$WalletActivitiesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get uuid => $composableBuilder(
     column: $table.uuid,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get actorAccountId => $composableBuilder(
-    column: $table.actorAccountId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get actorMemberId => $composableBuilder(
-    column: $table.actorMemberId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get actorUserId => $composableBuilder(
-    column: $table.actorUserId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -25815,6 +37444,98 @@ class $$WalletActivitiesTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$WalletsTableFilterComposer get walletId {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableFilterComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get actorAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.actorAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableFilterComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableFilterComposer get actorMemberId {
+    final $$WalletMembersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.actorMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableFilterComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UsersTableFilterComposer get actorUserId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.actorUserId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableFilterComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletActivitiesTableOrderingComposer
@@ -25831,28 +37552,8 @@ class $$WalletActivitiesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get walletId => $composableBuilder(
-    column: $table.walletId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get uuid => $composableBuilder(
     column: $table.uuid,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get actorAccountId => $composableBuilder(
-    column: $table.actorAccountId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get actorMemberId => $composableBuilder(
-    column: $table.actorMemberId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get actorUserId => $composableBuilder(
-    column: $table.actorUserId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -25895,6 +37596,98 @@ class $$WalletActivitiesTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$WalletsTableOrderingComposer get walletId {
+    final $$WalletsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableOrderingComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get actorAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.actorAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableOrderingComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableOrderingComposer get actorMemberId {
+    final $$WalletMembersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.actorMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableOrderingComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UsersTableOrderingComposer get actorUserId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.actorUserId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableOrderingComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletActivitiesTableAnnotationComposer
@@ -25909,26 +37702,8 @@ class $$WalletActivitiesTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get walletId =>
-      $composableBuilder(column: $table.walletId, builder: (column) => column);
-
   GeneratedColumn<String> get uuid =>
       $composableBuilder(column: $table.uuid, builder: (column) => column);
-
-  GeneratedColumn<int> get actorAccountId => $composableBuilder(
-    column: $table.actorAccountId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get actorMemberId => $composableBuilder(
-    column: $table.actorMemberId,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get actorUserId => $composableBuilder(
-    column: $table.actorUserId,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<String> get action =>
       $composableBuilder(column: $table.action, builder: (column) => column);
@@ -25957,6 +37732,98 @@ class $$WalletActivitiesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$WalletsTableAnnotationComposer get walletId {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.walletId,
+      referencedTable: $db.wallets,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.wallets,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get actorAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.actorAccountId,
+      referencedTable: $db.accounts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AccountsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.accounts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$WalletMembersTableAnnotationComposer get actorMemberId {
+    final $$WalletMembersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.actorMemberId,
+      referencedTable: $db.walletMembers,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WalletMembersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.walletMembers,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UsersTableAnnotationComposer get actorUserId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.actorUserId,
+      referencedTable: $db.users,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UsersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$WalletActivitiesTableTableManager
@@ -25970,16 +37837,14 @@ class $$WalletActivitiesTableTableManager
           $$WalletActivitiesTableAnnotationComposer,
           $$WalletActivitiesTableCreateCompanionBuilder,
           $$WalletActivitiesTableUpdateCompanionBuilder,
-          (
-            WalletActivity,
-            BaseReferences<
-              _$AppDatabase,
-              $WalletActivitiesTable,
-              WalletActivity
-            >,
-          ),
+          (WalletActivity, $$WalletActivitiesTableReferences),
           WalletActivity,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool walletId,
+            bool actorAccountId,
+            bool actorMemberId,
+            bool actorUserId,
+          })
         > {
   $$WalletActivitiesTableTableManager(
     _$AppDatabase db,
@@ -26059,9 +37924,107 @@ class $$WalletActivitiesTableTableManager
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$WalletActivitiesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                walletId = false,
+                actorAccountId = false,
+                actorMemberId = false,
+                actorUserId = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (walletId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.walletId,
+                                    referencedTable:
+                                        $$WalletActivitiesTableReferences
+                                            ._walletIdTable(db),
+                                    referencedColumn:
+                                        $$WalletActivitiesTableReferences
+                                            ._walletIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (actorAccountId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.actorAccountId,
+                                    referencedTable:
+                                        $$WalletActivitiesTableReferences
+                                            ._actorAccountIdTable(db),
+                                    referencedColumn:
+                                        $$WalletActivitiesTableReferences
+                                            ._actorAccountIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (actorMemberId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.actorMemberId,
+                                    referencedTable:
+                                        $$WalletActivitiesTableReferences
+                                            ._actorMemberIdTable(db),
+                                    referencedColumn:
+                                        $$WalletActivitiesTableReferences
+                                            ._actorMemberIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (actorUserId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.actorUserId,
+                                    referencedTable:
+                                        $$WalletActivitiesTableReferences
+                                            ._actorUserIdTable(db),
+                                    referencedColumn:
+                                        $$WalletActivitiesTableReferences
+                                            ._actorUserIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -26076,220 +38039,14 @@ typedef $$WalletActivitiesTableProcessedTableManager =
       $$WalletActivitiesTableAnnotationComposer,
       $$WalletActivitiesTableCreateCompanionBuilder,
       $$WalletActivitiesTableUpdateCompanionBuilder,
-      (
-        WalletActivity,
-        BaseReferences<_$AppDatabase, $WalletActivitiesTable, WalletActivity>,
-      ),
+      (WalletActivity, $$WalletActivitiesTableReferences),
       WalletActivity,
-      PrefetchHooks Function()
-    >;
-typedef $$UsersTableCreateCompanionBuilder =
-    UsersCompanion Function({
-      Value<int> id,
-      Value<String> uuid,
-      required String displayName,
-      Value<String?> email,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-    });
-typedef $$UsersTableUpdateCompanionBuilder =
-    UsersCompanion Function({
-      Value<int> id,
-      Value<String> uuid,
-      Value<String> displayName,
-      Value<String?> email,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-    });
-
-class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
-  $$UsersTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get uuid => $composableBuilder(
-    column: $table.uuid,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get displayName => $composableBuilder(
-    column: $table.displayName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$UsersTableOrderingComposer
-    extends Composer<_$AppDatabase, $UsersTable> {
-  $$UsersTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get uuid => $composableBuilder(
-    column: $table.uuid,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get displayName => $composableBuilder(
-    column: $table.displayName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get email => $composableBuilder(
-    column: $table.email,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$UsersTableAnnotationComposer
-    extends Composer<_$AppDatabase, $UsersTable> {
-  $$UsersTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get uuid =>
-      $composableBuilder(column: $table.uuid, builder: (column) => column);
-
-  GeneratedColumn<String> get displayName => $composableBuilder(
-    column: $table.displayName,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get email =>
-      $composableBuilder(column: $table.email, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-}
-
-class $$UsersTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $UsersTable,
-          User,
-          $$UsersTableFilterComposer,
-          $$UsersTableOrderingComposer,
-          $$UsersTableAnnotationComposer,
-          $$UsersTableCreateCompanionBuilder,
-          $$UsersTableUpdateCompanionBuilder,
-          (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
-          User,
-          PrefetchHooks Function()
-        > {
-  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$UsersTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$UsersTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$UsersTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> uuid = const Value.absent(),
-                Value<String> displayName = const Value.absent(),
-                Value<String?> email = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-              }) => UsersCompanion(
-                id: id,
-                uuid: uuid,
-                displayName: displayName,
-                email: email,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> uuid = const Value.absent(),
-                required String displayName,
-                Value<String?> email = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-              }) => UsersCompanion.insert(
-                id: id,
-                uuid: uuid,
-                displayName: displayName,
-                email: email,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$UsersTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $UsersTable,
-      User,
-      $$UsersTableFilterComposer,
-      $$UsersTableOrderingComposer,
-      $$UsersTableAnnotationComposer,
-      $$UsersTableCreateCompanionBuilder,
-      $$UsersTableUpdateCompanionBuilder,
-      (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
-      User,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool walletId,
+        bool actorAccountId,
+        bool actorMemberId,
+        bool actorUserId,
+      })
     >;
 
 class $AppDatabaseManager {
@@ -26297,16 +38054,24 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$AccountsTableTableManager get accounts =>
       $$AccountsTableTableManager(_db, _db.accounts);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db, _db.wallets);
   $$WalletBillsTableTableManager get walletBills =>
       $$WalletBillsTableTableManager(_db, _db.walletBills);
-  $$BudgetsTableTableManager get budgets =>
-      $$BudgetsTableTableManager(_db, _db.budgets);
   $$CategoriesTableTableManager get categories =>
       $$CategoriesTableTableManager(_db, _db.categories);
+  $$BudgetsTableTableManager get budgets =>
+      $$BudgetsTableTableManager(_db, _db.budgets);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db, _db.users);
+  $$WalletMembersTableTableManager get walletMembers =>
+      $$WalletMembersTableTableManager(_db, _db.walletMembers);
   $$WalletNotificationsTableTableManager get walletNotifications =>
       $$WalletNotificationsTableTableManager(_db, _db.walletNotifications);
   $$LoansTableTableManager get loans =>
       $$LoansTableTableManager(_db, _db.loans);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db, _db.transactions);
   $$PeerDebtsTableTableManager get peerDebts =>
       $$PeerDebtsTableTableManager(_db, _db.peerDebts);
   $$WalletAllowancesTableTableManager get walletAllowances =>
@@ -26318,12 +38083,8 @@ class $AppDatabaseManager {
       );
   $$WalletSettlementsTableTableManager get walletSettlements =>
       $$WalletSettlementsTableTableManager(_db, _db.walletSettlements);
-  $$WalletsTableTableManager get wallets =>
-      $$WalletsTableTableManager(_db, _db.wallets);
   $$WalletInvitationsTableTableManager get walletInvitations =>
       $$WalletInvitationsTableTableManager(_db, _db.walletInvitations);
-  $$WalletMembersTableTableManager get walletMembers =>
-      $$WalletMembersTableTableManager(_db, _db.walletMembers);
   $$WalletGoalsTableTableManager get walletGoals =>
       $$WalletGoalsTableTableManager(_db, _db.walletGoals);
   $$WalletGoalContributionsTableTableManager get walletGoalContributions =>
@@ -26363,8 +38124,6 @@ class $AppDatabaseManager {
   $$SmsImportMetricsTableTableManager get smsImportMetrics =>
       $$SmsImportMetricsTableTableManager(_db, _db.smsImportMetrics);
   $$TagsTableTableManager get tags => $$TagsTableTableManager(_db, _db.tags);
-  $$TransactionsTableTableManager get transactions =>
-      $$TransactionsTableTableManager(_db, _db.transactions);
   $$UnrecognizedSmsEntriesTableTableManager get unrecognizedSmsEntries =>
       $$UnrecognizedSmsEntriesTableTableManager(
         _db,
@@ -26372,14 +38131,308 @@ class $AppDatabaseManager {
       );
   $$WalletActivitiesTableTableManager get walletActivities =>
       $$WalletActivitiesTableTableManager(_db, _db.walletActivities);
+}
+
+mixin _$CategoryDaoMixin on DatabaseAccessor<AppDatabase> {
+  $CategoriesTable get categories => attachedDatabase.categories;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $BudgetsTable get budgets => attachedDatabase.budgets;
+  $RecurringTransactionsTable get recurringTransactions =>
+      attachedDatabase.recurringTransactions;
+  CategoryDaoManager get managers => CategoryDaoManager(this);
+}
+
+class CategoryDaoManager {
+  final _$CategoryDaoMixin _db;
+  CategoryDaoManager(this._db);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$BudgetsTableTableManager get budgets =>
+      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
+  $$RecurringTransactionsTableTableManager get recurringTransactions =>
+      $$RecurringTransactionsTableTableManager(
+        _db.attachedDatabase,
+        _db.recurringTransactions,
+      );
+}
+
+mixin _$AccountDaoMixin on DatabaseAccessor<AppDatabase> {
+  $CategoriesTable get categories => attachedDatabase.categories;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $BudgetsTable get budgets => attachedDatabase.budgets;
+  $RecurringTransactionsTable get recurringTransactions =>
+      attachedDatabase.recurringTransactions;
+  AccountDaoManager get managers => AccountDaoManager(this);
+}
+
+class AccountDaoManager {
+  final _$AccountDaoMixin _db;
+  AccountDaoManager(this._db);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$BudgetsTableTableManager get budgets =>
+      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
+  $$RecurringTransactionsTableTableManager get recurringTransactions =>
+      $$RecurringTransactionsTableTableManager(
+        _db.attachedDatabase,
+        _db.recurringTransactions,
+      );
+}
+
+mixin _$TransactionDaoMixin on DatabaseAccessor<AppDatabase> {
+  $CategoriesTable get categories => attachedDatabase.categories;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $BudgetsTable get budgets => attachedDatabase.budgets;
+  $RecurringTransactionsTable get recurringTransactions =>
+      attachedDatabase.recurringTransactions;
+  TransactionDaoManager get managers => TransactionDaoManager(this);
+}
+
+class TransactionDaoManager {
+  final _$TransactionDaoMixin _db;
+  TransactionDaoManager(this._db);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$BudgetsTableTableManager get budgets =>
+      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
+  $$RecurringTransactionsTableTableManager get recurringTransactions =>
+      $$RecurringTransactionsTableTableManager(
+        _db.attachedDatabase,
+        _db.recurringTransactions,
+      );
+}
+
+mixin _$BudgetDaoMixin on DatabaseAccessor<AppDatabase> {
+  $CategoriesTable get categories => attachedDatabase.categories;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $BudgetsTable get budgets => attachedDatabase.budgets;
+  $RecurringTransactionsTable get recurringTransactions =>
+      attachedDatabase.recurringTransactions;
+  BudgetDaoManager get managers => BudgetDaoManager(this);
+}
+
+class BudgetDaoManager {
+  final _$BudgetDaoMixin _db;
+  BudgetDaoManager(this._db);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$BudgetsTableTableManager get budgets =>
+      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
+  $$RecurringTransactionsTableTableManager get recurringTransactions =>
+      $$RecurringTransactionsTableTableManager(
+        _db.attachedDatabase,
+        _db.recurringTransactions,
+      );
+}
+
+mixin _$RecurringTransactionDaoMixin on DatabaseAccessor<AppDatabase> {
+  $CategoriesTable get categories => attachedDatabase.categories;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $BudgetsTable get budgets => attachedDatabase.budgets;
+  $RecurringTransactionsTable get recurringTransactions =>
+      attachedDatabase.recurringTransactions;
+  RecurringTransactionDaoManager get managers =>
+      RecurringTransactionDaoManager(this);
+}
+
+class RecurringTransactionDaoManager {
+  final _$RecurringTransactionDaoMixin _db;
+  RecurringTransactionDaoManager(this._db);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$BudgetsTableTableManager get budgets =>
+      $$BudgetsTableTableManager(_db.attachedDatabase, _db.budgets);
+  $$RecurringTransactionsTableTableManager get recurringTransactions =>
+      $$RecurringTransactionsTableTableManager(
+        _db.attachedDatabase,
+        _db.recurringTransactions,
+      );
+}
+
+mixin _$WalletDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $UsersTable get users => attachedDatabase.users;
+  $WalletMembersTable get walletMembers => attachedDatabase.walletMembers;
+  $WalletInvitationsTable get walletInvitations =>
+      attachedDatabase.walletInvitations;
+  $WalletSettlementsTable get walletSettlements =>
+      attachedDatabase.walletSettlements;
+  $CategoriesTable get categories => attachedDatabase.categories;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  $WalletExpenseSplitsTable get walletExpenseSplits =>
+      attachedDatabase.walletExpenseSplits;
+  $WalletExpenseSplitMembersTable get walletExpenseSplitMembers =>
+      attachedDatabase.walletExpenseSplitMembers;
+  $PeerDebtsTable get peerDebts => attachedDatabase.peerDebts;
+  $WalletActivitiesTable get walletActivities =>
+      attachedDatabase.walletActivities;
+  WalletDaoManager get managers => WalletDaoManager(this);
+}
+
+class WalletDaoManager {
+  final _$WalletDaoMixin _db;
+  WalletDaoManager(this._db);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
   $$UsersTableTableManager get users =>
-      $$UsersTableTableManager(_db, _db.users);
+      $$UsersTableTableManager(_db.attachedDatabase, _db.users);
+  $$WalletMembersTableTableManager get walletMembers =>
+      $$WalletMembersTableTableManager(_db.attachedDatabase, _db.walletMembers);
+  $$WalletInvitationsTableTableManager get walletInvitations =>
+      $$WalletInvitationsTableTableManager(
+        _db.attachedDatabase,
+        _db.walletInvitations,
+      );
+  $$WalletSettlementsTableTableManager get walletSettlements =>
+      $$WalletSettlementsTableTableManager(
+        _db.attachedDatabase,
+        _db.walletSettlements,
+      );
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$WalletExpenseSplitsTableTableManager get walletExpenseSplits =>
+      $$WalletExpenseSplitsTableTableManager(
+        _db.attachedDatabase,
+        _db.walletExpenseSplits,
+      );
+  $$WalletExpenseSplitMembersTableTableManager get walletExpenseSplitMembers =>
+      $$WalletExpenseSplitMembersTableTableManager(
+        _db.attachedDatabase,
+        _db.walletExpenseSplitMembers,
+      );
+  $$PeerDebtsTableTableManager get peerDebts =>
+      $$PeerDebtsTableTableManager(_db.attachedDatabase, _db.peerDebts);
+  $$WalletActivitiesTableTableManager get walletActivities =>
+      $$WalletActivitiesTableTableManager(
+        _db.attachedDatabase,
+        _db.walletActivities,
+      );
+}
+
+mixin _$TransactionTagDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $TagsTable get tags => attachedDatabase.tags;
+  TransactionTagDaoManager get managers => TransactionTagDaoManager(this);
+}
+
+class TransactionTagDaoManager {
+  final _$TransactionTagDaoMixin _db;
+  TransactionTagDaoManager(this._db);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$TagsTableTableManager get tags =>
+      $$TagsTableTableManager(_db.attachedDatabase, _db.tags);
+}
+
+mixin _$AttachmentDaoMixin on DatabaseAccessor<AppDatabase> {
+  $CategoriesTable get categories => attachedDatabase.categories;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  $AttachmentsTable get attachments => attachedDatabase.attachments;
+  AttachmentDaoManager get managers => AttachmentDaoManager(this);
+}
+
+class AttachmentDaoManager {
+  final _$AttachmentDaoMixin _db;
+  AttachmentDaoManager(this._db);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+  $$AttachmentsTableTableManager get attachments =>
+      $$AttachmentsTableTableManager(_db.attachedDatabase, _db.attachments);
+}
+
+mixin _$AllowanceDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $UsersTable get users => attachedDatabase.users;
+  $WalletMembersTable get walletMembers => attachedDatabase.walletMembers;
+  $WalletAllowancesTable get walletAllowances =>
+      attachedDatabase.walletAllowances;
+  $WalletAllowancePaymentsTable get walletAllowancePayments =>
+      attachedDatabase.walletAllowancePayments;
+  AllowanceDaoManager get managers => AllowanceDaoManager(this);
+}
+
+class AllowanceDaoManager {
+  final _$AllowanceDaoMixin _db;
+  AllowanceDaoManager(this._db);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db.attachedDatabase, _db.users);
+  $$WalletMembersTableTableManager get walletMembers =>
+      $$WalletMembersTableTableManager(_db.attachedDatabase, _db.walletMembers);
+  $$WalletAllowancesTableTableManager get walletAllowances =>
+      $$WalletAllowancesTableTableManager(
+        _db.attachedDatabase,
+        _db.walletAllowances,
+      );
+  $$WalletAllowancePaymentsTableTableManager get walletAllowancePayments =>
+      $$WalletAllowancePaymentsTableTableManager(
+        _db.attachedDatabase,
+        _db.walletAllowancePayments,
+      );
 }
 
 mixin _$GoalDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $AccountsTable get accounts => attachedDatabase.accounts;
   $WalletGoalsTable get walletGoals => attachedDatabase.walletGoals;
   $WalletGoalContributionsTable get walletGoalContributions =>
       attachedDatabase.walletGoalContributions;
+  $UsersTable get users => attachedDatabase.users;
+  $WalletMembersTable get walletMembers => attachedDatabase.walletMembers;
   $WalletGoalSchedulesTable get walletGoalSchedules =>
       attachedDatabase.walletGoalSchedules;
   GoalDaoManager get managers => GoalDaoManager(this);
@@ -26388,6 +38441,10 @@ mixin _$GoalDaoMixin on DatabaseAccessor<AppDatabase> {
 class GoalDaoManager {
   final _$GoalDaoMixin _db;
   GoalDaoManager(this._db);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
   $$WalletGoalsTableTableManager get walletGoals =>
       $$WalletGoalsTableTableManager(_db.attachedDatabase, _db.walletGoals);
   $$WalletGoalContributionsTableTableManager get walletGoalContributions =>
@@ -26395,9 +38452,67 @@ class GoalDaoManager {
         _db.attachedDatabase,
         _db.walletGoalContributions,
       );
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db.attachedDatabase, _db.users);
+  $$WalletMembersTableTableManager get walletMembers =>
+      $$WalletMembersTableTableManager(_db.attachedDatabase, _db.walletMembers);
   $$WalletGoalSchedulesTableTableManager get walletGoalSchedules =>
       $$WalletGoalSchedulesTableTableManager(
         _db.attachedDatabase,
         _db.walletGoalSchedules,
       );
+}
+
+mixin _$BillDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $WalletBillsTable get walletBills => attachedDatabase.walletBills;
+  BillDaoManager get managers => BillDaoManager(this);
+}
+
+class BillDaoManager {
+  final _$BillDaoMixin _db;
+  BillDaoManager(this._db);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$WalletBillsTableTableManager get walletBills =>
+      $$WalletBillsTableTableManager(_db.attachedDatabase, _db.walletBills);
+}
+
+mixin _$PayeeDaoMixin on DatabaseAccessor<AppDatabase> {
+  $WalletsTable get wallets => attachedDatabase.wallets;
+  $TagsTable get tags => attachedDatabase.tags;
+  $CategoriesTable get categories => attachedDatabase.categories;
+  $AccountsTable get accounts => attachedDatabase.accounts;
+  $TransactionsTable get transactions => attachedDatabase.transactions;
+  PayeeDaoManager get managers => PayeeDaoManager(this);
+}
+
+class PayeeDaoManager {
+  final _$PayeeDaoMixin _db;
+  PayeeDaoManager(this._db);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db.attachedDatabase, _db.wallets);
+  $$TagsTableTableManager get tags =>
+      $$TagsTableTableManager(_db.attachedDatabase, _db.tags);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$AccountsTableTableManager get accounts =>
+      $$AccountsTableTableManager(_db.attachedDatabase, _db.accounts);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db.attachedDatabase, _db.transactions);
+}
+
+mixin _$UserDaoMixin on DatabaseAccessor<AppDatabase> {
+  $UsersTable get users => attachedDatabase.users;
+  UserDaoManager get managers => UserDaoManager(this);
+}
+
+class UserDaoManager {
+  final _$UserDaoMixin _db;
+  UserDaoManager(this._db);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db.attachedDatabase, _db.users);
 }
