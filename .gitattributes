@@ -1,0 +1,17 @@
+# Line-ending policy
+# ------------------
+# The index stores every text file with LF. `eol=lf` makes checkouts write LF
+# on every platform, so Windows working trees match what Flutter tooling
+# writes (it always emits LF) and files stop flip-flopping between
+# "modified" and clean under core.autocrlf=true.
+# `text=auto` still lets Git auto-detect and skip truly binary files.
+* text=auto eol=lf
+
+# Explicit binary protection (belt-and-braces beside auto-detection).
+*.png binary
+*.ico binary
+
+# Windows scripts keep CRLF; cmd.exe and older PowerShell expect it.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
