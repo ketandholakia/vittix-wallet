@@ -1,0 +1,189 @@
+name: CI
+
+# ---------------------------------------------------------------------------
+# TEMPORARY REPORT-ONLY MODE
+#
+# Validation runs and is reported, but does not fail the build while the
+# baseline is established. This is controlled by REPORT_ONLY below; it is the
+# ONLY switch. Individual steps deliberately keep `continue-on-error: true`
+# (so every check still runs and reports) and the final "Enforcement gate"
+# step turns the collected outcomes into a pass/fail decision.
+#
+# To make CI blocking:
+#   1. Confirm the pinned Flutter version matches .metadata.
+#   2. Set REPORT_ONLY to "false".
+#   3. Delete this comment block and the "report-only" wording in the summary.
+#
+# Do not remove `continue-on-error` without also updating the gate: the gate
+# is what makes failures observable in both modes.
+#
+# integration_test/ is NOT run here: it requires an Android device or emulator
+# and is documented as a manual/device step in
+# docs/development/DEVELOPMENT_ENVIRONMENT.md.
+# ---------------------------------------------------------------------------
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+# Least privilege: this workflow only reads the repository.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Pinned deliberately: `.metadata` records the SDK this project was created
+  # with (revision 559ffa3f75e7402d65a8def9c28389a9b2e6fe42, stable channel).
+  # A floating `stable` channel makes dependency resolution and Drift output
+  # non-reproducible. Confirm the release that carries that revision with
+  # `flutter --version` on a provisioned machine before making CI blocking.
+  FLUTTER_VERSION: "3.44.0"
+  REPORT_ONLY: "true"
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Toolchain versions
+        id: toolchain
+        run: |
+          flutter --version
+          dart --version
+
+      - name: Install dependencies
+        id: pubget
+        run: flutter pub get
+
+      # The lockfile is committed, so `flutter pub get` must be a no-op. A diff
+      # here means the lockfile is stale (for example after editing pubspec) or
+      # was resolved against a different SDK. Report it rather than silently
+      # validating against different dependency versions than a developer has.
+      - name: Lockfile drift
+        id: lockfile
+        continue-on-error: true
+        run: |
+          if ! git diff --quiet -- pubspec.lock; then
+            echo "pubspec.lock changed during 'flutter pub get'."
+            git diff --stat -- pubspec.lock
+            git diff -- pubspec.lock | head -100
+            exit 1
+          fi
+          echo "Lockfile is current."
+
+      # Generation runs before analysis so the analyzer validates freshly
+      # generated code, not a stale committed copy.
+      - name: Generate Drift code
+        id: codegen
+        continue-on-error: true
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      # Catches modified, deleted AND newly created generated files. The older
+      # `git diff --quiet` form misses untracked output entirely.
+      - name: Codegen drift
+        id: codegen_drift
+        continue-on-error: true
+        run: |
+          changes="$(git status --porcelain -- '*.g.dart')"
+          if [ -n "$changes" ]; then
+            echo "Generated Drift code is out of date or untracked:"
+            echo "$changes"
+            git diff -- '*.g.dart' | head -200
+            exit 1
+          fi
+          echo "Generated code matches the committed copy."
+
+      - name: Format
+        id: format
+        continue-on-error: true
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        id: analyze
+        continue-on-error: true
+        run: flutter analyze --no-fatal-infos
+
+      # Unit and widget tests only (test/). integration_test/ needs a device.
+      - name: Test
+        id: test
+        continue-on-error: true
+        run: flutter test --reporter expanded
+
+      - name: Summary
+        if: always()
+        run: |
+          status() {
+            case "$1" in
+              success) echo "PASS" ;;
+              failure) echo "FAIL" ;;
+              skipped|cancelled) echo "NOT RUN" ;;
+              *) echo "${1:-NOT RUN}" ;;
+            esac
+          }
+          {
+            echo "### Validation results"
+            echo ""
+            if [ "$REPORT_ONLY" = "true" ]; then
+              echo "**Mode: REPORT-ONLY — failures below do not fail this build yet.**"
+            else
+              echo "**Mode: ENFORCING — any FAIL fails the build.**"
+            fi
+            echo ""
+            echo "| Step | Result |"
+            echo "| --- | --- |"
+            echo "| toolchain | $(status '${{ steps.toolchain.outcome }}') |"
+            echo "| pub get | $(status '${{ steps.pubget.outcome }}') |"
+            echo "| lockfile drift | $(status '${{ steps.lockfile.outcome }}') |"
+            echo "| codegen | $(status '${{ steps.codegen.outcome }}') |"
+            echo "| codegen drift | $(status '${{ steps.codegen_drift.outcome }}') |"
+            echo "| format | $(status '${{ steps.format.outcome }}') |"
+            echo "| analyze | $(status '${{ steps.analyze.outcome }}') |"
+            echo "| test | $(status '${{ steps.test.outcome }}') |"
+            echo ""
+            echo "Integration tests are not run here (device/emulator required)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Turns the collected outcomes into the job result. Always runs, so a
+      # skipped step is reported as NOT RUN rather than disappearing.
+      - name: Enforcement gate
+        if: always()
+        run: |
+          if [ "$REPORT_ONLY" = "true" ]; then
+            echo "::notice title=Report-only::REPORT_ONLY=true, so validation results are informational. Set REPORT_ONLY to \"false\" to enforce."
+            exit 0
+          fi
+          failed=0
+          for pair in \
+            "toolchain:${{ steps.toolchain.outcome }}" \
+            "pub get:${{ steps.pubget.outcome }}" \
+            "lockfile drift:${{ steps.lockfile.outcome }}" \
+            "codegen:${{ steps.codegen.outcome }}" \
+            "codegen drift:${{ steps.codegen_drift.outcome }}" \
+            "format:${{ steps.format.outcome }}" \
+            "analyze:${{ steps.analyze.outcome }}" \
+            "test:${{ steps.test.outcome }}"; do
+            name="${pair%%:*}"
+            result="${pair#*:}"
+            if [ "$result" != "success" ]; then
+              echo "::error title=Validation failed::$name did not pass ($result)."
+              failed=1
+            fi
+          done
+          exit $failed

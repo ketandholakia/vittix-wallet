@@ -847,3 +847,43 @@ Implemented comprehensive wallet isolation, RBAC, audit attribution, privacy pro
   fallback remains as a second line of defence. README documents that Play may
   reject `SCHEDULE_EXACT_ALARM` and that the app then stays on inexact alarms.
 
+## Release hardening P2-15 to P2-18: identity, dependencies, CI and safe deletion
+
+- **P2-15 package identity.** The Dart package is now `vittix_wallet` (was
+  `expense_tracker`). 887 imports were rewritten mechanically; no runtime string
+  used the old name, so no stored key, database filename or directory changed and
+  existing installs are unaffected. Android identity was already
+  `com.vittix.wallet`.
+- **P2-16 dependencies.** `alfred`, `go_router`, `permission_handler` and
+  `flex_color_scheme` were removed. Each was verified unreferenced before
+  removal. Navigation remains 33 `MaterialPageRoute` call sites plus one
+  `Navigator.push`; the `go_router` decision is recorded as open in
+  `docs/release-plan.md` rather than silently resolved by deleting the
+  dependency.
+- **P2-17 CI.** `.github/workflows/ci.yml` runs analyze, test and a Drift codegen
+  drift check in report-only mode, so the first runs establish the real baseline
+  instead of failing. The roadmap's "0 issues / 444 passing" figure predates
+  these changes and has not been re-verified.
+- **P2-18 safe deletion.** Category and account deletion now offer to move the
+  blocking transactions to a replacement before deleting, using
+  `countTransactionsForCategory`, `reassignAndDeleteCategory` and
+  `reassignAndDeleteAccount`. Category operations cover the subtree.
+  `CategoryRepositoryImpl.deleteCategory` no longer relies on the `parentId`
+  cascade, which never ran because `PRAGMA foreign_keys` is off — that had been
+  leaving orphaned subcategories behind despite the dialog promising otherwise.
+  `reassignAndDeleteAccount` validates that the target account belongs to the
+  active wallet, preserving the isolation boundary.
+- **Still open.** `Categories` has no `walletId` column, so categories are global
+  rather than wallet-scoped. Changing that is a schema change and is tracked in
+  `docs/release-plan.md`, not addressed here. `PRAGMA foreign_keys` itself
+  remains disabled.
+- **Review pass (static only).** The combined change set was reviewed end to end
+  and `git diff --check` is now clean. Fixed during review: the workflow pins
+  Flutter, checks formatting and lockfile drift, and detects untracked generated
+  files (the earlier `git diff --quiet` check missed them); report-only mode is
+  one explicit switch with an enforcement gate and a PASS/FAIL/NOT RUN summary;
+  category reassignment rejects a non-existent target; the delete dialog
+  discloses that categories are shared across wallets; `budget_list_item.dart`
+  was normalised to LF and `docs/history.md` lost a stray trailing blank line.
+  No Flutter or Dart SDK was available, so analyzer, formatter, codegen and tests
+  remain unexecuted. See `docs/audits/VW_P2_CHANGESET_REVIEW.md`.

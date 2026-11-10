@@ -260,6 +260,35 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   verified without the corresponding toolchains.
 - `tools/generate_brand_assets.py` still hardcodes an absolute
   `D:\ketan\...\expense_tracker` path. Out of scope for this change set.
+## P2-17 - CI validation workflow (report-only)
+
+- Added `.github/workflows/ci.yml`. Order is generation before validation, so
+  the analyzer sees freshly generated code: `flutter pub get` → lockfile drift →
+  `build_runner build` → codegen drift → `dart format --set-exit-if-changed` →
+  `flutter analyze --no-fatal-infos` → `flutter test`.
+- Flutter is pinned via `FLUTTER_VERSION`, not the floating `stable` channel.
+  `.metadata` pins a specific revision, and a moving SDK makes Drift output and
+  dependency resolution non-reproducible.
+- Codegen drift uses `git status --porcelain -- '*.g.dart'`, which catches
+  modified, deleted **and newly created** generated files. The earlier
+  `git diff --quiet` form silently missed untracked output.
+- Added a lockfile drift check so a stale `pubspec.lock` cannot pass unnoticed.
+- Report-only mode is a single explicit switch (`REPORT_ONLY: "true"`), not a
+  scattered set of `continue-on-error` flags. Steps keep
+  `continue-on-error: true` so every check still runs and reports; a final
+  "Enforcement gate" step converts the collected outcomes into the job result
+  and is the only place that decides pass/fail. Setting `REPORT_ONLY` to
+  `"false"` makes every check blocking.
+- The job summary distinguishes **PASS**, **FAIL** and **NOT RUN** (skipped or
+  cancelled) and states the active mode, so a report-only run cannot be mistaken
+  for a green build.
+- Uses `permissions: contents: read` and no secrets.
+- `integration_test/` is excluded and documented as requiring a device or
+  emulator.
+- Caveat: `dart format` also covers generated `*.g.dart` files. Whether Drift
+  output is format-clean is unverified, which is part of why the gate starts in
+  report-only mode.
+
 ## P2-18 - Reassign-or-block on category and account delete
 
 - `CategoryRepository` gains `countTransactionsForCategory` and

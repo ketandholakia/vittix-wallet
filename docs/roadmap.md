@@ -212,7 +212,13 @@
 - [x] P2-13 strict analyzer/lints, `.isolated` tests resolved, real README,
   first-frame + DB-ready startup
 - [x] P2-14 optional SMS build + exact-alarm fallback
-- [x] `flutter analyze` 0 issues; `flutter test` 444 passing
+- [x] P2-15 Dart package identity `vittix_wallet`
+- [x] P2-16 unused dependency removal
+- [x] P2-17 CI baseline workflow, report-only until the suite is known green
+- [x] P2-18 reassign-or-block on category and account delete
+- [x] `flutter analyze` 0 issues; `flutter test` 444 passing — baseline recorded
+  before P2-15 to P2-18. Those four changes were made without a Flutter
+  toolchain available, so re-verification is still pending.
 
 ## Next milestone
 
@@ -227,3 +233,10 @@
 - [ ] Upgrade a real v12/v16 database through v19 on device and compare row
   counts/amounts before and after
 - [ ] Replace the remaining dashboard/settings stub providers with real queries
+- [ ] Make CI blocking: pin the Flutter release that matches `.metadata`
+  revision `559ffa3f`, then set `REPORT_ONLY` to `"false"` in
+  `.github/workflows/ci.yml` once the first validated run is green
+- [ ] Regenerate `pubspec.lock` with a real `flutter pub get` after P2-16
+- [ ] Rename desktop shell artefacts still called `expense_tracker` (Windows,
+  Linux, macOS) and correct the Linux `com.example.expense_tracker`
+  `APPLICATION_ID`; requires those toolchains
