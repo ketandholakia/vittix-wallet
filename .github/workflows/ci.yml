@@ -37,12 +37,15 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Pinned deliberately: `.metadata` records the SDK this project was created
-  # with (revision 559ffa3f75e7402d65a8def9c28389a9b2e6fe42, stable channel).
-  # A floating `stable` channel makes dependency resolution and Drift output
-  # non-reproducible. Confirm the release that carries that revision with
-  # `flutter --version` on a provisioned machine before making CI blocking.
-  FLUTTER_VERSION: "3.44.0"
+  # Pinned to 3.47.9 — the locally validated toolchain (Dart 3.13.7): the
+  # full 451-test baseline and a zero-issue `flutter analyze` were verified
+  # on exactly this SDK, so the format/analyze/test gates judge the same
+  # output locally and in CI. `.metadata` retains revision
+  # 559ffa3f75e7402d65a8def9c28389a9b2e6fe42 (the 3.44 branch point) as the
+  # historical project-creation record; it is informational and does not
+  # need to match the CI SDK. A floating `stable` channel would make
+  # dependency resolution and Drift output non-reproducible.
+  FLUTTER_VERSION: "3.47.9"
   REPORT_ONLY: "true"
 
 jobs:
