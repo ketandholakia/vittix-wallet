@@ -87,6 +87,11 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
 
+dependency_overrides:
+  # analyzer 10.2.0 breaks drift_dev 2.31.0 parsing of .references().
+  # Remove when drift_dev >= 2.32.1 can be adopted safely.
+  analyzer: 10.1.0
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
