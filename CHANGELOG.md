@@ -260,6 +260,20 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   verified without the corresponding toolchains.
 - `tools/generate_brand_assets.py` still hardcodes an absolute
   `D:\ketan\...\expense_tracker` path. Out of scope for this change set.
+
+## P2-16 - Remove unused dependencies
+
+- Removed `alfred`, `go_router`, `permission_handler` and `flex_color_scheme`
+  from `pubspec.yaml`.
+- Verified before removal: no `package:` import for any of them, and no entry
+  points referenced (`Alfred`, `GoRouter`/`GoRoute`, `Permission.`,
+  `FlexThemeData`/`FlexColor` all absent from `lib/`, `test/` and
+  `integration_test/`). The only `Permission` matches are doc comments.
+- Regenerated `pubspec.lock` using Flutter 3.47.9 / Dart 3.13.7.
+- Removed the unused dependencies and their now-unneeded transitive packages.
+- Dependency resolution also updated `matcher`, `meta`, `test_api` and
+  `vector_math` within the existing dependency constraints.
+
 ## P2-17 - CI validation workflow (report-only)
 
 - Added `.github/workflows/ci.yml`. Order is generation before validation, so
