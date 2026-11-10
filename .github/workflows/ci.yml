@@ -93,7 +93,7 @@ jobs:
       - name: Generate Drift code
         id: codegen
         continue-on-error: true
-        run: dart run build_runner build --delete-conflicting-outputs
+        run: dart run build_runner build
 
       # Catches modified, deleted AND newly created generated files. The older
       # `git diff --quiet` form misses untracked output entirely.
