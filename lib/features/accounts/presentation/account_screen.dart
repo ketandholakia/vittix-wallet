@@ -4,6 +4,7 @@ import 'package:vittix_wallet/features/settings/presentation/settings_providers.
 import 'package:vittix_wallet/core/providers/usecase_providers.dart';
 import 'package:vittix_wallet/core/providers/repository_providers.dart';
 import 'package:vittix_wallet/core/presentation/empty_state_widget.dart';
+import 'package:vittix_wallet/core/presentation/reassign_delete_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,6 +37,7 @@ class AccountScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     AccountWithBalance item,
+    List<AccountWithBalance> allAccounts,
   ) async {
     if (item.account.isDefault) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -44,13 +46,64 @@ class AccountScreen extends ConsumerWidget {
       return;
     }
 
-    final txCount = await ref.read(accountRepositoryProvider).countTransactionsForAccount(item.account.id);
+    final repo = ref.read(accountRepositoryProvider);
+    final txCount = await repo.countTransactionsForAccount(item.account.id);
     if (!context.mounted) return;
 
+    // An account with history is deletable only if its transactions have
+    // somewhere to go. Offer that target instead of refusing outright.
     if (txCount > 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Cannot delete "${item.account.name}" — it has $txCount transaction(s).')),
+      final candidates = allAccounts
+          .where((other) => other.account.id != item.account.id)
+          .toList(growable: false);
+
+      if (candidates.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Cannot delete "${item.account.name}" — it has $txCount '
+              'transaction(s) and there is no other account to move them to.',
+            ),
+          ),
+        );
+        return;
+      }
+
+      final target = await showReassignDeleteDialog<AccountWithBalance>(
+        context: context,
+        title: 'Delete Account',
+        sourceName: item.account.name,
+        affectedCount: txCount,
+        recordNoun: 'transaction',
+        candidates: candidates,
+        labelOf: (account) => account.account.name,
+        subtitleOf: (account) => account.account.type.label,
+        warning: 'Transactions keep their amounts, dates and categories. '
+            'This cannot be undone.',
       );
+      if (target == null || !context.mounted) return;
+
+      try {
+        final moved = await repo.reassignAndDeleteAccount(
+          item.account.id,
+          target.account.id,
+        );
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              moved == 1
+                  ? 'Account "${item.account.name}" deleted, 1 transaction moved to "${target.account.name}"'
+                  : 'Account "${item.account.name}" deleted, $moved transactions moved to "${target.account.name}"',
+            ),
+          ),
+        );
+      } on Object catch (error) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not delete account: $error')),
+        );
+      }
       return;
     }
 
@@ -155,7 +208,7 @@ class AccountScreen extends ConsumerWidget {
                       icon: Icon(Icons.delete_outline, color: colorScheme.error),
                       onPressed: account.isDefault
                           ? null
-                          : () => _confirmDelete(context, ref, item),
+                          : () => _confirmDelete(context, ref, item, accounts),
                     ),
                   ],
                 ),

@@ -260,3 +260,44 @@ All notable changes to Vittix Wallet are recorded here, one entry per task.
   verified without the corresponding toolchains.
 - `tools/generate_brand_assets.py` still hardcodes an absolute
   `D:\ketan\...\expense_tracker` path. Out of scope for this change set.
+## P2-18 - Reassign-or-block on category and account delete
+
+- `CategoryRepository` gains `countTransactionsForCategory` and
+  `reassignAndDeleteCategory`; `AccountRepository` gains
+  `reassignAndDeleteAccount`. Both composite operations run inside a single
+  database transaction, so a failure cannot leave transactions moved but the
+  source still present.
+- Category operations work on the whole subtree, because categories reference
+  themselves through `parentId`. Deleting a parent also deletes and reassigns its
+  subcategories.
+- Fixed a latent orphan bug: `PRAGMA foreign_keys` is never enabled, so the
+  self-referencing `parentId` cascade never ran and deleting a parent category
+  silently left its subcategories behind (surfacing as top-level rows via the
+  screen's orphan fallback). `CategoryRepositoryImpl.deleteCategory` now deletes
+  the subtree explicitly, deepest first, so the behaviour matches what the
+  delete dialog already promised.
+- `reassignAndDeleteAccount` refuses a target outside the active wallet
+  (`StateError`) and keeps the existing `canManageAccounts` permission check and
+  `ACCOUNT_DELETED` audit event.
+- `reassignAndDeleteCategory` validates its target: the source, a descendant, or
+  a non-existent id is rejected with `ArgumentError`. Without the existence
+  check a stale id would have moved every transaction onto a category that does
+  not exist, silently orphaning the history.
+- New `showReassignDeleteDialog` in `lib/core/presentation/` collects the target
+  before deleting and reports how many records moved. It uses `ListTile`
+  selection rather than `RadioListTile` or `DropdownButtonFormField`, whose
+  APIs changed across recent Flutter releases, and it carries correct semantics
+  for screen readers.
+- Account delete no longer refuses outright when transactions exist: it offers
+  reassignment and falls back to a message only when no other account exists.
+- The category dialog now states that categories are shared across wallets, so a
+  delete moves matching transactions in **every** wallet. This is inherent to
+  the current schema: `categories` has no `walletId` column. Making categories
+  wallet-scoped is a schema change and is tracked as deferred, not done here.
+- Seven tests added to `test/category_account_reassign_test.dart` covering
+  subtree counts, subtree reassignment, orphan prevention, invalid-target
+  rejection (subtree member and non-existent id), account reassignment,
+  self-target rejection and cross-wallet target rejection.
+- Tests were written but **not executed**: no Flutter or Dart SDK is available
+  in the review environment. See
+  `docs/audits/VW_P2_CHANGESET_REVIEW.md`.

@@ -86,6 +86,48 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
+  Future<int> reassignAndDeleteAccount(int fromAccountId, int toAccountId) async {
+    if (fromAccountId == toAccountId) {
+      throw ArgumentError.value(
+        toAccountId,
+        'toAccountId',
+        'must differ from the account being deleted',
+      );
+    }
+    if (walletId != null) {
+      await _walletDao?.checkPermission(
+        walletId: walletId!,
+        permissionCheck: (s, r) => s.canManageAccounts(r),
+        actorAccountId: actorAccountId,
+        actionName: 'manage accounts',
+      );
+      // Never let a reassign point the source account's history at an account
+      // that lives in a different wallet.
+      final target = await _accountDao.getAccountById(toAccountId, walletId);
+      if (target == null) {
+        throw StateError('Target account $toAccountId is not in the active wallet.');
+      }
+    }
+
+    final existing = walletId != null ? await _accountDao.getAccountById(fromAccountId, walletId) : null;
+    final database = _accountDao.attachedDatabase;
+    var moved = 0;
+    await database.transaction(() async {
+      moved = await database.transactionDao
+          .reassignTransactionsForAccount(fromAccountId, toAccountId, walletId);
+      final deleted = await _accountDao.deleteAccount(fromAccountId, walletId);
+      if (deleted > 0 && existing != null) {
+        await _insertAuditEvent(
+          action: 'ACCOUNT_DELETED',
+          entityId: fromAccountId,
+          entityUuid: existing.uuid,
+        );
+      }
+    });
+    return moved;
+  }
+
+  @override
   Future<Account?> getAccountById(int id) async {
     final account = await _accountDao.getAccountById(id, walletId);
     if (account == null) {

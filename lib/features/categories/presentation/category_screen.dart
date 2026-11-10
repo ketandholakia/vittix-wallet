@@ -1,7 +1,9 @@
 import 'package:vittix_wallet/features/categories/presentation/category_form_dialog.dart';
 import 'package:vittix_wallet/core/providers/usecase_providers.dart';
+import 'package:vittix_wallet/core/providers/repository_providers.dart';
 import 'package:vittix_wallet/domain/entities/category.dart';
 import 'package:vittix_wallet/core/presentation/empty_state_widget.dart';
+import 'package:vittix_wallet/core/presentation/reassign_delete_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,8 +32,99 @@ class CategoryScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _confirmDelete(BuildContext context, WidgetRef ref, Category category) async {
+  /// [root] plus every descendant id, in breadth-first order.
+  List<int> _subtreeIds(Category root, List<Category> all) {
+    final ids = <int>[root.id];
+    var frontier = <int>[root.id];
+    while (frontier.isNotEmpty) {
+      final next = <int>[];
+      for (final candidate in all) {
+        final parentId = candidate.parentId;
+        if (parentId == null) continue;
+        if (frontier.contains(parentId) && !ids.contains(candidate.id)) {
+          ids.add(candidate.id);
+          next.add(candidate.id);
+        }
+      }
+      frontier = next;
+    }
+    return ids;
+  }
+
+  Future<void> _confirmDelete(
+    BuildContext context,
+    WidgetRef ref,
+    Category category,
+    List<Category> allCategories,
+  ) async {
+    final repo = ref.read(categoryRepositoryProvider);
+    final txCount = await repo.countTransactionsForCategory(category.id);
+    if (!context.mounted) return;
+
     final colorScheme = Theme.of(context).colorScheme;
+    final subtreeIds = _subtreeIds(category, allCategories);
+
+    // A category with history is deletable only if its transactions have
+    // somewhere to go. Descendants are excluded: they are deleted with it.
+    if (txCount > 0) {
+      final candidates = allCategories
+          .where((other) => !subtreeIds.contains(other.id))
+          .toList(growable: false);
+
+      if (candidates.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Cannot delete "${category.name}" — it has $txCount '
+              'transaction(s) and there is no other category to move them to.',
+            ),
+          ),
+        );
+        return;
+      }
+
+      final target = await showReassignDeleteDialog<Category>(
+        context: context,
+        title: 'Delete Category',
+        sourceName: category.name,
+        affectedCount: txCount,
+        recordNoun: 'transaction',
+        candidates: candidates,
+        labelOf: (c) => c.name,
+        subtitleOf: (c) => c.parentId == null ? 'Category' : 'Subcategory',
+        // Categories have no wallet column, so this delete is global. Say so
+        // rather than implying it only affects the active wallet.
+        warning: [
+          if (category.parentId == null && subtreeIds.length > 1)
+            'Its ${subtreeIds.length - 1} subcategory(ies) will also be deleted.',
+          'Categories are shared across wallets, so transactions in every '
+              'wallet that use this category are moved.',
+          'This cannot be undone.',
+        ].join(' '),
+      );
+      if (target == null || !context.mounted) return;
+
+      try {
+        final moved = await repo.reassignAndDeleteCategory(category.id, target.id);
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              moved == 1
+                  ? 'Category "${category.name}" deleted, 1 transaction moved to "${target.name}"'
+                  : 'Category "${category.name}" deleted, $moved transactions moved to "${target.name}"',
+            ),
+          ),
+        );
+      } on Object catch (error) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not delete category: $error')),
+        );
+      }
+      return;
+    }
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -168,7 +261,7 @@ class CategoryScreen extends ConsumerWidget {
                         tooltip: 'Delete',
                         onPressed: category.isDefault
                             ? null
-                            : () => _confirmDelete(context, ref, category),
+                            : () => _confirmDelete(context, ref, category, categories),
                       ),
                     ],
                   ),

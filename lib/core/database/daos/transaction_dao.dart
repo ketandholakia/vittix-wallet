@@ -34,6 +34,44 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     return query.write(TransactionsCompanion(categoryId: Value(toCategoryId)));
   }
 
+  /// Moves every transaction belonging to any of [fromCategoryIds] onto
+  /// [toCategoryId].
+  ///
+  /// Deleting a category also deletes its subcategories, so callers pass the
+  /// whole subtree to avoid orphaning transactions that were filed under a
+  /// child category.
+  Future<int> reassignTransactionsForCategories(
+    Iterable<int> fromCategoryIds,
+    int toCategoryId, [
+    int? walletId,
+  ]) {
+    final ids = fromCategoryIds.toList(growable: false);
+    if (ids.isEmpty) return Future<int>.value(0);
+    final query = update(transactions)
+      ..where((t) => t.categoryId.isIn(ids));
+    if (walletId != null) {
+      query.where((t) => t.walletId.equals(walletId));
+    }
+    return query.write(TransactionsCompanion(categoryId: Value(toCategoryId)));
+  }
+
+  /// Counts transactions filed under any of [categoryIds].
+  Future<int> countTransactionsForCategories(
+    Iterable<int> categoryIds, [
+    int? walletId,
+  ]) async {
+    final ids = categoryIds.toList(growable: false);
+    if (ids.isEmpty) return 0;
+    final count = countAll();
+    final query = selectOnly(transactions)..addColumns([count]);
+    query.where(transactions.categoryId.isIn(ids));
+    if (walletId != null) {
+      query.where(transactions.walletId.equals(walletId));
+    }
+    final row = await query.getSingle();
+    return row.read(count) ?? 0;
+  }
+
   /// Moves every transaction from one account to another. Accounts use
   /// `restrict` on delete, so this is what lets an account be removed without
   /// rejecting the delete or losing its history.

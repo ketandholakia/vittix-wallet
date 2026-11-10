@@ -16,8 +16,90 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @override
-  Future<void> deleteCategory(int id) {
-    return _categoryDao.deleteCategory(id);
+  Future<void> deleteCategory(int id) async {
+    // `PRAGMA foreign_keys` is off, so the self-referencing `parentId`
+    // cascade does not run; delete the subtree explicitly, deepest first.
+    final ids = await _subtreeIds(id);
+    await _categoryDao.attachedDatabase.transaction(() async {
+      await _categoryDao.deleteCategories(ids.reversed);
+    });
+  }
+
+  /// Collects [rootId] plus every descendant category id.
+  ///
+  /// Iterative so a corrupt self-referencing row cannot spin forever.
+  Future<List<int>> _subtreeIds(int rootId) async {
+    final all = await _categoryDao.getAllCategories();
+    final childrenOf = <int, List<int>>{};
+    for (final category in all) {
+      final parent = category.parentId;
+      if (parent == null) continue;
+      childrenOf.putIfAbsent(parent, () => <int>[]).add(category.id);
+    }
+
+    final ordered = <int>[rootId];
+    final seen = <int>{rootId};
+    var frontier = <int>[rootId];
+    while (frontier.isNotEmpty) {
+      final next = <int>[];
+      for (final id in frontier) {
+        for (final child in childrenOf[id] ?? const <int>[]) {
+          if (seen.add(child)) {
+            ordered.add(child);
+            next.add(child);
+          }
+        }
+      }
+      frontier = next;
+    }
+    return ordered;
+  }
+
+  @override
+  Future<int> countTransactionsForCategory(int categoryId) async {
+    final ids = await _subtreeIds(categoryId);
+    return _categoryDao.attachedDatabase.transactionDao
+        .countTransactionsForCategories(ids);
+  }
+
+  @override
+  Future<int> reassignAndDeleteCategory(int fromCategoryId, int toCategoryId) async {
+    if (fromCategoryId == toCategoryId) {
+      throw ArgumentError.value(
+        toCategoryId,
+        'toCategoryId',
+        'must differ from the category being deleted',
+      );
+    }
+    final ids = await _subtreeIds(fromCategoryId);
+    if (ids.contains(toCategoryId)) {
+      throw ArgumentError.value(
+        toCategoryId,
+        'toCategoryId',
+        'is inside the category subtree being deleted',
+      );
+    }
+    // Without this guard a stale or hostile id would move every transaction to
+    // a category that does not exist, silently orphaning the history.
+    final target = await _categoryDao.getCategoryById(toCategoryId);
+    if (target == null) {
+      throw ArgumentError.value(
+        toCategoryId,
+        'toCategoryId',
+        'does not exist',
+      );
+    }
+
+    final database = _categoryDao.attachedDatabase;
+    var moved = 0;
+    await database.transaction(() async {
+      moved = await database.transactionDao
+          .reassignTransactionsForCategories(ids, toCategoryId);
+      // Deepest first, so the operation stays correct if foreign keys are
+      // enabled later and the `parentId` cascade starts running.
+      await _categoryDao.deleteCategories(ids.reversed);
+    });
+    return moved;
   }
 
   @override
