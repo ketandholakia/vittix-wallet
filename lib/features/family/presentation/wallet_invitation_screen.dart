@@ -172,8 +172,9 @@ class _WalletInvitationScreenState
                             m.role.equals(db.WalletRole.owner.name),
                       ))
                       .get();
-              if (owners.isEmpty)
+              if (owners.isEmpty) {
                 return; // Cannot invite without an active owner
+              }
 
               final invitationId = await ref
                   .read(walletInvitationRepositoryProvider)
@@ -349,8 +350,9 @@ class _WalletInvitationScreenState
                                       final ownerId = owners.isNotEmpty
                                           ? owners.first.accountId
                                           : invitation.invitedByAccountId;
-                                      if (ownerId == null)
+                                      if (ownerId == null) {
                                         throw Exception('No actor available');
+                                      }
                                       await ref
                                           .read(
                                             walletInvitationRepositoryProvider,

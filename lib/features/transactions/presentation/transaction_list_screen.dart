@@ -117,10 +117,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
       }
 
       // Amount range filter
-      if (_filterMinAmount != null && tx.amount < _filterMinAmount!)
+      if (_filterMinAmount != null && tx.amount < _filterMinAmount!) {
         return false;
-      if (_filterMaxAmount != null && tx.amount > _filterMaxAmount!)
+      }
+      if (_filterMaxAmount != null && tx.amount > _filterMaxAmount!) {
         return false;
+      }
 
       // Search query (note text or category name)
       if (_searchQuery.isNotEmpty) {

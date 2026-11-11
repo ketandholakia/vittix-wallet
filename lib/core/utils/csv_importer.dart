@@ -333,10 +333,12 @@ class CsvTransactionImporter {
 
         final categoryKey = _normalize(categoryName);
         final accountKey = _normalize(accountName);
-        if (!categoryByName.containsKey(categoryKey))
+        if (!categoryByName.containsKey(categoryKey)) {
           missingCategories.add(categoryName);
-        if (!accountByName.containsKey(accountKey))
+        }
+        if (!accountByName.containsKey(accountKey)) {
           missingAccounts.add(accountName);
+        }
 
         final amount = _parseAmount(row[amountIndex]);
         final note = noteIndex == null

@@ -280,8 +280,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                       });
                     },
                     validator: (value) {
-                      if (value == null)
+                      if (value == null) {
                         return 'Please select destination account.';
+                      }
                       if (value.id == _fromAccount?.id) {
                         return 'Destination account must be different.';
                       }

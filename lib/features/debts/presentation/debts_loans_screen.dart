@@ -9,8 +9,9 @@ import 'package:vittix_wallet/features/settings/presentation/settings_providers.
 
 // Repayment calculation helper
 double calculateEmi(double principal, double annualRate, int tenureMonths) {
-  if (annualRate == 0 || tenureMonths == 0)
+  if (annualRate == 0 || tenureMonths == 0) {
     return principal / (tenureMonths > 0 ? tenureMonths : 1);
+  }
   final double r = annualRate / 12 / 100;
   return principal *
       (r * math.pow(1 + r, tenureMonths)) /

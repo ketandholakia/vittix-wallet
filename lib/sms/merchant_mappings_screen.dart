@@ -152,8 +152,9 @@ class _MerchantMappingsScreenState
                 FilledButton(
                   onPressed: () async {
                     if (patternController.text.isEmpty ||
-                        cleanNameController.text.isEmpty)
+                        cleanNameController.text.isEmpty) {
                       return;
+                    }
 
                     final dao = ref.read(smsParsingDaoProvider);
                     final currentWalletId = ref.read(currentWalletIdProvider);

@@ -120,8 +120,9 @@ class TrendReportScreen extends ConsumerWidget {
                             interval: 1,
                             getTitlesWidget: (value, meta) {
                               final index = value.toInt();
-                              if (index >= allMonths.length)
+                              if (index >= allMonths.length) {
                                 return const SizedBox();
+                              }
                               final date = allMonths[index];
                               return SideTitleWidget(
                                 axisSide: meta.axisSide,

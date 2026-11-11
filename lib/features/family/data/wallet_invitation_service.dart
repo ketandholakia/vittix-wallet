@@ -42,8 +42,9 @@ class WalletInvitationService {
     if (invitation == null) return null;
     if (invitation.status != WalletInvitationStatus.pending) return null;
     if (invitation.expiresAt != null &&
-        invitation.expiresAt!.isBefore(DateTime.now()))
+        invitation.expiresAt!.isBefore(DateTime.now())) {
       return null;
+    }
     return invitation;
   }
 }
