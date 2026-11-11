@@ -63,6 +63,10 @@ dependencies:
   android_sms_reader: ^0.0.6
   syncfusion_flutter_pdf: ^33.2.13
   mediapipe_genai: ^0.0.1
+  # Phase 4I lockfile-failure probe (temporary, disposable branch only): direct
+  # dep added without regenerating pubspec.lock, so CI `flutter pub get` must
+  # produce a lockfile diff.
+  meta: ^1.15.0
   google_mlkit_text_recognition: ^0.15.1
   image_picker: ^1.2.2
   table_calendar: ^3.1.3
