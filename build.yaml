@@ -1,0 +1,5 @@
+# Phase 4I codegen-failure probe (temporary, disposable branch only).
+# Malformed on purpose: build_runner must fail while parsing build configuration.
+targets:
+  $default:
+    builders: [drift_dev|sim_probe: { enabled: true
