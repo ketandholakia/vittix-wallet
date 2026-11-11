@@ -45,7 +45,7 @@ env:
   # historical project-creation record; it is informational and does not
   # need to match the CI SDK. A floating `stable` channel would make
   # dependency resolution and Drift output non-reproducible.
-  FLUTTER_VERSION: "3.47.9"
+  FLUTTER_VERSION: "0.0.0-4i-sim-nonexistent" # Phase 4I infra-failure probe (temporary branch only)
   REPORT_ONLY: "true"
 
 jobs:
