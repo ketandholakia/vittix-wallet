@@ -115,6 +115,7 @@ jobs:
 
       - name: Format
         id: format
+        if: false # Phase 4I skip-probe (temporary branch only): force-skip this gate only
         continue-on-error: true
         run: dart format --output=none --set-exit-if-changed .
 
