@@ -46,7 +46,7 @@ env:
   # need to match the CI SDK. A floating `stable` channel would make
   # dependency resolution and Drift output non-reproducible.
   FLUTTER_VERSION: "3.47.9"
-  REPORT_ONLY: "true"
+  REPORT_ONLY: "false"
 
 jobs:
   validate:
