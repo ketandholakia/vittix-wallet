@@ -21,17 +21,23 @@ class IciciBankParser extends BankSmsParser {
     DateTime date,
   ) {
     final lowerBody = body.toLowerCase();
-    
+
     // Check for mandates/subscriptions first
-    final bool isMandate = isEMandateNotification(body) || isFutureDebitNotification(body) || lowerBody.contains('autopay');
+    final bool isMandate =
+        isEMandateNotification(body) ||
+        isFutureDebitNotification(body) ||
+        lowerBody.contains('autopay');
 
     // Determine type
     domain.TransactionType? type;
     if (isMandate) {
       type = domain.TransactionType.expense;
-    } else if (lowerBody.contains('debited') || lowerBody.contains('spent') || lowerBody.contains('paid')) {
+    } else if (lowerBody.contains('debited') ||
+        lowerBody.contains('spent') ||
+        lowerBody.contains('paid')) {
       type = domain.TransactionType.expense;
-    } else if (lowerBody.contains('credited') || lowerBody.contains('deposited')) {
+    } else if (lowerBody.contains('credited') ||
+        lowerBody.contains('deposited')) {
       type = domain.TransactionType.income;
     }
 
@@ -51,17 +57,26 @@ class IciciBankParser extends BankSmsParser {
         if (amount != null) break;
       }
     }
-    
+
     if (amount == null || amount <= 0) return null;
 
     // Extract merchant
     String? merchant;
     final merchantRegexes = [
       if (isMandate) ...[
-        RegExp(r'towards\s+([^.\n]+?)(?:\s+from|\s+A/c|\s+UMRN|\s+ID:|\s+Alert:|\s*\.|$)', caseSensitive: false),
-        RegExp(r'for\s+([^.\n]+?)(?:\s+mandate|\s+will\s+be|\s+subscription|\s+ID:|\s+Act:|\s*\.|$)', caseSensitive: false),
+        RegExp(
+          r'towards\s+([^.\n]+?)(?:\s+from|\s+A/c|\s+UMRN|\s+ID:|\s+Alert:|\s*\.|$)',
+          caseSensitive: false,
+        ),
+        RegExp(
+          r'for\s+([^.\n]+?)(?:\s+mandate|\s+will\s+be|\s+subscription|\s+ID:|\s+Act:|\s*\.|$)',
+          caseSensitive: false,
+        ),
       ],
-      RegExp(r'Info:?\s*([^\.\n]+?)(?:\s+Ref|\s+UPI|\s+on|\.|$)', caseSensitive: false), // ICICI often uses Info: <merchant>
+      RegExp(
+        r'Info:?\s*([^\.\n]+?)(?:\s+Ref|\s+UPI|\s+on|\.|$)',
+        caseSensitive: false,
+      ), // ICICI often uses Info: <merchant>
       RegExp(r'to\s+([^.\n]+?)(?:\.|\s+UPI|\s+Ref)', caseSensitive: false),
       RegExp(r'at\s+([^.\n]+?)(?:\.|\s+on|\s+Ref)', caseSensitive: false),
     ];

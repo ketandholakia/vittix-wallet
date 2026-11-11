@@ -17,9 +17,19 @@ class AllowanceDetailScreen extends ConsumerWidget {
           summaryAsync.when(
             data: (summary) => Column(
               children: [
-                ListTile(title: const Text('Active Allowances'), trailing: Text('${summary.activeAllowances}')),
-                ListTile(title: const Text('Monthly Total'), trailing: Text(summary.monthlyTotal.toStringAsFixed(0))),
-                if (summary.nextDue != null) ListTile(title: const Text('Next Due'), trailing: Text(summary.nextDue!)),
+                ListTile(
+                  title: const Text('Active Allowances'),
+                  trailing: Text('${summary.activeAllowances}'),
+                ),
+                ListTile(
+                  title: const Text('Monthly Total'),
+                  trailing: Text(summary.monthlyTotal.toStringAsFixed(0)),
+                ),
+                if (summary.nextDue != null)
+                  ListTile(
+                    title: const Text('Next Due'),
+                    trailing: Text(summary.nextDue!),
+                  ),
               ],
             ),
             loading: () => const Padding(
@@ -34,10 +44,22 @@ class AllowanceDetailScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const ListTile(title: Text('Child Spending Summary')),
-                ListTile(title: const Text('Allowance Received'), trailing: Text(summary.allowanceReceived.toStringAsFixed(0))),
-                ListTile(title: const Text('Expenses Recorded'), trailing: Text(summary.expensesRecorded.toStringAsFixed(0))),
-                ListTile(title: const Text('Remaining Allowance'), trailing: Text(summary.remainingAllowance.toStringAsFixed(0))),
-                ListTile(title: const Text('Savings Amount'), trailing: Text(summary.savingsAmount.toStringAsFixed(0))),
+                ListTile(
+                  title: const Text('Allowance Received'),
+                  trailing: Text(summary.allowanceReceived.toStringAsFixed(0)),
+                ),
+                ListTile(
+                  title: const Text('Expenses Recorded'),
+                  trailing: Text(summary.expensesRecorded.toStringAsFixed(0)),
+                ),
+                ListTile(
+                  title: const Text('Remaining Allowance'),
+                  trailing: Text(summary.remainingAllowance.toStringAsFixed(0)),
+                ),
+                ListTile(
+                  title: const Text('Savings Amount'),
+                  trailing: Text(summary.savingsAmount.toStringAsFixed(0)),
+                ),
               ],
             ),
             loading: () => const Padding(

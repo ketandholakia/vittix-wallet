@@ -77,13 +77,22 @@ void main() {
 
       final lines = csv.trim().split('\n');
       expect(lines.length, 3); // Header + 2 data rows
-      expect(lines[0], 'ID,Date,Type,Parent Category,Category,Account,Amount,Currency,Note');
-      
+      expect(
+        lines[0],
+        'ID,Date,Type,Parent Category,Category,Account,Amount,Currency,Note',
+      );
+
       // First transaction line
-      expect(lines[1], '101,2026-06-12,Expense,Food,Dining Out,Bank Account,50.5,INR,Dinner at restaurant');
-      
+      expect(
+        lines[1],
+        '101,2026-06-12,Expense,Food,Dining Out,Bank Account,50.5,INR,Dinner at restaurant',
+      );
+
       // Second transaction line
-      expect(lines[2], '102,2026-06-01,Income,,Salary,Bank Account,1000.0,INR,');
+      expect(
+        lines[2],
+        '102,2026-06-01,Income,,Salary,Bank Account,1000.0,INR,',
+      );
     });
 
     test('escapes special characters correctly in CSV fields', () {
@@ -111,7 +120,7 @@ void main() {
           note: 'Purchased apple, banana, & "peaches"\nNext line note.',
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
-        )
+        ),
       ];
 
       final csv = generateCsv(
@@ -122,13 +131,21 @@ void main() {
 
       final lines = csv.trim().split('\n');
       // Due to a newline in the note field, split('\n') returns 3 lines
-      expect(lines.length, 3); 
-      
+      expect(lines.length, 3);
+
       // First line should be header
-      expect(lines[0], 'ID,Date,Type,Parent Category,Category,Account,Amount,Currency,Note');
-      
+      expect(
+        lines[0],
+        'ID,Date,Type,Parent Category,Category,Account,Amount,Currency,Note',
+      );
+
       // Data row starts on line 1, continues to line 2
-      expect(lines[1], startsWith('201,2026-06-12,Expense,,"Misc, Tricky Category","My ""Super"" Bank",25.0,USD,"Purchased apple, banana, & ""peaches""'));
+      expect(
+        lines[1],
+        startsWith(
+          '201,2026-06-12,Expense,,"Misc, Tricky Category","My ""Super"" Bank",25.0,USD,"Purchased apple, banana, & ""peaches""',
+        ),
+      );
       expect(lines[2], 'Next line note."');
     });
   });
@@ -152,14 +169,18 @@ void main() {
       expect(escapeCsvField('+SUM(A1)'), "'+SUM(A1)");
       expect(escapeCsvField('-2+3'), "'-2+3");
       expect(escapeCsvField('@SUM(A1)'), "'@SUM(A1)");
-      expect(escapeCsvField('=HYPERLINK("http://x")'),
-          '"\'=HYPERLINK(""http://x"")"');
+      expect(
+        escapeCsvField('=HYPERLINK("http://x")'),
+        '"\'=HYPERLINK(""http://x"")"',
+      );
     });
 
-    test('formula injection combined with a comma is both prefixed and quoted',
-        () {
-      expect(escapeCsvField('=A1,B1'), '"\'=A1,B1"');
-    });
+    test(
+      'formula injection combined with a comma is both prefixed and quoted',
+      () {
+        expect(escapeCsvField('=A1,B1'), '"\'=A1,B1"');
+      },
+    );
 
     test('a formula marker in the middle of a value is left alone', () {
       expect(escapeCsvField('coffee - 2'), 'coffee - 2');

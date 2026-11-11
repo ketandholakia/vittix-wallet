@@ -24,7 +24,10 @@ class BetaObservationDashboardScreen extends ConsumerWidget {
               data: (health) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${health.score}/100', style: Theme.of(context).textTheme.displaySmall),
+                  Text(
+                    '${health.score}/100',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
                   const SizedBox(height: 8),
                   Text(health.label),
                 ],
@@ -38,8 +41,18 @@ class BetaObservationDashboardScreen extends ConsumerWidget {
             child: onboardingAsync.when(
               data: (summary) => Column(
                 children: [
-                  _MetricRow('Started onboarding', summary.walletCreationStarted + summary.inviteFlowStarted + summary.smsSetupStarted),
-                  _MetricRow('Completed onboarding', summary.walletCreationCompleted + summary.inviteFlowCompleted + summary.smsSetupCompleted),
+                  _MetricRow(
+                    'Started onboarding',
+                    summary.walletCreationStarted +
+                        summary.inviteFlowStarted +
+                        summary.smsSetupStarted,
+                  ),
+                  _MetricRow(
+                    'Completed onboarding',
+                    summary.walletCreationCompleted +
+                        summary.inviteFlowCompleted +
+                        summary.smsSetupCompleted,
+                  ),
                   _MetricRow('Wallet created', summary.walletCreationCompleted),
                   _MetricRow('Invite accepted', summary.inviteFlowCompleted),
                   _MetricRow('SMS setup completed', summary.smsSetupCompleted),
@@ -51,8 +64,12 @@ class BetaObservationDashboardScreen extends ConsumerWidget {
           ),
           _SectionCard(
             title: 'Wallet activity',
-            child: ref.watch(walletActivityProvider).when(
-                  data: (activities) => Text('Recent wallet activity events: ${activities.length}'),
+            child: ref
+                .watch(walletActivityProvider)
+                .when(
+                  data: (activities) => Text(
+                    'Recent wallet activity events: ${activities.length}',
+                  ),
                   loading: () => const SizedBox(height: 32),
                   error: (error, _) => Text('Activity unavailable: $error'),
                 ),
@@ -67,7 +84,9 @@ class BetaObservationDashboardScreen extends ConsumerWidget {
                   _MetricRow('Duplicates', metric?.duplicateDetections ?? 0),
                   _MetricRow(
                     'Confidence distribution',
-                    (metric?.acceptedImports ?? 0) + (metric?.rejectedImports ?? 0) + (metric?.duplicateDetections ?? 0),
+                    (metric?.acceptedImports ?? 0) +
+                        (metric?.rejectedImports ?? 0) +
+                        (metric?.duplicateDetections ?? 0),
                   ),
                 ],
               ),
@@ -80,10 +99,22 @@ class BetaObservationDashboardScreen extends ConsumerWidget {
             child: frictionAsync.when(
               data: (friction) => Column(
                 children: [
-                  _MetricRow('Abandoned invites', friction.abandonedInviteFlows),
-                  _MetricRow('Abandoned SMS setup', friction.abandonedSmsImports),
-                  _MetricRow('Failed split creation', friction.failedSplitCreations),
-                  _MetricRow('Failed settlement creation', friction.failedSettlementCreations),
+                  _MetricRow(
+                    'Abandoned invites',
+                    friction.abandonedInviteFlows,
+                  ),
+                  _MetricRow(
+                    'Abandoned SMS setup',
+                    friction.abandonedSmsImports,
+                  ),
+                  _MetricRow(
+                    'Failed split creation',
+                    friction.failedSplitCreations,
+                  ),
+                  _MetricRow(
+                    'Failed settlement creation',
+                    friction.failedSettlementCreations,
+                  ),
                 ],
               ),
               loading: () => const SizedBox(height: 32),
@@ -95,10 +126,19 @@ class BetaObservationDashboardScreen extends ConsumerWidget {
             child: feedbackAsync.when(
               data: (feedback) => Column(
                 children: [
-                  _MetricRow('Bug reports', feedback.categoryCounts['bug'] ?? 0),
+                  _MetricRow(
+                    'Bug reports',
+                    feedback.categoryCounts['bug'] ?? 0,
+                  ),
                   _MetricRow('UX issues', feedback.recentUxIssues),
-                  _MetricRow('Feature requests', feedback.categoryCounts['improvement'] ?? 0),
-                  _MetricRow('SMS issues', feedback.categoryCounts['smsParsingIssue'] ?? 0),
+                  _MetricRow(
+                    'Feature requests',
+                    feedback.categoryCounts['improvement'] ?? 0,
+                  ),
+                  _MetricRow(
+                    'SMS issues',
+                    feedback.categoryCounts['smsParsingIssue'] ?? 0,
+                  ),
                 ],
               ),
               loading: () => const SizedBox(height: 32),

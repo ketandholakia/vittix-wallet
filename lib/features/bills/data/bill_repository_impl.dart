@@ -8,7 +8,11 @@ abstract class BillRepository {
   Future<bool> updateBill(Insertable<WalletBill> bill, {int? actorAccountId});
   Future<int> deleteBill(int id, {int? actorAccountId});
   Future<bool> markBillPaid(int id, {int? actorAccountId});
-  Future<bool> updateBillStatus(int id, WalletBillStatus status, {int? actorAccountId});
+  Future<bool> updateBillStatus(
+    int id,
+    WalletBillStatus status, {
+    int? actorAccountId,
+  });
 }
 
 class BillRepositoryImpl implements BillRepository {
@@ -34,7 +38,10 @@ class BillRepositoryImpl implements BillRepository {
   }
 
   @override
-  Future<int> addBill(Insertable<WalletBill> bill, {int? actorAccountId}) async {
+  Future<int> addBill(
+    Insertable<WalletBill> bill, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageBillsAndSchedules(r),
@@ -45,7 +52,10 @@ class BillRepositoryImpl implements BillRepository {
   }
 
   @override
-  Future<bool> updateBill(Insertable<WalletBill> bill, {int? actorAccountId}) async {
+  Future<bool> updateBill(
+    Insertable<WalletBill> bill, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageBillsAndSchedules(r),
@@ -78,7 +88,11 @@ class BillRepositoryImpl implements BillRepository {
   }
 
   @override
-  Future<bool> updateBillStatus(int id, WalletBillStatus status, {int? actorAccountId}) async {
+  Future<bool> updateBillStatus(
+    int id,
+    WalletBillStatus status, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canMarkBillsPaid(r),

@@ -12,7 +12,8 @@ class GetBudgetStatus {
   GetBudgetStatus(this.budgetRepository, this.transactionRepository);
 
   Stream<List<Budget>> call(DateTime month, RolloverMode mode) {
-    final targetPeriod = '${month.year}-${month.month.toString().padLeft(2, '0')}';
+    final targetPeriod =
+        '${month.year}-${month.month.toString().padLeft(2, '0')}';
     final targetStart = DateTime(month.year, month.month, 1);
     final targetEnd = DateTime(month.year, month.month + 1, 1);
 
@@ -21,7 +22,9 @@ class GetBudgetStatus {
       transactionRepository.watchAllTransactions(),
       (List<Budget> allBudgets, List<Transaction> allTransactions) {
         // Filter budgets for the target month
-        final monthlyBudgets = allBudgets.where((b) => b.period == targetPeriod).toList();
+        final monthlyBudgets = allBudgets
+            .where((b) => b.period == targetPeriod)
+            .toList();
 
         return monthlyBudgets.map((budget) {
           // Calculate rolloverAmount dynamically
@@ -54,18 +57,25 @@ class GetBudgetStatus {
             if (oldestMonth != null && oldestMonth.isBefore(targetStart)) {
               DateTime current = oldestMonth;
               while (current.isBefore(targetStart)) {
-                final currentPeriod = '${current.year}-${current.month.toString().padLeft(2, '0')}';
+                final currentPeriod =
+                    '${current.year}-${current.month.toString().padLeft(2, '0')}';
                 final currentBudget = budgetMap[currentPeriod];
 
                 if (currentBudget != null) {
-                  final nextMonth = DateTime(current.year, current.month + 1, 1);
+                  final nextMonth = DateTime(
+                    current.year,
+                    current.month + 1,
+                    1,
+                  );
                   final spent = allTransactions
-                      .where((tx) =>
-                          tx.type == TransactionType.expense &&
-                          (tx.category.id == budget.category.id ||
-                           tx.category.parentId == budget.category.id) &&
-                          !tx.date.isBefore(current) &&
-                          tx.date.isBefore(nextMonth))
+                      .where(
+                        (tx) =>
+                            tx.type == TransactionType.expense &&
+                            (tx.category.id == budget.category.id ||
+                                tx.category.parentId == budget.category.id) &&
+                            !tx.date.isBefore(current) &&
+                            tx.date.isBefore(nextMonth),
+                      )
                       .fold(0.0, (sum, tx) => sum + tx.amount);
 
                   final remaining = (currentBudget.amount + rollover) - spent;
@@ -87,12 +97,14 @@ class GetBudgetStatus {
 
           // Calculate spent for the target month
           final spent = allTransactions
-              .where((tx) =>
-                  tx.type == TransactionType.expense &&
-                  (tx.category.id == budget.category.id ||
-                   tx.category.parentId == budget.category.id) &&
-                  !tx.date.isBefore(targetStart) &&
-                  tx.date.isBefore(targetEnd))
+              .where(
+                (tx) =>
+                    tx.type == TransactionType.expense &&
+                    (tx.category.id == budget.category.id ||
+                        tx.category.parentId == budget.category.id) &&
+                    !tx.date.isBefore(targetStart) &&
+                    tx.date.isBefore(targetEnd),
+              )
               .fold(0.0, (sum, tx) => sum + tx.amount);
 
           return Budget(

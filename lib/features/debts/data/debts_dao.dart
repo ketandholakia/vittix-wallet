@@ -13,7 +13,7 @@ class DebtsDao extends DatabaseAccessor<AppDatabase> with _$DebtsDaoMixin {
           ..where((l) => l.walletId.equals(walletId) & l.isActive.equals(true)))
         .watch();
   }
-  
+
   Stream<List<LoanDb>> watchAllLoans(int walletId) {
     return (select(loans)..where((l) => l.walletId.equals(walletId))).watch();
   }
@@ -24,19 +24,19 @@ class DebtsDao extends DatabaseAccessor<AppDatabase> with _$DebtsDaoMixin {
           ..orderBy([(pd) => OrderingTerm.desc(pd.date)]))
         .watch();
   }
-  
+
   Future<int> insertLoan(LoansCompanion companion) {
     return into(loans).insert(companion);
   }
-  
+
   Future<bool> updateLoan(LoansCompanion companion) {
     return update(loans).replace(companion);
   }
-  
+
   Future<int> insertPeerDebt(PeerDebtsCompanion companion) {
     return into(peerDebts).insert(companion);
   }
-  
+
   Future<bool> updatePeerDebt(PeerDebtsCompanion companion) {
     return update(peerDebts).replace(companion);
   }

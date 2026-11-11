@@ -13,9 +13,18 @@ class FamilyCommitmentsScreen extends ConsumerWidget {
       body: summaryAsync.when(
         data: (summary) => ListView(
           children: [
-            ListTile(title: const Text('Active Goals'), trailing: Text('${summary.activeGoals}')),
-            ListTile(title: const Text('Recurring Contributions'), trailing: Text('${summary.recurringContributions}')),
-            ListTile(title: const Text('Overdue Bills'), trailing: Text('${summary.overdueBills}')),
+            ListTile(
+              title: const Text('Active Goals'),
+              trailing: Text('${summary.activeGoals}'),
+            ),
+            ListTile(
+              title: const Text('Recurring Contributions'),
+              trailing: Text('${summary.recurringContributions}'),
+            ),
+            ListTile(
+              title: const Text('Overdue Bills'),
+              trailing: Text('${summary.overdueBills}'),
+            ),
             const Divider(),
             if (summary.upcomingBills.isEmpty)
               const ListTile(title: Text('No upcoming bills'))

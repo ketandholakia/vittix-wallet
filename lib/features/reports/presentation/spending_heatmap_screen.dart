@@ -10,7 +10,8 @@ class SpendingHeatmapScreen extends ConsumerStatefulWidget {
   const SpendingHeatmapScreen({super.key});
 
   @override
-  ConsumerState<SpendingHeatmapScreen> createState() => _SpendingHeatmapScreenState();
+  ConsumerState<SpendingHeatmapScreen> createState() =>
+      _SpendingHeatmapScreenState();
 }
 
 class _SpendingHeatmapScreenState extends ConsumerState<SpendingHeatmapScreen> {
@@ -58,11 +59,23 @@ class _SpendingHeatmapScreenState extends ConsumerState<SpendingHeatmapScreen> {
     final intensity = (amount / _maxDailySpend).clamp(0.0, 1.0);
     // Gradient from green (low) → yellow (medium) → red (high)
     if (intensity < 0.33) {
-      return Color.lerp(Colors.green.shade100, Colors.green.shade400, intensity * 3)!;
+      return Color.lerp(
+        Colors.green.shade100,
+        Colors.green.shade400,
+        intensity * 3,
+      )!;
     } else if (intensity < 0.66) {
-      return Color.lerp(Colors.yellow.shade200, Colors.orange.shade400, (intensity - 0.33) * 3)!;
+      return Color.lerp(
+        Colors.yellow.shade200,
+        Colors.orange.shade400,
+        (intensity - 0.33) * 3,
+      )!;
     } else {
-      return Color.lerp(Colors.orange.shade400, Colors.red.shade600, (intensity - 0.66) * 3)!;
+      return Color.lerp(
+        Colors.orange.shade400,
+        Colors.red.shade600,
+        (intensity - 0.66) * 3,
+      )!;
     }
   }
 
@@ -71,13 +84,15 @@ class _SpendingHeatmapScreenState extends ConsumerState<SpendingHeatmapScreen> {
     final currencyFormat = ref.watch(currencyFormatProvider);
     final theme = Theme.of(context);
     final selectedAmount = _selectedDay != null
-        ? _dailySpending[DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day)]
+        ? _dailySpending[DateTime(
+            _selectedDay!.year,
+            _selectedDay!.month,
+            _selectedDay!.day,
+          )]
         : null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Spending Heatmap'),
-      ),
+      appBar: AppBar(title: const Text('Spending Heatmap')),
       body: Column(
         children: [
           TableCalendar<Object?>(
@@ -133,7 +148,9 @@ class _SpendingHeatmapScreenState extends ConsumerState<SpendingHeatmapScreen> {
             headerStyle: HeaderStyle(
               formatButtonVisible: false,
               titleCentered: true,
-              titleTextStyle: theme.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+              titleTextStyle: theme.textTheme.titleMedium!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 16),

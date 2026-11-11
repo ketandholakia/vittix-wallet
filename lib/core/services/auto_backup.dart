@@ -32,11 +32,11 @@ class AutoBackupSettings {
   static const _encryptKey = 'auto_backup_encrypt';
 
   static AutoBackupSettings load(SharedPreferences prefs) => AutoBackupSettings(
-        enabled: prefs.getBool(_enabledKey) ?? false,
-        intervalDays: prefs.getInt(_intervalKey) ?? 7,
-        directoryPath: prefs.getString(_directoryKey),
-        encrypt: prefs.getBool(_encryptKey) ?? false,
-      );
+    enabled: prefs.getBool(_enabledKey) ?? false,
+    intervalDays: prefs.getInt(_intervalKey) ?? 7,
+    directoryPath: prefs.getString(_directoryKey),
+    encrypt: prefs.getBool(_encryptKey) ?? false,
+  );
 
   Future<void> save(SharedPreferences prefs) async {
     await prefs.setBool(_enabledKey, enabled);
@@ -73,7 +73,7 @@ class AutoBackupSettings {
 /// [keepCount] are pruned so the folder does not grow without bound.
 class AutoBackupService {
   AutoBackupService(this._backupService, {FlutterSecureStorage? storage})
-      : _storage = storage ?? const FlutterSecureStorage();
+    : _storage = storage ?? const FlutterSecureStorage();
 
   static const _lastRunKey = 'auto_backup_last_run';
   static const _passphraseKey = 'auto_backup_passphrase';
@@ -85,7 +85,10 @@ class AutoBackupService {
   final FlutterSecureStorage _storage;
 
   static Future<void> setPassphrase(String passphrase) =>
-      const FlutterSecureStorage().write(key: _passphraseKey, value: passphrase);
+      const FlutterSecureStorage().write(
+        key: _passphraseKey,
+        value: passphrase,
+      );
 
   Future<String?> readPassphrase() => _storage.read(key: _passphraseKey);
 
@@ -132,12 +135,13 @@ class AutoBackupService {
 
   /// Keeps only the [keepCount] most recent backups.
   Future<void> _prune(Directory dir) async {
-    final backups = dir
-        .listSync()
-        .whereType<File>()
-        .where((f) => p.basename(f.path).startsWith('expense_backup_'))
-        .toList()
-      ..sort((a, b) => a.path.compareTo(b.path));
+    final backups =
+        dir
+            .listSync()
+            .whereType<File>()
+            .where((f) => p.basename(f.path).startsWith('expense_backup_'))
+            .toList()
+          ..sort((a, b) => a.path.compareTo(b.path));
 
     while (backups.length > keepCount) {
       final oldest = backups.removeAt(0);

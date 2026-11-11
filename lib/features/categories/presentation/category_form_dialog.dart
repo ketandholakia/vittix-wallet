@@ -10,20 +10,20 @@ const _iconOptions = [
   Symbols.coffee,
   Symbols.local_bar,
   Symbols.fastfood,
-  
+
   // Shopping
   Symbols.shopping_bag,
   Symbols.shopping_cart,
   Symbols.store,
   Symbols.checkroom,
-  
+
   // Transport & Auto
   Symbols.local_gas_station,
   Symbols.directions_car,
   Symbols.directions_bus,
   Symbols.two_wheeler,
   Symbols.build,
-  
+
   // Bills & Utilities
   Symbols.receipt_long,
   Symbols.electric_bolt,
@@ -31,43 +31,43 @@ const _iconOptions = [
   Symbols.wifi,
   Symbols.phone_android,
   Symbols.home_repair_service,
-  
+
   // Health & Personal Care
   Symbols.medical_services,
   Symbols.fitness_center,
   Symbols.spa,
   Symbols.health_and_safety,
-  
+
   // Travel & Leisure
   Symbols.flight,
   Symbols.hotel,
   Symbols.explore,
-  
+
   // Education & Books
   Symbols.school,
   Symbols.book,
-  
+
   // Entertainment & Hobby
   Symbols.movie,
   Symbols.sports_esports,
   Symbols.music_note,
   Symbols.subscriptions,
-  
+
   // Home & Living
   Symbols.home,
   Symbols.apartment,
-  
+
   // Family & Social
   Symbols.child_care,
   Symbols.group,
-  
+
   // Pets
   Symbols.pets,
-  
+
   // Gifts & Charity
   Symbols.card_giftcard,
   Symbols.volunteer_activism,
-  
+
   // Finance & Money
   Symbols.payments,
   Symbols.trending_up,
@@ -76,7 +76,7 @@ const _iconOptions = [
   Symbols.credit_card,
   Symbols.account_balance,
   Symbols.work,
-  
+
   // Others
   Symbols.celebration,
   Symbols.help,
@@ -115,7 +115,8 @@ class _CategoryFormDialog extends ConsumerStatefulWidget {
   const _CategoryFormDialog({this.category, required this.ref});
 
   @override
-  ConsumerState<_CategoryFormDialog> createState() => _CategoryFormDialogState();
+  ConsumerState<_CategoryFormDialog> createState() =>
+      _CategoryFormDialogState();
 }
 
 class _CategoryFormDialogState extends ConsumerState<_CategoryFormDialog> {
@@ -159,7 +160,9 @@ class _CategoryFormDialogState extends ConsumerState<_CategoryFormDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final categoriesStream = ref.watch(watchAllCategoriesUseCaseProvider).call();
+    final categoriesStream = ref
+        .watch(watchAllCategoriesUseCaseProvider)
+        .call();
 
     return AlertDialog(
       title: Text(_isEditing ? 'Edit Category' : 'Add Category'),
@@ -195,7 +198,12 @@ class _CategoryFormDialogState extends ConsumerState<_CategoryFormDialog> {
                   builder: (context, snapshot) {
                     final list = snapshot.data ?? [];
                     // Filter: only allow top-level categories as parents, and exclude the current category itself.
-                    final parentCandidates = list.where((c) => c.parentId == null && c.id != widget.category?.id).toList();
+                    final parentCandidates = list
+                        .where(
+                          (c) =>
+                              c.parentId == null && c.id != widget.category?.id,
+                        )
+                        .toList();
 
                     return DropdownButtonFormField<int?>(
                       initialValue: _selectedParentId,
@@ -213,7 +221,11 @@ class _CategoryFormDialogState extends ConsumerState<_CategoryFormDialog> {
                             value: parent.id,
                             child: Row(
                               children: [
-                                Icon(parent.icon, color: parent.color, size: 20),
+                                Icon(
+                                  parent.icon,
+                                  color: parent.color,
+                                  size: 20,
+                                ),
                                 const SizedBox(width: 8),
                                 Text(parent.name),
                               ],
@@ -238,7 +250,8 @@ class _CategoryFormDialogState extends ConsumerState<_CategoryFormDialog> {
                   spacing: 8,
                   runSpacing: 8,
                   children: _iconOptions.map((icon) {
-                    final isSelected = icon.codePoint == _selectedIcon.codePoint;
+                    final isSelected =
+                        icon.codePoint == _selectedIcon.codePoint;
                     return InkWell(
                       onTap: () => setState(() => _selectedIcon = icon),
                       borderRadius: BorderRadius.circular(8),
@@ -248,13 +261,18 @@ class _CategoryFormDialogState extends ConsumerState<_CategoryFormDialog> {
                         decoration: BoxDecoration(
                           color: isSelected
                               ? _selectedColor.withValues(alpha: 0.2)
-                              : Theme.of(context).colorScheme.surfaceContainerHighest,
+                              : Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(8),
                           border: isSelected
                               ? Border.all(color: _selectedColor, width: 2)
                               : null,
                         ),
-                        child: Icon(icon, color: isSelected ? _selectedColor : null),
+                        child: Icon(
+                          icon,
+                          color: isSelected ? _selectedColor : null,
+                        ),
                       ),
                     );
                   }).toList(),
@@ -268,7 +286,8 @@ class _CategoryFormDialogState extends ConsumerState<_CategoryFormDialog> {
                   spacing: 8,
                   runSpacing: 8,
                   children: _colorOptions.map((color) {
-                    final isSelected = color.toARGB32() == _selectedColor.toARGB32();
+                    final isSelected =
+                        color.toARGB32() == _selectedColor.toARGB32();
                     return InkWell(
                       onTap: () => setState(() => _selectedColor = color),
                       customBorder: const CircleBorder(),
@@ -279,10 +298,21 @@ class _CategoryFormDialogState extends ConsumerState<_CategoryFormDialog> {
                           color: color,
                           shape: BoxShape.circle,
                           border: isSelected
-                              ? Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2)
+                              ? Border.all(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
+                                  width: 2,
+                                )
                               : null,
                         ),
-                        child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 18) : null,
+                        child: isSelected
+                            ? const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 18,
+                              )
+                            : null,
                       ),
                     );
                   }).toList(),

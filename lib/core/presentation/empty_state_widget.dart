@@ -26,13 +26,17 @@ class EmptyStateWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
                 size: 64,
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.8),
               ),
             ),
             const SizedBox(height: 24),
@@ -40,7 +44,9 @@ class EmptyStateWidget extends StatelessWidget {
               message,
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.8),
               ),
               textAlign: TextAlign.center,
             ),
@@ -49,16 +55,15 @@ class EmptyStateWidget extends StatelessWidget {
               Text(
                 subMessage!,
                 style: textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.5),
                   height: 1.4,
                 ),
                 textAlign: TextAlign.center,
               ),
             ],
-            if (action != null) ...[
-              const SizedBox(height: 24),
-              action!,
-            ],
+            if (action != null) ...[const SizedBox(height: 24), action!],
           ],
         ),
       ),

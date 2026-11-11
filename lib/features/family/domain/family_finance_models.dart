@@ -19,7 +19,8 @@ class GoalViewModel {
     this.archived = false,
   });
 
-  double get progress => targetAmount <= 0 ? 0 : (currentAmount / targetAmount).clamp(0.0, 1.0);
+  double get progress =>
+      targetAmount <= 0 ? 0 : (currentAmount / targetAmount).clamp(0.0, 1.0);
 }
 
 class GoalContributionViewModel {
@@ -27,7 +28,11 @@ class GoalContributionViewModel {
   final double amount;
   final DateTime date;
 
-  const GoalContributionViewModel({required this.contributor, required this.amount, required this.date});
+  const GoalContributionViewModel({
+    required this.contributor,
+    required this.amount,
+    required this.date,
+  });
 }
 
 class BudgetViewModel {
@@ -48,7 +53,8 @@ class BudgetViewModel {
   });
 
   double get remaining => budgetAmount - spent;
-  double get usage => budgetAmount <= 0 ? 0 : (spent / budgetAmount).clamp(0.0, 1.0);
+  double get usage =>
+      budgetAmount <= 0 ? 0 : (spent / budgetAmount).clamp(0.0, 1.0);
 }
 
 class BudgetActivityViewModel {

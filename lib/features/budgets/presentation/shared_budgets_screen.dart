@@ -1,5 +1,6 @@
 import 'package:vittix_wallet/features/budgets/domain/budget.dart' as domain;
-import 'package:vittix_wallet/features/categories/domain/category.dart' as domain;
+import 'package:vittix_wallet/features/categories/domain/category.dart'
+    as domain;
 import 'package:vittix_wallet/features/dashboard/presentation/dashboard_providers.dart';
 import 'package:vittix_wallet/core/providers/database_provider.dart';
 import 'package:vittix_wallet/core/providers/repository_providers.dart';
@@ -27,7 +28,9 @@ class SharedBudgetsScreen extends ConsumerWidget {
               ? const Center(
                   child: Padding(
                     padding: EdgeInsets.all(24),
-                    child: Text('No shared budgets yet. Create a wallet budget to set a common spending limit.'),
+                    child: Text(
+                      'No shared budgets yet. Create a wallet budget to set a common spending limit.',
+                    ),
                   ),
                 )
               : ListView.builder(
@@ -37,12 +40,23 @@ class SharedBudgetsScreen extends ConsumerWidget {
                     final canManage = permissions.canManageBudgets(role);
                     return ListTile(
                       title: Text(budget.category),
-                      subtitle: Text('${budget.spent.toStringAsFixed(0)} spent / ${budget.budgetAmount.toStringAsFixed(0)}'),
+                      subtitle: Text(
+                        '${budget.spent.toStringAsFixed(0)} spent / ${budget.budgetAmount.toStringAsFixed(0)}',
+                      ),
                       trailing: Wrap(
                         spacing: 8,
                         children: [
-                          if (canManage) IconButton(icon: const Icon(Icons.edit), onPressed: () => _edit(context, ref, walletId, budget)),
-                          if (canManage) IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(ref, budget.id)),
+                          if (canManage)
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () =>
+                                  _edit(context, ref, walletId, budget),
+                            ),
+                          if (canManage)
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => _delete(ref, budget.id),
+                            ),
                         ],
                       ),
                     );
@@ -57,26 +71,46 @@ class SharedBudgetsScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _edit(BuildContext context, WidgetRef ref, int walletId, BudgetViewModel budget) async {
+  Future<void> _edit(
+    BuildContext context,
+    WidgetRef ref,
+    int walletId,
+    BudgetViewModel budget,
+  ) async {
     final amount = TextEditingController(text: budget.budgetAmount.toString());
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Edit Budget'),
-        content: TextField(controller: amount, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Amount')),
+        content: TextField(
+          controller: amount,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(labelText: 'Amount'),
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
             onPressed: () async {
               final value = double.tryParse(amount.text) ?? budget.budgetAmount;
               final db = ref.read(databaseProvider);
-              final categoryId = (await db.select(db.categories).get()).first.id;
-              await ref.read(budgetRepositoryProvider).updateBudget(
+              final categoryId =
+                  (await db.select(db.categories).get()).first.id;
+              await ref
+                  .read(budgetRepositoryProvider)
+                  .updateBudget(
                     domain.Budget(
                       id: budget.id,
                       amount: value,
                       period: '2026-06',
-                      category: domain.Category(id: categoryId, name: budget.category, icon: Icons.pie_chart, color: Colors.blue),
+                      category: domain.Category(
+                        id: categoryId,
+                        name: budget.category,
+                        icon: Icons.pie_chart,
+                        color: Colors.blue,
+                      ),
                     ),
                   );
               if (context.mounted) Navigator.pop(context);

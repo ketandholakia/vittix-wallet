@@ -10,7 +10,10 @@ class BillDashboardWidget extends ConsumerWidget {
     final billsAsync = ref.watch(billViewModelsProvider);
     return billsAsync.when(
       data: (bills) {
-        final upcoming = bills.where((bill) => bill.status != 'paid').take(3).toList();
+        final upcoming = bills
+            .where((bill) => bill.status != 'paid')
+            .take(3)
+            .toList();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

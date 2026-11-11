@@ -3,9 +3,5 @@ class Attachment {
   final String filePath;
   final String? fileType;
 
-  Attachment({
-    required this.id,
-    required this.filePath,
-    this.fileType,
-  });
+  Attachment({required this.id, required this.filePath, this.fileType});
 }

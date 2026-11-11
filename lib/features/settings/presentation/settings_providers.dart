@@ -19,7 +19,9 @@ final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return const FlutterSecureStorage();
 });
 
-final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
+final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((
+  ref,
+) {
   final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
   return ThemeModeNotifier(prefs);
 });
@@ -28,7 +30,15 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   final SharedPreferences? _prefs;
   static const _themeKey = 'themeMode';
 
-  ThemeModeNotifier(this._prefs) : super(_prefs == null ? ThemeMode.system : ThemeMode.values.firstWhere((e) => e.name == _prefs.getString(_themeKey), orElse: () => ThemeMode.system));
+  ThemeModeNotifier(this._prefs)
+    : super(
+        _prefs == null
+            ? ThemeMode.system
+            : ThemeMode.values.firstWhere(
+                (e) => e.name == _prefs.getString(_themeKey),
+                orElse: () => ThemeMode.system,
+              ),
+      );
 
   void updateThemeMode(ThemeMode newMode) {
     if (newMode != state) {
@@ -57,7 +67,9 @@ final Map<Currency, CurrencyInfo> currencyData = {
   Currency.GBP: CurrencyInfo('£', 'en_GB'),
 };
 
-final currencyProvider = StateNotifierProvider<CurrencyNotifier, Currency>((ref) {
+final currencyProvider = StateNotifierProvider<CurrencyNotifier, Currency>((
+  ref,
+) {
   final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
   return CurrencyNotifier(prefs);
 });
@@ -66,7 +78,14 @@ class CurrencyNotifier extends StateNotifier<Currency> {
   final SharedPreferences? _prefs;
   static const _currencyKey = 'currency';
 
-  CurrencyNotifier(this._prefs) : super(_prefs == null ? Currency.INR : Currency.values.byName(_prefs.getString(_currencyKey) ?? Currency.INR.name));
+  CurrencyNotifier(this._prefs)
+    : super(
+        _prefs == null
+            ? Currency.INR
+            : Currency.values.byName(
+                _prefs.getString(_currencyKey) ?? Currency.INR.name,
+              ),
+      );
 
   void updateCurrency(Currency newCurrency) {
     if (newCurrency != state) {
@@ -85,32 +104,35 @@ class CurrencyNotifier extends StateNotifier<Currency> {
 
   double convertToBaseCurrency(double amount, Currency fromCurrency) {
     if (fromCurrency == state) return amount;
-    
+
     // Convert from -> USD -> Base (state)
     final fromRate = _exchangeRates[fromCurrency]!;
     final baseRate = _exchangeRates[state]!;
-    
+
     final inUsd = amount / fromRate;
     return inUsd * baseRate;
   }
 }
 
-final rolloverModeProvider = StateNotifierProvider<RolloverModeNotifier, RolloverMode>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return RolloverModeNotifier(prefs);
-});
+final rolloverModeProvider =
+    StateNotifierProvider<RolloverModeNotifier, RolloverMode>((ref) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      return RolloverModeNotifier(prefs);
+    });
 
 class RolloverModeNotifier extends StateNotifier<RolloverMode> {
   final SharedPreferences? _prefs;
   static const _rolloverKey = 'rolloverMode';
 
   RolloverModeNotifier(this._prefs)
-      : super(_prefs == null
+    : super(
+        _prefs == null
             ? RolloverMode.surplusOnly
             : RolloverMode.values.firstWhere(
                 (e) => e.name == _prefs.getString(_rolloverKey),
                 orElse: () => RolloverMode.surplusOnly,
-              ));
+              ),
+      );
 
   void updateRolloverMode(RolloverMode newMode) {
     if (newMode != state) {
@@ -126,10 +148,11 @@ final currencyFormatProvider = Provider<NumberFormat>((ref) {
   return NumberFormat.currency(locale: info.locale, symbol: info.symbol);
 });
 
-final pinLockEnabledProvider = StateNotifierProvider<PinLockEnabledNotifier, bool>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return PinLockEnabledNotifier(prefs);
-});
+final pinLockEnabledProvider =
+    StateNotifierProvider<PinLockEnabledNotifier, bool>((ref) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      return PinLockEnabledNotifier(prefs);
+    });
 
 class PinLockEnabledNotifier extends StateNotifier<bool> {
   final SharedPreferences? _prefs;
@@ -143,26 +166,24 @@ class PinLockEnabledNotifier extends StateNotifier<bool> {
   }
 }
 
-final biometricsEnabledProvider = StateNotifierProvider<BiometricsEnabledNotifier, bool>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return BiometricsEnabledNotifier(prefs);
-});
+final biometricsEnabledProvider =
+    StateNotifierProvider<BiometricsEnabledNotifier, bool>((ref) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      return BiometricsEnabledNotifier(prefs);
+    });
 
 class BiometricsEnabledNotifier extends StateNotifier<bool> {
   final SharedPreferences? _prefs;
   static const _key = 'isBiometricsEnabled';
 
-  BiometricsEnabledNotifier(this._prefs) : super(_prefs?.getBool(_key) ?? false);
+  BiometricsEnabledNotifier(this._prefs)
+    : super(_prefs?.getBool(_key) ?? false);
 
   void updateBiometricsEnabled(bool enabled) {
     _prefs?.setBool(_key, enabled);
     state = enabled;
   }
 }
-
-
-
-
 
 String hashPin(String pin) {
   const salt = 'vittix_wallet_salt_!@#';
@@ -189,7 +210,9 @@ class SyncUrlNotifier extends StateNotifier<String> {
   }
 }
 
-final syncTokenProvider = StateNotifierProvider<SyncTokenNotifier, String>((ref) {
+final syncTokenProvider = StateNotifierProvider<SyncTokenNotifier, String>((
+  ref,
+) {
   final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
   final secure = SecureStorageKeyValueStore(ref.watch(secureStorageProvider));
   return SyncTokenNotifier(secure, prefs);
@@ -247,8 +270,8 @@ class SyncTokenNotifier extends StateNotifier<String> {
 /// Stored in the platform keystore, never in SharedPreferences.
 final syncPassphraseProvider =
     StateNotifierProvider<SyncPassphraseNotifier, String>((ref) {
-  return SyncPassphraseNotifier(ref.watch(secureStorageProvider));
-});
+      return SyncPassphraseNotifier(ref.watch(secureStorageProvider));
+    });
 
 class SyncPassphraseNotifier extends StateNotifier<String> {
   SyncPassphraseNotifier(this._storage) : super('') {
@@ -274,10 +297,11 @@ class SyncPassphraseNotifier extends StateNotifier<String> {
   }
 }
 
-final nextcloudUsernameProvider = StateNotifierProvider<NextcloudUsernameNotifier, String>((ref) {
-  final secureStorage = ref.watch(secureStorageProvider);
-  return NextcloudUsernameNotifier(secureStorage);
-});
+final nextcloudUsernameProvider =
+    StateNotifierProvider<NextcloudUsernameNotifier, String>((ref) {
+      final secureStorage = ref.watch(secureStorageProvider);
+      return NextcloudUsernameNotifier(secureStorage);
+    });
 
 class NextcloudUsernameNotifier extends StateNotifier<String> {
   final FlutterSecureStorage _storage;
@@ -288,16 +312,18 @@ class NextcloudUsernameNotifier extends StateNotifier<String> {
   Future<void> _load() async {
     state = await _storage.read(key: _key) ?? '';
   }
+
   Future<void> updateUsername(String value) async {
     await _storage.write(key: _key, value: value);
     state = value;
   }
 }
 
-final nextcloudPasswordProvider = StateNotifierProvider<NextcloudPasswordNotifier, String>((ref) {
-  final secureStorage = ref.watch(secureStorageProvider);
-  return NextcloudPasswordNotifier(secureStorage);
-});
+final nextcloudPasswordProvider =
+    StateNotifierProvider<NextcloudPasswordNotifier, String>((ref) {
+      final secureStorage = ref.watch(secureStorageProvider);
+      return NextcloudPasswordNotifier(secureStorage);
+    });
 
 class NextcloudPasswordNotifier extends StateNotifier<String> {
   final FlutterSecureStorage _storage;
@@ -308,16 +334,18 @@ class NextcloudPasswordNotifier extends StateNotifier<String> {
   Future<void> _load() async {
     state = await _storage.read(key: _key) ?? '';
   }
+
   Future<void> updatePassword(String value) async {
     await _storage.write(key: _key, value: value);
     state = value;
   }
 }
 
-final isSimulatedSyncProvider = StateNotifierProvider<IsSimulatedSyncNotifier, bool>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return IsSimulatedSyncNotifier(prefs);
-});
+final isSimulatedSyncProvider =
+    StateNotifierProvider<IsSimulatedSyncNotifier, bool>((ref) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      return IsSimulatedSyncNotifier(prefs);
+    });
 
 class IsSimulatedSyncNotifier extends StateNotifier<bool> {
   final SharedPreferences? _prefs;
@@ -329,15 +357,21 @@ class IsSimulatedSyncNotifier extends StateNotifier<bool> {
   }
 }
 
-final lastSyncTimeProvider = StateNotifierProvider<LastSyncTimeNotifier, DateTime?>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return LastSyncTimeNotifier(prefs);
-});
+final lastSyncTimeProvider =
+    StateNotifierProvider<LastSyncTimeNotifier, DateTime?>((ref) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      return LastSyncTimeNotifier(prefs);
+    });
 
 class LastSyncTimeNotifier extends StateNotifier<DateTime?> {
   final SharedPreferences? _prefs;
   static const _key = 'lastSyncTime';
-  LastSyncTimeNotifier(this._prefs) : super(_prefs?.getString(_key) == null ? null : DateTime.tryParse(_prefs!.getString(_key)!));
+  LastSyncTimeNotifier(this._prefs)
+    : super(
+        _prefs?.getString(_key) == null
+            ? null
+            : DateTime.tryParse(_prefs!.getString(_key)!),
+      );
   void updateLastSyncTime(DateTime? value) {
     if (value == null) {
       _prefs?.remove(_key);
@@ -348,10 +382,11 @@ class LastSyncTimeNotifier extends StateNotifier<DateTime?> {
   }
 }
 
-final lastSelectedAccountIdProvider = StateNotifierProvider<LastSelectedAccountIdNotifier, int?>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return LastSelectedAccountIdNotifier(prefs);
-});
+final lastSelectedAccountIdProvider =
+    StateNotifierProvider<LastSelectedAccountIdNotifier, int?>((ref) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      return LastSelectedAccountIdNotifier(prefs);
+    });
 
 class LastSelectedAccountIdNotifier extends StateNotifier<int?> {
   final SharedPreferences? _prefs;
@@ -363,10 +398,11 @@ class LastSelectedAccountIdNotifier extends StateNotifier<int?> {
   }
 }
 
-final lastSelectedCategoryIdProvider = StateNotifierProvider<LastSelectedCategoryIdNotifier, int?>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return LastSelectedCategoryIdNotifier(prefs);
-});
+final lastSelectedCategoryIdProvider =
+    StateNotifierProvider<LastSelectedCategoryIdNotifier, int?>((ref) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      return LastSelectedCategoryIdNotifier(prefs);
+    });
 
 class LastSelectedCategoryIdNotifier extends StateNotifier<int?> {
   final SharedPreferences? _prefs;
@@ -378,18 +414,20 @@ class LastSelectedCategoryIdNotifier extends StateNotifier<int?> {
   }
 }
 
-final currentWalletIdProvider = StateNotifierProvider<CurrentWalletIdNotifier, int>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  final walletDao = ref.watch(walletDaoProvider);
-  return CurrentWalletIdNotifier(prefs, walletDao);
-});
+final currentWalletIdProvider =
+    StateNotifierProvider<CurrentWalletIdNotifier, int>((ref) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      final walletDao = ref.watch(walletDaoProvider);
+      return CurrentWalletIdNotifier(prefs, walletDao);
+    });
 
 class CurrentWalletIdNotifier extends StateNotifier<int> {
   final SharedPreferences? _prefs;
   final WalletDao? _walletDao;
   static const _key = 'currentWalletId';
-  
-  CurrentWalletIdNotifier(this._prefs, [this._walletDao]) : super(_prefs?.getInt(_key) ?? 1) {
+
+  CurrentWalletIdNotifier(this._prefs, [this._walletDao])
+    : super(_prefs?.getInt(_key) ?? 1) {
     _validateAndRestore();
   }
 
@@ -397,7 +435,10 @@ class CurrentWalletIdNotifier extends StateNotifier<int> {
     if (_walletDao == null) return;
     try {
       final storedId = _prefs?.getInt(_key);
-      final validId = await _walletDao.validateActiveWallet(storedId, actorAccountId: actorAccountId);
+      final validId = await _walletDao.validateActiveWallet(
+        storedId,
+        actorAccountId: actorAccountId,
+      );
       if (!mounted) return;
       if (validId != null) {
         if (state != validId) {
@@ -418,8 +459,10 @@ class CurrentWalletIdNotifier extends StateNotifier<int> {
   Future<bool> selectWallet(int value, {int? actorAccountId}) async {
     final walletDao = _walletDao;
     if (walletDao != null) {
-      final isValid =
-          await walletDao.isWalletValid(value, actorAccountId: actorAccountId);
+      final isValid = await walletDao.isWalletValid(
+        value,
+        actorAccountId: actorAccountId,
+      );
       if (!isValid) {
         // Rejecting the switch preserves the previous valid wallet instead of
         // moving the app into a wallet context the actor cannot access.
@@ -451,18 +494,25 @@ final availableWalletsProvider = StreamProvider<List<Wallet>>((ref) {
 final currentWalletProvider = StreamProvider<Wallet?>((ref) {
   final db = ref.watch(databaseProvider);
   final id = ref.watch(currentWalletIdProvider);
-  return (db.select(db.wallets)..where((w) => w.id.equals(id))).watchSingleOrNull();
+  return (db.select(
+    db.wallets,
+  )..where((w) => w.id.equals(id))).watchSingleOrNull();
 });
 
-final dashboardWidgetsOrderProvider = StateNotifierProvider<DashboardWidgetsOrderNotifier, List<String>>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return DashboardWidgetsOrderNotifier(prefs);
-});
+final dashboardWidgetsOrderProvider =
+    StateNotifierProvider<DashboardWidgetsOrderNotifier, List<String>>((ref) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      return DashboardWidgetsOrderNotifier(prefs);
+    });
 
 class DashboardWidgetsOrderNotifier extends StateNotifier<List<String>> {
   final SharedPreferences? _prefs;
   static const _key = 'dashboardWidgetsOrder';
-  DashboardWidgetsOrderNotifier(this._prefs) : super(_prefs?.getStringList(_key) ?? ['accounts', 'budgets', 'debts', 'spending', 'recent']);
+  DashboardWidgetsOrderNotifier(this._prefs)
+    : super(
+        _prefs?.getStringList(_key) ??
+            ['accounts', 'budgets', 'debts', 'spending', 'recent'],
+      );
 
   void updateOrder(List<String> newOrder) {
     _prefs?.setStringList(_key, newOrder);
@@ -470,10 +520,13 @@ class DashboardWidgetsOrderNotifier extends StateNotifier<List<String>> {
   }
 }
 
-final dashboardWidgetsHiddenProvider = StateNotifierProvider<DashboardWidgetsHiddenNotifier, Map<String, bool>>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
-  return DashboardWidgetsHiddenNotifier(prefs);
-});
+final dashboardWidgetsHiddenProvider =
+    StateNotifierProvider<DashboardWidgetsHiddenNotifier, Map<String, bool>>((
+      ref,
+    ) {
+      final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
+      return DashboardWidgetsHiddenNotifier(prefs);
+    });
 
 class DashboardWidgetsHiddenNotifier extends StateNotifier<Map<String, bool>> {
   final SharedPreferences? _prefs;
@@ -487,9 +540,15 @@ class DashboardWidgetsHiddenNotifier extends StateNotifier<Map<String, bool>> {
       try {
         return Map<String, bool>.from(jsonDecode(str) as Map);
       } on FormatException catch (error) {
-        AppLogger.warn('Invalid dashboard widget settings; using defaults', error);
+        AppLogger.warn(
+          'Invalid dashboard widget settings; using defaults',
+          error,
+        );
       } on TypeError catch (error) {
-        AppLogger.warn('Invalid dashboard widget settings; using defaults', error);
+        AppLogger.warn(
+          'Invalid dashboard widget settings; using defaults',
+          error,
+        );
       }
     }
     return {};

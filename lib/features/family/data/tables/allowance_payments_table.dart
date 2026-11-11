@@ -6,9 +6,15 @@ import 'package:vittix_wallet/features/family/data/tables/wallet_members_table.d
 @DataClassName('WalletAllowancePayment')
 class WalletAllowancePayments extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get allowanceId => integer().references(WalletAllowances, #id, onDelete: KeyAction.cascade)();
-  IntColumn get memberId => integer().references(WalletMembers, #id, onDelete: KeyAction.cascade)();
+  IntColumn get allowanceId => integer().references(
+    WalletAllowances,
+    #id,
+    onDelete: KeyAction.cascade,
+  )();
+  IntColumn get memberId =>
+      integer().references(WalletMembers, #id, onDelete: KeyAction.cascade)();
   IntColumn get amount => integer().map(const MoneyConverter())();
-  DateTimeColumn get paidDate => dateTime().clientDefault(() => DateTime.now())();
+  DateTimeColumn get paidDate =>
+      dateTime().clientDefault(() => DateTime.now())();
   TextColumn get notes => text().nullable()();
 }

@@ -40,18 +40,18 @@ class DashboardHeader extends ConsumerWidget {
           Text(
             'Current Balance',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.8),
-                  fontWeight: FontWeight.w500,
-                ),
+              color: Colors.white.withValues(alpha: 0.8),
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             currencyFormat.format(report.balance),
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -1,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              letterSpacing: -1,
+            ),
           ),
           const SizedBox(height: 24),
           Row(
@@ -59,17 +59,35 @@ class DashboardHeader extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: _buildInfoCard(context, 'Income', currencyFormat.format(report.totalIncome), Colors.green, Icons.arrow_upward),
+                child: _buildInfoCard(
+                  context,
+                  'Income',
+                  currencyFormat.format(report.totalIncome),
+                  Colors.green,
+                  Icons.arrow_upward,
+                ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: _buildInfoCard(context, 'Expense', currencyFormat.format(report.totalExpense), Colors.red, Icons.arrow_downward),
+                child: _buildInfoCard(
+                  context,
+                  'Expense',
+                  currencyFormat.format(report.totalExpense),
+                  Colors.red,
+                  Icons.arrow_downward,
+                ),
               ),
               const SizedBox(width: 8),
               // Only show savings card if screen is wide enough
               if (MediaQuery.of(context).size.width > 380)
                 Expanded(
-                  child: _buildInfoCard(context, 'Savings', currencyFormat.format(savings), Colors.blue, Icons.savings),
+                  child: _buildInfoCard(
+                    context,
+                    'Savings',
+                    currencyFormat.format(savings),
+                    Colors.blue,
+                    Icons.savings,
+                  ),
                 ),
             ],
           ),
@@ -78,7 +96,13 @@ class DashboardHeader extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoCard(BuildContext context, String title, String amount, Color color, IconData icon) {
+  Widget _buildInfoCard(
+    BuildContext context,
+    String title,
+    String amount,
+    Color color,
+    IconData icon,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
@@ -92,16 +116,18 @@ class DashboardHeader extends ConsumerWidget {
           Icon(icon, color: Colors.white, size: 20),
           const SizedBox(height: 8),
           Text(
-            title, 
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.9))
+            title,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Colors.white.withValues(alpha: 0.9),
+            ),
           ),
           Text(
-            amount, 
+            amount,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: Colors.white,
-            ), 
-            overflow: TextOverflow.ellipsis
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

@@ -8,5 +8,6 @@ class Wallets extends Table {
   TextColumn get name => text().withLength(min: 1, max: 80)();
   TextColumn get type => text().withDefault(const Constant('personal'))();
   IntColumn get createdByAccountId => integer().nullable()();
-  DateTimeColumn get createdAt => dateTime().clientDefault(() => DateTime.now())();
+  DateTimeColumn get createdAt =>
+      dateTime().clientDefault(() => DateTime.now())();
 }

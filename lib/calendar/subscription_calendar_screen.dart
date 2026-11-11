@@ -11,10 +11,12 @@ class SubscriptionCalendarScreen extends ConsumerStatefulWidget {
   const SubscriptionCalendarScreen({super.key});
 
   @override
-  ConsumerState<SubscriptionCalendarScreen> createState() => _SubscriptionCalendarScreenState();
+  ConsumerState<SubscriptionCalendarScreen> createState() =>
+      _SubscriptionCalendarScreenState();
 }
 
-class _SubscriptionCalendarScreenState extends ConsumerState<SubscriptionCalendarScreen> {
+class _SubscriptionCalendarScreenState
+    extends ConsumerState<SubscriptionCalendarScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
@@ -25,7 +27,10 @@ class _SubscriptionCalendarScreenState extends ConsumerState<SubscriptionCalenda
   }
 
   // A helper function to project upcoming occurrences of a template within a given month.
-  List<DateTime> _projectDatesForMonth(RecurringTransaction template, DateTime month) {
+  List<DateTime> _projectDatesForMonth(
+    RecurringTransaction template,
+    DateTime month,
+  ) {
     List<DateTime> dates = [];
     DateTime current = template.nextDueDate;
     final lastDayOfMonth = DateTime(month.year, month.month + 1, 0);
@@ -40,9 +45,10 @@ class _SubscriptionCalendarScreenState extends ConsumerState<SubscriptionCalenda
     }
 
     // Collect all occurrences within the target month
-    while (current.isBefore(lastDayOfMonth) || current.isAtSameMomentAs(lastDayOfMonth)) {
+    while (current.isBefore(lastDayOfMonth) ||
+        current.isAtSameMomentAs(lastDayOfMonth)) {
       if (current.month == month.month && current.year == month.year) {
-         dates.add(current);
+        dates.add(current);
       }
       current = _getNextDate(current, template.interval);
     }
@@ -68,9 +74,7 @@ class _SubscriptionCalendarScreenState extends ConsumerState<SubscriptionCalenda
     final currencyFormat = ref.watch(currencyFormatProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Subscriptions & Bills'),
-      ),
+      appBar: AppBar(title: const Text('Subscriptions & Bills')),
       body: StreamBuilder<List<RecurringTransaction>>(
         stream: templatesStream,
         builder: (context, snapshot) {
@@ -82,7 +86,7 @@ class _SubscriptionCalendarScreenState extends ConsumerState<SubscriptionCalenda
 
           // Map each day to a list of templates due on that day
           Map<DateTime, List<RecurringTransaction>> events = {};
-          
+
           for (final template in templates) {
             final dates = _projectDatesForMonth(template, _focusedDay);
             for (final date in dates) {
@@ -91,7 +95,11 @@ class _SubscriptionCalendarScreenState extends ConsumerState<SubscriptionCalenda
             }
           }
 
-          final selectedDateNormalized = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
+          final selectedDateNormalized = DateTime(
+            _selectedDay!.year,
+            _selectedDay!.month,
+            _selectedDay!.day,
+          );
           final selectedEvents = events[selectedDateNormalized] ?? [];
 
           return Column(
@@ -129,7 +137,9 @@ class _SubscriptionCalendarScreenState extends ConsumerState<SubscriptionCalenda
                     ? Center(
                         child: Text(
                           'No bills due on ${DateFormat.yMMMd().format(_selectedDay!)}',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
                         ),
                       )
                     : ListView.builder(
@@ -137,12 +147,17 @@ class _SubscriptionCalendarScreenState extends ConsumerState<SubscriptionCalenda
                         itemCount: selectedEvents.length,
                         itemBuilder: (context, index) {
                           final template = selectedEvents[index];
-                          final isExpense = template.type == domain.TransactionType.expense;
+                          final isExpense =
+                              template.type == domain.TransactionType.expense;
 
                           return ListTile(
                             leading: CircleAvatar(
-                              backgroundColor: template.category.color.withValues(alpha: 0.2),
-                              child: Icon(template.category.icon, color: template.category.color),
+                              backgroundColor: template.category.color
+                                  .withValues(alpha: 0.2),
+                              child: Icon(
+                                template.category.icon,
+                                color: template.category.color,
+                              ),
                             ),
                             title: Text(template.name),
                             subtitle: Text(template.category.name),

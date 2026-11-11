@@ -1,6 +1,13 @@
 import 'package:drift/native.dart';
 import 'package:vittix_wallet/core/database/app_database.dart'
-    hide Transaction, Category, Account, TransactionType, AccountType, isNull, isNotNull;
+    hide
+        Transaction,
+        Category,
+        Account,
+        TransactionType,
+        AccountType,
+        isNull,
+        isNotNull;
 import 'package:vittix_wallet/core/database/database_enums.dart' as db_enums;
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,13 +25,17 @@ void main() {
     walletId = await db
         .into(db.wallets)
         .insert(const WalletsCompanion(name: Value('Wallet A')));
-    accountId = await db.into(db.accounts).insert(AccountsCompanion.insert(
-          walletId: Value(walletId),
-          name: 'Cash',
-          type: db_enums.AccountType.cash,
-          icon: 0,
-          color: '00FF00',
-        ));
+    accountId = await db
+        .into(db.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletId),
+            name: 'Cash',
+            type: db_enums.AccountType.cash,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
     userId = await db.userDao.insertUser(
       const UsersCompanion(displayName: Value('Asha')),
     );
@@ -88,7 +99,10 @@ void main() {
       await db.walletDao.getRoleInWallet(walletId, actorUserId: userId),
       isNull,
     );
-    expect(await db.walletDao.isWalletValid(walletId, actorUserId: userId), isFalse);
+    expect(
+      await db.walletDao.isWalletValid(walletId, actorUserId: userId),
+      isFalse,
+    );
   });
 
   test('checkPermission denies a viewer by user identity', () async {

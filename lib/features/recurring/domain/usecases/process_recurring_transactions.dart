@@ -24,7 +24,8 @@ class ProcessRecurringTransactions {
       bool generatedAny = false;
       int generatedCount = 0;
 
-      while (currentDueDate.isBefore(now) || currentDueDate.isAtSameMomentAs(now)) {
+      while (currentDueDate.isBefore(now) ||
+          currentDueDate.isAtSameMomentAs(now)) {
         // Create standard transaction
         final transaction = domain.Transaction(
           id: 0,
@@ -42,7 +43,10 @@ class ProcessRecurringTransactions {
 
         // Advance to next occurrence
         final lastGen = currentDueDate;
-        currentDueDate = _calculateNextDueDate(currentDueDate, template.interval);
+        currentDueDate = _calculateNextDueDate(
+          currentDueDate,
+          template.interval,
+        );
 
         // Update the template state locally
         final updatedTemplate = RecurringTransaction(
@@ -78,7 +82,10 @@ class ProcessRecurringTransactions {
     }
   }
 
-  DateTime _calculateNextDueDate(DateTime currentDate, RecurringInterval interval) {
+  DateTime _calculateNextDueDate(
+    DateTime currentDate,
+    RecurringInterval interval,
+  ) {
     switch (interval) {
       case RecurringInterval.daily:
         return currentDate.add(const Duration(days: 1));
@@ -90,13 +97,29 @@ class ProcessRecurringTransactions {
         final resolvedMonth = (nextMonth - 1) % 12 + 1;
         final resolvedYear = currentDate.year + yearOffset;
         final maxDays = DateTime(resolvedYear, resolvedMonth + 1, 0).day;
-        final resolvedDay = currentDate.day > maxDays ? maxDays : currentDate.day;
-        return DateTime(resolvedYear, resolvedMonth, resolvedDay, currentDate.hour, currentDate.minute);
+        final resolvedDay = currentDate.day > maxDays
+            ? maxDays
+            : currentDate.day;
+        return DateTime(
+          resolvedYear,
+          resolvedMonth,
+          resolvedDay,
+          currentDate.hour,
+          currentDate.minute,
+        );
       case RecurringInterval.yearly:
         final resolvedYear = currentDate.year + 1;
         final maxDays = DateTime(resolvedYear, currentDate.month + 1, 0).day;
-        final resolvedDay = currentDate.day > maxDays ? maxDays : currentDate.day;
-        return DateTime(resolvedYear, currentDate.month, resolvedDay, currentDate.hour, currentDate.minute);
+        final resolvedDay = currentDate.day > maxDays
+            ? maxDays
+            : currentDate.day;
+        return DateTime(
+          resolvedYear,
+          currentDate.month,
+          resolvedDay,
+          currentDate.hour,
+          currentDate.minute,
+        );
     }
   }
 }

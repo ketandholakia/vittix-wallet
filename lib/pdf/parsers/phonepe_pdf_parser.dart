@@ -7,8 +7,13 @@ class PhonePePdfParser extends PdfStatementParser {
   static const _phonePeKeywords = ['phonepe', 'phone pe'];
 
   final _amountPattern = RegExp(r'[₹Rs.]+\s*([\d,]+(?:\.\d{1,2})?)');
-  final _datePattern = RegExp(r'(\d{1,2}\s+\w{3}[,]?\s+\d{4}|\w{3}\s+\d{1,2}[,]?\s+\d{4})');
-  final _merchantPattern = RegExp(r'(?:Paid\s+to|Sent\s+to|Transferred\s+to|Received\s+from)\s+(.+?)(?:\n|$)', caseSensitive: false);
+  final _datePattern = RegExp(
+    r'(\d{1,2}\s+\w{3}[,]?\s+\d{4}|\w{3}\s+\d{1,2}[,]?\s+\d{4})',
+  );
+  final _merchantPattern = RegExp(
+    r'(?:Paid\s+to|Sent\s+to|Transferred\s+to|Received\s+from)\s+(.+?)(?:\n|$)',
+    caseSensitive: false,
+  );
 
   final List<DateFormat> _dateFormats = [
     DateFormat('MMM dd, yyyy', 'en_US'),
@@ -51,7 +56,8 @@ class PhonePePdfParser extends PdfStatementParser {
       final lowerLine = trimmed.toLowerCase();
       final isDebit = lowerLine == 'debit' || lowerLine.startsWith('debit ');
       final isCredit = lowerLine == 'credit' || lowerLine.startsWith('credit ');
-      final isPaidTo = lowerLine.startsWith('paid to') ||
+      final isPaidTo =
+          lowerLine.startsWith('paid to') ||
           lowerLine.startsWith('sent to') ||
           lowerLine.startsWith('transferred to');
       final isReceivedFrom = lowerLine.startsWith('received from');
@@ -108,7 +114,11 @@ class PhonePePdfParser extends PdfStatementParser {
   }
 
   domain.TransactionType? _extractTransactionType(String block) {
-    final lines = block.split('\n').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    final lines = block
+        .split('\n')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
     if (lines.isEmpty) return null;
 
     final firstLine = lines.first.toUpperCase();
@@ -144,7 +154,11 @@ class PhonePePdfParser extends PdfStatementParser {
       return match.group(1)?.trim();
     }
 
-    final lines = block.split('\n').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    final lines = block
+        .split('\n')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
     if (lines.length >= 2) {
       final secondLine = lines[1];
       if (!RegExp(r'^[₹Rs.\d,]+.*').hasMatch(secondLine) &&

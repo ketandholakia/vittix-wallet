@@ -59,8 +59,11 @@ void main() {
     test('an indivisible total still adds back exactly', () {
       final parts = allocateMinorUnits(100, 3);
       expect(parts, [34, 33, 33]);
-      expect(parts.fold<int>(0, (a, b) => a + b), 100,
-          reason: 'no paise may be created or lost');
+      expect(
+        parts.fold<int>(0, (a, b) => a + b),
+        100,
+        reason: 'no paise may be created or lost',
+      );
     });
 
     test('the remainder goes to the earliest parts and is deterministic', () {
@@ -101,8 +104,14 @@ void main() {
 
     test('invalid weights are rejected', () {
       expect(() => allocateMinorUnitsByWeight(100, []), throwsArgumentError);
-      expect(() => allocateMinorUnitsByWeight(100, [0, 0]), throwsArgumentError);
-      expect(() => allocateMinorUnitsByWeight(100, [1, -1]), throwsArgumentError);
+      expect(
+        () => allocateMinorUnitsByWeight(100, [0, 0]),
+        throwsArgumentError,
+      );
+      expect(
+        () => allocateMinorUnitsByWeight(100, [1, -1]),
+        throwsArgumentError,
+      );
     });
   });
 }

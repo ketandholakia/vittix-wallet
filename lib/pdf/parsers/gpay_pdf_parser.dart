@@ -6,15 +6,30 @@ import 'package:intl/intl.dart';
 class GPayPdfParser extends PdfStatementParser {
   static const _dateFormatPattern = 'dd MMM yyyy hh:mm a';
 
-  final _merchantAnchorRegex = RegExp(r'^Paid\s+to\s+(.+)$', caseSensitive: false);
-  final _receivedAnchorRegex = RegExp(r'^Received\s+from\s+(.+)$', caseSensitive: false);
-  final _bankAccountLineRegex = RegExp(r'^Paid\s+(?:by|to)\s+(.+)\s+(Bank|Card|A/c)\s+(\d{4})$', caseSensitive: false);
-  final _amountRegex = RegExp(r'^(?:₹|Rs\.?)\s*([0-9][0-9,]*(?:\.[0-9]{1,2})?)$');
+  final _merchantAnchorRegex = RegExp(
+    r'^Paid\s+to\s+(.+)$',
+    caseSensitive: false,
+  );
+  final _receivedAnchorRegex = RegExp(
+    r'^Received\s+from\s+(.+)$',
+    caseSensitive: false,
+  );
+  final _bankAccountLineRegex = RegExp(
+    r'^Paid\s+(?:by|to)\s+(.+)\s+(Bank|Card|A/c)\s+(\d{4})$',
+    caseSensitive: false,
+  );
+  final _amountRegex = RegExp(
+    r'^(?:₹|Rs\.?)\s*([0-9][0-9,]*(?:\.[0-9]{1,2})?)$',
+  );
   final _dateLineRegex = RegExp(r'^(\d{1,2})\s+(\w{3}),?$');
   final _fullDateLineRegex = RegExp(r'^(\d{1,2}\s+\w{3},\s+20\d{2})$');
-  final _datePrefixedRowRegex = RegExp(r'^(\d{1,2}\s+\w{3},\s+20\d{2})\s+(.+)$');
+  final _datePrefixedRowRegex = RegExp(
+    r'^(\d{1,2}\s+\w{3},\s+20\d{2})\s+(.+)$',
+  );
   final _yearLineRegex = RegExp(r'^(20\d{2})$');
-  final _timeLineRegex = RegExp(r'^(\d{1,2}:\d{2})\s*([AaPp][Mm])(?:\s+(.+))?$');
+  final _timeLineRegex = RegExp(
+    r'^(\d{1,2}:\d{2})\s*([AaPp][Mm])(?:\s+(.+))?$',
+  );
 
   @override
   bool canHandle(String text) {
@@ -106,7 +121,10 @@ class GPayPdfParser extends PdfStatementParser {
       }
       if (isTime && inBlock) {
         final match = _timeLineRegex.firstMatch(line);
-        if (match != null && match.groupCount >= 3 && match.group(3) != null && match.group(3)!.trim().isNotEmpty) {
+        if (match != null &&
+            match.groupCount >= 3 &&
+            match.group(3) != null &&
+            match.group(3)!.trim().isNotEmpty) {
           current.writeln(line);
           continue;
         }
@@ -132,7 +150,11 @@ class GPayPdfParser extends PdfStatementParser {
   }
 
   PdfTransactionCandidate? _parseBlock(String block) {
-    final lines = block.split('\n').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    final lines = block
+        .split('\n')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
 
     final anchorLine = lines.firstWhere(
       (line) => _isTransactionAnchor(line),
@@ -142,7 +164,9 @@ class GPayPdfParser extends PdfStatementParser {
     if (anchorLine.isEmpty) return null;
 
     final isExpense = _merchantAnchorRegex.hasMatch(anchorLine);
-    final type = isExpense ? domain.TransactionType.expense : domain.TransactionType.income;
+    final type = isExpense
+        ? domain.TransactionType.expense
+        : domain.TransactionType.income;
     final merchant = _extractMerchant(anchorLine, isExpense);
 
     if (merchant == null) return null;
@@ -191,7 +215,9 @@ class GPayPdfParser extends PdfStatementParser {
     String? timeLine;
 
     for (var line in lines) {
-      if (dateLine == null && (_dateLineRegex.hasMatch(line) || _fullDateLineRegex.hasMatch(line))) {
+      if (dateLine == null &&
+          (_dateLineRegex.hasMatch(line) ||
+              _fullDateLineRegex.hasMatch(line))) {
         dateLine = line;
       } else if (yearLine == null && _yearLineRegex.hasMatch(line)) {
         yearLine = line;
@@ -201,18 +227,22 @@ class GPayPdfParser extends PdfStatementParser {
           timeLine = '${match.group(1)} ${match.group(2)}';
         }
       }
-      if (dateLine != null && (yearLine != null || _fullDateLineRegex.hasMatch(dateLine)) && timeLine != null) {
+      if (dateLine != null &&
+          (yearLine != null || _fullDateLineRegex.hasMatch(dateLine)) &&
+          timeLine != null) {
         break;
       }
     }
 
-    if (dateLine == null || timeLine == null || (yearLine == null && !_fullDateLineRegex.hasMatch(dateLine))) {
+    if (dateLine == null ||
+        timeLine == null ||
+        (yearLine == null && !_fullDateLineRegex.hasMatch(dateLine))) {
       return null;
     }
 
     final dateClean = dateLine.replaceAll(RegExp(r'[, ]+$'), '');
     final timeClean = timeLine.replaceAll(RegExp(r'\s+'), ' ').toUpperCase();
-    
+
     final combined = _fullDateLineRegex.hasMatch(dateLine)
         ? '$dateClean $timeClean'
         : '$dateClean $yearLine $timeClean';
@@ -229,7 +259,9 @@ class GPayPdfParser extends PdfStatementParser {
   }
 
   MapEntry<String, String?> _splitAnchorAndAmount(String value) {
-    final amountRegex = RegExp(r'\s+((?:₹|Rs\.?)\s*[0-9][0-9,]*(?:\.[0-9]{1,2})?)$');
+    final amountRegex = RegExp(
+      r'\s+((?:₹|Rs\.?)\s*[0-9][0-9,]*(?:\.[0-9]{1,2})?)$',
+    );
     final match = amountRegex.firstMatch(value);
     if (match == null) return MapEntry(value.trim(), null);
 

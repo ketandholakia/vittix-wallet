@@ -16,7 +16,9 @@ class SettlementHistoryScreen extends ConsumerWidget {
             if (history.isEmpty)
               const ListTile(
                 title: Text('No settlements yet'),
-                subtitle: Text('Record a local settlement to keep balances up to date.'),
+                subtitle: Text(
+                  'Record a local settlement to keep balances up to date.',
+                ),
               )
             else
               ...history.map(

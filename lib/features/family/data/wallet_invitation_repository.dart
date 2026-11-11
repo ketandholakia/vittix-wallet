@@ -40,7 +40,10 @@ class WalletInvitationRepositoryImpl implements WalletInvitationRepository {
     required int invitedByAccountId,
     DateTime? expiresAt,
   }) async {
-    final inviterRole = await _walletDao.getRoleInWallet(walletId, actorAccountId: invitedByAccountId);
+    final inviterRole = await _walletDao.getRoleInWallet(
+      walletId,
+      actorAccountId: invitedByAccountId,
+    );
 
     await _walletDao.checkPermission(
       walletId: walletId,
@@ -83,7 +86,10 @@ class WalletInvitationRepositoryImpl implements WalletInvitationRepository {
     required int activeAccountId,
     required int walletId,
   }) async {
-    final invitation = await _walletDao.getInvitationByIdAndToken(invitationId, token);
+    final invitation = await _walletDao.getInvitationByIdAndToken(
+      invitationId,
+      token,
+    );
     if (invitation == null) {
       throw Exception('Invitation not found or invalid token');
     }
@@ -97,9 +103,15 @@ class WalletInvitationRepositoryImpl implements WalletInvitationRepository {
     }
 
     await _walletDao.attachedDatabase.transaction(() async {
-      final rowsUpdated = await _walletDao.consumeInvitationAtomically(invitationId, token, WalletInvitationStatus.accepted);
+      final rowsUpdated = await _walletDao.consumeInvitationAtomically(
+        invitationId,
+        token,
+        WalletInvitationStatus.accepted,
+      );
       if (rowsUpdated != 1) {
-        throw Exception('Invitation acceptance failed due to invalid state or concurrency conflict');
+        throw Exception(
+          'Invitation acceptance failed due to invalid state or concurrency conflict',
+        );
       }
 
       await _walletDao.insertMember(
@@ -148,7 +160,11 @@ class WalletInvitationRepositoryImpl implements WalletInvitationRepository {
     }
 
     await _walletDao.attachedDatabase.transaction(() async {
-      final rowsUpdated = await _walletDao.consumeInvitationAtomically(invitationId, invitation.token, WalletInvitationStatus.revoked);
+      final rowsUpdated = await _walletDao.consumeInvitationAtomically(
+        invitationId,
+        invitation.token,
+        WalletInvitationStatus.revoked,
+      );
       if (rowsUpdated != 1) {
         throw Exception('Revocation failed due to state conflict');
       }
@@ -169,7 +185,11 @@ class WalletInvitationRepositoryImpl implements WalletInvitationRepository {
     if (invitation.status != WalletInvitationStatus.pending) return;
 
     await _walletDao.attachedDatabase.transaction(() async {
-      final rowsUpdated = await _walletDao.consumeInvitationAtomically(invitationId, invitation.token, WalletInvitationStatus.expired);
+      final rowsUpdated = await _walletDao.consumeInvitationAtomically(
+        invitationId,
+        invitation.token,
+        WalletInvitationStatus.expired,
+      );
       if (rowsUpdated == 1) {
         await _walletDao.logInvitationActivity(
           walletId: invitation.walletId,

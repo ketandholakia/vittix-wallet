@@ -69,11 +69,29 @@ class FamilyAutomationService {
       case 'weekly':
         return date.add(const Duration(days: 7));
       case 'monthly':
-        return DateTime(date.year, date.month + 1, date.day, date.hour, date.minute);
+        return DateTime(
+          date.year,
+          date.month + 1,
+          date.day,
+          date.hour,
+          date.minute,
+        );
       case 'quarterly':
-        return DateTime(date.year, date.month + 3, date.day, date.hour, date.minute);
+        return DateTime(
+          date.year,
+          date.month + 3,
+          date.day,
+          date.hour,
+          date.minute,
+        );
       case 'yearly':
-        return DateTime(date.year + 1, date.month, date.day, date.hour, date.minute);
+        return DateTime(
+          date.year + 1,
+          date.month,
+          date.day,
+          date.hour,
+          date.minute,
+        );
       default:
         return date.add(const Duration(days: 1));
     }
@@ -92,7 +110,14 @@ class FamilyAutomationService {
       while (!next.isBefore(from) || next.isAfter(from)) {
         next = next.isBefore(from) ? from : next;
         if (next.isAfter(to)) break;
-        occurrences.add(RecurrenceOccurrence(date: next, amount: allowance.amount, kind: 'allowance', entityId: allowance.id));
+        occurrences.add(
+          RecurrenceOccurrence(
+            date: next,
+            amount: allowance.amount,
+            kind: 'allowance',
+            entityId: allowance.id,
+          ),
+        );
         next = _addFrequency(next, allowance.frequency.name);
       }
     }
@@ -100,7 +125,14 @@ class FamilyAutomationService {
       var next = schedule.nextDueDate;
       while (!next.isBefore(from) || next.isAfter(from)) {
         if (next.isAfter(to)) break;
-        occurrences.add(RecurrenceOccurrence(date: next, amount: schedule.amount, kind: 'goal_schedule', entityId: schedule.id));
+        occurrences.add(
+          RecurrenceOccurrence(
+            date: next,
+            amount: schedule.amount,
+            kind: 'goal_schedule',
+            entityId: schedule.id,
+          ),
+        );
         next = _addFrequency(next, schedule.frequency.name);
       }
     }
@@ -108,7 +140,14 @@ class FamilyAutomationService {
       var next = bill.dueDate;
       while (!next.isBefore(from) || next.isAfter(from)) {
         if (next.isAfter(to)) break;
-        occurrences.add(RecurrenceOccurrence(date: next, amount: bill.amount, kind: 'bill', entityId: bill.id));
+        occurrences.add(
+          RecurrenceOccurrence(
+            date: next,
+            amount: bill.amount,
+            kind: 'bill',
+            entityId: bill.id,
+          ),
+        );
         next = _addFrequency(next, bill.recurrence.name);
       }
     }
@@ -116,14 +155,35 @@ class FamilyAutomationService {
     return occurrences;
   }
 
-  GoalForecast forecastGoal(WalletGoal goal, List<WalletGoalSchedule> schedules, List<WalletGoalContribution> contributions) {
-    final remaining = (goal.targetAmount - goal.currentAmount).clamp(0.0, double.infinity);
-    final goalSchedules = schedules.where((s) => s.walletGoalId == goal.id && s.isActive).toList();
-    final scheduledVelocity = goalSchedules.fold<double>(0, (sum, schedule) => sum + schedule.amount);
-    final contributionVelocity = contributions.fold<double>(0, (sum, contribution) => sum + contribution.amount);
-    final velocity = scheduledVelocity > 0 ? scheduledVelocity : contributionVelocity;
+  GoalForecast forecastGoal(
+    WalletGoal goal,
+    List<WalletGoalSchedule> schedules,
+    List<WalletGoalContribution> contributions,
+  ) {
+    final remaining = (goal.targetAmount - goal.currentAmount).clamp(
+      0.0,
+      double.infinity,
+    );
+    final goalSchedules = schedules
+        .where((s) => s.walletGoalId == goal.id && s.isActive)
+        .toList();
+    final scheduledVelocity = goalSchedules.fold<double>(
+      0,
+      (sum, schedule) => sum + schedule.amount,
+    );
+    final contributionVelocity = contributions.fold<double>(
+      0,
+      (sum, contribution) => sum + contribution.amount,
+    );
+    final velocity = scheduledVelocity > 0
+        ? scheduledVelocity
+        : contributionVelocity;
     if (velocity <= 0) {
-      return GoalForecast(projectedCompletionDate: null, contributionVelocity: 0, remainingRequired: remaining);
+      return GoalForecast(
+        projectedCompletionDate: null,
+        contributionVelocity: 0,
+        remainingRequired: remaining,
+      );
     }
     final months = (remaining / velocity).ceil();
     return GoalForecast(
@@ -133,18 +193,29 @@ class FamilyAutomationService {
     );
   }
 
-  AllowanceForecast forecastAllowance(WalletAllowance allowance, List<WalletAllowancePayment> payments) {
-    final nextPaymentDate = _addFrequency(allowance.startDate, allowance.frequency.name);
+  AllowanceForecast forecastAllowance(
+    WalletAllowance allowance,
+    List<WalletAllowancePayment> payments,
+  ) {
+    final nextPaymentDate = _addFrequency(
+      allowance.startDate,
+      allowance.frequency.name,
+    );
     final annualTotal = switch (allowance.frequency) {
       WalletAllowanceFrequency.weekly => allowance.amount * 52,
       WalletAllowanceFrequency.monthly => allowance.amount * 12,
       WalletAllowanceFrequency.custom => allowance.amount,
     };
-    final paid = payments.where((payment) => payment.allowanceId == allowance.id).fold<double>(0, (sum, payment) => sum + payment.amount);
+    final paid = payments
+        .where((payment) => payment.allowanceId == allowance.id)
+        .fold<double>(0, (sum, payment) => sum + payment.amount);
     return AllowanceForecast(
       nextPaymentDate: nextPaymentDate,
       annualTotal: annualTotal,
-      projectedRemainingAllowance: (annualTotal - paid).clamp(0.0, double.infinity),
+      projectedRemainingAllowance: (annualTotal - paid).clamp(
+        0.0,
+        double.infinity,
+      ),
     );
   }
 
@@ -153,10 +224,12 @@ class FamilyAutomationService {
     final status = bill.status == WalletBillStatus.paid
         ? 'paid'
         : bill.dueDate.isBefore(now)
-            ? 'overdue'
-            : bill.dueDate.day == now.day && bill.dueDate.month == now.month && bill.dueDate.year == now.year
-                ? 'due_today'
-                : 'upcoming';
+        ? 'overdue'
+        : bill.dueDate.day == now.day &&
+              bill.dueDate.month == now.month &&
+              bill.dueDate.year == now.year
+        ? 'due_today'
+        : 'upcoming';
     return BillForecast(status: status, dueDate: bill.dueDate);
   }
 
@@ -167,13 +240,24 @@ class FamilyAutomationService {
     required DateTime horizon,
   }) {
     final now = DateTime.now();
-    final occurrences = buildOccurrences(from: now, to: horizon, allowances: allowances, schedules: schedules, bills: bills);
+    final occurrences = buildOccurrences(
+      from: now,
+      to: horizon,
+      allowances: allowances,
+      schedules: schedules,
+      bills: bills,
+    );
     return FamilyCashflowProjection(
       expectedIncome: 0,
-      expectedBills: occurrences.where((o) => o.kind == 'bill').fold<double>(0, (sum, o) => sum + o.amount),
-      expectedAllowancePayments: occurrences.where((o) => o.kind == 'allowance').fold<double>(0, (sum, o) => sum + o.amount),
-      expectedGoalContributions: occurrences.where((o) => o.kind == 'goal_schedule').fold<double>(0, (sum, o) => sum + o.amount),
+      expectedBills: occurrences
+          .where((o) => o.kind == 'bill')
+          .fold<double>(0, (sum, o) => sum + o.amount),
+      expectedAllowancePayments: occurrences
+          .where((o) => o.kind == 'allowance')
+          .fold<double>(0, (sum, o) => sum + o.amount),
+      expectedGoalContributions: occurrences
+          .where((o) => o.kind == 'goal_schedule')
+          .fold<double>(0, (sum, o) => sum + o.amount),
     );
   }
 }
-

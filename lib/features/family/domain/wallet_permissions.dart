@@ -3,14 +3,18 @@ import 'package:vittix_wallet/core/providers/database_provider.dart';
 import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final currentWalletMembersProvider = FutureProvider<List<WalletMember>>((ref) async {
+final currentWalletMembersProvider = FutureProvider<List<WalletMember>>((
+  ref,
+) async {
   final walletId = ref.watch(currentWalletIdProvider);
   return ref.watch(walletDaoProvider).getMembersForWallet(walletId);
 });
 
 final currentWalletMemberProvider = FutureProvider<WalletMember?>((ref) async {
   final walletId = ref.watch(currentWalletIdProvider);
-  final members = await ref.watch(walletDaoProvider).getMembersForWallet(walletId);
+  final members = await ref
+      .watch(walletDaoProvider)
+      .getMembersForWallet(walletId);
   return members.isEmpty ? null : members.first;
 });
 
@@ -39,11 +43,15 @@ class WalletPermissionService {
   }
 
   bool canAddTransactions(WalletRole? role) {
-    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+    return role == WalletRole.owner ||
+        role == WalletRole.admin ||
+        role == WalletRole.member;
   }
 
   bool canManageRecurringTransactions(WalletRole? role) {
-    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+    return role == WalletRole.owner ||
+        role == WalletRole.admin ||
+        role == WalletRole.member;
   }
 
   bool canViewRecurringTransactions(WalletRole? role) {
@@ -71,7 +79,9 @@ class WalletPermissionService {
   }
 
   bool canContributeToGoals(WalletRole? role) {
-    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+    return role == WalletRole.owner ||
+        role == WalletRole.admin ||
+        role == WalletRole.member;
   }
 
   bool canViewGoals(WalletRole? role) {
@@ -83,7 +93,9 @@ class WalletPermissionService {
   }
 
   bool canViewOwnAllowance(WalletRole? role) {
-    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+    return role == WalletRole.owner ||
+        role == WalletRole.admin ||
+        role == WalletRole.member;
   }
 
   bool canViewAllowances(WalletRole? role) {
@@ -95,7 +107,9 @@ class WalletPermissionService {
   }
 
   bool canMarkBillsPaid(WalletRole? role) {
-    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+    return role == WalletRole.owner ||
+        role == WalletRole.admin ||
+        role == WalletRole.member;
   }
 
   bool canViewBills(WalletRole? role) {
@@ -107,7 +121,9 @@ class WalletPermissionService {
   }
 
   bool canCreateSplits(WalletRole? role) {
-    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+    return role == WalletRole.owner ||
+        role == WalletRole.admin ||
+        role == WalletRole.member;
   }
 
   bool canManageDebts(WalletRole? role) {
@@ -131,7 +147,9 @@ class WalletPermissionService {
   }
 
   bool canCreateActivity(WalletRole? role) {
-    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+    return role == WalletRole.owner ||
+        role == WalletRole.admin ||
+        role == WalletRole.member;
   }
 
   bool canViewAllActivity(WalletRole? role) {
@@ -139,10 +157,14 @@ class WalletPermissionService {
   }
 
   bool canSynchronizeWallet(WalletRole? role) {
-    return role == WalletRole.owner || role == WalletRole.admin || role == WalletRole.member;
+    return role == WalletRole.owner ||
+        role == WalletRole.admin ||
+        role == WalletRole.member;
   }
 }
 
-final walletPermissionServiceProvider = Provider<WalletPermissionService>((ref) {
+final walletPermissionServiceProvider = Provider<WalletPermissionService>((
+  ref,
+) {
   return const WalletPermissionService();
 });

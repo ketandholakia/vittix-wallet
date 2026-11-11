@@ -25,7 +25,11 @@ class CheckBudgetThresholds {
 
     final period = DateFormat('yyyy-MM').format(transaction.date);
     final firstDay = DateTime(transaction.date.year, transaction.date.month, 1);
-    final nextMonth = DateTime(transaction.date.year, transaction.date.month + 1, 1);
+    final nextMonth = DateTime(
+      transaction.date.year,
+      transaction.date.month + 1,
+      1,
+    );
 
     final allBudgets = await _budgetRepository.watchAllBudgets().first;
     final matchingBudgets = allBudgets.where(
@@ -42,7 +46,9 @@ class CheckBudgetThresholds {
       orElse: () => RolloverMode.surplusOnly,
     );
 
-    final allTransactions = await _transactionRepository.watchAllTransactions().first;
+    final allTransactions = await _transactionRepository
+        .watchAllTransactions()
+        .first;
 
     // Calculate rollover
     double rollover = 0.0;
@@ -71,18 +77,21 @@ class CheckBudgetThresholds {
       if (oldestMonth != null && oldestMonth.isBefore(firstDay)) {
         DateTime current = oldestMonth;
         while (current.isBefore(firstDay)) {
-          final currentPeriod = '${current.year}-${current.month.toString().padLeft(2, '0')}';
+          final currentPeriod =
+              '${current.year}-${current.month.toString().padLeft(2, '0')}';
           final currentBudget = budgetMap[currentPeriod];
 
           if (currentBudget != null) {
             final currentNext = DateTime(current.year, current.month + 1, 1);
             final spent = allTransactions
-                .where((tx) =>
-                    tx.type == TransactionType.expense &&
-                    (tx.category.id == budget.category.id ||
-                     tx.category.parentId == budget.category.id) &&
-                    !tx.date.isBefore(current) &&
-                    tx.date.isBefore(currentNext))
+                .where(
+                  (tx) =>
+                      tx.type == TransactionType.expense &&
+                      (tx.category.id == budget.category.id ||
+                          tx.category.parentId == budget.category.id) &&
+                      !tx.date.isBefore(current) &&
+                      tx.date.isBefore(currentNext),
+                )
                 .fold(0.0, (sum, tx) => sum + tx.amount);
 
             final remaining = (currentBudget.amount + rollover) - spent;
@@ -106,12 +115,14 @@ class CheckBudgetThresholds {
 
     // Calculate spent for target month (including subcategories)
     final spentAmount = allTransactions
-        .where((tx) =>
-            (tx.category.id == budget.category.id ||
-             tx.category.parentId == budget.category.id) &&
-            tx.type == TransactionType.expense &&
-            !tx.date.isBefore(firstDay) &&
-            tx.date.isBefore(nextMonth))
+        .where(
+          (tx) =>
+              (tx.category.id == budget.category.id ||
+                  tx.category.parentId == budget.category.id) &&
+              tx.type == TransactionType.expense &&
+              !tx.date.isBefore(firstDay) &&
+              tx.date.isBefore(nextMonth),
+        )
         .fold(0.0, (sum, item) => sum + item.amount);
 
     final oldSpentAmount = spentAmount - transaction.amount;
@@ -126,12 +137,22 @@ class CheckBudgetThresholds {
       final percentageInt = entry.value;
 
       if (newPercentage >= threshold && oldPercentage < threshold) {
-        await _notifyUser(budget.id, period, percentageInt, budget.category.name);
+        await _notifyUser(
+          budget.id,
+          period,
+          percentageInt,
+          budget.category.name,
+        );
       }
     }
   }
 
-  Future<void> _notifyUser(int budgetId, String period, int percentage, String categoryName) async {
+  Future<void> _notifyUser(
+    int budgetId,
+    String period,
+    int percentage,
+    String categoryName,
+  ) async {
     final key = 'budget_alert_${budgetId}_${period}_$percentage';
     final hasNotified = _prefs.getBool(key) ?? false;
 

@@ -35,7 +35,11 @@ class WalletMemberSummaryWidget extends ConsumerWidget {
         );
       },
       loading: () => const ListTile(
-        leading: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2)),
+        leading: SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
         title: Text('Loading member contributions...'),
       ),
       error: (error, stack) => ListTile(
@@ -45,4 +49,3 @@ class WalletMemberSummaryWidget extends ConsumerWidget {
     );
   }
 }
-

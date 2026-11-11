@@ -28,7 +28,8 @@ class LockScreen extends ConsumerStatefulWidget {
   ConsumerState<LockScreen> createState() => _LockScreenState();
 }
 
-class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProviderStateMixin {
+class _LockScreenState extends ConsumerState<LockScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _shakeController;
   late Animation<double> _shakeAnimation;
 
@@ -46,15 +47,39 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    _shakeAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween<double>(begin: 0.0, end: -12.0), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: -12.0, end: 12.0), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: 12.0, end: -8.0), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: -8.0, end: 8.0), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: 8.0, end: -4.0), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: -4.0, end: 4.0), weight: 1),
-      TweenSequenceItem(tween: Tween<double>(begin: 4.0, end: 0.0), weight: 1),
-    ]).animate(CurvedAnimation(parent: _shakeController, curve: Curves.easeInOut));
+    _shakeAnimation =
+        TweenSequence<double>([
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 0.0, end: -12.0),
+            weight: 1,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: -12.0, end: 12.0),
+            weight: 1,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 12.0, end: -8.0),
+            weight: 1,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: -8.0, end: 8.0),
+            weight: 1,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 8.0, end: -4.0),
+            weight: 1,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: -4.0, end: 4.0),
+            weight: 1,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 4.0, end: 0.0),
+            weight: 1,
+          ),
+        ]).animate(
+          CurvedAnimation(parent: _shakeController, curve: Curves.easeInOut),
+        );
 
     _initInstruction();
     _checkBiometricsSupport();
@@ -255,7 +280,9 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
     final theme = Theme.of(context);
     final color = _isError
         ? theme.colorScheme.error
-        : (isFilled ? theme.colorScheme.primary : theme.colorScheme.outlineVariant);
+        : (isFilled
+              ? theme.colorScheme.primary
+              : theme.colorScheme.outlineVariant);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 100),
@@ -265,15 +292,16 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
       decoration: BoxDecoration(
         color: isFilled ? color : Colors.transparent,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: color,
-          width: 2.5,
-        ),
+        border: Border.all(color: color, width: 2.5),
       ),
     );
   }
 
-  Widget _buildKeypadButton(String value, {VoidCallback? onPressed, Widget? icon}) {
+  Widget _buildKeypadButton(
+    String value, {
+    VoidCallback? onPressed,
+    Widget? icon,
+  }) {
     final theme = Theme.of(context);
     return Material(
       color: Colors.transparent,
@@ -292,7 +320,8 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
             ),
             color: theme.cardColor.withValues(alpha: 0.4),
           ),
-          child: icon ??
+          child:
+              icon ??
               Text(
                 value,
                 style: theme.textTheme.headlineMedium?.copyWith(
@@ -415,7 +444,9 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             // Biometric button (only for unlock mode if enabled)
-                            isUnlockMode && isBiometricsEnabled && _deviceSupportsBiometrics
+                            isUnlockMode &&
+                                    isBiometricsEnabled &&
+                                    _deviceSupportsBiometrics
                                 ? _buildKeypadButton(
                                     '',
                                     onPressed: _authenticateWithBiometrics,
@@ -430,7 +461,10 @@ class _LockScreenState extends ConsumerState<LockScreen> with SingleTickerProvid
                             _buildKeypadButton(
                               '',
                               onPressed: _onBackspace,
-                              icon: const Icon(Icons.backspace_outlined, size: 24),
+                              icon: const Icon(
+                                Icons.backspace_outlined,
+                                size: 24,
+                              ),
                             ),
                           ],
                         ),

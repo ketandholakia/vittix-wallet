@@ -35,8 +35,12 @@ class DatabaseRecoveryService {
     final live = await liveDatabaseFile();
     final directory = live.parent;
 
-    final materialized = File(p.join(directory.path, '$kDatabaseFileName.recovery.tmp'));
-    final staged = File(p.join(directory.path, '$kDatabaseFileName.restore.tmp'));
+    final materialized = File(
+      p.join(directory.path, '$kDatabaseFileName.recovery.tmp'),
+    );
+    final staged = File(
+      p.join(directory.path, '$kDatabaseFileName.restore.tmp'),
+    );
 
     File candidate = backupFile;
     try {
@@ -46,7 +50,11 @@ class DatabaseRecoveryService {
             'This backup is encrypted; a passphrase is required to restore it.',
           );
         }
-        await BackupService.decryptToFile(backupFile, passphrase, materialized.path);
+        await BackupService.decryptToFile(
+          backupFile,
+          passphrase,
+          materialized.path,
+        );
         candidate = materialized;
       }
 

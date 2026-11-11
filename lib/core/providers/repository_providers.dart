@@ -42,12 +42,13 @@ final accountRepositoryProvider = Provider<AccountRepository>((ref) {
   return AccountRepositoryImpl(dao, walletId, walletDao);
 });
 
-final recurringTransactionRepositoryProvider = Provider<RecurringTransactionRepository>((ref) {
-  final dao = ref.watch(recurringTransactionDaoProvider);
-  final walletDao = ref.watch(walletDaoProvider);
-  final walletId = ref.watch(currentWalletIdProvider);
-  return RecurringTransactionRepositoryImpl(dao, walletDao, walletId);
-});
+final recurringTransactionRepositoryProvider =
+    Provider<RecurringTransactionRepository>((ref) {
+      final dao = ref.watch(recurringTransactionDaoProvider);
+      final walletDao = ref.watch(walletDaoProvider);
+      final walletId = ref.watch(currentWalletIdProvider);
+      return RecurringTransactionRepositoryImpl(dao, walletDao, walletId);
+    });
 
 final goalRepositoryProvider = Provider<GoalRepository>((ref) {
   final dao = ref.watch(goalDaoProvider);

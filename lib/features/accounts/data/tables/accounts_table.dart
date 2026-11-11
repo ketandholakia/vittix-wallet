@@ -9,10 +9,13 @@ class Accounts extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   TextColumn get name => text().withLength(min: 1, max: 50)();
-  TextColumn get type => text().map(const EnumNameConverter(AccountType.values))();
+  TextColumn get type =>
+      text().map(const EnumNameConverter(AccountType.values))();
   IntColumn get icon => integer()();
   TextColumn get color => text()();
-  IntColumn get openingBalance => integer().map(const MoneyConverter()).withDefault(const Constant(0))();
+  IntColumn get openingBalance =>
+      integer().map(const MoneyConverter()).withDefault(const Constant(0))();
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
-  DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
+  DateTimeColumn get updatedAt =>
+      dateTime().clientDefault(() => DateTime.now())();
 }

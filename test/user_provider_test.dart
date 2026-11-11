@@ -1,6 +1,13 @@
 import 'package:drift/native.dart';
 import 'package:vittix_wallet/core/database/app_database.dart'
-    hide Transaction, Category, Account, TransactionType, AccountType, isNull, isNotNull;
+    hide
+        Transaction,
+        Category,
+        Account,
+        TransactionType,
+        AccountType,
+        isNull,
+        isNotNull;
 import 'package:vittix_wallet/core/database/database_enums.dart' as db_enums;
 import 'package:vittix_wallet/core/providers/database_provider.dart';
 import 'package:vittix_wallet/features/users/presentation/user_providers.dart';
@@ -25,13 +32,17 @@ void main() {
     walletId = await db
         .into(db.wallets)
         .insert(const WalletsCompanion(name: Value('Wallet A')));
-    accountId = await db.into(db.accounts).insert(AccountsCompanion.insert(
-          walletId: Value(walletId),
-          name: 'Cash',
-          type: db_enums.AccountType.cash,
-          icon: 0,
-          color: '00FF00',
-        ));
+    accountId = await db
+        .into(db.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletId),
+            name: 'Cash',
+            type: db_enums.AccountType.cash,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
   });
 
   tearDown(() async {
@@ -39,12 +50,13 @@ void main() {
   });
 
   Future<int?> resolve() => container.read(
-        userIdForAccountProvider((walletId: walletId, accountId: accountId)).future,
-      );
+    userIdForAccountProvider((walletId: walletId, accountId: accountId)).future,
+  );
 
   test('resolves the user identity of a mapped membership', () async {
-    final userId = await db.userDao
-        .insertUser(const UsersCompanion(displayName: Value('Asha')));
+    final userId = await db.userDao.insertUser(
+      const UsersCompanion(displayName: Value('Asha')),
+    );
     await db.walletDao.insertMember(
       WalletMembersCompanion.insert(
         walletId: walletId,
@@ -78,8 +90,9 @@ void main() {
   });
 
   test('returns null for an inactive membership', () async {
-    final userId = await db.userDao
-        .insertUser(const UsersCompanion(displayName: Value('Asha')));
+    final userId = await db.userDao.insertUser(
+      const UsersCompanion(displayName: Value('Asha')),
+    );
     await db.walletDao.insertMember(
       WalletMembersCompanion.insert(
         walletId: walletId,
@@ -97,8 +110,9 @@ void main() {
     final otherWallet = await db
         .into(db.wallets)
         .insert(const WalletsCompanion(name: Value('Wallet B')));
-    final otherUser = await db.userDao
-        .insertUser(const UsersCompanion(displayName: Value('Ravi')));
+    final otherUser = await db.userDao.insertUser(
+      const UsersCompanion(displayName: Value('Ravi')),
+    );
 
     // Reuse the same account id in a different wallet.
     await db.walletDao.insertMember(
@@ -114,9 +128,10 @@ void main() {
     expect(await resolve(), isNull);
 
     final inOther = await container.read(
-      userIdForAccountProvider(
-        (walletId: otherWallet, accountId: accountId),
-      ).future,
+      userIdForAccountProvider((
+        walletId: otherWallet,
+        accountId: accountId,
+      )).future,
     );
     expect(inOther, otherUser);
   });

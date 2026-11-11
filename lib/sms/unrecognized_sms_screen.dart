@@ -1,5 +1,5 @@
-
-import 'package:vittix_wallet/core/database/app_database.dart' hide Column, AccountType;
+import 'package:vittix_wallet/core/database/app_database.dart'
+    hide Column, AccountType;
 import 'package:vittix_wallet/core/providers/database_provider.dart';
 import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:vittix_wallet/llm/llm_service.dart';
 import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
 import 'package:vittix_wallet/core/providers/usecase_providers.dart';
 import 'package:vittix_wallet/features/accounts/domain/account.dart';
+
 // Removed unused category.dart
 
 class UnrecognizedSmsScreen extends ConsumerWidget {
@@ -19,9 +20,7 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
     final dao = ref.watch(smsParsingDaoProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Unrecognized SMS'),
-      ),
+      appBar: AppBar(title: const Text('Unrecognized SMS')),
       body: StreamBuilder<List<UnrecognizedSms>>(
         stream: dao.watchUnresolvedSms(currentWalletId),
         builder: (context, snapshot) {
@@ -47,7 +46,10 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(item.sender, style: Theme.of(context).textTheme.titleMedium),
+                          Text(
+                            item.sender,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
                           Text(item.receivedAt.toString().split('.')[0]),
                         ],
                       ),
@@ -59,22 +61,37 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
                         children: [
                           TextButton.icon(
                             onPressed: () async {
-                              final scaffoldMessenger = ScaffoldMessenger.of(context);
+                              final scaffoldMessenger = ScaffoldMessenger.of(
+                                context,
+                              );
                               scaffoldMessenger.showSnackBar(
-                                const SnackBar(content: Text('Asking AI to parse SMS...')),
+                                const SnackBar(
+                                  content: Text('Asking AI to parse SMS...'),
+                                ),
                               );
                               try {
-                                final candidate = await ref.read(llmServiceProvider).parseSms(item.smsBody);
-                                
+                                final candidate = await ref
+                                    .read(llmServiceProvider)
+                                    .parseSms(item.smsBody);
+
                                 if (!context.mounted) return;
-                                
+
                                 // Show a dialog with the parsed data to confirm import
-                                final categories = await ref.read(watchAllCategoriesUseCaseProvider).call().first;
-                                final accounts = await ref.read(watchAllAccountsUseCaseProvider).call().first;
-                                final cashAccount = accounts.firstWhere((a) => a.type == AccountType.cash, orElse: () => accounts.first);
-                                
+                                final categories = await ref
+                                    .read(watchAllCategoriesUseCaseProvider)
+                                    .call()
+                                    .first;
+                                final accounts = await ref
+                                    .read(watchAllAccountsUseCaseProvider)
+                                    .call()
+                                    .first;
+                                final cashAccount = accounts.firstWhere(
+                                  (a) => a.type == AccountType.cash,
+                                  orElse: () => accounts.first,
+                                );
+
                                 if (!context.mounted) return;
-                                
+
                                 await showDialog<void>(
                                   context: context,
                                   builder: (context) {
@@ -82,33 +99,60 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
                                       title: const Text('AI Extracted Data'),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Text('Merchant: ${candidate.merchant}'),
+                                          Text(
+                                            'Merchant: ${candidate.merchant}',
+                                          ),
                                           Text('Amount: ${candidate.amount}'),
                                           Text('Type: ${candidate.type.name}'),
                                         ],
                                       ),
                                       actions: [
-                                        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('Cancel'),
+                                        ),
                                         FilledButton(
                                           onPressed: () async {
                                             final transaction = domain.Transaction(
                                               id: 0,
                                               amount: candidate.amount,
                                               date: candidate.date,
-                                              note: '[AI] ${candidate.merchant}',
+                                              note:
+                                                  '[AI] ${candidate.merchant}',
                                               type: candidate.type,
                                               category: categories.first,
                                               account: cashAccount,
                                               createdAt: DateTime.now(),
                                               updatedAt: DateTime.now(),
                                             );
-                                            await ref.read(addTransactionUseCaseProvider).call(transaction, source: 'import');
-                                            await dao.markSmsResolved(item.id, authorizedWalletId: currentWalletId);
+                                            await ref
+                                                .read(
+                                                  addTransactionUseCaseProvider,
+                                                )
+                                                .call(
+                                                  transaction,
+                                                  source: 'import',
+                                                );
+                                            await dao.markSmsResolved(
+                                              item.id,
+                                              authorizedWalletId:
+                                                  currentWalletId,
+                                            );
                                             if (context.mounted) {
                                               Navigator.pop(context);
-                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Transaction saved!')));
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    'Transaction saved!',
+                                                  ),
+                                                ),
+                                              );
                                             }
                                           },
                                           child: const Text('Save & Resolve'),
@@ -117,11 +161,12 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
                                     );
                                   },
                                 );
-                                
                               } on Object catch (e) {
                                 if (context.mounted) {
                                   scaffoldMessenger.showSnackBar(
-                                    SnackBar(content: Text('AI Parse Failed: $e')),
+                                    SnackBar(
+                                      content: Text('AI Parse Failed: $e'),
+                                    ),
                                   );
                                 }
                               }
@@ -131,7 +176,10 @@ class UnrecognizedSmsScreen extends ConsumerWidget {
                           ),
                           TextButton(
                             onPressed: () async {
-                              await dao.markSmsResolved(item.id, authorizedWalletId: currentWalletId);
+                              await dao.markSmsResolved(
+                                item.id,
+                                authorizedWalletId: currentWalletId,
+                              );
                             },
                             child: const Text('Mark Resolved'),
                           ),

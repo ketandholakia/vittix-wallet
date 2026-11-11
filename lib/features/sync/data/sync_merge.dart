@@ -50,7 +50,8 @@ class SyncMergeStats {
   int blockedByTombstone = 0;
 
   @override
-  String toString() => 'SyncMergeStats(inserted: $inserted, updated: $updated, '
+  String toString() =>
+      'SyncMergeStats(inserted: $inserted, updated: $updated, '
       'keptLocal: $keptLocal, conflicts: $conflicts, '
       'skippedClockSkew: $skippedClockSkew, '
       'blockedByTombstone: $blockedByTombstone)';
@@ -70,7 +71,8 @@ Future<SyncMergeStats> mergeEntityChanges<T>({
   required Future<T?> Function(String uuid) findLocal,
   required DateTime Function(T local) localUpdatedAt,
   required Future<void> Function(Map<String, dynamic> data) insertRemote,
-  required Future<void> Function(T local, Map<String, dynamic> data) updateRemote,
+  required Future<void> Function(T local, Map<String, dynamic> data)
+  updateRemote,
   Future<void> Function(Map<String, dynamic> data, T local)? recordConflict,
   Map<String, DateTime>? tombstoneByKey,
   DateTime? now,

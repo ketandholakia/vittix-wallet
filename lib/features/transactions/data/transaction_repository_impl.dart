@@ -15,9 +15,15 @@ class TransactionRepositoryImpl implements TransactionRepository {
   /// Null when no authenticated user context exists (e.g. background operations).
   final int? actorAccountId;
 
-  TransactionRepositoryImpl(this._transactionDao, this.walletId, [this._walletDao, this.actorAccountId]);
+  TransactionRepositoryImpl(
+    this._transactionDao,
+    this.walletId, [
+    this._walletDao,
+    this.actorAccountId,
+  ]);
 
-  db.WalletDao get _auditDao => _walletDao ?? db.WalletDao(_transactionDao.attachedDatabase);
+  db.WalletDao get _auditDao =>
+      _walletDao ?? db.WalletDao(_transactionDao.attachedDatabase);
 
   Future<void> _insertAuditEvent({
     required String action,
@@ -42,26 +48,31 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<void> addTransaction(Transaction transaction, {String source = 'user'}) async {
+  Future<void> addTransaction(
+    Transaction transaction, {
+    String source = 'user',
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canAddTransactions(r),
       actorAccountId: actorAccountId,
       actionName: 'add transactions',
     );
-    final companion = transaction.toCompanion().copyWith(id: const Value.absent());
+    final companion = transaction.toCompanion().copyWith(
+      id: const Value.absent(),
+    );
     final database = _transactionDao.attachedDatabase;
     await database.transaction(() async {
       final id = await _transactionDao.insertTransaction(
-        companion.copyWith(
-          walletId: Value(walletId),
-        ),
+        companion.copyWith(walletId: Value(walletId)),
         walletId,
       );
       // Read back the stored row to capture the generated uuid (inside the same transaction).
       final row = await _transactionDao.getTransactionById(id, walletId);
       await _insertAuditEvent(
-        action: source == 'recurring' ? 'RECURRING_GENERATED' : 'TRANSACTION_CREATED',
+        action: source == 'recurring'
+            ? 'RECURRING_GENERATED'
+            : 'TRANSACTION_CREATED',
         entityId: id,
         entityUuid: row?.uuid,
         source: source,
@@ -144,13 +155,14 @@ class TransactionRepositoryImpl implements TransactionRepository {
     final database = _transactionDao.attachedDatabase;
     await database.transaction(() async {
       final updated = await _transactionDao.updateTransaction(
-        companion.copyWith(
-          walletId: Value(walletId),
-        ),
+        companion.copyWith(walletId: Value(walletId)),
         walletId,
       );
       if (updated) {
-        final row = await _transactionDao.getTransactionById(transaction.id, walletId);
+        final row = await _transactionDao.getTransactionById(
+          transaction.id,
+          walletId,
+        );
         await _insertAuditEvent(
           action: 'TRANSACTION_UPDATED',
           entityId: transaction.id,
@@ -163,22 +175,29 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<Transaction?> getTransactionById(int id) async {
-    final details = await _transactionDao.getTransactionWithDetailsById(id, walletId);
+    final details = await _transactionDao.getTransactionWithDetailsById(
+      id,
+      walletId,
+    );
     return details?.toDomain();
   }
 
   @override
   Stream<List<Transaction>> watchTransactionsInMonth(DateTime month) {
-    return _transactionDao.watchTransactionsInMonth(month, walletId).map((dbTransactions) {
+    return _transactionDao.watchTransactionsInMonth(month, walletId).map((
+      dbTransactions,
+    ) {
       return dbTransactions.map((dbTx) => dbTx.toDomain()).toList();
     });
   }
 
   @override
   Stream<List<Transaction>> watchRecentTransactions({int limit = 10}) {
-    return _transactionDao.watchRecentTransactions(limit: limit, walletId: walletId).map((dbTransactions) {
-      return dbTransactions.map((dbTx) => dbTx.toDomain()).toList();
-    });
+    return _transactionDao
+        .watchRecentTransactions(limit: limit, walletId: walletId)
+        .map((dbTransactions) {
+          return dbTransactions.map((dbTx) => dbTx.toDomain()).toList();
+        });
   }
 
   @override
@@ -190,7 +209,10 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<List<TrendDataPoint>> getMonthlyTrend(int months) async {
-    final result = await _transactionDao.getMonthlyExpensesForLastNMonths(months, walletId);
+    final result = await _transactionDao.getMonthlyExpensesForLastNMonths(
+      months,
+      walletId,
+    );
     return result.map((monthlyTotal) {
       return TrendDataPoint(
         date: DateTime(monthlyTotal.year, monthlyTotal.month),
@@ -200,8 +222,13 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<(double totalIncome, double totalExpense)> getMonthlySummaryTotals(DateTime month) async {
-    final summary = await _transactionDao.getMonthlySummaryTotals(month, walletId);
+  Future<(double totalIncome, double totalExpense)> getMonthlySummaryTotals(
+    DateTime month,
+  ) async {
+    final summary = await _transactionDao.getMonthlySummaryTotals(
+      month,
+      walletId,
+    );
     return (summary.totalIncome, summary.totalExpense);
   }
 }

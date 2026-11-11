@@ -6,20 +6,20 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
 
 IconData iconForAccountType(AccountType type) => switch (type) {
-      AccountType.bank => Symbols.account_balance,
-      AccountType.creditCard => Symbols.credit_card,
-      AccountType.loan => Symbols.real_estate_agent,
-      AccountType.cash => Symbols.payments,
-      AccountType.income => Symbols.savings,
-    };
+  AccountType.bank => Symbols.account_balance,
+  AccountType.creditCard => Symbols.credit_card,
+  AccountType.loan => Symbols.real_estate_agent,
+  AccountType.cash => Symbols.payments,
+  AccountType.income => Symbols.savings,
+};
 
 Color colorForAccountType(AccountType type) => switch (type) {
-      AccountType.bank => const Color(0xFF569BFF),
-      AccountType.creditCard => const Color(0xFFFF7A6B),
-      AccountType.loan => const Color(0xFF9C27B0),
-      AccountType.cash => const Color(0xFF45D4A3),
-      AccountType.income => const Color(0xFF2196F3),
-    };
+  AccountType.bank => const Color(0xFF569BFF),
+  AccountType.creditCard => const Color(0xFFFF7A6B),
+  AccountType.loan => const Color(0xFF9C27B0),
+  AccountType.cash => const Color(0xFF45D4A3),
+  AccountType.income => const Color(0xFF2196F3),
+};
 
 Future<Account?> showAccountFormDialog(
   BuildContext context,
@@ -112,10 +112,7 @@ class _AccountFormDialogState extends ConsumerState<_AccountFormDialog> {
                 prefixIcon: Icon(Icons.account_balance_wallet_outlined),
               ),
               items: AccountType.values.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type.label),
-                );
+                return DropdownMenuItem(value: type, child: Text(type.label));
               }).toList(),
               onChanged: (value) {
                 if (value != null) {
@@ -142,7 +139,9 @@ class _AccountFormDialogState extends ConsumerState<_AccountFormDialog> {
             TextFormField(
               controller: _balanceController,
               decoration: InputDecoration(
-                labelText: _selectedType.isLiability ? 'Amount Owed' : 'Opening Balance',
+                labelText: _selectedType.isLiability
+                    ? 'Amount Owed'
+                    : 'Opening Balance',
                 prefixIcon: const Icon(Icons.payments_outlined),
               ),
               keyboardType: TextInputType.number,

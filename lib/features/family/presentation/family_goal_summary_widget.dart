@@ -24,8 +24,12 @@ class FamilyGoalSummaryWidget extends ConsumerWidget {
                 (goal) => ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(goal.goal.name),
-                  subtitle: Text('${(goal.progress * 100).toStringAsFixed(0)}% complete'),
-                  trailing: Text('${goal.goal.currentAmount}/${goal.goal.targetAmount}'),
+                  subtitle: Text(
+                    '${(goal.progress * 100).toStringAsFixed(0)}% complete',
+                  ),
+                  trailing: Text(
+                    '${goal.goal.currentAmount}/${goal.goal.targetAmount}',
+                  ),
                 ),
               ),
             ],
@@ -37,4 +41,3 @@ class FamilyGoalSummaryWidget extends ConsumerWidget {
     );
   }
 }
-

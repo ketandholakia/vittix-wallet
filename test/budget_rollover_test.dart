@@ -25,8 +25,19 @@ void main() {
     usecase = GetBudgetStatus(mockBudgetRepository, mockTransactionRepository);
   });
 
-  final testCategory = Category(id: 1, name: 'Food', icon: Icons.fastfood, color: Colors.red);
-  final testAccount = const Account(id: 1, name: 'Cash', type: AccountType.cash, icon: Icons.payments, color: Colors.green);
+  final testCategory = Category(
+    id: 1,
+    name: 'Food',
+    icon: Icons.fastfood,
+    color: Colors.red,
+  );
+  final testAccount = const Account(
+    id: 1,
+    name: 'Cash',
+    type: AccountType.cash,
+    icon: Icons.payments,
+    color: Colors.green,
+  );
 
   group('Budget Rollover Tests', () {
     test('Scenario 1: Disabled Rollover', () async {
@@ -37,12 +48,34 @@ void main() {
       ];
 
       final transactions = [
-        Transaction(id: 1, amount: 80, date: DateTime(2026, 5, 15), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()),
-        Transaction(id: 2, amount: 90, date: DateTime(2026, 6, 15), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        Transaction(
+          id: 1,
+          amount: 80,
+          date: DateTime(2026, 5, 15),
+          type: TransactionType.expense,
+          category: testCategory,
+          account: testAccount,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+        Transaction(
+          id: 2,
+          amount: 90,
+          date: DateTime(2026, 6, 15),
+          type: TransactionType.expense,
+          category: testCategory,
+          account: testAccount,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
       ];
 
-      when(mockBudgetRepository.watchAllBudgets()).thenAnswer((_) => Stream.value(budgets));
-      when(mockTransactionRepository.watchAllTransactions()).thenAnswer((_) => Stream.value(transactions));
+      when(
+        mockBudgetRepository.watchAllBudgets(),
+      ).thenAnswer((_) => Stream.value(budgets));
+      when(
+        mockTransactionRepository.watchAllTransactions(),
+      ).thenAnswer((_) => Stream.value(transactions));
 
       final stream = usecase(DateTime(2026, 7, 1), RolloverMode.disabled);
       final result = await stream.first;
@@ -60,12 +93,34 @@ void main() {
       ];
 
       final transactions = [
-        Transaction(id: 1, amount: 80, date: DateTime(2026, 5, 15), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()), // May: $20 surplus
-        Transaction(id: 2, amount: 70, date: DateTime(2026, 6, 15), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()), // June: spent $70 of ($100 + $20 May) = $50 surplus
+        Transaction(
+          id: 1,
+          amount: 80,
+          date: DateTime(2026, 5, 15),
+          type: TransactionType.expense,
+          category: testCategory,
+          account: testAccount,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ), // May: $20 surplus
+        Transaction(
+          id: 2,
+          amount: 70,
+          date: DateTime(2026, 6, 15),
+          type: TransactionType.expense,
+          category: testCategory,
+          account: testAccount,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ), // June: spent $70 of ($100 + $20 May) = $50 surplus
       ];
 
-      when(mockBudgetRepository.watchAllBudgets()).thenAnswer((_) => Stream.value(budgets));
-      when(mockTransactionRepository.watchAllTransactions()).thenAnswer((_) => Stream.value(transactions));
+      when(
+        mockBudgetRepository.watchAllBudgets(),
+      ).thenAnswer((_) => Stream.value(budgets));
+      when(
+        mockTransactionRepository.watchAllTransactions(),
+      ).thenAnswer((_) => Stream.value(transactions));
 
       final stream = usecase(DateTime(2026, 7, 1), RolloverMode.surplusOnly);
       final result = await stream.first;
@@ -82,11 +137,24 @@ void main() {
       ];
 
       final transactions = [
-        Transaction(id: 1, amount: 120, date: DateTime(2026, 6, 15), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()), // June: deficit -$20
+        Transaction(
+          id: 1,
+          amount: 120,
+          date: DateTime(2026, 6, 15),
+          type: TransactionType.expense,
+          category: testCategory,
+          account: testAccount,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ), // June: deficit -$20
       ];
 
-      when(mockBudgetRepository.watchAllBudgets()).thenAnswer((_) => Stream.value(budgets));
-      when(mockTransactionRepository.watchAllTransactions()).thenAnswer((_) => Stream.value(transactions));
+      when(
+        mockBudgetRepository.watchAllBudgets(),
+      ).thenAnswer((_) => Stream.value(budgets));
+      when(
+        mockTransactionRepository.watchAllTransactions(),
+      ).thenAnswer((_) => Stream.value(transactions));
 
       final stream = usecase(DateTime(2026, 7, 1), RolloverMode.surplusOnly);
       final result = await stream.first;
@@ -102,13 +170,29 @@ void main() {
       ];
 
       final transactions = [
-        Transaction(id: 1, amount: 120, date: DateTime(2026, 6, 15), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()), // June: deficit -$20
+        Transaction(
+          id: 1,
+          amount: 120,
+          date: DateTime(2026, 6, 15),
+          type: TransactionType.expense,
+          category: testCategory,
+          account: testAccount,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ), // June: deficit -$20
       ];
 
-      when(mockBudgetRepository.watchAllBudgets()).thenAnswer((_) => Stream.value(budgets));
-      when(mockTransactionRepository.watchAllTransactions()).thenAnswer((_) => Stream.value(transactions));
+      when(
+        mockBudgetRepository.watchAllBudgets(),
+      ).thenAnswer((_) => Stream.value(budgets));
+      when(
+        mockTransactionRepository.watchAllTransactions(),
+      ).thenAnswer((_) => Stream.value(transactions));
 
-      final stream = usecase(DateTime(2026, 7, 1), RolloverMode.surplusAndDeficit);
+      final stream = usecase(
+        DateTime(2026, 7, 1),
+        RolloverMode.surplusAndDeficit,
+      );
       final result = await stream.first;
 
       expect(result.length, 1);
@@ -124,17 +208,33 @@ void main() {
       ];
 
       final transactions = [
-        Transaction(id: 1, amount: 80, date: DateTime(2026, 5, 15), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()), // May: $20 surplus
+        Transaction(
+          id: 1,
+          amount: 80,
+          date: DateTime(2026, 5, 15),
+          type: TransactionType.expense,
+          category: testCategory,
+          account: testAccount,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ), // May: $20 surplus
       ];
 
-      when(mockBudgetRepository.watchAllBudgets()).thenAnswer((_) => Stream.value(budgets));
-      when(mockTransactionRepository.watchAllTransactions()).thenAnswer((_) => Stream.value(transactions));
+      when(
+        mockBudgetRepository.watchAllBudgets(),
+      ).thenAnswer((_) => Stream.value(budgets));
+      when(
+        mockTransactionRepository.watchAllTransactions(),
+      ).thenAnswer((_) => Stream.value(transactions));
 
       final stream = usecase(DateTime(2026, 7, 1), RolloverMode.surplusOnly);
       final result = await stream.first;
 
       expect(result.length, 1);
-      expect(result.first.rolloverAmount, 0.0); // Cascade reset due to gap in June
+      expect(
+        result.first.rolloverAmount,
+        0.0,
+      ); // Cascade reset due to gap in June
     });
   });
 }

@@ -25,9 +25,18 @@ class FamilyFinancialSummaryWidget extends ConsumerWidget {
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  _MetricCard(label: 'Income', value: currencyFormat.format(summary.income)),
-                  _MetricCard(label: 'Expenses', value: currencyFormat.format(summary.expense)),
-                  _MetricCard(label: 'Savings Rate', value: '${(summary.savingsRate * 100).toStringAsFixed(0)}%'),
+                  _MetricCard(
+                    label: 'Income',
+                    value: currencyFormat.format(summary.income),
+                  ),
+                  _MetricCard(
+                    label: 'Expenses',
+                    value: currencyFormat.format(summary.expense),
+                  ),
+                  _MetricCard(
+                    label: 'Savings Rate',
+                    value: '${(summary.savingsRate * 100).toStringAsFixed(0)}%',
+                  ),
                 ],
               ),
             ],
@@ -66,4 +75,3 @@ class _MetricCard extends StatelessWidget {
     );
   }
 }
-

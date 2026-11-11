@@ -29,11 +29,22 @@ class FamilySettlementService {
   }) {
     final memberIds = members.map((m) => m.id).toSet();
     final balances = {
-      for (final id in memberIds) id: const WalletMemberBalance(memberId: 0, totalPaid: 0, totalOwed: 0, totalSettled: 0),
+      for (final id in memberIds)
+        id: const WalletMemberBalance(
+          memberId: 0,
+          totalPaid: 0,
+          totalOwed: 0,
+          totalSettled: 0,
+        ),
     };
 
     for (final member in members) {
-      balances[member.id] = WalletMemberBalance(memberId: member.id, totalPaid: 0, totalOwed: 0, totalSettled: 0);
+      balances[member.id] = WalletMemberBalance(
+        memberId: member.id,
+        totalPaid: 0,
+        totalOwed: 0,
+        totalSettled: 0,
+      );
     }
 
     for (final split in splits) {
@@ -41,7 +52,11 @@ class FamilySettlementService {
       if (current != null) {
         balances[split.paidByMemberId] = WalletMemberBalance(
           memberId: current.memberId,
-          totalPaid: current.totalPaid + splitMembers.where((m) => m.splitId == split.id).fold<double>(0, (s, m) => s + m.amountOwed),
+          totalPaid:
+              current.totalPaid +
+              splitMembers
+                  .where((m) => m.splitId == split.id)
+                  .fold<double>(0, (s, m) => s + m.amountOwed),
           totalOwed: current.totalOwed,
           totalSettled: current.totalSettled,
         );
@@ -83,4 +98,3 @@ class FamilySettlementService {
     return balances.values.toList();
   }
 }
-

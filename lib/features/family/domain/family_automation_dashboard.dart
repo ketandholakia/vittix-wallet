@@ -15,9 +15,22 @@ class FamilyAutomationDashboard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const ListTile(title: Text('Future Commitments')),
-          ListTile(title: const Text('Expected Bills'), trailing: Text(projection.expectedBills.toStringAsFixed(0))),
-          ListTile(title: const Text('Allowance Payments'), trailing: Text(projection.expectedAllowancePayments.toStringAsFixed(0))),
-          ListTile(title: const Text('Goal Contributions'), trailing: Text(projection.expectedGoalContributions.toStringAsFixed(0))),
+          ListTile(
+            title: const Text('Expected Bills'),
+            trailing: Text(projection.expectedBills.toStringAsFixed(0)),
+          ),
+          ListTile(
+            title: const Text('Allowance Payments'),
+            trailing: Text(
+              projection.expectedAllowancePayments.toStringAsFixed(0),
+            ),
+          ),
+          ListTile(
+            title: const Text('Goal Contributions'),
+            trailing: Text(
+              projection.expectedGoalContributions.toStringAsFixed(0),
+            ),
+          ),
         ],
       ),
       loading: () => const SizedBox.shrink(),
@@ -25,4 +38,3 @@ class FamilyAutomationDashboard extends ConsumerWidget {
     );
   }
 }
-

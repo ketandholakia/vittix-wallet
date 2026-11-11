@@ -56,15 +56,17 @@ class BackupService {
   static const int _nonceLength = 12;
   static const int _macLength = 16;
   static const int _headerLength =
-      10 /*magic*/ + 1 /*version*/ + 4 /*iterations*/ + _saltLength + _nonceLength + _macLength;
+      10 /*magic*/ +
+      1 /*version*/ +
+      4 /*iterations*/ +
+      _saltLength +
+      _nonceLength +
+      _macLength;
 
   static final Cipher _cipher = AesGcm.with256bits();
 
-  static Pbkdf2 _kdf(int iterations) => Pbkdf2(
-        macAlgorithm: Hmac.sha256(),
-        iterations: iterations,
-        bits: 256,
-      );
+  static Pbkdf2 _kdf(int iterations) =>
+      Pbkdf2(macAlgorithm: Hmac.sha256(), iterations: iterations, bits: 256);
 
   // ------------------------------------------------------------------ backup
   /// Writes a consistent snapshot of the live database to [targetPath].
@@ -112,7 +114,8 @@ class BackupService {
 
   /// `expense_backup_<timestamp>.db`. Callers append `.enc` for encrypted ones.
   static String timestampedBackupName(DateTime now) {
-    final stamp = '${now.year.toString().padLeft(4, '0')}'
+    final stamp =
+        '${now.year.toString().padLeft(4, '0')}'
         '${now.month.toString().padLeft(2, '0')}'
         '${now.day.toString().padLeft(2, '0')}_'
         '${now.hour.toString().padLeft(2, '0')}'
@@ -130,10 +133,9 @@ class BackupService {
   }) async {
     final salt = _randomBytes(_saltLength);
     final nonce = _cipher.newNonce();
-    final key = await _kdf(iterations).deriveKey(
-      secretKey: SecretKey(utf8.encode(passphrase)),
-      nonce: salt,
-    );
+    final key = await _kdf(
+      iterations,
+    ).deriveKey(secretKey: SecretKey(utf8.encode(passphrase)), nonce: salt);
     final box = await _cipher.encrypt(clearBytes, secretKey: key, nonce: nonce);
 
     final out = BytesBuilder();
@@ -177,10 +179,9 @@ class BackupService {
     offset += _macLength;
     final cipherText = container.sublist(offset);
 
-    final key = await _kdf(iterations).deriveKey(
-      secretKey: SecretKey(utf8.encode(passphrase)),
-      nonce: salt,
-    );
+    final key = await _kdf(
+      iterations,
+    ).deriveKey(secretKey: SecretKey(utf8.encode(passphrase)), nonce: salt);
     final box = SecretBox(cipherText, nonce: nonce, mac: Mac(mac));
     try {
       final clear = await _cipher.decrypt(box, secretKey: key);
@@ -200,10 +201,7 @@ class BackupService {
     RandomAccessFile? raf;
     try {
       raf = file.openSync();
-      return _startsWith(
-        raf.readSync(_containerMagic.length),
-        _containerMagic,
-      );
+      return _startsWith(raf.readSync(_containerMagic.length), _containerMagic);
     } on FileSystemException {
       // An unreadable file is simply not a container.
       return false;
@@ -304,7 +302,8 @@ class BackupService {
     if (!plaintext && (databaseKey == null || databaseKey.isEmpty)) {
       return const BackupValidationResult(
         isValid: false,
-        error: 'Not a SQLite database, or an encrypted snapshot that requires '
+        error:
+            'Not a SQLite database, or an encrypted snapshot that requires '
             'the database key',
       );
     }
@@ -316,8 +315,9 @@ class BackupService {
         db.execute(DatabaseEncryption.pragmaForKey(databaseKey!));
       }
       final integrity = db.select('PRAGMA integrity_check');
-      final verdict =
-          integrity.isEmpty ? null : integrity.first.values.first?.toString();
+      final verdict = integrity.isEmpty
+          ? null
+          : integrity.first.values.first?.toString();
       if (verdict != 'ok') {
         return BackupValidationResult(
           isValid: false,
@@ -333,7 +333,8 @@ class BackupService {
       if (version > currentSchemaVersion) {
         return BackupValidationResult(
           isValid: false,
-          error: 'Backup is from a newer app version (schema $version > '
+          error:
+              'Backup is from a newer app version (schema $version > '
               '$currentSchemaVersion)',
           schemaVersion: version,
         );
@@ -346,7 +347,7 @@ class BackupService {
         error: plaintext
             ? error.message
             : 'Cannot open the encrypted backup with the supplied key '
-                '(${error.message})',
+                  '(${error.message})',
       );
     } finally {
       db?.dispose();
@@ -454,10 +455,7 @@ class BackupService {
     }
   }
 
-  static Future<bool> _opensAsDatabase(
-    File file,
-    String? databaseKey,
-  ) async {
+  static Future<bool> _opensAsDatabase(File file, String? databaseKey) async {
     Database? db;
     try {
       db = sqlite3.open(file.path, mode: OpenMode.readOnly);
@@ -481,11 +479,11 @@ class BackupService {
   }
 
   static List<int> _uint32(int value) => <int>[
-        (value >> 24) & 0xFF,
-        (value >> 16) & 0xFF,
-        (value >> 8) & 0xFF,
-        value & 0xFF,
-      ];
+    (value >> 24) & 0xFF,
+    (value >> 16) & 0xFF,
+    (value >> 8) & 0xFF,
+    value & 0xFF,
+  ];
 
   static int _readUint32(List<int> bytes, int offset) =>
       (bytes[offset] << 24) |

@@ -2,7 +2,10 @@ part of 'sync_service.dart';
 
 /// Local "server" used when simulated sync is enabled.
 extension SyncSimulatedServer on SyncNotifier {
-  Future<Map<String, dynamic>> _runSimulatedServerSync(Map<String, dynamic> clientPayload, DateTime clientLastSync) async {
+  Future<Map<String, dynamic>> _runSimulatedServerSync(
+    Map<String, dynamic> clientPayload,
+    DateTime clientLastSync,
+  ) async {
     // Artificial delay for UI realism
     await Future<void>.delayed(const Duration(milliseconds: 800));
 
@@ -62,7 +65,9 @@ extension SyncSimulatedServer on SyncNotifier {
       });
       if (hasNewerEdit) continue;
 
-      list.removeWhere((item) => (item as Map<String, dynamic>)['uuid'] == uuid);
+      list.removeWhere(
+        (item) => (item as Map<String, dynamic>)['uuid'] == uuid,
+      );
 
       final deletionsList = serverDb['deletions'] as List<dynamic>? ?? [];
       final exists = deletionsList.any((item) {
@@ -114,7 +119,9 @@ extension SyncSimulatedServer on SyncNotifier {
           continue;
         }
         final clientUpdatedAt = _parseDateTime(clientItem['updatedAt']);
-        final normalizedClientItem = Map<String, dynamic>.from(_jsonSafeValue(clientItem) as Map);
+        final normalizedClientItem = Map<String, dynamic>.from(
+          _jsonSafeValue(clientItem) as Map,
+        );
 
         // Do not resurrect a row that has a tombstone at least as new as this
         // client edit.
@@ -152,7 +159,9 @@ extension SyncSimulatedServer on SyncNotifier {
     for (final table in tables) {
       final serverList = serverDb[table] as List<dynamic>? ?? [];
       final filteredList = serverList.where((item) {
-        final updatedAt = _parseDateTime((item as Map<String, dynamic>)['updatedAt']);
+        final updatedAt = _parseDateTime(
+          (item as Map<String, dynamic>)['updatedAt'],
+        );
         return updatedAt.isAfter(clientLastSync);
       }).toList();
       responseChanges[table] = filteredList;
@@ -160,7 +169,9 @@ extension SyncSimulatedServer on SyncNotifier {
 
     final serverDeletions = serverDb['deletions'] as List<dynamic>? ?? [];
     final filteredDeletions = serverDeletions.where((item) {
-      final deletedAt = _parseDateTime((item as Map<String, dynamic>)['deletedAt']);
+      final deletedAt = _parseDateTime(
+        (item as Map<String, dynamic>)['deletedAt'],
+      );
       return deletedAt.isAfter(clientLastSync);
     }).toList();
 

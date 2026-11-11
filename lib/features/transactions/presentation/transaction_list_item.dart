@@ -20,17 +20,18 @@ class TransactionListItem extends ConsumerWidget {
     final amountColor = isExpense ? Colors.red : Colors.green;
     final amountPrefix = isExpense ? '-' : '+';
     final currencyFormat = ref.watch(currencyFormatProvider);
-    
-    final isTransfer = transaction.note != null && transaction.note!.startsWith('[Transfer]');
+
+    final isTransfer =
+        transaction.note != null && transaction.note!.startsWith('[Transfer]');
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: isTransfer 
-            ? Colors.grey.withValues(alpha: 0.2) 
+        backgroundColor: isTransfer
+            ? Colors.grey.withValues(alpha: 0.2)
             : transaction.category.color.withValues(alpha: 0.2),
         child: Icon(
-          isTransfer ? Symbols.swap_horiz : transaction.category.icon, 
-          color: isTransfer ? Colors.grey : transaction.category.color, 
+          isTransfer ? Symbols.swap_horiz : transaction.category.icon,
+          color: isTransfer ? Colors.grey : transaction.category.color,
           size: 20,
         ),
       ),
@@ -39,13 +40,15 @@ class TransactionListItem extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            isTransfer 
+            isTransfer
                 ? '${transaction.account.name} · ${DateFormat.yMMMd().format(transaction.date)}'
                 : '${transaction.account.name} · ${DateFormat.yMMMd().format(transaction.date)}${transaction.note != null ? ' · ${transaction.note}' : ''}',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          if (transaction.payee != null || transaction.tags.isNotEmpty || transaction.attachments.isNotEmpty)
+          if (transaction.payee != null ||
+              transaction.tags.isNotEmpty ||
+              transaction.attachments.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Row(
@@ -53,13 +56,19 @@ class TransactionListItem extends ConsumerWidget {
                   if (transaction.payee != null) ...[
                     const Icon(Icons.person, size: 14, color: Colors.grey),
                     const SizedBox(width: 2),
-                    Text(transaction.payee!.name, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text(
+                      transaction.payee!.name,
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
                     const SizedBox(width: 8),
                   ],
                   if (transaction.tags.isNotEmpty) ...[
                     const Icon(Icons.label, size: 14, color: Colors.grey),
                     const SizedBox(width: 2),
-                    Text(transaction.tags.map((t) => t.name).join(', '), style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text(
+                      transaction.tags.map((t) => t.name).join(', '),
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
                     const SizedBox(width: 8),
                   ],
                   if (transaction.attachments.isNotEmpty) ...[
@@ -84,7 +93,9 @@ class TransactionListItem extends ConsumerWidget {
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('Delete Transaction'),
-                  content: const Text('Are you sure you want to delete this transaction?'),
+                  content: const Text(
+                    'Are you sure you want to delete this transaction?',
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
@@ -94,7 +105,9 @@ class TransactionListItem extends ConsumerWidget {
                       onPressed: () => Navigator.of(context).pop(true),
                       child: Text(
                         'Delete',
-                        style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     ),
                   ],
@@ -102,7 +115,9 @@ class TransactionListItem extends ConsumerWidget {
               );
 
               if (confirmed == true) {
-                await ref.read(deleteTransactionUseCaseProvider).call(transaction.id);
+                await ref
+                    .read(deleteTransactionUseCaseProvider)
+                    .call(transaction.id);
               }
             },
           ),
@@ -112,14 +127,17 @@ class TransactionListItem extends ConsumerWidget {
           ? () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Transfers cannot be edited. Please delete and recreate if needed.'),
+                  content: Text(
+                    'Transfers cannot be edited. Please delete and recreate if needed.',
+                  ),
                 ),
               );
             }
           : () {
               Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (ctx) => AddTransactionScreen(existingTransaction: transaction),
+                  builder: (ctx) =>
+                      AddTransactionScreen(existingTransaction: transaction),
                 ),
               );
             },

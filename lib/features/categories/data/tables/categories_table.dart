@@ -8,8 +8,14 @@ class Categories extends Table {
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   TextColumn get name => text().withLength(min: 1, max: 50)();
   IntColumn get icon => integer()(); // Storing icon codepoint
-  TextColumn get color => text()(); // Storing color as a hex string (e.g., "FF0000")
+  TextColumn get color =>
+      text()(); // Storing color as a hex string (e.g., "FF0000")
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
-  IntColumn get parentId => integer().nullable().references(Categories, #id, onDelete: KeyAction.cascade)();
-  DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
+  IntColumn get parentId => integer().nullable().references(
+    Categories,
+    #id,
+    onDelete: KeyAction.cascade,
+  )();
+  DateTimeColumn get updatedAt =>
+      dateTime().clientDefault(() => DateTime.now())();
 }

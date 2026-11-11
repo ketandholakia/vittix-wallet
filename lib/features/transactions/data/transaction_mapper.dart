@@ -15,8 +15,10 @@ extension TransactionWithDetailsMapper on db.TransactionWithDetails {
       category: category.toDomain(),
       account: account.toDomain(),
       // payee: payee != null ? domain.Payee(id: payee!.id, name: payee!.name) : null,
-      tags: [], // tags.map((t) => domain.Tag(id: t.id, name: t.name, color: t.color)).toList(),
-      attachments: [], // attachments.map((a) => domain.Attachment(id: a.id, filePath: a.filePath, fileType: a.fileType)).toList(),
+      tags:
+          [], // tags.map((t) => domain.Tag(id: t.id, name: t.name, color: t.color)).toList(),
+      attachments:
+          [], // attachments.map((a) => domain.Attachment(id: a.id, filePath: a.filePath, fileType: a.fileType)).toList(),
       createdAt: transaction.createdAt,
       updatedAt: transaction.updatedAt,
     );

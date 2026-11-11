@@ -11,12 +11,18 @@ abstract class GoalRepository {
   Stream<List<WalletGoalContribution>> watchContributionsForGoal(int goalId);
   Stream<List<WalletGoalContribution>> watchContributions();
   Future<List<WalletGoalContribution>> getContributions();
-  Future<int> addContribution(Insertable<WalletGoalContribution> contribution, {int? actorAccountId});
+  Future<int> addContribution(
+    Insertable<WalletGoalContribution> contribution, {
+    int? actorAccountId,
+  });
   Future<int> deleteContribution(int id, {int? actorAccountId});
 
   Stream<List<WalletGoalSchedule>> watchSchedules();
   Future<List<WalletGoalSchedule>> getSchedules();
-  Future<int> addSchedule(Insertable<WalletGoalSchedule> schedule, {int? actorAccountId});
+  Future<int> addSchedule(
+    Insertable<WalletGoalSchedule> schedule, {
+    int? actorAccountId,
+  });
   Future<int> deleteSchedule(int id, {int? actorAccountId});
 }
 
@@ -43,7 +49,10 @@ class GoalRepositoryImpl implements GoalRepository {
   }
 
   @override
-  Future<int> addGoal(Insertable<WalletGoal> goal, {int? actorAccountId}) async {
+  Future<int> addGoal(
+    Insertable<WalletGoal> goal, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageGoals(r),
@@ -54,7 +63,10 @@ class GoalRepositoryImpl implements GoalRepository {
   }
 
   @override
-  Future<bool> updateGoal(Insertable<WalletGoal> goal, {int? actorAccountId}) async {
+  Future<bool> updateGoal(
+    Insertable<WalletGoal> goal, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageGoals(r),
@@ -91,7 +103,10 @@ class GoalRepositoryImpl implements GoalRepository {
   }
 
   @override
-  Future<int> addContribution(Insertable<WalletGoalContribution> contribution, {int? actorAccountId}) async {
+  Future<int> addContribution(
+    Insertable<WalletGoalContribution> contribution, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canContributeToGoals(r),
@@ -123,7 +138,10 @@ class GoalRepositoryImpl implements GoalRepository {
   }
 
   @override
-  Future<int> addSchedule(Insertable<WalletGoalSchedule> schedule, {int? actorAccountId}) async {
+  Future<int> addSchedule(
+    Insertable<WalletGoalSchedule> schedule, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageGoals(r),

@@ -22,8 +22,7 @@ class Money {
       (majorUnits * minorUnitsPerUnit).round();
 
   /// Converts minor units back to major units for display.
-  static double toMajorUnits(int minorUnits) =>
-      minorUnits / minorUnitsPerUnit;
+  static double toMajorUnits(int minorUnits) => minorUnits / minorUnitsPerUnit;
 }
 
 /// Drift converter: integer minor units in SQLite, `double` major units in Dart.
@@ -53,27 +52,22 @@ List<int> allocateMinorUnits(int totalMinorUnits, int parts) {
   // Allocate on the magnitude and flip the signs: Dart's `~/` truncates toward
   // zero, so splitting a negative total directly would not conserve value.
   if (totalMinorUnits < 0) {
-    return allocateMinorUnits(-totalMinorUnits, parts)
-        .map((part) => -part)
-        .toList();
+    return allocateMinorUnits(
+      -totalMinorUnits,
+      parts,
+    ).map((part) => -part).toList();
   }
 
   final base = totalMinorUnits ~/ parts;
   final remainder = totalMinorUnits - base * parts;
 
-  return List<int>.generate(
-    parts,
-    (i) => base + (i < remainder ? 1 : 0),
-  );
+  return List<int>.generate(parts, (i) => base + (i < remainder ? 1 : 0));
 }
 
 /// Allocates [totalMinorUnits] in proportion to [weights] (largest remainder).
 ///
 /// Weights must be non-negative and sum to more than zero.
-List<int> allocateMinorUnitsByWeight(
-  int totalMinorUnits,
-  List<int> weights,
-) {
+List<int> allocateMinorUnitsByWeight(int totalMinorUnits, List<int> weights) {
   if (weights.isEmpty) {
     throw ArgumentError.value(weights, 'weights', 'must not be empty');
   }

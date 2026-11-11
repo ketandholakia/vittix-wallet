@@ -32,7 +32,7 @@ class LlmService {
       if (modelPath == null || modelPath.isEmpty) {
         throw Exception("No LLM model path selected in Settings.");
       }
-      
+
       final cacheDir = await getTemporaryDirectory();
 
       final options = LlmInferenceOptions.cpu(
@@ -57,7 +57,8 @@ class LlmService {
       throw Exception("LLM engine could not be initialized.");
     }
 
-    final prompt = '''
+    final prompt =
+        '''
 You are a highly accurate financial SMS parser. Extract the following from the SMS text below.
 If it's an expense, amount should be positive. If income, amount should be positive.
 Return ONLY valid JSON with keys: "merchant" (string), "amount" (number), "type" (either "expense" or "income").
@@ -77,21 +78,28 @@ JSON:
 
   PdfTransactionCandidate _parseJsonResponse(String response, String rawBody) {
     try {
-      final cleaned = response.replaceAll('```json', '').replaceAll('```', '').trim();
+      final cleaned = response
+          .replaceAll('```json', '')
+          .replaceAll('```', '')
+          .trim();
       final map = jsonDecode(cleaned) as Map<String, dynamic>;
 
       final merchant = map['merchant']?.toString() ?? 'Unknown';
-      
+
       final amountRaw = map['amount'];
       double amount = 0.0;
       if (amountRaw is num) {
         amount = amountRaw.toDouble();
       } else if (amountRaw is String) {
-        amount = double.tryParse(amountRaw.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+        amount =
+            double.tryParse(amountRaw.replaceAll(RegExp(r'[^0-9.]'), '')) ??
+            0.0;
       }
 
       final typeStr = map['type']?.toString().toLowerCase();
-      final type = typeStr == 'income' ? domain.TransactionType.income : domain.TransactionType.expense;
+      final type = typeStr == 'income'
+          ? domain.TransactionType.income
+          : domain.TransactionType.expense;
 
       return PdfTransactionCandidate(
         merchant: merchant,
@@ -103,7 +111,9 @@ JSON:
         confidence: 0.95,
       );
     } on Object catch (e) {
-      throw Exception("Failed to parse LLM response: $e\nRaw Response: $response");
+      throw Exception(
+        "Failed to parse LLM response: $e\nRaw Response: $response",
+      );
     }
   }
 
@@ -114,7 +124,8 @@ JSON:
       throw Exception("LLM engine could not be initialized.");
     }
 
-    final prompt = '''
+    final prompt =
+        '''
 You are a highly accurate receipt parser. Extract the following from the raw receipt text below.
 If it's an expense, amount should be positive. If income, amount should be positive.
 Return ONLY valid JSON with keys: "merchant" (string), "amount" (number), "type" (either "expense" or "income").

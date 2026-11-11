@@ -1,6 +1,13 @@
 import 'package:drift/native.dart';
 import 'package:vittix_wallet/core/database/app_database.dart'
-    hide Transaction, Category, Account, TransactionType, AccountType, isNull, isNotNull;
+    hide
+        Transaction,
+        Category,
+        Account,
+        TransactionType,
+        AccountType,
+        isNull,
+        isNotNull;
 import 'package:flutter_test/flutter_test.dart';
 
 /// A7 step 1 — a user identity that is separate from money accounts.
@@ -77,8 +84,12 @@ void main() {
 
   test('users are global, not wallet-scoped', () async {
     // Two wallets, one person: the identity is shared across both.
-    await db.into(db.wallets).insert(const WalletsCompanion(name: Value('Wallet A')));
-    await db.into(db.wallets).insert(const WalletsCompanion(name: Value('Wallet B')));
+    await db
+        .into(db.wallets)
+        .insert(const WalletsCompanion(name: Value('Wallet A')));
+    await db
+        .into(db.wallets)
+        .insert(const WalletsCompanion(name: Value('Wallet B')));
 
     final user = await db.userDao.findOrCreateUser('Shared Person');
     expect(await db.userDao.getAllUsers(), hasLength(1));

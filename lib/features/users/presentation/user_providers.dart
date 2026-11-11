@@ -23,24 +23,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// account-based actor, which is why both parameters coexist during the
 /// migration.
 final userIdForAccountProvider =
-    FutureProvider.family<int?, ({int walletId, int accountId})>(
-  (ref, args) async {
-    final members = await ref
-        .watch(walletDaoProvider)
-        .getMembersForWallet(args.walletId);
+    FutureProvider.family<int?, ({int walletId, int accountId})>((
+      ref,
+      args,
+    ) async {
+      final members = await ref
+          .watch(walletDaoProvider)
+          .getMembersForWallet(args.walletId);
 
-    for (final member in members) {
-      if (member.accountId == args.accountId) {
-        return member.userId;
+      for (final member in members) {
+        if (member.accountId == args.accountId) {
+          return member.userId;
+        }
       }
-    }
-    return null;
-  },
-);
+      return null;
+    });
 
 /// The user identity of the current actor: the membership for [accountId] in
 /// the wallet currently being viewed.
-final currentUserIdProvider = FutureProvider.family<int?, int>((ref, accountId) {
+final currentUserIdProvider = FutureProvider.family<int?, int>((
+  ref,
+  accountId,
+) {
   final walletId = ref.watch(currentWalletIdProvider);
   return ref.watch(
     userIdForAccountProvider((walletId: walletId, accountId: accountId)).future,

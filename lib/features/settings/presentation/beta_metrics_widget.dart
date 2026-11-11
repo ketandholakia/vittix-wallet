@@ -21,48 +21,104 @@ class BetaMetricsWidget extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Beta Metrics', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    'Beta Metrics',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox(height: 12),
                   _MetricRow('Wallet creations', metrics.walletCreations),
-                  _MetricRow('Invitation acceptances', metrics.invitationAcceptances),
+                  _MetricRow(
+                    'Invitation acceptances',
+                    metrics.invitationAcceptances,
+                  ),
                   _MetricRow('SMS imports', metrics.smsImports),
                   _MetricRow('Budget creations', metrics.budgetCreations),
                   _MetricRow('Goal creations', metrics.goalCreations),
                   _MetricRow('Split creations', metrics.splitCreations),
-                  _MetricRow('Settlement recordings', metrics.settlementCreations),
+                  _MetricRow(
+                    'Settlement recordings',
+                    metrics.settlementCreations,
+                  ),
                   const SizedBox(height: 8),
-                  Text('Feedback review', style: Theme.of(context).textTheme.titleSmall),
-                  _MetricRow('Bug reports', feedback.categoryCounts['bug'] ?? 0),
-                  _MetricRow('UX issues', feedback.categoryCounts['uxIssue'] ?? 0),
-                  _MetricRow('Feature requests', feedback.categoryCounts['featureRequest'] ?? 0),
-                  _MetricRow('SMS issues', feedback.categoryCounts['smsAccuracy'] ?? 0),
+                  Text(
+                    'Feedback review',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  _MetricRow(
+                    'Bug reports',
+                    feedback.categoryCounts['bug'] ?? 0,
+                  ),
+                  _MetricRow(
+                    'UX issues',
+                    feedback.categoryCounts['uxIssue'] ?? 0,
+                  ),
+                  _MetricRow(
+                    'Feature requests',
+                    feedback.categoryCounts['featureRequest'] ?? 0,
+                  ),
+                  _MetricRow(
+                    'SMS issues',
+                    feedback.categoryCounts['smsAccuracy'] ?? 0,
+                  ),
                   _MetricRow('Recent bugs (14d)', feedback.recentBugReports),
                   _MetricRow('Recent UX issues (14d)', feedback.recentUxIssues),
-                  _MetricRow('Recent requests (14d)', feedback.recentFeatureRequests),
-                  _MetricRow('Recent SMS issues (14d)', feedback.recentSmsIssues),
+                  _MetricRow(
+                    'Recent requests (14d)',
+                    feedback.recentFeatureRequests,
+                  ),
+                  _MetricRow(
+                    'Recent SMS issues (14d)',
+                    feedback.recentSmsIssues,
+                  ),
                   const SizedBox(height: 8),
-                  Text('Workflow friction', style: Theme.of(context).textTheme.titleSmall),
-                  _MetricRow('Abandoned invite flows', friction.abandonedInviteFlows),
-                  _MetricRow('Abandoned SMS imports', friction.abandonedSmsImports),
-                  _MetricRow('Failed split creation', friction.failedSplitCreations),
-                  _MetricRow('Failed settlement creation', friction.failedSettlementCreations),
-                  _MetricRow('Total friction signals', friction.totalFrictionSignals),
+                  Text(
+                    'Workflow friction',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  _MetricRow(
+                    'Abandoned invite flows',
+                    friction.abandonedInviteFlows,
+                  ),
+                  _MetricRow(
+                    'Abandoned SMS imports',
+                    friction.abandonedSmsImports,
+                  ),
+                  _MetricRow(
+                    'Failed split creation',
+                    friction.failedSplitCreations,
+                  ),
+                  _MetricRow(
+                    'Failed settlement creation',
+                    friction.failedSettlementCreations,
+                  ),
+                  _MetricRow(
+                    'Total friction signals',
+                    friction.totalFrictionSignals,
+                  ),
                   const SizedBox(height: 8),
-                  Text('SMS quality', style: Theme.of(context).textTheme.titleSmall),
+                  Text(
+                    'SMS quality',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
                   _MetricRow('Accepted', metrics.smsAccepted),
                   _MetricRow('Rejected', metrics.smsRejected),
                   _MetricRow('Duplicate', metrics.smsDuplicates),
                   if (metrics.feedbackCategories.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    Text('Feedback categories', style: Theme.of(context).textTheme.titleSmall),
-                    for (final entry in metrics.feedbackCategories.entries) _MetricRow(entry.key, entry.value),
+                    Text(
+                      'Feedback categories',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    for (final entry in metrics.feedbackCategories.entries)
+                      _MetricRow(entry.key, entry.value),
                   ],
                 ],
               ),
             ),
           ),
           loading: () => const SizedBox.shrink(),
-          error: (error, stack) => Text('Workflow friction unavailable: $error'),
+          error: (error, stack) =>
+              Text('Workflow friction unavailable: $error'),
         ),
         loading: () => const SizedBox.shrink(),
         error: (error, stack) => Text('Feedback review unavailable: $error'),
@@ -93,4 +149,3 @@ class _MetricRow extends StatelessWidget {
     );
   }
 }
-

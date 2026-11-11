@@ -20,9 +20,9 @@ class DatabaseKeyUnavailableException implements Exception {
   final Object? cause;
 
   @override
-  String toString() =>
-      cause == null ? 'DatabaseKeyUnavailableException: $message'
-          : 'DatabaseKeyUnavailableException: $message ($cause)';
+  String toString() => cause == null
+      ? 'DatabaseKeyUnavailableException: $message'
+      : 'DatabaseKeyUnavailableException: $message ($cause)';
 }
 
 /// How the database should be opened.
@@ -31,12 +31,12 @@ enum DatabaseOpenMode { encrypted, plaintext }
 /// Result of resolving the encryption key for the on-device database.
 class DatabaseOpenPlan {
   const DatabaseOpenPlan.encrypted(String this.base64Key)
-      : mode = DatabaseOpenMode.encrypted,
-        warning = null;
+    : mode = DatabaseOpenMode.encrypted,
+      warning = null;
 
   const DatabaseOpenPlan.plaintext(String this.warning)
-      : mode = DatabaseOpenMode.plaintext,
-        base64Key = null;
+    : mode = DatabaseOpenMode.plaintext,
+      base64Key = null;
 
   final DatabaseOpenMode mode;
 
@@ -51,16 +51,12 @@ class DatabaseOpenPlan {
 }
 
 /// Signature for the plaintext → encrypted migration, injectable in tests.
-typedef DatabaseMigration = Future<bool> Function({
-  required File file,
-  required String base64Key,
-});
+typedef DatabaseMigration =
+    Future<bool> Function({required File file, required String base64Key});
 
 /// Signature for "does this key open this file", injectable in tests.
-typedef DatabaseKeyVerifier = Future<bool> Function(
-  File file,
-  String base64Key,
-);
+typedef DatabaseKeyVerifier =
+    Future<bool> Function(File file, String base64Key);
 
 /// Key management and plaintext → encrypted migration for the on-device
 /// database (backlog item A3, option (a)).
@@ -215,7 +211,9 @@ class DatabaseEncryption {
 
       source = sqlite3.open(file.path);
       final hex = hexKeyFromBase64(base64Key);
-      source.execute("ATTACH DATABASE '$encryptedPath' AS encrypted KEY \"x'$hex'\"");
+      source.execute(
+        "ATTACH DATABASE '$encryptedPath' AS encrypted KEY \"x'$hex'\"",
+      );
       source.select("SELECT sqlcipher_export('encrypted')");
       source.execute('DETACH DATABASE encrypted');
     } on SqliteException catch (error) {

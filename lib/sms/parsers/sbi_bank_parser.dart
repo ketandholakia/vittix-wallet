@@ -9,7 +9,10 @@ class SbiBankParser extends BankSmsParser {
   @override
   bool canHandle(String sender, String body) {
     final s = sender.toUpperCase();
-    return s.contains('SBIINB') || s.contains('SBIPSG') || s.contains('SBIUPI') || s.contains('SBICRD');
+    return s.contains('SBIINB') ||
+        s.contains('SBIPSG') ||
+        s.contains('SBIUPI') ||
+        s.contains('SBICRD');
   }
 
   @override
@@ -21,17 +24,22 @@ class SbiBankParser extends BankSmsParser {
     DateTime date,
   ) {
     final lowerBody = body.toLowerCase();
-    
+
     // Check for mandates/subscriptions first
-    final bool isMandate = isEMandateNotification(body) || isFutureDebitNotification(body);
+    final bool isMandate =
+        isEMandateNotification(body) || isFutureDebitNotification(body);
 
     // Determine type
     domain.TransactionType? type;
     if (isMandate) {
       type = domain.TransactionType.expense;
-    } else if (lowerBody.contains('debited') || lowerBody.contains('withdrawn') || lowerBody.contains('paid') || lowerBody.contains('sent')) {
+    } else if (lowerBody.contains('debited') ||
+        lowerBody.contains('withdrawn') ||
+        lowerBody.contains('paid') ||
+        lowerBody.contains('sent')) {
       type = domain.TransactionType.expense;
-    } else if (lowerBody.contains('credited') || lowerBody.contains('received')) {
+    } else if (lowerBody.contains('credited') ||
+        lowerBody.contains('received')) {
       type = domain.TransactionType.income;
     }
 
@@ -50,18 +58,27 @@ class SbiBankParser extends BankSmsParser {
         if (amount != null) break;
       }
     }
-    
+
     if (amount == null || amount <= 0) return null;
 
     // Extract merchant
     String? merchant;
     final merchantRegexes = [
       if (isMandate) ...[
-        RegExp(r'towards\s+([^.\n]+?)(?:\s+from|\s+A/c|\s+UMRN|\s+ID:|\s+Alert:|\s*\.|$)', caseSensitive: false),
-        RegExp(r'for\s+([^.\n]+?)(?:\s+mandate|\s+will\s+be|\s+ID:|\s+Act:|\s*\.|$)', caseSensitive: false),
+        RegExp(
+          r'towards\s+([^.\n]+?)(?:\s+from|\s+A/c|\s+UMRN|\s+ID:|\s+Alert:|\s*\.|$)',
+          caseSensitive: false,
+        ),
+        RegExp(
+          r'for\s+([^.\n]+?)(?:\s+mandate|\s+will\s+be|\s+ID:|\s+Act:|\s*\.|$)',
+          caseSensitive: false,
+        ),
       ],
       RegExp(r'to\s+([^\.\n]+?)(?:\s+Ref|\s+UPI|\s+on)', caseSensitive: false),
-      RegExp(r'from\s+([^\.\n]+?)(?:\s+Ref|\s+UPI|\s+on)', caseSensitive: false),
+      RegExp(
+        r'from\s+([^\.\n]+?)(?:\s+Ref|\s+UPI|\s+on)',
+        caseSensitive: false,
+      ),
       RegExp(r'transfer\s+to\s+([^\.\n]+)', caseSensitive: false),
     ];
 

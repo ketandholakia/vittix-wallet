@@ -63,12 +63,14 @@ class SmsTransactionCandidate {
       type: type ?? this.type,
       date: date ?? this.date,
       accountHint: accountHint ?? this.accountHint,
-      suggestedCategoryName: suggestedCategoryName ?? this.suggestedCategoryName,
+      suggestedCategoryName:
+          suggestedCategoryName ?? this.suggestedCategoryName,
       selectedAccountId: selectedAccountId ?? this.selectedAccountId,
       isSelected: isSelected ?? this.isSelected,
       confidence: confidence,
       isRecurringSetup: isRecurringSetup ?? this.isRecurringSetup,
-      recurringIntervalHint: recurringIntervalHint ?? this.recurringIntervalHint,
+      recurringIntervalHint:
+          recurringIntervalHint ?? this.recurringIntervalHint,
     );
   }
 }
@@ -80,7 +82,10 @@ class SmsTransactionParser {
     IciciBankParser(),
   ];
   static String buildHash({required String sender, required String body}) {
-    final normalized = body.trim().replaceAll(RegExp(r'\s+'), ' ').toLowerCase();
+    final normalized = body
+        .trim()
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .toLowerCase();
     return base64Url.encode(utf8.encode('$sender|$normalized'));
   }
 
@@ -90,18 +95,33 @@ class SmsTransactionParser {
     RegExp(r'Rs\.?\s*([0-9,]+(?:\.\d{2})?)', caseSensitive: false),
     RegExp(r'INR\s*([0-9,]+(?:\.\d{2})?)', caseSensitive: false),
     RegExp(r'₹\s*([0-9,]+(?:\.\d{2})?)', caseSensitive: false),
-    RegExp(r'(?:Rs\.?|INR|\u20B9)\s*([\d,]+(?:\.\d{1,2})?)', caseSensitive: false), // Fallback
+    RegExp(
+      r'(?:Rs\.?|INR|\u20B9)\s*([\d,]+(?:\.\d{1,2})?)',
+      caseSensitive: false,
+    ), // Fallback
   ];
 
-  static final RegExp _upiAmountRegex = RegExp(r'UPI.*?(?:Rs\.?|INR|\u20B9)\s*([\d,]+(?:\.\d{1,2})?)', caseSensitive: false);
+  static final RegExp _upiAmountRegex = RegExp(
+    r'UPI.*?(?:Rs\.?|INR|\u20B9)\s*([\d,]+(?:\.\d{1,2})?)',
+    caseSensitive: false,
+  );
 
   static final List<RegExp> _merchantRegexes = [
-    RegExp(r'to\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref|\s+UPI)', caseSensitive: false),
-    RegExp(r'from\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref|\s+UPI)', caseSensitive: false),
+    RegExp(
+      r'to\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref|\s+UPI)',
+      caseSensitive: false,
+    ),
+    RegExp(
+      r'from\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref|\s+UPI)',
+      caseSensitive: false,
+    ),
     RegExp(r'at\s+([^\.\n]+?)(?:\s+on|\s+Ref)', caseSensitive: false),
     RegExp(r'for\s+([^\.\n]+?)(?:\s+on|\s+at|\s+Ref)', caseSensitive: false),
     RegExp(r'\bpaid\s+to\s+([A-Z0-9][A-Z0-9 &._/-]{2,})', caseSensitive: false),
-    RegExp(r'\bspent\s+on\s+([A-Z0-9][A-Z0-9 &._/-]{2,})', caseSensitive: false),
+    RegExp(
+      r'\bspent\s+on\s+([A-Z0-9][A-Z0-9 &._/-]{2,})',
+      caseSensitive: false,
+    ),
   ];
 
   static final List<RegExp> _accountHintRegexes = [
@@ -170,14 +190,22 @@ class SmsTransactionParser {
     final trimmedBody = body.trim();
     if (trimmedBody.isEmpty) return null;
 
-    final normalized = trimmedBody.replaceAll(RegExp(r'\s+'), ' ').toLowerCase();
+    final normalized = trimmedBody
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .toLowerCase();
     final smsHash = buildHash(sender: sender, body: trimmedBody);
     if (knownHashes.contains(smsHash)) return null;
 
     // Try bank specific parsers first
     for (final parser in _bankParsers) {
       if (parser.canHandle(sender, trimmedBody)) {
-        final candidate = parser.parse(smsId, smsHash, sender, trimmedBody, date);
+        final candidate = parser.parse(
+          smsId,
+          smsHash,
+          sender,
+          trimmedBody,
+          date,
+        );
         if (candidate != null) {
           // Add category hint logic from fallback if the bank parser couldn't
           final categoryHint = _inferCategory(candidate.merchant, trimmedBody);
@@ -189,7 +217,9 @@ class SmsTransactionParser {
       }
     }
 
-    final keywordsMatch = _expenseKeywords.any((r) => r.hasMatch(normalized)) || _incomeKeywords.any((r) => r.hasMatch(normalized));
+    final keywordsMatch =
+        _expenseKeywords.any((r) => r.hasMatch(normalized)) ||
+        _incomeKeywords.any((r) => r.hasMatch(normalized));
     if (!keywordsMatch) return null;
 
     final amount = _extractAmount(trimmedBody);
@@ -199,7 +229,13 @@ class SmsTransactionParser {
     final merchant = _extractMerchant(trimmedBody) ?? _fallbackMerchant(sender);
     final accountHint = _extractAccountHint(trimmedBody);
     final categoryHint = _inferCategory(merchant, trimmedBody);
-    final confidence = _computeConfidence(merchant, categoryHint, accountHint, amount, trimmedBody);
+    final confidence = _computeConfidence(
+      merchant,
+      categoryHint,
+      accountHint,
+      amount,
+      trimmedBody,
+    );
 
     return SmsTransactionCandidate(
       smsId: smsId,
@@ -289,7 +325,13 @@ class SmsTransactionParser {
         .trim();
   }
 
-  double _computeConfidence(String merchant, String? categoryHint, String? accountHint, double amount, String body) {
+  double _computeConfidence(
+    String merchant,
+    String? categoryHint,
+    String? accountHint,
+    double amount,
+    String body,
+  ) {
     var confidence = 0.45;
     if (merchant.isNotEmpty && merchant != 'SMS Import') confidence += 0.2;
     if (categoryHint != null) confidence += 0.15;

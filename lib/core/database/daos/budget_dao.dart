@@ -1,18 +1,24 @@
 part of '../app_database.dart';
 
-@DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
+@DriftAccessor(
+  tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions],
+)
 class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   BudgetDao(super.db);
 
   // Add
-  Future<int> insertBudget(Insertable<Budget> budget) => into(budgets).insert(budget);
+  Future<int> insertBudget(Insertable<Budget> budget) =>
+      into(budgets).insert(budget);
 
   // Update with wallet ownership check
   Future<bool> updateBudget(int walletId, Insertable<Budget> budget) async {
     if (budget is BudgetsCompanion && budget.id.present) {
-      final rows = await (update(budgets)
-        ..where((b) => b.id.equals(budget.id.value) & b.walletId.equals(walletId)))
-        .write(budget);
+      final rows =
+          await (update(budgets)..where(
+                (b) =>
+                    b.id.equals(budget.id.value) & b.walletId.equals(walletId),
+              ))
+              .write(budget);
       return rows > 0;
     }
     return update(budgets).replace(budget);
@@ -21,14 +27,18 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
   // Delete with wallet ownership check
   Future<int> deleteBudget(int id, [int? walletId]) {
     if (walletId != null) {
-      return (delete(budgets)..where((b) => b.id.equals(id) & b.walletId.equals(walletId))).go();
+      return (delete(
+        budgets,
+      )..where((b) => b.id.equals(id) & b.walletId.equals(walletId))).go();
     }
     return (delete(budgets)..where((b) => b.id.equals(id))).go();
   }
 
   Future<Budget?> getBudgetById(int id, [int? walletId]) {
     if (walletId != null) {
-      return (select(budgets)..where((b) => b.id.equals(id) & b.walletId.equals(walletId))).getSingleOrNull();
+      return (select(budgets)
+            ..where((b) => b.id.equals(id) & b.walletId.equals(walletId)))
+          .getSingleOrNull();
     }
     return (select(budgets)..where((b) => b.id.equals(id))).getSingleOrNull();
   }
@@ -83,15 +93,11 @@ class BudgetDao extends DatabaseAccessor<AppDatabase> with _$BudgetDaoMixin {
 
 // Recurring Transactions Table
 
-
 // Deleted Records Table for Sync Tracking
-
 
 // Loans Table
 
-
 // Peer Debts Table
-
 
 class RecurringTransactionWithDetails {
   final RecurringTransactionDb template;
@@ -104,4 +110,3 @@ class RecurringTransactionWithDetails {
     required this.account,
   });
 }
-

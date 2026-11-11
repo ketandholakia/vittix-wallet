@@ -19,7 +19,9 @@ class MemberBalancesWidget extends ConsumerWidget {
             ...balances.map(
               (balance) => ListTile(
                 title: Text(balance.memberName),
-                subtitle: Text('Paid ${balance.totalPaid.toStringAsFixed(0)} • Owed ${balance.totalOwed.toStringAsFixed(0)}'),
+                subtitle: Text(
+                  'Paid ${balance.totalPaid.toStringAsFixed(0)} • Owed ${balance.totalOwed.toStringAsFixed(0)}',
+                ),
                 trailing: Text(balance.netBalance.toStringAsFixed(0)),
               ),
             ),

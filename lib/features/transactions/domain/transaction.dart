@@ -4,10 +4,7 @@ import 'package:vittix_wallet/core/domain/payee.dart';
 import 'package:vittix_wallet/core/domain/tag.dart';
 import 'package:vittix_wallet/core/domain/attachment.dart';
 
-enum TransactionType {
-  income,
-  expense,
-}
+enum TransactionType { income, expense }
 
 class Transaction {
   final int id;

@@ -53,8 +53,12 @@ void main() {
     });
 
     test('two fresh stores get different keys', () async {
-      final a = await DatabaseEncryption.getOrCreateKey(InMemorySecureKeyValueStore());
-      final b = await DatabaseEncryption.getOrCreateKey(InMemorySecureKeyValueStore());
+      final a = await DatabaseEncryption.getOrCreateKey(
+        InMemorySecureKeyValueStore(),
+      );
+      final b = await DatabaseEncryption.getOrCreateKey(
+        InMemorySecureKeyValueStore(),
+      );
       expect(a, isNot(equals(b)));
     });
 
@@ -75,12 +79,19 @@ void main() {
 
   group('DatabaseEncryption plaintext detection', () {
     test('a missing file is not plaintext', () {
-      expect(DatabaseEncryption.isPlaintextFile(File(p.join(dir.path, 'none.db'))), isFalse);
+      expect(
+        DatabaseEncryption.isPlaintextFile(File(p.join(dir.path, 'none.db'))),
+        isFalse,
+      );
     });
 
     test('a SQLite header is detected as plaintext', () async {
       final file = File(p.join(dir.path, 'plain.db'));
-      await file.writeAsBytes([...utf8.encode('SQLite format 3'), 0, ...List.filled(64, 7)]);
+      await file.writeAsBytes([
+        ...utf8.encode('SQLite format 3'),
+        0,
+        ...List.filled(64, 7),
+      ]);
       expect(DatabaseEncryption.isPlaintextFile(file), isTrue);
     });
 
@@ -100,7 +111,9 @@ void main() {
   group('DatabaseEncryption.resolveOpenPlan fails closed', () {
     File writeEncryptedFile(String name) {
       final file = File(p.join(dir.path, name));
-      file.writeAsBytesSync(List<int>.generate(128, (i) => (i * 37 + 11) % 256));
+      file.writeAsBytesSync(
+        List<int>.generate(128, (i) => (i * 37 + 11) % 256),
+      );
       return file;
     }
 
@@ -117,33 +130,36 @@ void main() {
     Future<bool> migrateTrue({
       required File file,
       required String base64Key,
-    }) async =>
-        true;
+    }) async => true;
 
     Future<bool> migrateFalse({
       required File file,
       required String base64Key,
-    }) async =>
-        false;
+    }) async => false;
 
-    test('encrypted file + keystore unavailable throws and never overwrites',
-        () async {
-      final file = writeEncryptedFile('encrypted.db');
-      final before = file.readAsBytesSync();
+    test(
+      'encrypted file + keystore unavailable throws and never overwrites',
+      () async {
+        final file = writeEncryptedFile('encrypted.db');
+        final before = file.readAsBytesSync();
 
-      await expectLater(
-        DatabaseEncryption.resolveOpenPlan(
-          file: file,
-          store: const _ThrowingKeyStore(),
-          verify: (file, key) async => true,
-        ),
-        throwsA(isA<DatabaseKeyUnavailableException>()),
-      );
+        await expectLater(
+          DatabaseEncryption.resolveOpenPlan(
+            file: file,
+            store: const _ThrowingKeyStore(),
+            verify: (file, key) async => true,
+          ),
+          throwsA(isA<DatabaseKeyUnavailableException>()),
+        );
 
-      expect(file.existsSync(), isTrue);
-      expect(file.readAsBytesSync(), equals(before),
-          reason: 'the encrypted database must not be touched');
-    });
+        expect(file.existsSync(), isTrue);
+        expect(
+          file.readAsBytesSync(),
+          equals(before),
+          reason: 'the encrypted database must not be touched',
+        );
+      },
+    );
 
     test('encrypted file + key that cannot open it throws', () async {
       final file = writeEncryptedFile('encrypted.db');
@@ -161,23 +177,25 @@ void main() {
       expect(file.readAsBytesSync(), equals(before));
     });
 
-    test('encrypted file + verified key opens encrypted and purges plaintext bak',
-        () async {
-      final file = writeEncryptedFile('encrypted.db');
-      final bak = File('${file.path}.premigration.bak')
-        ..writeAsStringSync('stale plaintext copy');
+    test(
+      'encrypted file + verified key opens encrypted and purges plaintext bak',
+      () async {
+        final file = writeEncryptedFile('encrypted.db');
+        final bak = File('${file.path}.premigration.bak')
+          ..writeAsStringSync('stale plaintext copy');
 
-      final plan = await DatabaseEncryption.resolveOpenPlan(
-        file: file,
-        store: InMemorySecureKeyValueStore(),
-        verify: (file, key) async => true,
-      );
+        final plan = await DatabaseEncryption.resolveOpenPlan(
+          file: file,
+          store: InMemorySecureKeyValueStore(),
+          verify: (file, key) async => true,
+        );
 
-      expect(plan.mode, DatabaseOpenMode.encrypted);
-      expect(plan.base64Key, isNotNull);
-      expect(plan.warning, isNull);
-      expect(bak.existsSync(), isFalse);
-    });
+        expect(plan.mode, DatabaseOpenMode.encrypted);
+        expect(plan.base64Key, isNotNull);
+        expect(plan.warning, isNull);
+        expect(bak.existsSync(), isFalse);
+      },
+    );
 
     test('new file is created encrypted when a key is available', () async {
       final file = File(p.join(dir.path, 'new.db'));
@@ -190,38 +208,45 @@ void main() {
 
       expect(plan.mode, DatabaseOpenMode.encrypted);
       expect(plan.base64Key, isNotNull);
-      expect(file.existsSync(), isFalse,
-          reason: 'resolution must not create the file itself');
-    });
-
-    test('new file + key creation failure falls back to plaintext with warning',
-        () async {
-      final file = File(p.join(dir.path, 'new.db'));
-
-      final plan = await DatabaseEncryption.resolveOpenPlan(
-        file: file,
-        store: const _ThrowingKeyStore(),
+      expect(
+        file.existsSync(),
+        isFalse,
+        reason: 'resolution must not create the file itself',
       );
-
-      expect(plan.mode, DatabaseOpenMode.plaintext);
-      expect(plan.isPlaintext, isTrue);
-      expect(plan.warning, isNotNull);
-      expect(plan.base64Key, isNull);
     });
 
-    test('plaintext file + key creation failure falls back to plaintext',
-        () async {
-      final file = writePlaintextFile('plain.db');
+    test(
+      'new file + key creation failure falls back to plaintext with warning',
+      () async {
+        final file = File(p.join(dir.path, 'new.db'));
 
-      final plan = await DatabaseEncryption.resolveOpenPlan(
-        file: file,
-        store: const _ThrowingKeyStore(),
-      );
+        final plan = await DatabaseEncryption.resolveOpenPlan(
+          file: file,
+          store: const _ThrowingKeyStore(),
+        );
 
-      expect(plan.mode, DatabaseOpenMode.plaintext);
-      expect(plan.warning, isNotNull);
-      expect(_looksPlaintext(file.readAsBytesSync()), isTrue);
-    });
+        expect(plan.mode, DatabaseOpenMode.plaintext);
+        expect(plan.isPlaintext, isTrue);
+        expect(plan.warning, isNotNull);
+        expect(plan.base64Key, isNull);
+      },
+    );
+
+    test(
+      'plaintext file + key creation failure falls back to plaintext',
+      () async {
+        final file = writePlaintextFile('plain.db');
+
+        final plan = await DatabaseEncryption.resolveOpenPlan(
+          file: file,
+          store: const _ThrowingKeyStore(),
+        );
+
+        expect(plan.mode, DatabaseOpenMode.plaintext);
+        expect(plan.warning, isNotNull);
+        expect(_looksPlaintext(file.readAsBytesSync()), isTrue);
+      },
+    );
 
     test('plaintext file + working key migrates to encrypted', () async {
       final file = writePlaintextFile('plain.db');
@@ -230,10 +255,7 @@ void main() {
       final plan = await DatabaseEncryption.resolveOpenPlan(
         file: file,
         store: InMemorySecureKeyValueStore(),
-        migrate: ({
-          required File file,
-          required String base64Key,
-        }) async {
+        migrate: ({required File file, required String base64Key}) async {
           migrated = true;
           return true;
         },
@@ -244,42 +266,51 @@ void main() {
       expect(plan.base64Key, isNotNull);
     });
 
-    test('plaintext file + failed migration refuses to open unencrypted',
-        () async {
-      final file = writePlaintextFile('plain.db');
+    test(
+      'plaintext file + failed migration refuses to open unencrypted',
+      () async {
+        final file = writePlaintextFile('plain.db');
 
-      await expectLater(
-        DatabaseEncryption.resolveOpenPlan(
+        await expectLater(
+          DatabaseEncryption.resolveOpenPlan(
+            file: file,
+            store: InMemorySecureKeyValueStore(),
+            migrate: migrateFalse,
+          ),
+          throwsA(isA<DatabaseKeyUnavailableException>()),
+        );
+      },
+    );
+
+    test(
+      'migration helper that succeeds is used for plaintext files',
+      () async {
+        final file = writePlaintextFile('plain.db');
+        final plan = await DatabaseEncryption.resolveOpenPlan(
           file: file,
           store: InMemorySecureKeyValueStore(),
-          migrate: migrateFalse,
-        ),
-        throwsA(isA<DatabaseKeyUnavailableException>()),
-      );
-    });
-
-    test('migration helper that succeeds is used for plaintext files', () async {
-      final file = writePlaintextFile('plain.db');
-      final plan = await DatabaseEncryption.resolveOpenPlan(
-        file: file,
-        store: InMemorySecureKeyValueStore(),
-        migrate: migrateTrue,
-        verify: (file, key) async => true,
-      );
-      expect(plan.mode, DatabaseOpenMode.encrypted);
-    });
+          migrate: migrateTrue,
+          verify: (file, key) async => true,
+        );
+        expect(plan.mode, DatabaseOpenMode.encrypted);
+      },
+    );
   });
 
   group('DatabaseEncryption plaintext backup cleanup', () {
     test('purge removes a leftover migration backup', () async {
-      final dbFile = File(p.join(dir.path, 'db.sqlite'))..writeAsStringSync('x');
+      final dbFile = File(p.join(dir.path, 'db.sqlite'))
+        ..writeAsStringSync('x');
       final backup = File('${dbFile.path}.premigration.bak')
         ..writeAsStringSync('plaintext database copy');
 
       expect(await backup.exists(), isTrue);
       await DatabaseEncryption.purgePlaintextBackup(dbFile);
-      expect(await backup.exists(), isFalse,
-          reason: 'an unencrypted copy must not survive next to the database');
+      expect(
+        await backup.exists(),
+        isFalse,
+        reason: 'an unencrypted copy must not survive next to the database',
+      );
     });
 
     test('purge is a no-op when there is nothing to remove', () async {

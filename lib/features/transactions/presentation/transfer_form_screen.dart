@@ -47,7 +47,10 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
   }
 
   Future<Category> _getOrCreateTransferCategory() async {
-    final categories = await ref.read(categoryRepositoryProvider).watchAllCategories().first;
+    final categories = await ref
+        .read(categoryRepositoryProvider)
+        .watchAllCategories()
+        .first;
     final transferCategory = categories.firstWhere(
       (c) => c.name.toLowerCase() == 'transfer',
       orElse: () => Category(
@@ -61,8 +64,13 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
 
     if (transferCategory.id == 0) {
       await ref.read(categoryRepositoryProvider).addCategory(transferCategory);
-      final updatedCategories = await ref.read(categoryRepositoryProvider).watchAllCategories().first;
-      return updatedCategories.firstWhere((c) => c.name.toLowerCase() == 'transfer');
+      final updatedCategories = await ref
+          .read(categoryRepositoryProvider)
+          .watchAllCategories()
+          .first;
+      return updatedCategories.firstWhere(
+        (c) => c.name.toLowerCase() == 'transfer',
+      );
     }
 
     return transferCategory;
@@ -79,7 +87,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
 
       if (_fromAccount!.id == _toAccount!.id) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Source and destination accounts must be different.')),
+          const SnackBar(
+            content: Text('Source and destination accounts must be different.'),
+          ),
         );
         return;
       }
@@ -97,7 +107,8 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
           id: 0,
           amount: amount,
           date: _selectedDate,
-          note: '[Transfer] → ${_toAccount!.name}${userNote.isNotEmpty ? ': $userNote' : ''}',
+          note:
+              '[Transfer] → ${_toAccount!.name}${userNote.isNotEmpty ? ': $userNote' : ''}',
           type: domain.TransactionType.expense,
           category: transferCategory,
           account: _fromAccount!,
@@ -110,7 +121,8 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
           id: 0,
           amount: amount,
           date: _selectedDate,
-          note: '[Transfer] ← ${_fromAccount!.name}${userNote.isNotEmpty ? ': $userNote' : ''}',
+          note:
+              '[Transfer] ← ${_fromAccount!.name}${userNote.isNotEmpty ? ': $userNote' : ''}',
           type: domain.TransactionType.income,
           category: transferCategory,
           account: _toAccount!,
@@ -127,9 +139,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
         }
       } on Object catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error making transfer: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error making transfer: $e')));
         }
       } finally {
         if (mounted) {
@@ -156,15 +168,15 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                 child: SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             )
           else
-            IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: _saveForm,
-            ),
+            IconButton(icon: const Icon(Icons.check), onPressed: _saveForm),
         ],
       ),
       body: StreamBuilder<List<Account>>(
@@ -181,7 +193,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
 
           // Set default accounts if not set
           _fromAccount ??= accountList.first;
-          _toAccount ??= accountList.length > 1 ? accountList[1] : accountList.first;
+          _toAccount ??= accountList.length > 1
+              ? accountList[1]
+              : accountList.first;
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -196,12 +210,15 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                       labelText: 'Amount',
                       prefixIcon: Icon(Icons.attach_money),
                     ),
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter an amount.';
                       }
-                      if (double.tryParse(value) == null || double.parse(value) <= 0) {
+                      if (double.tryParse(value) == null ||
+                          double.parse(value) <= 0) {
                         return 'Please enter a valid amount greater than 0.';
                       }
                       return null;
@@ -233,7 +250,8 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                         _fromAccount = value;
                       });
                     },
-                    validator: (value) => value == null ? 'Please select source account.' : null,
+                    validator: (value) =>
+                        value == null ? 'Please select source account.' : null,
                   ),
                   const SizedBox(height: 16),
 
@@ -262,7 +280,8 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                       });
                     },
                     validator: (value) {
-                      if (value == null) return 'Please select destination account.';
+                      if (value == null)
+                        return 'Please select destination account.';
                       if (value.id == _fromAccount?.id) {
                         return 'Destination account must be different.';
                       }
@@ -282,7 +301,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                         onPressed: _pickDate,
                       ),
                     ),
-                    controller: TextEditingController(text: DateFormat.yMMMd().format(_selectedDate)),
+                    controller: TextEditingController(
+                      text: DateFormat.yMMMd().format(_selectedDate),
+                    ),
                     onTap: _pickDate,
                   ),
                   const SizedBox(height: 16),

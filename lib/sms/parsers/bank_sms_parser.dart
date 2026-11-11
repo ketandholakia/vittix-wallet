@@ -22,7 +22,8 @@ abstract class BankSmsParser {
     final lowerBody = body.toLowerCase();
     return lowerBody.contains('e-mandate') ||
         lowerBody.contains('upi-mandate') ||
-        (lowerBody.contains('mandate') && lowerBody.contains('successfully created'));
+        (lowerBody.contains('mandate') &&
+            lowerBody.contains('successfully created'));
   }
 
   /// Checks if this is a future debit notification (subscription alert, not a current transaction).
@@ -43,7 +44,10 @@ abstract class BankSmsParser {
       RegExp(r'\s+UPI.*', caseSensitive: false),
       RegExp(r'\s+at\s+\d{2}:\d{2}.*'),
       RegExp(r'\s*-\s*$'),
-      RegExp(r'(\s+PVT\.?\s*LTD\.?|\s+PRIVATE\s+LIMITED)$', caseSensitive: false),
+      RegExp(
+        r'(\s+PVT\.?\s*LTD\.?|\s+PRIVATE\s+LIMITED)$',
+        caseSensitive: false,
+      ),
       RegExp(r'(\s+LTD\.?|\s+LIMITED)$', caseSensitive: false),
     ];
     for (final regex in cleaningRegexes) {

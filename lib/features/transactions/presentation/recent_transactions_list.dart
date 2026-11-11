@@ -15,19 +15,26 @@ class RecentTransactionsList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Recent Transactions', style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            'Recent Transactions',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 8),
           if (transactions.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 32.0),
-              child: EmptyStateWidget(icon: Icons.history_toggle_off, message: 'No recent activity'),
+              child: EmptyStateWidget(
+                icon: Icons.history_toggle_off,
+                message: 'No recent activity',
+              ),
             )
           else
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: transactions.length,
-              itemBuilder: (ctx, index) => TransactionListItem(transaction: transactions[index]),
+              itemBuilder: (ctx, index) =>
+                  TransactionListItem(transaction: transactions[index]),
             ),
         ],
       ),

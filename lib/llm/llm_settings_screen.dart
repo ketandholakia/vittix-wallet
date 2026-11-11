@@ -51,9 +51,9 @@ class _LlmSettingsScreenState extends State<LlmSettingsScreen> {
       }
     } on Object catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to pick model: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to pick model: $e')));
       }
     } finally {
       setState(() => _loading = false);
@@ -72,9 +72,9 @@ class _LlmSettingsScreenState extends State<LlmSettingsScreen> {
     final url = Uri.parse(urlString);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not launch $urlString')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Could not launch $urlString')));
       }
     }
   }
@@ -86,7 +86,11 @@ class _LlmSettingsScreenState extends State<LlmSettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Icon(Icons.smart_toy_outlined, size: 64, color: Colors.blueGrey),
+          const Icon(
+            Icons.smart_toy_outlined,
+            size: 64,
+            color: Colors.blueGrey,
+          ),
           const SizedBox(height: 16),
           Text(
             'On-Device LLM Inference',
@@ -105,7 +109,10 @@ class _LlmSettingsScreenState extends State<LlmSettingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Active Model Path', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    'Active Model Path',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox(height: 8),
                   Text(
                     _modelPath ?? 'No model selected',
@@ -119,13 +126,20 @@ class _LlmSettingsScreenState extends State<LlmSettingsScreen> {
                     FutureBuilder<bool>(
                       future: File(_modelPath!).exists(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         }
                         if (snapshot.hasData && snapshot.data == true) {
-                          return const Text('File exists on device.', style: TextStyle(color: Colors.green));
+                          return const Text(
+                            'File exists on device.',
+                            style: TextStyle(color: Colors.green),
+                          );
                         } else {
-                          return const Text('File not found! Please re-select.', style: TextStyle(color: Colors.red));
+                          return const Text(
+                            'File not found! Please re-select.',
+                            style: TextStyle(color: Colors.red),
+                          );
                         }
                       },
                     ),
@@ -136,7 +150,16 @@ class _LlmSettingsScreenState extends State<LlmSettingsScreen> {
           const SizedBox(height: 16),
           FilledButton.icon(
             onPressed: _loading ? null : _pickModel,
-            icon: _loading ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)) : const Icon(Icons.folder_open),
+            icon: _loading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const Icon(Icons.folder_open),
             label: const Text('Select .bin Model File'),
           ),
           if (_modelPath != null) ...[
@@ -158,13 +181,17 @@ class _LlmSettingsScreenState extends State<LlmSettingsScreen> {
             ),
             const SizedBox(height: 16),
             OutlinedButton.icon(
-              onPressed: () => _launchUrl('https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference/android#models'),
+              onPressed: () => _launchUrl(
+                'https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference/android#models',
+              ),
               icon: const Icon(Icons.download),
               label: const Text('Download Models from Google AI Edge'),
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
-              onPressed: () => _launchUrl('https://www.kaggle.com/models/google/gemma/frameworks/mediaPipe'),
+              onPressed: () => _launchUrl(
+                'https://www.kaggle.com/models/google/gemma/frameworks/mediaPipe',
+              ),
               icon: const Icon(Icons.open_in_new),
               label: const Text('Get Gemma on Kaggle'),
             ),

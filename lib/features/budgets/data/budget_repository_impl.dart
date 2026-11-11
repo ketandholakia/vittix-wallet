@@ -13,9 +13,15 @@ class BudgetRepositoryImpl implements BudgetRepository {
   /// Null when no authenticated user context exists.
   final int? actorAccountId;
 
-  BudgetRepositoryImpl(this._budgetDao, this.walletId, [this._walletDao, this.actorAccountId]);
+  BudgetRepositoryImpl(
+    this._budgetDao,
+    this.walletId, [
+    this._walletDao,
+    this.actorAccountId,
+  ]);
 
-  db.WalletDao get _auditDao => _walletDao ?? db.WalletDao(_budgetDao.attachedDatabase);
+  db.WalletDao get _auditDao =>
+      _walletDao ?? db.WalletDao(_budgetDao.attachedDatabase);
 
   Future<void> _insertAuditEvent({
     required String action,
@@ -46,12 +52,18 @@ class BudgetRepositoryImpl implements BudgetRepository {
       actorAccountId: actorAccountId,
       actionName: 'manage budgets',
     );
-    final companion = budget.toCompanion(walletId).copyWith(id: const Value.absent());
+    final companion = budget
+        .toCompanion(walletId)
+        .copyWith(id: const Value.absent());
     final database = _budgetDao.attachedDatabase;
     await database.transaction(() async {
       final id = await _budgetDao.insertBudget(companion);
       final row = await _budgetDao.getBudgetById(id, walletId);
-      await _insertAuditEvent(action: 'BUDGET_CREATED', entityId: id, entityUuid: row?.uuid);
+      await _insertAuditEvent(
+        action: 'BUDGET_CREATED',
+        entityId: id,
+        entityUuid: row?.uuid,
+      );
     });
   }
 
@@ -68,7 +80,11 @@ class BudgetRepositoryImpl implements BudgetRepository {
     await database.transaction(() async {
       final deleted = await _budgetDao.deleteBudget(id, walletId);
       if (deleted > 0 && existing != null) {
-        await _insertAuditEvent(action: 'BUDGET_DELETED', entityId: id, entityUuid: existing.uuid);
+        await _insertAuditEvent(
+          action: 'BUDGET_DELETED',
+          entityId: id,
+          entityUuid: existing.uuid,
+        );
       }
     });
   }
@@ -87,7 +103,11 @@ class BudgetRepositoryImpl implements BudgetRepository {
       final updated = await _budgetDao.updateBudget(walletId, companion);
       if (updated) {
         final row = await _budgetDao.getBudgetById(budget.id, walletId);
-        await _insertAuditEvent(action: 'BUDGET_UPDATED', entityId: budget.id, entityUuid: row?.uuid);
+        await _insertAuditEvent(
+          action: 'BUDGET_UPDATED',
+          entityId: budget.id,
+          entityUuid: row?.uuid,
+        );
       }
     });
   }

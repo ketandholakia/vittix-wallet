@@ -1,4 +1,3 @@
-
 import 'package:vittix_wallet/features/accounts/domain/account.dart';
 import 'package:vittix_wallet/features/categories/domain/category.dart';
 import 'package:vittix_wallet/core/providers/database_provider.dart';
@@ -10,7 +9,8 @@ import 'package:vittix_wallet/domain/entities/transaction.dart' as domain;
 import 'package:vittix_wallet/features/recurring/domain/recurring_transaction.dart';
 import 'package:vittix_wallet/sms/sms_transaction_parser.dart';
 import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart';
-import 'package:vittix_wallet/core/database/app_database.dart' hide Column, Category, Account, AccountType;
+import 'package:vittix_wallet/core/database/app_database.dart'
+    hide Column, Category, Account, AccountType;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +26,9 @@ class SmsImportScreen extends ConsumerStatefulWidget {
 }
 
 class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
-  static const MethodChannel _smsChannel = MethodChannel('com.vittix.wallet/sms_capture');
+  static const MethodChannel _smsChannel = MethodChannel(
+    'com.vittix.wallet/sms_capture',
+  );
   final SmsTransactionParser _parser = SmsTransactionParser();
   final Set<String> _knownHashes = <String>{};
   final List<SmsTransactionCandidate> _candidates = <SmsTransactionCandidate>[];
@@ -41,9 +43,15 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
     _loadCandidates();
   }
 
-  Account _guessAccount(SmsTransactionCandidate candidate, List<Account> accounts) {
+  Account _guessAccount(
+    SmsTransactionCandidate candidate,
+    List<Account> accounts,
+  ) {
     if (candidate.selectedAccountId != null) {
-      return accounts.firstWhere((a) => a.id == candidate.selectedAccountId, orElse: () => accounts.first);
+      return accounts.firstWhere(
+        (a) => a.id == candidate.selectedAccountId,
+        orElse: () => accounts.first,
+      );
     }
     final hint = candidate.accountHint;
     if (hint != null && hint.isNotEmpty) {
@@ -55,7 +63,10 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
         if (hintLower.isNotEmpty && nameLower.contains(hintLower)) return a;
       }
     }
-    return accounts.firstWhere((a) => a.type == AccountType.cash, orElse: () => accounts.first);
+    return accounts.firstWhere(
+      (a) => a.type == AccountType.cash,
+      orElse: () => accounts.first,
+    );
   }
 
   Future<void> _loadCandidates() async {
@@ -74,7 +85,9 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
       // Capture wallet context once at the start of the operation.
       final walletId = ref.read(currentWalletIdProvider);
 
-      final isWalletValid = await ref.read(walletDaoProvider).isWalletValid(walletId);
+      final isWalletValid = await ref
+          .read(walletDaoProvider)
+          .isWalletValid(walletId);
       if (!isWalletValid) {
         setState(() {
           _loading = false;
@@ -83,7 +96,9 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
         return;
       }
 
-      await ref.read(walletDaoProvider).logOnboardingActivity(
+      await ref
+          .read(walletDaoProvider)
+          .logOnboardingActivity(
             walletId: walletId,
             action: 'sms_setup_started',
           );
@@ -97,7 +112,8 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
       }
 
       final prefs = await SharedPreferences.getInstance();
-      final importedHashes = prefs.getStringList('sms_imported_hashes') ?? <String>[];
+      final importedHashes =
+          prefs.getStringList('sms_imported_hashes') ?? <String>[];
       _knownHashes.addAll(importedHashes);
 
       final inbox = await AndroidSMSReader.fetchMessages(
@@ -108,9 +124,14 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
 
       final liveQueue = await _pullCapturedSms();
       final sources = <dynamic>[...liveQueue, ...inbox];
-      
-      final mappings = await ref.read(smsParsingDaoProvider).getMerchantMappings(walletId);
-      final categories = await ref.read(watchAllCategoriesUseCaseProvider).call().first;
+
+      final mappings = await ref
+          .read(smsParsingDaoProvider)
+          .getMerchantMappings(walletId);
+      final categories = await ref
+          .read(watchAllCategoriesUseCaseProvider)
+          .call()
+          .first;
       final categoryById = {for (final c in categories) c.id: c};
 
       for (final sms in sources) {
@@ -118,7 +139,9 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
         final body = (sms is Map ? sms['body'] : sms.body).toString();
         final sender = (sms is Map ? sms['address'] : sms.address).toString();
         final rawDate = sms is Map ? sms['date'] : sms.date;
-        final date = DateTime.fromMillisecondsSinceEpoch((rawDate as num).toInt());
+        final date = DateTime.fromMillisecondsSinceEpoch(
+          (rawDate as num).toInt(),
+        );
         final hash = SmsTransactionParser.buildHash(sender: sender, body: body);
         if (_knownHashes.contains(hash)) {
           _duplicateDetections++;
@@ -134,11 +157,14 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
         if (candidate != null) {
           for (final mapping in mappings) {
             try {
-              if (RegExp(mapping.originalPattern, caseSensitive: false).hasMatch(candidate!.merchant)) {
+              if (RegExp(
+                mapping.originalPattern,
+                caseSensitive: false,
+              ).hasMatch(candidate!.merchant)) {
                 candidate = candidate.copyWith(
                   merchant: mapping.cleanName,
-                  suggestedCategoryName: mapping.defaultCategoryId != null 
-                      ? categoryById[mapping.defaultCategoryId]?.name 
+                  suggestedCategoryName: mapping.defaultCategoryId != null
+                      ? categoryById[mapping.defaultCategoryId]?.name
                       : candidate.suggestedCategoryName,
                 );
                 break;
@@ -155,22 +181,21 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
         } else {
           _rejectedImports++;
           try {
-            await ref.read(smsParsingDaoProvider).insertUnrecognizedSms(
-              UnrecognizedSmsEntriesCompanion.insert(
-                walletId: walletId,
-                smsBody: body,
-                sender: sender,
-                receivedAt: date,
-              ),
-              authorizedWalletId: walletId,
-            );
+            await ref
+                .read(smsParsingDaoProvider)
+                .insertUnrecognizedSms(
+                  UnrecognizedSmsEntriesCompanion.insert(
+                    walletId: walletId,
+                    smsBody: body,
+                    sender: sender,
+                    receivedAt: date,
+                  ),
+                  authorizedWalletId: walletId,
+                );
           } on SqliteException catch (error) {
             // A duplicate row (re-import without resolving) is expected; log it
             // so unexpected constraint failures are visible in debug builds.
-            AppLogger.warn(
-              'Unrecognized SMS entry was not stored',
-              error,
-            );
+            AppLogger.warn('Unrecognized SMS entry was not stored', error);
           }
         }
       }
@@ -178,7 +203,9 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
       setState(() {
         _loading = false;
       });
-      await ref.read(walletDaoProvider).logOnboardingActivity(
+      await ref
+          .read(walletDaoProvider)
+          .logOnboardingActivity(
             walletId: walletId,
             action: 'sms_setup_completed',
           );
@@ -192,10 +219,15 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
 
   Future<List<Map<String, dynamic>>> _pullCapturedSms() async {
     try {
-      final raw = await _smsChannel.invokeMethod<List<dynamic>>('pullCapturedSms');
+      final raw = await _smsChannel.invokeMethod<List<dynamic>>(
+        'pullCapturedSms',
+      );
       return raw
               ?.whereType<Map<dynamic, dynamic>>()
-              .map((item) => item.map((key, value) => MapEntry(key.toString(), value)))
+              .map(
+                (item) =>
+                    item.map((key, value) => MapEntry(key.toString(), value)),
+              )
               .toList() ??
           <Map<String, dynamic>>[];
     } on MissingPluginException {
@@ -207,33 +239,51 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
     // Capture wallet context once for the entire save operation.
     final walletId = ref.read(currentWalletIdProvider);
 
-    final isWalletValid = await ref.read(walletDaoProvider).isWalletValid(walletId);
+    final isWalletValid = await ref
+        .read(walletDaoProvider)
+        .isWalletValid(walletId);
     if (!isWalletValid) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Cannot save: Invalid or unauthorized wallet context.')),
+          const SnackBar(
+            content: Text(
+              'Cannot save: Invalid or unauthorized wallet context.',
+            ),
+          ),
         );
       }
       return;
     }
 
-    final categories = await ref.read(watchAllCategoriesUseCaseProvider).call().first;
-    final accounts = await ref.read(watchAllAccountsUseCaseProvider).call().first;
+    final categories = await ref
+        .read(watchAllCategoriesUseCaseProvider)
+        .call()
+        .first;
+    final accounts = await ref
+        .read(watchAllAccountsUseCaseProvider)
+        .call()
+        .first;
     final prefs = await SharedPreferences.getInstance();
-    final importedHashes = prefs.getStringList('sms_imported_hashes') ?? <String>[];
+    final importedHashes =
+        prefs.getStringList('sms_imported_hashes') ?? <String>[];
 
-    final categoryByName = {for (final c in categories) c.name.toLowerCase(): c};
+    final categoryByName = {
+      for (final c in categories) c.name.toLowerCase(): c,
+    };
 
     int skippedDuplicates = 0;
     // Existing ledger entries, so re-importing the same SMS does not silently
     // double up. Same rule as the manual entry form.
-    final existingTransactions =
-        await ref.read(watchRecentTransactionsUseCaseProvider).call(limit: 200).first;
+    final existingTransactions = await ref
+        .read(watchRecentTransactionsUseCaseProvider)
+        .call(limit: 200)
+        .first;
 
     for (final candidate in _candidates.where((item) => item.isSelected)) {
       final category = candidate.suggestedCategoryName == null
           ? categories.first
-          : categoryByName[candidate.suggestedCategoryName!.toLowerCase()] ?? categories.first;
+          : categoryByName[candidate.suggestedCategoryName!.toLowerCase()] ??
+                categories.first;
 
       if (candidate.isRecurringSetup) {
         final recurringTransaction = RecurringTransaction(
@@ -269,19 +319,25 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
 
         // Audit: source = 'import' (not 'user') for SMS-imported transactions.
         // The 'import' source suppresses actor attribution per P2-3A convention.
-        await ref.read(addTransactionUseCaseProvider).call(transaction, source: 'import');
+        await ref
+            .read(addTransactionUseCaseProvider)
+            .call(transaction, source: 'import');
       }
       importedHashes.add(candidate.smsHash);
     }
 
     await prefs.setStringList('sms_imported_hashes', importedHashes);
-    await ref.read(smsImportMetricsDaoProvider).record(
+    await ref
+        .read(smsImportMetricsDaoProvider)
+        .record(
           walletId: walletId,
           acceptedImports: _candidates.where((c) => c.isSelected).length,
           rejectedImports: _rejectedImports,
           duplicateDetections: _duplicateDetections + skippedDuplicates,
         );
-    await ref.read(walletDaoProvider).logOnboardingActivity(
+    await ref
+        .read(walletDaoProvider)
+        .logOnboardingActivity(
           walletId: walletId,
           action: 'sms_import_completed',
         );
@@ -289,8 +345,9 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Saved ${_candidates.where((c) => c.isSelected).length - skippedDuplicates} SMS transactions'
-              '${skippedDuplicates > 0 ? ' ($skippedDuplicates skipped as likely duplicates)' : ''}'),
+            'Saved ${_candidates.where((c) => c.isSelected).length - skippedDuplicates} SMS transactions'
+            '${skippedDuplicates > 0 ? ' ($skippedDuplicates skipped as likely duplicates)' : ''}',
+          ),
         ),
       );
     }
@@ -311,164 +368,212 @@ class _SmsImportScreenState extends ConsumerState<SmsImportScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(child: Text(_error!))
-              : FutureBuilder<List<Object>>(
-                  future: Future.wait<Object>([
-                    ref.read(watchAllCategoriesUseCaseProvider).call().first,
-                    ref.read(watchAllAccountsUseCaseProvider).call().first,
-                  ]),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    final categories = snapshot.data![0] as List<Category>;
-                    final accounts = snapshot.data![1] as List<Account>;
-                    return Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
-                          child: Card(
-                            child: ListTile(
-                              leading: Icon(Icons.sms_outlined),
-                              title: Text('SMS Import Introduction'),
-                              subtitle: Text(
-                                'SMS permission is used only to scan inbox messages on-device. '
-                                'The app shows a review queue first, so nothing is saved until you choose it. '
-                                'Duplicates and rejected messages stay local.',
+          ? Center(child: Text(_error!))
+          : FutureBuilder<List<Object>>(
+              future: Future.wait<Object>([
+                ref.read(watchAllCategoriesUseCaseProvider).call().first,
+                ref.read(watchAllAccountsUseCaseProvider).call().first,
+              ]),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final categories = snapshot.data![0] as List<Category>;
+                final accounts = snapshot.data![1] as List<Account>;
+                return Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+                      child: Card(
+                        child: ListTile(
+                          leading: Icon(Icons.sms_outlined),
+                          title: Text('SMS Import Introduction'),
+                          subtitle: Text(
+                            'SMS permission is used only to scan inbox messages on-device. '
+                            'The app shows a review queue first, so nothing is saved until you choose it. '
+                            'Duplicates and rejected messages stay local.',
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 12.0,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Card(
+                              child: ListTile(
+                                title: const Text('Review first'),
+                                subtitle: Text(
+                                  'Candidates: ${_candidates.length}  •  Rejected: $_rejectedImports  •  Duplicates: $_duplicateDetections',
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Card(
-                                  child: ListTile(
-                                    title: const Text('Review first'),
-                                    subtitle: Text('Candidates: ${_candidates.length}  •  Rejected: $_rejectedImports  •  Duplicates: $_duplicateDetections'),
-                                  ),
-                                ),
-                              ),
-                            ],
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${_candidates.length} candidates found',
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('${_candidates.length} candidates found', style: Theme.of(context).textTheme.titleMedium),
-                              FilledButton.icon(
-                                onPressed: _candidates.any((c) => c.isSelected) ? _saveSelected : null,
-                                icon: const Icon(Icons.save),
-                                label: const Text('Save Selected'),
-                              ),
-                            ],
+                          FilledButton.icon(
+                            onPressed: _candidates.any((c) => c.isSelected)
+                                ? _saveSelected
+                                : null,
+                            icon: const Icon(Icons.save),
+                            label: const Text('Save Selected'),
                           ),
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: _candidates.length,
-                            itemBuilder: (context, index) {
-                              final candidate = _candidates[index];
-                              final category = candidate.suggestedCategoryName == null
-                                  ? null
-                                  : categories.firstWhere(
-                                      (c) => c.name.toLowerCase() == candidate.suggestedCategoryName!.toLowerCase(),
-                                      orElse: () => categories.first,
-                                    );
-                              return Card(
-                                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _candidates.length,
+                        itemBuilder: (context, index) {
+                          final candidate = _candidates[index];
+                          final category =
+                              candidate.suggestedCategoryName == null
+                              ? null
+                              : categories.firstWhere(
+                                  (c) =>
+                                      c.name.toLowerCase() ==
+                                      candidate.suggestedCategoryName!
+                                          .toLowerCase(),
+                                  orElse: () => categories.first,
+                                );
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Checkbox(
-                                            value: candidate.isSelected,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _candidates[index] = candidate.copyWith(isSelected: value ?? false);
-                                              });
-                                            },
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              'Rs ${candidate.amount.toStringAsFixed(0)} - ${candidate.merchant}',
-                                              style: Theme.of(context).textTheme.titleMedium,
-                                            ),
-                                          ),
-                                          Text(
-                                            candidate.type == domain.TransactionType.expense ? 'Expense' : 'Income',
-                                            style: Theme.of(context).textTheme.labelLarge,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Chip(label: Text('${(candidate.confidence * 100).toStringAsFixed(0)}%')),
-                                          if (candidate.isRecurringSetup)
-                                            const Padding(
-                                              padding: EdgeInsets.only(left: 8.0),
-                                              child: Chip(
-                                                label: Text('Subscription'),
-                                                backgroundColor: Colors.blue,
-                                                labelStyle: TextStyle(color: Colors.white),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                      Text(candidate.body, maxLines: 3, overflow: TextOverflow.ellipsis),
-                                      const SizedBox(height: 8),
-                                      DropdownButtonFormField<Category>(
-                                        initialValue: category,
-                                        decoration: const InputDecoration(labelText: 'Category'),
-                                        items: categories
-                                            .map(
-                                              (c) => DropdownMenuItem(
-                                                value: c,
-                                                child: Text(c.name),
-                                              ),
-                                            )
-                                            .toList(),
+                                      Checkbox(
+                                        value: candidate.isSelected,
                                         onChanged: (value) {
-                                          if (value == null) return;
                                           setState(() {
-                                            _candidates[index] = candidate.copyWith(suggestedCategoryName: value.name);
+                                            _candidates[index] = candidate
+                                                .copyWith(
+                                                  isSelected: value ?? false,
+                                                );
                                           });
                                         },
                                       ),
-                                      const SizedBox(height: 8),
-                                      DropdownButtonFormField<Account>(
-                                        initialValue: _guessAccount(candidate, accounts),
-                                        decoration: const InputDecoration(labelText: 'Account'),
-                                        items: accounts
-                                            .map(
-                                              (a) => DropdownMenuItem(
-                                                value: a,
-                                                child: Text(a.name),
-                                              ),
-                                            )
-                                            .toList(),
-                                        onChanged: (value) {
-                                          if (value == null) return;
-                                          setState(() {
-                                            _candidates[index] = candidate.copyWith(selectedAccountId: value.id);
-                                          });
-                                        },
+                                      Expanded(
+                                        child: Text(
+                                          'Rs ${candidate.amount.toStringAsFixed(0)} - ${candidate.merchant}',
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.titleMedium,
+                                        ),
                                       ),
+                                      Text(
+                                        candidate.type ==
+                                                domain.TransactionType.expense
+                                            ? 'Expense'
+                                            : 'Income',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.labelLarge,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Chip(
+                                        label: Text(
+                                          '${(candidate.confidence * 100).toStringAsFixed(0)}%',
+                                        ),
+                                      ),
+                                      if (candidate.isRecurringSetup)
+                                        const Padding(
+                                          padding: EdgeInsets.only(left: 8.0),
+                                          child: Chip(
+                                            label: Text('Subscription'),
+                                            backgroundColor: Colors.blue,
+                                            labelStyle: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                     ],
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                                  Text(
+                                    candidate.body,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  DropdownButtonFormField<Category>(
+                                    initialValue: category,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Category',
+                                    ),
+                                    items: categories
+                                        .map(
+                                          (c) => DropdownMenuItem(
+                                            value: c,
+                                            child: Text(c.name),
+                                          ),
+                                        )
+                                        .toList(),
+                                    onChanged: (value) {
+                                      if (value == null) return;
+                                      setState(() {
+                                        _candidates[index] = candidate.copyWith(
+                                          suggestedCategoryName: value.name,
+                                        );
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(height: 8),
+                                  DropdownButtonFormField<Account>(
+                                    initialValue: _guessAccount(
+                                      candidate,
+                                      accounts,
+                                    ),
+                                    decoration: const InputDecoration(
+                                      labelText: 'Account',
+                                    ),
+                                    items: accounts
+                                        .map(
+                                          (a) => DropdownMenuItem(
+                                            value: a,
+                                            child: Text(a.name),
+                                          ),
+                                        )
+                                        .toList(),
+                                    onChanged: (value) {
+                                      if (value == null) return;
+                                      setState(() {
+                                        _candidates[index] = candidate.copyWith(
+                                          selectedAccountId: value.id,
+                                        );
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
     );
   }
 }

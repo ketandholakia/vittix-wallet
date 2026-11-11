@@ -11,7 +11,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
   @override
   Future<void> addCategory(Category category) {
     // When adding, Drift handles the auto-increment ID, so we use .insert
-    final companion = category.toCompanion().copyWith(id: const db.Value.absent());
+    final companion = category.toCompanion().copyWith(
+      id: const db.Value.absent(),
+    );
     return _categoryDao.insertCategory(companion);
   }
 
@@ -63,7 +65,10 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @override
-  Future<int> reassignAndDeleteCategory(int fromCategoryId, int toCategoryId) async {
+  Future<int> reassignAndDeleteCategory(
+    int fromCategoryId,
+    int toCategoryId,
+  ) async {
     if (fromCategoryId == toCategoryId) {
       throw ArgumentError.value(
         toCategoryId,
@@ -83,18 +88,16 @@ class CategoryRepositoryImpl implements CategoryRepository {
     // a category that does not exist, silently orphaning the history.
     final target = await _categoryDao.getCategoryById(toCategoryId);
     if (target == null) {
-      throw ArgumentError.value(
-        toCategoryId,
-        'toCategoryId',
-        'does not exist',
-      );
+      throw ArgumentError.value(toCategoryId, 'toCategoryId', 'does not exist');
     }
 
     final database = _categoryDao.attachedDatabase;
     var moved = 0;
     await database.transaction(() async {
-      moved = await database.transactionDao
-          .reassignTransactionsForCategories(ids, toCategoryId);
+      moved = await database.transactionDao.reassignTransactionsForCategories(
+        ids,
+        toCategoryId,
+      );
       // Deepest first, so the operation stays correct if foreign keys are
       // enabled later and the `parentId` cascade starts running.
       await _categoryDao.deleteCategories(ids.reversed);

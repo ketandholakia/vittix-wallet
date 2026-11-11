@@ -1,24 +1,19 @@
 import 'package:vittix_wallet/features/transactions/domain/transaction.dart';
 import 'package:flutter/material.dart';
 
-enum AccountType {
-  bank,
-  creditCard,
-  loan,
-  cash,
-  income,
-}
+enum AccountType { bank, creditCard, loan, cash, income }
 
 extension AccountTypeX on AccountType {
   String get label => switch (this) {
-        AccountType.bank => 'Bank Account',
-        AccountType.creditCard => 'Credit Card',
-        AccountType.loan => 'Loan',
-        AccountType.cash => 'Cash',
-        AccountType.income => 'Income Account',
-      };
+    AccountType.bank => 'Bank Account',
+    AccountType.creditCard => 'Credit Card',
+    AccountType.loan => 'Loan',
+    AccountType.cash => 'Cash',
+    AccountType.income => 'Income Account',
+  };
 
-  bool get isLiability => this == AccountType.creditCard || this == AccountType.loan;
+  bool get isLiability =>
+      this == AccountType.creditCard || this == AccountType.loan;
 }
 
 class Account {
@@ -55,13 +50,14 @@ class AccountWithBalance {
   final Account account;
   final double balance;
 
-  const AccountWithBalance({
-    required this.account,
-    required this.balance,
-  });
+  const AccountWithBalance({required this.account, required this.balance});
 }
 
-double accountTransactionEffect(AccountType accountType, TransactionType txType, double amount) {
+double accountTransactionEffect(
+  AccountType accountType,
+  TransactionType txType,
+  double amount,
+) {
   if (accountType.isLiability) {
     return txType == TransactionType.expense ? amount : -amount;
   }

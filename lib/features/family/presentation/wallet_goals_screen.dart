@@ -25,7 +25,9 @@ class WalletGoalsScreen extends ConsumerWidget {
               ? const m.Center(
                   child: m.Padding(
                     padding: m.EdgeInsets.all(24),
-                    child: m.Text('No goals yet. Add a wallet goal to track savings progress together.'),
+                    child: m.Text(
+                      'No goals yet. Add a wallet goal to track savings progress together.',
+                    ),
                   ),
                 )
               : m.ListView.builder(
@@ -33,17 +35,39 @@ class WalletGoalsScreen extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final goal = goals[index];
                     final canManage = permissions.canManageGoals(role);
-                    final canContribute = permissions.canContributeToGoals(role);
+                    final canContribute = permissions.canContributeToGoals(
+                      role,
+                    );
                     return m.ListTile(
                       title: m.Text(goal.name),
-                      subtitle: m.Text('${(goal.progress * 100).toStringAsFixed(0)}% of ${goal.targetAmount.toStringAsFixed(0)}'),
+                      subtitle: m.Text(
+                        '${(goal.progress * 100).toStringAsFixed(0)}% of ${goal.targetAmount.toStringAsFixed(0)}',
+                      ),
                       trailing: m.Wrap(
                         spacing: 8,
                         children: [
-                          if (canContribute) m.IconButton(icon: const m.Icon(m.Icons.add), onPressed: () => _contribute(context, ref, walletId, goal)),
-                          if (canManage) m.IconButton(icon: const m.Icon(m.Icons.edit), onPressed: () => _edit(context, ref, walletId, goal)),
-                          if (canManage) m.IconButton(icon: const m.Icon(m.Icons.archive), onPressed: () => _archive(ref, goal.id)),
-                          if (canManage) m.IconButton(icon: const m.Icon(m.Icons.delete), onPressed: () => _delete(ref, goal.id)),
+                          if (canContribute)
+                            m.IconButton(
+                              icon: const m.Icon(m.Icons.add),
+                              onPressed: () =>
+                                  _contribute(context, ref, walletId, goal),
+                            ),
+                          if (canManage)
+                            m.IconButton(
+                              icon: const m.Icon(m.Icons.edit),
+                              onPressed: () =>
+                                  _edit(context, ref, walletId, goal),
+                            ),
+                          if (canManage)
+                            m.IconButton(
+                              icon: const m.Icon(m.Icons.archive),
+                              onPressed: () => _archive(ref, goal.id),
+                            ),
+                          if (canManage)
+                            m.IconButton(
+                              icon: const m.Icon(m.Icons.delete),
+                              onPressed: () => _delete(ref, goal.id),
+                            ),
                         ],
                       ),
                     );
@@ -58,21 +82,39 @@ class WalletGoalsScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _contribute(m.BuildContext context, WidgetRef ref, int walletId, GoalViewModel goal) async {
+  Future<void> _contribute(
+    m.BuildContext context,
+    WidgetRef ref,
+    int walletId,
+    GoalViewModel goal,
+  ) async {
     final amount = m.TextEditingController();
     await m.showDialog<void>(
       context: context,
       builder: (context) => m.AlertDialog(
         title: m.Text('Contribute to ${goal.name}'),
-        content: m.TextField(controller: amount, keyboardType: m.TextInputType.number, decoration: const m.InputDecoration(labelText: 'Amount')),
+        content: m.TextField(
+          controller: amount,
+          keyboardType: m.TextInputType.number,
+          decoration: const m.InputDecoration(labelText: 'Amount'),
+        ),
         actions: [
-          m.TextButton(onPressed: () => m.Navigator.pop(context), child: const m.Text('Cancel')),
+          m.TextButton(
+            onPressed: () => m.Navigator.pop(context),
+            child: const m.Text('Cancel'),
+          ),
           m.FilledButton(
             onPressed: () async {
               final value = double.tryParse(amount.text) ?? 0;
               if (value > 0) {
-                await ref.read(goalRepositoryProvider).addContribution(
-                      db.WalletGoalContributionsCompanion.insert(walletId: walletId, goalId: goal.id, amount: value),
+                await ref
+                    .read(goalRepositoryProvider)
+                    .addContribution(
+                      db.WalletGoalContributionsCompanion.insert(
+                        walletId: walletId,
+                        goalId: goal.id,
+                        amount: value,
+                      ),
                     );
               }
               if (context.mounted) m.Navigator.pop(context);
@@ -84,7 +126,12 @@ class WalletGoalsScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _edit(m.BuildContext context, WidgetRef ref, int walletId, GoalViewModel goal) async {
+  Future<void> _edit(
+    m.BuildContext context,
+    WidgetRef ref,
+    int walletId,
+    GoalViewModel goal,
+  ) async {
     final name = m.TextEditingController(text: goal.name);
     final target = m.TextEditingController(text: goal.targetAmount.toString());
     await m.showDialog<void>(
@@ -94,20 +141,34 @@ class WalletGoalsScreen extends ConsumerWidget {
         content: m.Column(
           mainAxisSize: m.MainAxisSize.min,
           children: [
-            m.TextField(controller: name, decoration: const m.InputDecoration(labelText: 'Name')),
-            m.TextField(controller: target, decoration: const m.InputDecoration(labelText: 'Target'), keyboardType: m.TextInputType.number),
+            m.TextField(
+              controller: name,
+              decoration: const m.InputDecoration(labelText: 'Name'),
+            ),
+            m.TextField(
+              controller: target,
+              decoration: const m.InputDecoration(labelText: 'Target'),
+              keyboardType: m.TextInputType.number,
+            ),
           ],
         ),
         actions: [
-          m.TextButton(onPressed: () => m.Navigator.pop(context), child: const m.Text('Cancel')),
+          m.TextButton(
+            onPressed: () => m.Navigator.pop(context),
+            child: const m.Text('Cancel'),
+          ),
           m.FilledButton(
             onPressed: () async {
-              await ref.read(goalRepositoryProvider).updateGoal(
+              await ref
+                  .read(goalRepositoryProvider)
+                  .updateGoal(
                     db.WalletGoalsCompanion(
                       id: db.Value(goal.id),
                       walletId: db.Value(walletId),
                       name: db.Value(name.text),
-                      targetAmount: db.Value(double.tryParse(target.text) ?? goal.targetAmount),
+                      targetAmount: db.Value(
+                        double.tryParse(target.text) ?? goal.targetAmount,
+                      ),
                       currentAmount: db.Value(goal.currentAmount),
                       targetDate: db.Value(goal.targetDate),
                     ),

@@ -20,7 +20,9 @@ class WalletInvitationService {
   Future<WalletInvitation?> resolveInvitation(String code) async {
     Map<String, dynamic> payload;
     try {
-      payload = jsonDecode(utf8.decode(base64Url.decode(code))) as Map<String, dynamic>;
+      payload =
+          jsonDecode(utf8.decode(base64Url.decode(code)))
+              as Map<String, dynamic>;
     } on FormatException {
       return null;
     } on ArgumentError {
@@ -34,10 +36,14 @@ class WalletInvitationService {
     if (token is! String) return null;
 
     final invitations = await _repository.listInvitations(walletId);
-    final invitation = invitations.where((item) => item.id == invitationId && item.token == token).firstOrNull;
+    final invitation = invitations
+        .where((item) => item.id == invitationId && item.token == token)
+        .firstOrNull;
     if (invitation == null) return null;
     if (invitation.status != WalletInvitationStatus.pending) return null;
-    if (invitation.expiresAt != null && invitation.expiresAt!.isBefore(DateTime.now())) return null;
+    if (invitation.expiresAt != null &&
+        invitation.expiresAt!.isBefore(DateTime.now()))
+      return null;
     return invitation;
   }
 }

@@ -93,9 +93,7 @@ class _DatabaseRecoveryScreenState
             controller: controller,
             obscureText: true,
             autofocus: true,
-            decoration: const InputDecoration(
-              labelText: 'Passphrase',
-            ),
+            decoration: const InputDecoration(labelText: 'Passphrase'),
           ),
           actions: [
             TextButton(

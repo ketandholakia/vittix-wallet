@@ -46,7 +46,8 @@ class PdfTransactionCandidate {
       type: type ?? this.type,
       date: date ?? this.date,
       accountHint: accountHint ?? this.accountHint,
-      suggestedCategoryName: suggestedCategoryName ?? this.suggestedCategoryName,
+      suggestedCategoryName:
+          suggestedCategoryName ?? this.suggestedCategoryName,
       selectedAccountId: selectedAccountId ?? this.selectedAccountId,
       isSelected: isSelected ?? this.isSelected,
       confidence: confidence ?? this.confidence,

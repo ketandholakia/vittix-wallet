@@ -27,15 +27,19 @@ String generateCsv({
   required String currencyCode,
 }) {
   final buffer = StringBuffer();
-  
+
   // CSV Header
-  buffer.writeln('ID,Date,Type,Parent Category,Category,Account,Amount,Currency,Note');
+  buffer.writeln(
+    'ID,Date,Type,Parent Category,Category,Account,Amount,Currency,Note',
+  );
 
   String escapeCsv(String text) => escapeCsvField(text);
 
   for (final tx in transactions) {
     final parentId = tx.category.parentId;
-    final parentName = parentId != null ? (categoryMap[parentId]?.name ?? '') : '';
+    final parentName = parentId != null
+        ? (categoryMap[parentId]?.name ?? '')
+        : '';
 
     final row = [
       tx.id.toString(),
@@ -50,6 +54,6 @@ String generateCsv({
     ];
     buffer.writeln(row.join(','));
   }
-  
+
   return buffer.toString();
 }

@@ -10,17 +10,18 @@ void main() {
   group('validateSyncUrl', () {
     test('accepts https in any build', () {
       expect(
-        validateSyncUrl('https://cloud.example.com/remote.php/webdav/',
-                debugOverride: false)
-            .scheme,
+        validateSyncUrl(
+          'https://cloud.example.com/remote.php/webdav/',
+          debugOverride: false,
+        ).scheme,
         'https',
       );
     });
 
     test('release builds reject plain http even for localhost', () {
       expect(
-        () => validateSyncUrl('http://localhost:8080/sync',
-            debugOverride: false),
+        () =>
+            validateSyncUrl('http://localhost:8080/sync', debugOverride: false),
         throwsFormatException,
       );
       expect(
@@ -36,8 +37,11 @@ void main() {
         'http://10.1.2.3/sync',
         'http://192.168.1.20/sync',
       ]) {
-        expect(validateSyncUrl(url, debugOverride: true).scheme, 'http',
-            reason: url);
+        expect(
+          validateSyncUrl(url, debugOverride: true).scheme,
+          'http',
+          reason: url,
+        );
       }
     });
 
@@ -53,7 +57,10 @@ void main() {
     });
 
     test('rejects malformed URLs', () {
-      expect(() => validateSyncUrl('', debugOverride: true), throwsFormatException);
+      expect(
+        () => validateSyncUrl('', debugOverride: true),
+        throwsFormatException,
+      );
       expect(
         () => validateSyncUrl('not a url', debugOverride: true),
         throwsFormatException,
@@ -66,20 +73,27 @@ void main() {
   });
 
   group('SyncTokenMigration', () {
-    test('migrates a legacy SharedPreferences token and deletes the old key',
-        () async {
-      SharedPreferences.setMockInitialValues({'syncToken': 'legacy-token'});
-      final prefs = await SharedPreferences.getInstance();
-      final secure = InMemorySecureKeyValueStore();
+    test(
+      'migrates a legacy SharedPreferences token and deletes the old key',
+      () async {
+        SharedPreferences.setMockInitialValues({'syncToken': 'legacy-token'});
+        final prefs = await SharedPreferences.getInstance();
+        final secure = InMemorySecureKeyValueStore();
 
-      final token =
-          await SyncTokenMigration.load(secure: secure, prefs: prefs);
+        final token = await SyncTokenMigration.load(
+          secure: secure,
+          prefs: prefs,
+        );
 
-      expect(token, 'legacy-token');
-      expect(await secure.read(SyncTokenMigration.key), 'legacy-token');
-      expect(prefs.getString(SyncTokenMigration.key), isNull,
-          reason: 'the plaintext token must be removed once migrated');
-    });
+        expect(token, 'legacy-token');
+        expect(await secure.read(SyncTokenMigration.key), 'legacy-token');
+        expect(
+          prefs.getString(SyncTokenMigration.key),
+          isNull,
+          reason: 'the plaintext token must be removed once migrated',
+        );
+      },
+    );
 
     test('prefers an existing secure token and never rewrites it', () async {
       SharedPreferences.setMockInitialValues({'syncToken': 'legacy-token'});
@@ -87,8 +101,7 @@ void main() {
       final secure = InMemorySecureKeyValueStore();
       await secure.write(SyncTokenMigration.key, 'secure-token');
 
-      final token =
-          await SyncTokenMigration.load(secure: secure, prefs: prefs);
+      final token = await SyncTokenMigration.load(secure: secure, prefs: prefs);
 
       expect(token, 'secure-token');
       expect(await secure.read(SyncTokenMigration.key), 'secure-token');

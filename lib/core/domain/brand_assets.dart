@@ -14,8 +14,12 @@ class BrandLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = Theme.of(context).colorScheme.outline.withValues(alpha: 0.2);
-    final bg = backgroundColor ?? Theme.of(context).colorScheme.surface.withValues(alpha: 0.04);
+    final borderColor = Theme.of(
+      context,
+    ).colorScheme.outline.withValues(alpha: 0.2);
+    final bg =
+        backgroundColor ??
+        Theme.of(context).colorScheme.surface.withValues(alpha: 0.04);
 
     if (showWordmark) {
       return Row(
@@ -30,17 +34,19 @@ class BrandLogo extends StatelessWidget {
               Text(
                 'VITTIX',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 2.2,
-                    ),
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 2.2,
+                ),
               ),
               Text(
                 'WALLET',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 6,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                    ),
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 6,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
               ),
             ],
           ),

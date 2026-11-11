@@ -1,7 +1,10 @@
 part of '../app_database.dart';
 
-@DriftAccessor(tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions])
-class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDaoMixin {
+@DriftAccessor(
+  tables: [Categories, Accounts, Transactions, Budgets, RecurringTransactions],
+)
+class TransactionDao extends DatabaseAccessor<AppDatabase>
+    with _$TransactionDaoMixin {
   TransactionDao(super.db);
 
   List<TransactionWithDetails> _mapTransactionRows(List<TypedResult> rows) {
@@ -47,8 +50,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   ]) {
     final ids = fromCategoryIds.toList(growable: false);
     if (ids.isEmpty) return Future<int>.value(0);
-    final query = update(transactions)
-      ..where((t) => t.categoryId.isIn(ids));
+    final query = update(transactions)..where((t) => t.categoryId.isIn(ids));
     if (walletId != null) {
       query.where((t) => t.walletId.equals(walletId));
     }
@@ -88,7 +90,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     return query.write(TransactionsCompanion(accountId: Value(toAccountId)));
   }
 
-  Future<int> insertTransaction(Insertable<Transaction> transaction, [int? walletId]) {
+  Future<int> insertTransaction(
+    Insertable<Transaction> transaction, [
+    int? walletId,
+  ]) {
     if (walletId != null && transaction is TransactionsCompanion) {
       transaction = transaction.copyWith(walletId: Value(walletId));
     }
@@ -96,20 +101,33 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   // Edit (with cross-wallet guard)
-  Future<bool> updateTransaction(Insertable<Transaction> transaction, [int? walletId]) async {
+  Future<bool> updateTransaction(
+    Insertable<Transaction> transaction, [
+    int? walletId,
+  ]) async {
     if (transaction is TransactionsCompanion && transaction.id.present) {
-      final targetWalletId = walletId ?? (transaction.walletId.present ? transaction.walletId.value : null);
+      final targetWalletId =
+          walletId ??
+          (transaction.walletId.present ? transaction.walletId.value : null);
       if (targetWalletId != null) {
-        final rows = await (update(transactions)
-          ..where((t) => t.id.equals(transaction.id.value) & t.walletId.equals(targetWalletId)))
-          .write(transaction);
+        final rows =
+            await (update(transactions)..where(
+                  (t) =>
+                      t.id.equals(transaction.id.value) &
+                      t.walletId.equals(targetWalletId),
+                ))
+                .write(transaction);
         return rows > 0;
       }
     } else if (transaction is Transaction) {
       final targetWalletId = walletId ?? transaction.walletId;
-      final rows = await (update(transactions)
-        ..where((t) => t.id.equals(transaction.id) & t.walletId.equals(targetWalletId)))
-        .write(transaction);
+      final rows =
+          await (update(transactions)..where(
+                (t) =>
+                    t.id.equals(transaction.id) &
+                    t.walletId.equals(targetWalletId),
+              ))
+              .write(transaction);
       return rows > 0;
     }
     return update(transactions).replace(transaction);
@@ -118,7 +136,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   // Delete (with cross-wallet guard)
   Future<int> deleteTransaction(int id, [int? walletId]) {
     if (walletId != null) {
-      return (delete(transactions)..where((t) => t.id.equals(id) & t.walletId.equals(walletId))).go();
+      return (delete(
+        transactions,
+      )..where((t) => t.id.equals(id) & t.walletId.equals(walletId))).go();
     }
     return (delete(transactions)..where((t) => t.id.equals(id))).go();
   }
@@ -133,7 +153,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   // Get transaction with details by ID with wallet isolation
-  Future<TransactionWithDetails?> getTransactionWithDetailsById(int id, [int? walletId]) async {
+  Future<TransactionWithDetails?> getTransactionWithDetailsById(
+    int id, [
+    int? walletId,
+  ]) async {
     final query = select(transactions).join([
       innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
       innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
@@ -147,19 +170,28 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   // Get By Month
-  Stream<List<TransactionWithDetails>> watchTransactionsInMonth(DateTime month, [int? walletId]) {
+  Stream<List<TransactionWithDetails>> watchTransactionsInMonth(
+    DateTime month, [
+    int? walletId,
+  ]) {
     final firstDay = DateTime(month.year, month.month, 1);
     // Half-open range [firstDay, nextMonthStart) so transactions on the last
     // day of the month (which carry a time of day) are not dropped.
     final nextMonthStart = DateTime(month.year, month.month + 1, 1);
 
-    final query = select(transactions).join([
-      innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-      innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
-    ])
-      ..where(transactions.date.isBiggerOrEqualValue(firstDay) &
-          transactions.date.isSmallerThanValue(nextMonthStart))
-      ..orderBy([OrderingTerm.desc(transactions.date)]);
+    final query =
+        select(transactions).join([
+            innerJoin(
+              categories,
+              categories.id.equalsExp(transactions.categoryId),
+            ),
+            innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+          ])
+          ..where(
+            transactions.date.isBiggerOrEqualValue(firstDay) &
+                transactions.date.isSmallerThanValue(nextMonthStart),
+          )
+          ..orderBy([OrderingTerm.desc(transactions.date)]);
 
     if (walletId != null) {
       query.where(transactions.walletId.equals(walletId));
@@ -169,13 +201,23 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   // Get recent transactions
-  Stream<List<TransactionWithDetails>> watchRecentTransactions({int limit = 10, int? walletId}) {
-    final query = select(transactions).join([
-      innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-      innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
-    ])
-      ..orderBy([OrderingTerm.desc(transactions.date), OrderingTerm.desc(transactions.id)])
-      ..limit(limit);
+  Stream<List<TransactionWithDetails>> watchRecentTransactions({
+    int limit = 10,
+    int? walletId,
+  }) {
+    final query =
+        select(transactions).join([
+            innerJoin(
+              categories,
+              categories.id.equalsExp(transactions.categoryId),
+            ),
+            innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+          ])
+          ..orderBy([
+            OrderingTerm.desc(transactions.date),
+            OrderingTerm.desc(transactions.id),
+          ])
+          ..limit(limit);
 
     if (walletId != null) {
       query.where(transactions.walletId.equals(walletId));
@@ -186,11 +228,17 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
   // Get all transactions (watches changes)
   Stream<List<TransactionWithDetails>> watchAllTransactions([int? walletId]) {
-    final query = select(transactions).join([
-      innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-      innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
-    ])
-      ..orderBy([OrderingTerm.desc(transactions.date), OrderingTerm.desc(transactions.id)]);
+    final query =
+        select(transactions).join([
+          innerJoin(
+            categories,
+            categories.id.equalsExp(transactions.categoryId),
+          ),
+          innerJoin(accounts, accounts.id.equalsExp(transactions.accountId)),
+        ])..orderBy([
+          OrderingTerm.desc(transactions.date),
+          OrderingTerm.desc(transactions.id),
+        ]);
 
     if (walletId != null) {
       query.where(transactions.walletId.equals(walletId));
@@ -200,7 +248,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   }
 
   // Get monthly expenses for trend report
-  Future<List<MonthlyTotal>> getMonthlyExpensesForLastNMonths(int n, [int? walletId]) async {
+  Future<List<MonthlyTotal>> getMonthlyExpensesForLastNMonths(
+    int n, [
+    int? walletId,
+  ]) async {
     final now = DateTime.now();
     // Go back n-1 months from the start of the current month
     final startDate = DateTime(now.year, now.month - (n - 1), 1);
@@ -211,7 +262,10 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
     final query = selectOnly(transactions)
       ..addColumns([year, month, totalAmount])
-      ..where(transactions.type.equalsValue(TransactionType.expense) & transactions.date.isBiggerOrEqualValue(startDate));
+      ..where(
+        transactions.type.equalsValue(TransactionType.expense) &
+            transactions.date.isBiggerOrEqualValue(startDate),
+      );
 
     if (walletId != null) {
       query.where(transactions.walletId.equals(walletId));
@@ -221,11 +275,17 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
 
     return query.map((row) {
       return MonthlyTotal(
-          year: row.read(year)!, month: row.read(month)!, total: Money.toMajorUnits(row.read(totalAmount) ?? 0));
+        year: row.read(year)!,
+        month: row.read(month)!,
+        total: Money.toMajorUnits(row.read(totalAmount) ?? 0),
+      );
     }).get();
   }
 
-  Future<MonthlySummaryTotals> getMonthlySummaryTotals(DateTime month, [int? walletId]) async {
+  Future<MonthlySummaryTotals> getMonthlySummaryTotals(
+    DateTime month, [
+    int? walletId,
+  ]) async {
     final firstDay = DateTime(month.year, month.month, 1);
     // Half-open range [firstDay, nextMonthStart) so transactions on the last
     // day of the month (which carry a time of day) are not dropped.
@@ -267,4 +327,3 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     );
   }
 }
-

@@ -1,7 +1,16 @@
 import 'package:drift/native.dart';
-import 'package:vittix_wallet/core/database/app_database.dart' hide isNull, isNotNull, Budget, Transaction, TransactionType, Category, Account;
+import 'package:vittix_wallet/core/database/app_database.dart'
+    hide
+        isNull,
+        isNotNull,
+        Budget,
+        Transaction,
+        TransactionType,
+        Category,
+        Account;
 import 'package:vittix_wallet/features/accounts/data/account_repository_impl.dart';
-import 'package:vittix_wallet/features/accounts/domain/account.dart' as account_domain;
+import 'package:vittix_wallet/features/accounts/domain/account.dart'
+    as account_domain;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -31,112 +40,146 @@ void main() {
     accountDao = database.accountDao;
 
     // Create Wallet A & Wallet B
-    walletIdA = await database.into(database.wallets).insert(
-      const WalletsCompanion(name: Value('Wallet A')),
-    );
-    walletIdB = await database.into(database.wallets).insert(
-      const WalletsCompanion(name: Value('Wallet B')),
-    );
+    walletIdA = await database
+        .into(database.wallets)
+        .insert(const WalletsCompanion(name: Value('Wallet A')));
+    walletIdB = await database
+        .into(database.wallets)
+        .insert(const WalletsCompanion(name: Value('Wallet B')));
 
     // Accounts for Wallet A
-    accountOwnerA = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Owner A Account',
-        type: AccountType.bank,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
-    accountAdminA = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Admin A Account',
-        type: AccountType.bank,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
-    accountMemberA = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Member A Account',
-        type: AccountType.bank,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
-    accountViewerA = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Viewer A Account',
-        type: AccountType.bank,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
-    accountInactiveA = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Inactive A Account',
-        type: AccountType.bank,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
+    accountOwnerA = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Owner A Account',
+            type: AccountType.bank,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
+    accountAdminA = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Admin A Account',
+            type: AccountType.bank,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
+    accountMemberA = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Member A Account',
+            type: AccountType.bank,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
+    accountViewerA = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Viewer A Account',
+            type: AccountType.bank,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
+    accountInactiveA = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Inactive A Account',
+            type: AccountType.bank,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
 
     // Accounts for Wallet B
-    accountOwnerB = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdB),
-        name: 'Owner B Account',
-        type: AccountType.bank,
-        icon: 0,
-        color: '0000FF',
-      ),
-    );
+    accountOwnerB = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdB),
+            name: 'Owner B Account',
+            type: AccountType.bank,
+            icon: 0,
+            color: '0000FF',
+          ),
+        );
 
     // Additional accounts for isolation tests
-    testAccA1 = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Savings A1',
-        type: AccountType.bank,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
-    testAccA2 = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Credit A2',
-        type: AccountType.creditCard,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
-    testAccB1 = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdB),
-        name: 'Savings B1',
-        type: AccountType.bank,
-        icon: 0,
-        color: '0000FF',
-      ),
-    );
+    testAccA1 = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Savings A1',
+            type: AccountType.bank,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
+    testAccA2 = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Credit A2',
+            type: AccountType.creditCard,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
+    testAccB1 = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdB),
+            name: 'Savings B1',
+            type: AccountType.bank,
+            icon: 0,
+            color: '0000FF',
+          ),
+        );
 
     // Seed Wallet A memberships
     await walletDao.insertMember(
-      WalletMembersCompanion.insert(walletId: walletIdA, accountId: accountOwnerA, role: WalletRole.owner),
+      WalletMembersCompanion.insert(
+        walletId: walletIdA,
+        accountId: accountOwnerA,
+        role: WalletRole.owner,
+      ),
     );
     await walletDao.insertMember(
-      WalletMembersCompanion.insert(walletId: walletIdA, accountId: accountAdminA, role: WalletRole.admin),
+      WalletMembersCompanion.insert(
+        walletId: walletIdA,
+        accountId: accountAdminA,
+        role: WalletRole.admin,
+      ),
     );
     await walletDao.insertMember(
-      WalletMembersCompanion.insert(walletId: walletIdA, accountId: accountMemberA, role: WalletRole.member),
+      WalletMembersCompanion.insert(
+        walletId: walletIdA,
+        accountId: accountMemberA,
+        role: WalletRole.member,
+      ),
     );
     await walletDao.insertMember(
-      WalletMembersCompanion.insert(walletId: walletIdA, accountId: accountViewerA, role: WalletRole.viewer),
+      WalletMembersCompanion.insert(
+        walletId: walletIdA,
+        accountId: accountViewerA,
+        role: WalletRole.viewer,
+      ),
     );
     await walletDao.insertMember(
       WalletMembersCompanion.insert(
@@ -149,7 +192,11 @@ void main() {
 
     // Seed Wallet B memberships
     await walletDao.insertMember(
-      WalletMembersCompanion.insert(walletId: walletIdB, accountId: accountOwnerB, role: WalletRole.owner),
+      WalletMembersCompanion.insert(
+        walletId: walletIdB,
+        accountId: accountOwnerB,
+        role: WalletRole.owner,
+      ),
     );
   });
 
@@ -168,7 +215,18 @@ void main() {
       final idsA = accountsA.map((a) => a.id).toList();
       final idsB = accountsB.map((a) => a.id).toList();
 
-      expect(idsA, containsAll([accountOwnerA, accountAdminA, accountMemberA, accountViewerA, accountInactiveA, testAccA1, testAccA2]));
+      expect(
+        idsA,
+        containsAll([
+          accountOwnerA,
+          accountAdminA,
+          accountMemberA,
+          accountViewerA,
+          accountInactiveA,
+          testAccA1,
+          testAccA2,
+        ]),
+      );
       expect(idsA, isNot(contains(testAccB1)));
 
       expect(idsB, containsAll([accountOwnerB, testAccB1]));
@@ -217,76 +275,89 @@ void main() {
       expect(stillExists, isNotNull);
     });
 
-    test('Test 5 — Authorized Role (OWNER/ADMIN) Allowed to Create Account', () async {
-      // Test checkPermission for OWNER
-      await walletDao.checkPermission(
-        walletId: walletIdA,
-        permissionCheck: (s, r) => s.canManageAccounts(r),
-        actorAccountId: accountOwnerA,
-        actionName: 'manage accounts',
-      );
-
-      final repoOwner = AccountRepositoryImpl(accountDao, walletIdA, walletDao);
-      final newAcc = const account_domain.Account(
-        id: 0,
-        name: 'New Owner Bank',
-        type: account_domain.AccountType.bank,
-        icon: IconData(0),
-        color: Color(0xFF00FF00),
-      );
-
-      await repoOwner.addAccount(newAcc);
-      final accounts = await repoOwner.watchAllAccounts().first;
-      expect(accounts.any((a) => a.name == 'New Owner Bank'), isTrue);
-    });
-
-    test('Test 6 — Unauthorized Role (MEMBER/VIEWER) Denied Account Mutation', () async {
-      // Test checkPermission for MEMBER -> denied
-      expect(
-        () => walletDao.checkPermission(
+    test(
+      'Test 5 — Authorized Role (OWNER/ADMIN) Allowed to Create Account',
+      () async {
+        // Test checkPermission for OWNER
+        await walletDao.checkPermission(
           walletId: walletIdA,
           permissionCheck: (s, r) => s.canManageAccounts(r),
-          actorAccountId: accountMemberA,
+          actorAccountId: accountOwnerA,
           actionName: 'manage accounts',
-        ),
-        throwsA(isA<WalletPermissionDeniedException>()),
-      );
+        );
 
-      // Test checkPermission for VIEWER -> denied
-      expect(
-        () => walletDao.checkPermission(
-          walletId: walletIdA,
-          permissionCheck: (s, r) => s.canManageAccounts(r),
-          actorAccountId: accountViewerA,
-          actionName: 'manage accounts',
-        ),
-        throwsA(isA<WalletPermissionDeniedException>()),
-      );
-    });
+        final repoOwner = AccountRepositoryImpl(
+          accountDao,
+          walletIdA,
+          walletDao,
+        );
+        final newAcc = const account_domain.Account(
+          id: 0,
+          name: 'New Owner Bank',
+          type: account_domain.AccountType.bank,
+          icon: IconData(0),
+          color: Color(0xFF00FF00),
+        );
 
-    test('Test 7 — Missing & Inactive Membership Denied Account Permission', () async {
-      // Non-member (accountOwnerB in Wallet A) -> denied
-      expect(
-        () => walletDao.checkPermission(
-          walletId: walletIdA,
-          permissionCheck: (s, r) => s.canManageAccounts(r),
-          actorAccountId: accountOwnerB,
-          actionName: 'manage accounts',
-        ),
-        throwsA(isA<WalletPermissionDeniedException>()),
-      );
+        await repoOwner.addAccount(newAcc);
+        final accounts = await repoOwner.watchAllAccounts().first;
+        expect(accounts.any((a) => a.name == 'New Owner Bank'), isTrue);
+      },
+    );
 
-      // Inactive member (accountInactiveA in Wallet A) -> denied
-      expect(
-        () => walletDao.checkPermission(
-          walletId: walletIdA,
-          permissionCheck: (s, r) => s.canManageAccounts(r),
-          actorAccountId: accountInactiveA,
-          actionName: 'manage accounts',
-        ),
-        throwsA(isA<WalletPermissionDeniedException>()),
-      );
-    });
+    test(
+      'Test 6 — Unauthorized Role (MEMBER/VIEWER) Denied Account Mutation',
+      () async {
+        // Test checkPermission for MEMBER -> denied
+        expect(
+          () => walletDao.checkPermission(
+            walletId: walletIdA,
+            permissionCheck: (s, r) => s.canManageAccounts(r),
+            actorAccountId: accountMemberA,
+            actionName: 'manage accounts',
+          ),
+          throwsA(isA<WalletPermissionDeniedException>()),
+        );
+
+        // Test checkPermission for VIEWER -> denied
+        expect(
+          () => walletDao.checkPermission(
+            walletId: walletIdA,
+            permissionCheck: (s, r) => s.canManageAccounts(r),
+            actorAccountId: accountViewerA,
+            actionName: 'manage accounts',
+          ),
+          throwsA(isA<WalletPermissionDeniedException>()),
+        );
+      },
+    );
+
+    test(
+      'Test 7 — Missing & Inactive Membership Denied Account Permission',
+      () async {
+        // Non-member (accountOwnerB in Wallet A) -> denied
+        expect(
+          () => walletDao.checkPermission(
+            walletId: walletIdA,
+            permissionCheck: (s, r) => s.canManageAccounts(r),
+            actorAccountId: accountOwnerB,
+            actionName: 'manage accounts',
+          ),
+          throwsA(isA<WalletPermissionDeniedException>()),
+        );
+
+        // Inactive member (accountInactiveA in Wallet A) -> denied
+        expect(
+          () => walletDao.checkPermission(
+            walletId: walletIdA,
+            permissionCheck: (s, r) => s.canManageAccounts(r),
+            actorAccountId: accountInactiveA,
+            actionName: 'manage accounts',
+          ),
+          throwsA(isA<WalletPermissionDeniedException>()),
+        );
+      },
+    );
 
     test('Test 8 — Cross-Wallet Mismatch Attack Scenario Rejected', () async {
       // User A attempts to update testAccB1 in Wallet B using Wallet A context

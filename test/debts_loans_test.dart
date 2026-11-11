@@ -36,64 +36,78 @@ void main() {
       await db.close();
     });
 
-    test('Trigger after_loan_delete logs deleted loan to deleted_records', () async {
-      // Create Account first due to foreign key
-      final accId = await db.into(db.accounts).insert(
-        AccountsCompanion.insert(
-          uuid: const Value('acc-uuid-loan'),
-          name: 'Loan Account',
-          type: AccountType.loan,
-          icon: 1,
-          color: '000000',
-        ),
-      );
+    test(
+      'Trigger after_loan_delete logs deleted loan to deleted_records',
+      () async {
+        // Create Account first due to foreign key
+        final accId = await db
+            .into(db.accounts)
+            .insert(
+              AccountsCompanion.insert(
+                uuid: const Value('acc-uuid-loan'),
+                name: 'Loan Account',
+                type: AccountType.loan,
+                icon: 1,
+                color: '000000',
+              ),
+            );
 
-      // Insert Loan
-      final loanId = await db.into(db.loans).insert(
-        LoansCompanion.insert(
-          uuid: const Value('loan-uuid-1'),
-          name: 'Car Loan',
-          accountId: accId,
-          principalAmount: 15000.0,
-          interestRate: 5.0,
-          tenureMonths: 36,
-          startDate: DateTime.now(),
-          emiAmount: 450.0,
-        ),
-      );
+        // Insert Loan
+        final loanId = await db
+            .into(db.loans)
+            .insert(
+              LoansCompanion.insert(
+                uuid: const Value('loan-uuid-1'),
+                name: 'Car Loan',
+                accountId: accId,
+                principalAmount: 15000.0,
+                interestRate: 5.0,
+                tenureMonths: 36,
+                startDate: DateTime.now(),
+                emiAmount: 450.0,
+              ),
+            );
 
-      // Delete Loan
-      await (db.delete(db.loans)..where((l) => l.id.equals(loanId))).go();
+        // Delete Loan
+        await (db.delete(db.loans)..where((l) => l.id.equals(loanId))).go();
 
-      // Check deleted_records
-      final deleted = await db.select(db.deletedRecords).get();
-      expect(deleted.length, 1);
-      expect(deleted.first.uuid, 'loan-uuid-1');
-      expect(deleted.first.deletedTable, 'loans');
-    });
+        // Check deleted_records
+        final deleted = await db.select(db.deletedRecords).get();
+        expect(deleted.length, 1);
+        expect(deleted.first.uuid, 'loan-uuid-1');
+        expect(deleted.first.deletedTable, 'loans');
+      },
+    );
 
-    test('Trigger after_peer_debt_delete logs deleted peer debt to deleted_records', () async {
-      // Insert Peer Debt
-      final debtId = await db.into(db.peerDebts).insert(
-        PeerDebtsCompanion.insert(
-          walletId: 1,
-          uuid: const Value('peer-debt-uuid-1'),
-          personName: 'Dave',
-          type: PeerDebtType.lent,
-          amount: 100.0,
-          date: DateTime.now(),
-        ),
-      );
+    test(
+      'Trigger after_peer_debt_delete logs deleted peer debt to deleted_records',
+      () async {
+        // Insert Peer Debt
+        final debtId = await db
+            .into(db.peerDebts)
+            .insert(
+              PeerDebtsCompanion.insert(
+                walletId: 1,
+                uuid: const Value('peer-debt-uuid-1'),
+                personName: 'Dave',
+                type: PeerDebtType.lent,
+                amount: 100.0,
+                date: DateTime.now(),
+              ),
+            );
 
-      // Delete Peer Debt
-      await (db.delete(db.peerDebts)..where((pd) => pd.id.equals(debtId))).go();
+        // Delete Peer Debt
+        await (db.delete(
+          db.peerDebts,
+        )..where((pd) => pd.id.equals(debtId))).go();
 
-      // Check deleted_records
-      final deleted = await db.select(db.deletedRecords).get();
-      expect(deleted.length, 1);
-      expect(deleted.first.uuid, 'peer-debt-uuid-1');
-      expect(deleted.first.deletedTable, 'peer_debts');
-    });
+        // Check deleted_records
+        final deleted = await db.select(db.deletedRecords).get();
+        expect(deleted.length, 1);
+        expect(deleted.first.uuid, 'peer-debt-uuid-1');
+        expect(deleted.first.deletedTable, 'peer_debts');
+      },
+    );
   });
 
   group('Loans & Debts Sync & Conflict Resolution (LWW)', () {
@@ -101,9 +115,7 @@ void main() {
     late ProviderContainer container;
 
     setUp(() async {
-      SharedPreferences.setMockInitialValues({
-        'isSimulatedSync': true,
-      });
+      SharedPreferences.setMockInitialValues({'isSimulatedSync': true});
 
       db = AppDatabase.forTesting(NativeDatabase.memory());
 
@@ -112,7 +124,9 @@ void main() {
       final walletId = await db
           .into(db.wallets)
           .insert(const WalletsCompanion(name: Value('Debts Wallet')));
-      final accountId = await db.into(db.accounts).insert(
+      final accountId = await db
+          .into(db.accounts)
+          .insert(
             AccountsCompanion.insert(
               walletId: Value(walletId),
               name: 'Debts Account',
@@ -121,7 +135,9 @@ void main() {
               color: '000000',
             ),
           );
-      await db.into(db.walletMembers).insert(
+      await db
+          .into(db.walletMembers)
+          .insert(
             WalletMembersCompanion.insert(
               walletId: walletId,
               accountId: accountId,
@@ -130,9 +146,7 @@ void main() {
           );
 
       container = ProviderContainer(
-        overrides: [
-          databaseProvider.overrideWithValue(db),
-        ],
+        overrides: [databaseProvider.overrideWithValue(db)],
       );
     });
 
@@ -146,30 +160,34 @@ void main() {
       final newerTime = DateTime(2026, 6, 1, 12, 0, 0);
 
       // 1. Insert local linked account
-      final accId = await db.into(db.accounts).insert(
-        AccountsCompanion.insert(
-          uuid: const Value('acc-uuid-loan-2'),
-          name: 'Home Loan Account',
-          type: AccountType.loan,
-          icon: 1,
-          color: '000000',
-        ),
-      );
+      final accId = await db
+          .into(db.accounts)
+          .insert(
+            AccountsCompanion.insert(
+              uuid: const Value('acc-uuid-loan-2'),
+              name: 'Home Loan Account',
+              type: AccountType.loan,
+              icon: 1,
+              color: '000000',
+            ),
+          );
 
       // 2. Insert local loan (updated at 10:00)
-      await db.into(db.loans).insert(
-        LoansCompanion.insert(
-          uuid: const Value('loan-lww-1'),
-          name: 'Old Home Loan Name',
-          accountId: accId,
-          principalAmount: 200000.0,
-          interestRate: 4.5,
-          tenureMonths: 180,
-          startDate: DateTime(2026, 1, 1),
-          emiAmount: 1530.0,
-          updatedAt: Value(originalTime),
-        ),
-      );
+      await db
+          .into(db.loans)
+          .insert(
+            LoansCompanion.insert(
+              uuid: const Value('loan-lww-1'),
+              name: 'Old Home Loan Name',
+              accountId: accId,
+              principalAmount: 200000.0,
+              interestRate: 4.5,
+              tenureMonths: 180,
+              startDate: DateTime(2026, 1, 1),
+              emiAmount: 1530.0,
+              updatedAt: Value(originalTime),
+            ),
+          );
 
       // Set up simulated server with same loan uuid, but newer updatedAt and different name
       final prefs = await SharedPreferences.getInstance();
@@ -184,7 +202,7 @@ void main() {
             'openingBalance': 200000.0,
             'isDefault': false,
             'updatedAt': originalTime.millisecondsSinceEpoch,
-          }
+          },
         ],
         'categories': <dynamic>[],
         'transactions': <dynamic>[],
@@ -203,7 +221,7 @@ void main() {
             'emiAmount': 1478.0,
             'isActive': true,
             'updatedAt': newerTime.millisecondsSinceEpoch,
-          }
+          },
         ],
         'peer_debts': <dynamic>[],
         'deletions': <dynamic>[],
@@ -215,7 +233,9 @@ void main() {
       expect(container.read(syncStateProvider).status, SyncStatus.success);
 
       // Verify local database loan updated to newer remote values
-      final updatedLoan = await (db.select(db.loans)..where((l) => l.uuid.equals('loan-lww-1'))).getSingle();
+      final updatedLoan = await (db.select(
+        db.loans,
+      )..where((l) => l.uuid.equals('loan-lww-1'))).getSingle();
       expect(updatedLoan.name, 'Refinanced Home Loan');
       expect(updatedLoan.interestRate, 4.0);
       expect(updatedLoan.emiAmount, 1478.0);
@@ -226,18 +246,20 @@ void main() {
       final newerTime = DateTime(2026, 6, 1, 12, 0, 0);
 
       // 1. Insert local Peer Debt (updated at 10:00)
-      await db.into(db.peerDebts).insert(
-        PeerDebtsCompanion.insert(
-          walletId: 1,
-          uuid: const Value('peer-debt-lww-1'),
-          personName: 'Bob',
-          type: PeerDebtType.lent,
-          amount: 50.0,
-          date: DateTime(2026, 5, 1),
-          isSettled: const Value(false),
-          updatedAt: Value(originalTime),
-        ),
-      );
+      await db
+          .into(db.peerDebts)
+          .insert(
+            PeerDebtsCompanion.insert(
+              walletId: 1,
+              uuid: const Value('peer-debt-lww-1'),
+              personName: 'Bob',
+              type: PeerDebtType.lent,
+              amount: 50.0,
+              date: DateTime(2026, 5, 1),
+              isSettled: const Value(false),
+              updatedAt: Value(originalTime),
+            ),
+          );
 
       // Set up simulated server with same peer debt uuid, but newer updatedAt and marked as settled
       final prefs = await SharedPreferences.getInstance();
@@ -259,7 +281,7 @@ void main() {
             'isSettled': true, // Settled!
             'transactionUuid': null,
             'updatedAt': newerTime.millisecondsSinceEpoch,
-          }
+          },
         ],
         'deletions': <dynamic>[],
       };
@@ -270,7 +292,9 @@ void main() {
       expect(container.read(syncStateProvider).status, SyncStatus.success);
 
       // Verify local peer debt has been marked settled
-      final updatedDebt = await (db.select(db.peerDebts)..where((pd) => pd.uuid.equals('peer-debt-lww-1'))).getSingle();
+      final updatedDebt = await (db.select(
+        db.peerDebts,
+      )..where((pd) => pd.uuid.equals('peer-debt-lww-1'))).getSingle();
       expect(updatedDebt.isSettled, true);
     });
   });

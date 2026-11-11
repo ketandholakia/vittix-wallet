@@ -13,18 +13,24 @@ class AccountReportScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final expenseTransactions = transactions.where((tx) => tx.type == domain.TransactionType.expense).toList();
-    final spendingByAccount = groupBy(expenseTransactions, (domain.Transaction tx) => tx.account)
-        .map((account, txs) => MapEntry(account, txs.fold(0.0, (sum, tx) => sum + tx.amount)))
-        .entries
-        .sortedBy<num>((e) => e.value)
-        .reversed
+    final expenseTransactions = transactions
+        .where((tx) => tx.type == domain.TransactionType.expense)
         .toList();
+    final spendingByAccount =
+        groupBy(expenseTransactions, (domain.Transaction tx) => tx.account)
+            .map(
+              (account, txs) => MapEntry(
+                account,
+                txs.fold(0.0, (sum, tx) => sum + tx.amount),
+              ),
+            )
+            .entries
+            .sortedBy<num>((e) => e.value)
+            .reversed
+            .toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Account Spending'),
-      ),
+      appBar: AppBar(title: const Text('Account Spending')),
       body: spendingByAccount.isEmpty
           ? const EmptyStateWidget(
               icon: Icons.account_balance_wallet_outlined,
@@ -36,16 +42,23 @@ class AccountReportScreen extends ConsumerWidget {
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
-                  maxY: spendingByAccount.first.value * 1.2, // Add 20% padding to max Y
+                  maxY:
+                      spendingByAccount.first.value *
+                      1.2, // Add 20% padding to max Y
                   barTouchData: BarTouchData(
                     touchTooltipData: BarTouchTooltipData(
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
                         final account = spendingByAccount[groupIndex].key;
                         final amount = spendingByAccount[groupIndex].value;
-                        final currencyFormat = ref.watch(currencyFormatProvider);
+                        final currencyFormat = ref.watch(
+                          currencyFormatProvider,
+                        );
                         return BarTooltipItem(
                           '${account.name}\n',
-                          const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                           children: <TextSpan>[
                             TextSpan(
                               text: currencyFormat.format(amount),
@@ -66,15 +79,25 @@ class AccountReportScreen extends ConsumerWidget {
                           return SideTitleWidget(
                             axisSide: meta.axisSide,
                             space: 8.0,
-                            child: Icon(account.icon, color: account.color, size: 24),
+                            child: Icon(
+                              account.icon,
+                              color: account.color,
+                              size: 24,
+                            ),
                           );
                         },
                         reservedSize: 38,
                       ),
                     ),
-                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                   ),
                   borderData: FlBorderData(show: false),
                   barGroups: spendingByAccount.mapIndexed((index, entry) {

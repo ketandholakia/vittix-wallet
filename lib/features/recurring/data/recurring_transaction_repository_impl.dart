@@ -4,7 +4,8 @@ import 'package:vittix_wallet/features/recurring/domain/recurring_transaction.da
 import 'package:vittix_wallet/features/recurring/data/recurring_transaction_mapper.dart';
 import 'package:vittix_wallet/features/recurring/data/recurring_transaction_repository.dart';
 
-class RecurringTransactionRepositoryImpl implements RecurringTransactionRepository {
+class RecurringTransactionRepositoryImpl
+    implements RecurringTransactionRepository {
   final db.RecurringTransactionDao _dao;
   final db.WalletDao _walletDao;
   final int walletId;
@@ -83,7 +84,9 @@ class RecurringTransactionRepositoryImpl implements RecurringTransactionReposito
   Future<void> add(RecurringTransaction template) async {
     await _checkManagePermission();
     await _validateAccountBelongsToWallet(template.account.id);
-    final companion = template.toCompanion(overrideWalletId: walletId).copyWith(id: const Value.absent());
+    final companion = template
+        .toCompanion(overrideWalletId: walletId)
+        .copyWith(id: const Value.absent());
     final database = _dao.attachedDatabase;
     await database.transaction(() async {
       final id = await _dao.insertTemplate(companion, walletId);

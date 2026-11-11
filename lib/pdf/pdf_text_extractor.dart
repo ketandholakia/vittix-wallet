@@ -7,12 +7,12 @@ class PdfTextExtractorUtil {
     final bytes = await file.readAsBytes();
     final document = PdfDocument(inputBytes: bytes);
     final extractor = PdfTextExtractor(document);
-    
+
     final StringBuffer text = StringBuffer();
     for (int i = 0; i < document.pages.count; i++) {
       text.writeln(extractor.extractText(startPageIndex: i, endPageIndex: i));
     }
-    
+
     document.dispose();
     return text.toString();
   }

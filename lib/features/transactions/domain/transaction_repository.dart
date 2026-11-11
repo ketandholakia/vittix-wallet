@@ -6,9 +6,14 @@ abstract class TransactionRepository {
   Stream<List<Transaction>> watchRecentTransactions({int limit = 10});
   Stream<List<Transaction>> watchAllTransactions();
   Future<List<TrendDataPoint>> getMonthlyTrend(int months);
-  Future<(double totalIncome, double totalExpense)> getMonthlySummaryTotals(DateTime month);
+  Future<(double totalIncome, double totalExpense)> getMonthlySummaryTotals(
+    DateTime month,
+  );
   Future<Transaction?> getTransactionById(int id);
-  Future<void> addTransaction(Transaction transaction, {String source = 'user'});
+  Future<void> addTransaction(
+    Transaction transaction, {
+    String source = 'user',
+  });
 
   /// Writes both legs of a transfer atomically, sharing one transfer group id.
   Future<void> addTransfer(

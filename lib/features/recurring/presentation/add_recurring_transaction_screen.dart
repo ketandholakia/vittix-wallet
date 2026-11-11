@@ -100,9 +100,9 @@ class _AddRecurringTransactionScreenState
         }
       } on Object catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error saving template: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error saving template: $e')));
         }
       } finally {
         if (mounted) {
@@ -116,17 +116,16 @@ class _AddRecurringTransactionScreenState
 
   @override
   Widget build(BuildContext context) {
-    final categoriesStream = ref.watch(watchAllCategoriesUseCaseProvider).call();
+    final categoriesStream = ref
+        .watch(watchAllCategoriesUseCaseProvider)
+        .call();
     final accountsStream = ref.watch(watchAllAccountsUseCaseProvider).call();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Recurring Template'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: _saveForm,
-          ),
+          IconButton(icon: const Icon(Icons.check), onPressed: _saveForm),
         ],
       ),
       body: Padding(
@@ -138,8 +137,14 @@ class _AddRecurringTransactionScreenState
               // Segmented Type Button
               SegmentedButton<TransactionType>(
                 segments: const [
-                  ButtonSegment(value: TransactionType.expense, label: Text('Expense')),
-                  ButtonSegment(value: TransactionType.income, label: Text('Income')),
+                  ButtonSegment(
+                    value: TransactionType.expense,
+                    label: Text('Expense'),
+                  ),
+                  ButtonSegment(
+                    value: TransactionType.income,
+                    label: Text('Income'),
+                  ),
                 ],
                 selected: {_selectedType},
                 onSelectionChanged: (newSelection) {
@@ -220,8 +225,10 @@ class _AddRecurringTransactionScreenState
                         ),
                       );
                     }).toList(),
-                    onChanged: (value) => setState(() => _selectedAccount = value),
-                    validator: (value) => value == null ? 'Please select an account.' : null,
+                    onChanged: (value) =>
+                        setState(() => _selectedAccount = value),
+                    validator: (value) =>
+                        value == null ? 'Please select an account.' : null,
                   );
                 },
               ),
@@ -236,14 +243,19 @@ class _AddRecurringTransactionScreenState
                   }
                   final rawCategories = snapshot.data!;
                   // Flatten categories hierarchically
-                  final topLevel = rawCategories.where((c) => c.parentId == null).toList();
+                  final topLevel = rawCategories
+                      .where((c) => c.parentId == null)
+                      .toList();
                   final categoryList = <Category>[];
                   for (final parent in topLevel) {
                     categoryList.add(parent);
-                    categoryList.addAll(rawCategories.where((c) => c.parentId == parent.id));
+                    categoryList.addAll(
+                      rawCategories.where((c) => c.parentId == parent.id),
+                    );
                   }
                   for (final cat in rawCategories) {
-                    if (cat.parentId != null && !topLevel.any((p) => p.id == cat.parentId)) {
+                    if (cat.parentId != null &&
+                        !topLevel.any((p) => p.id == cat.parentId)) {
                       categoryList.add(cat);
                     }
                   }
@@ -271,10 +283,13 @@ class _AddRecurringTransactionScreenState
                           children: [
                             if (isSub) ...[
                               const SizedBox(width: 16),
-                              Text('↳ ', style: TextStyle(color: Colors.grey[500])),
+                              Text(
+                                '↳ ',
+                                style: TextStyle(color: Colors.grey[500]),
+                              ),
                             ],
                             Icon(
-                              category.icon, 
+                              category.icon,
                               color: category.color,
                               size: isSub ? 16 : 20,
                             ),
@@ -282,29 +297,48 @@ class _AddRecurringTransactionScreenState
                             Text(
                               category.name,
                               style: TextStyle(
-                                fontWeight: isSub ? FontWeight.normal : FontWeight.bold,
+                                fontWeight: isSub
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
                               ),
                             ),
                           ],
                         ),
                       );
                     }).toList(),
-                    onChanged: (value) => setState(() => _selectedCategory = value),
-                    validator: (value) => value == null ? 'Please select a category.' : null,
+                    onChanged: (value) =>
+                        setState(() => _selectedCategory = value),
+                    validator: (value) =>
+                        value == null ? 'Please select a category.' : null,
                   );
                 },
               ),
               const SizedBox(height: 16),
 
               // Interval Choice
-              Text('Recurring Interval', style: Theme.of(context).textTheme.titleSmall),
+              Text(
+                'Recurring Interval',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
               const SizedBox(height: 8),
               SegmentedButton<RecurringInterval>(
                 segments: const [
-                  ButtonSegment(value: RecurringInterval.daily, label: Text('Daily')),
-                  ButtonSegment(value: RecurringInterval.weekly, label: Text('Weekly')),
-                  ButtonSegment(value: RecurringInterval.monthly, label: Text('Monthly')),
-                  ButtonSegment(value: RecurringInterval.yearly, label: Text('Yearly')),
+                  ButtonSegment(
+                    value: RecurringInterval.daily,
+                    label: Text('Daily'),
+                  ),
+                  ButtonSegment(
+                    value: RecurringInterval.weekly,
+                    label: Text('Weekly'),
+                  ),
+                  ButtonSegment(
+                    value: RecurringInterval.monthly,
+                    label: Text('Monthly'),
+                  ),
+                  ButtonSegment(
+                    value: RecurringInterval.yearly,
+                    label: Text('Yearly'),
+                  ),
                 ],
                 selected: {_selectedInterval},
                 onSelectionChanged: (newSelection) {
@@ -326,7 +360,9 @@ class _AddRecurringTransactionScreenState
                     onPressed: _pickDate,
                   ),
                 ),
-                controller: TextEditingController(text: DateFormat.yMMMd().format(_selectedStartDate)),
+                controller: TextEditingController(
+                  text: DateFormat.yMMMd().format(_selectedStartDate),
+                ),
                 onTap: _pickDate,
               ),
             ],

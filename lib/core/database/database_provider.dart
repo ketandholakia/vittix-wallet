@@ -73,7 +73,9 @@ final accountDaoProvider = Provider<AccountDao>((ref) {
   return ref.watch(databaseProvider).accountDao;
 });
 
-final recurringTransactionDaoProvider = Provider<RecurringTransactionDao>((ref) {
+final recurringTransactionDaoProvider = Provider<RecurringTransactionDao>((
+  ref,
+) {
   return ref.watch(databaseProvider).recurringTransactionDao;
 });
 

@@ -32,7 +32,8 @@ class AddTransactionScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<AddTransactionScreen> createState() => _AddTransactionScreenState();
+  ConsumerState<AddTransactionScreen> createState() =>
+      _AddTransactionScreenState();
 }
 
 class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
@@ -45,7 +46,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   Account? _selectedAccount;
   DateTime _selectedDate = DateTime.now();
   bool _categorySuggested = false;
-  
+
   domain_payee.Payee? _selectedPayee;
   List<domain_tag.Tag> _selectedTags = [];
   List<domain_attachment.Attachment> _attachments = [];
@@ -57,7 +58,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     final currency = ref.read(currencyProvider);
     final info = currencyData[currency]!;
     _amountFormatter = CurrencyTextInputFormatter.currency(
@@ -82,7 +83,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         _selectedType = widget.initialType!;
       }
       if (widget.initialAmount != null) {
-        _amountController.text = _amountFormatter.formatDouble(widget.initialAmount!);
+        _amountController.text = _amountFormatter.formatDouble(
+          widget.initialAmount!,
+        );
       }
       if (widget.initialMerchant != null) {
         _noteController.text = widget.initialMerchant!;
@@ -117,7 +120,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     if (noteText.length < 3 || _isEditing || _categorySuggested) return;
     final query = noteText.toLowerCase();
     try {
-      final recentStream = ref.read(watchRecentTransactionsUseCaseProvider).call(limit: 200);
+      final recentStream = ref
+          .read(watchRecentTransactionsUseCaseProvider)
+          .call(limit: 200);
       final recentList = await recentStream.first;
       // Find transactions with similar notes
       final matching = recentList.where((tx) {
@@ -137,14 +142,18 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           bestCategory = tx.category;
         }
       }
-      if (bestCategory != null && _selectedCategory?.id != bestCategory.id && mounted) {
+      if (bestCategory != null &&
+          _selectedCategory?.id != bestCategory.id &&
+          mounted) {
         setState(() {
           _selectedCategory = bestCategory;
           _categorySuggested = true;
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Category auto-set to "${bestCategory.name}" based on similar notes'),
+            content: Text(
+              'Category auto-set to "${bestCategory.name}" based on similar notes',
+            ),
             duration: const Duration(seconds: 2),
             action: SnackBarAction(
               label: 'Undo',
@@ -193,7 +202,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         await ref.read(updateTransactionUseCaseProvider).call(transaction);
       } else {
         // Duplicate detection: check recent transactions for same amount, date, account
-        final recentStream = ref.read(watchRecentTransactionsUseCaseProvider).call(limit: 50);
+        final recentStream = ref
+            .read(watchRecentTransactionsUseCaseProvider)
+            .call(limit: 50);
         final recentList = await recentStream.first;
         // Shared rule (see duplicate_detector.dart) so manual, SMS and PDF entry
         // all warn about duplicates the same way.
@@ -203,7 +214,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           final confirmed = await showDialog<bool>(
             context: context,
             builder: (ctx) => AlertDialog(
-              icon: const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 40),
+              icon: const Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.orange,
+                size: 40,
+              ),
               title: const Text('Possible Duplicate'),
               content: const Text(
                 'A transaction with the same amount, date, and account already exists. Add it anyway?',
@@ -224,8 +239,12 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         }
 
         await ref.read(addTransactionUseCaseProvider).call(transaction);
-        ref.read(lastSelectedAccountIdProvider.notifier).updateLastSelectedAccountId(_selectedAccount!.id);
-        ref.read(lastSelectedCategoryIdProvider.notifier).updateLastSelectedCategoryId(_selectedCategory!.id);
+        ref
+            .read(lastSelectedAccountIdProvider.notifier)
+            .updateLastSelectedAccountId(_selectedAccount!.id);
+        ref
+            .read(lastSelectedCategoryIdProvider.notifier)
+            .updateLastSelectedCategoryId(_selectedCategory!.id);
       }
       if (mounted) Navigator.of(context).pop();
     }
@@ -243,7 +262,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
     setState(() {
       if (candidate.amount > 0) {
-        _amountController.text = _amountFormatter.formatDouble(candidate.amount);
+        _amountController.text = _amountFormatter.formatDouble(
+          candidate.amount,
+        );
       }
       if (candidate.merchant.isNotEmpty) {
         _noteController.text = candidate.merchant;
@@ -268,10 +289,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       appBar: AppBar(
         title: Text(_isEditing ? 'Edit Transaction' : 'Add Transaction'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: _saveForm,
-          ),
+          IconButton(icon: const Icon(Icons.check), onPressed: _saveForm),
         ],
       ),
       body: Padding(
@@ -283,8 +301,14 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               // Type Toggle
               SegmentedButton<domain.TransactionType>(
                 segments: const [
-                  ButtonSegment(value: domain.TransactionType.expense, label: Text('Expense')),
-                  ButtonSegment(value: domain.TransactionType.income, label: Text('Income')),
+                  ButtonSegment(
+                    value: domain.TransactionType.expense,
+                    label: Text('Expense'),
+                  ),
+                  ButtonSegment(
+                    value: domain.TransactionType.income,
+                    label: Text('Income'),
+                  ),
                 ],
                 selected: {_selectedType},
                 onSelectionChanged: (newSelection) {
@@ -316,7 +340,10 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               // Amount
               TextFormField(
                 controller: _amountController,
-                decoration: const InputDecoration(labelText: 'Amount', prefixIcon: Icon(Icons.payments_outlined)),
+                decoration: const InputDecoration(
+                  labelText: 'Amount',
+                  prefixIcon: Icon(Icons.payments_outlined),
+                ),
                 keyboardType: TextInputType.number,
                 inputFormatters: [_amountFormatter],
                 validator: (value) {
@@ -340,7 +367,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   final accountList = snapshot.data!;
-                  
+
                   if (accountList.isEmpty) {
                     return DropdownButtonFormField<Account>(
                       initialValue: null,
@@ -357,15 +384,23 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   if (_selectedAccount == null) {
                     final lastId = ref.read(lastSelectedAccountIdProvider);
                     if (lastId != null) {
-                      _selectedAccount = accountList.where((a) => a.id == lastId).firstOrNull;
+                      _selectedAccount = accountList
+                          .where((a) => a.id == lastId)
+                          .firstOrNull;
                     }
-                    _selectedAccount ??= accountList.where((a) => a.type == AccountType.cash).firstOrNull ?? accountList.first;
+                    _selectedAccount ??=
+                        accountList
+                            .where((a) => a.type == AccountType.cash)
+                            .firstOrNull ??
+                        accountList.first;
                   }
-                  
+
                   // Ensure selected account is actually in the list, otherwise use the first available
                   Account? accountDropdownValue = _selectedAccount;
                   if (accountDropdownValue != null) {
-                    accountDropdownValue = accountList.where((a) => a.id == accountDropdownValue!.id).firstOrNull;
+                    accountDropdownValue = accountList
+                        .where((a) => a.id == accountDropdownValue!.id)
+                        .firstOrNull;
                     accountDropdownValue ??= accountList.first;
                   }
 
@@ -387,8 +422,10 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                         ),
                       );
                     }).toList(),
-                    onChanged: (value) => setState(() => _selectedAccount = value),
-                    validator: (value) => value == null ? 'Please select an account.' : null,
+                    onChanged: (value) =>
+                        setState(() => _selectedAccount = value),
+                    validator: (value) =>
+                        value == null ? 'Please select an account.' : null,
                   );
                 },
               ),
@@ -402,26 +439,34 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   final rawCategories = snapshot.data!;
-                  
+
                   if (rawCategories.isEmpty) {
                     return DropdownButtonFormField<Category>(
                       initialValue: null,
-                      decoration: const InputDecoration(labelText: 'Category', prefixIcon: Icon(Icons.category)),
+                      decoration: const InputDecoration(
+                        labelText: 'Category',
+                        prefixIcon: Icon(Icons.category),
+                      ),
                       items: const [],
                       onChanged: null,
                       validator: (value) => 'Please create a category first.',
                     );
                   }
-                  
+
                   // Flatten categories hierarchically
-                  final topLevel = rawCategories.where((c) => c.parentId == null).toList();
+                  final topLevel = rawCategories
+                      .where((c) => c.parentId == null)
+                      .toList();
                   final categoryList = <Category>[];
                   for (final parent in topLevel) {
                     categoryList.add(parent);
-                    categoryList.addAll(rawCategories.where((c) => c.parentId == parent.id));
+                    categoryList.addAll(
+                      rawCategories.where((c) => c.parentId == parent.id),
+                    );
                   }
                   for (final cat in rawCategories) {
-                    if (cat.parentId != null && !topLevel.any((p) => p.id == cat.parentId)) {
+                    if (cat.parentId != null &&
+                        !topLevel.any((p) => p.id == cat.parentId)) {
                       categoryList.add(cat);
                     }
                   }
@@ -431,12 +476,16 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   if (_selectedCategory == null && !_isEditing) {
                     final lastId = ref.read(lastSelectedCategoryIdProvider);
                     if (lastId != null) {
-                      _selectedCategory = categoryList.where((c) => c.id == lastId).firstOrNull;
+                      _selectedCategory = categoryList
+                          .where((c) => c.id == lastId)
+                          .firstOrNull;
                     }
                   }
 
                   if (_selectedCategory != null) {
-                    dropdownValue = categoryList.where((c) => c.id == _selectedCategory!.id).firstOrNull;
+                    dropdownValue = categoryList
+                        .where((c) => c.id == _selectedCategory!.id)
+                        .firstOrNull;
                     if (dropdownValue == null && categoryList.isNotEmpty) {
                       // Fallback if the selected category is not in the list
                       dropdownValue = categoryList.first;
@@ -445,7 +494,10 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
                   return DropdownButtonFormField<Category>(
                     initialValue: dropdownValue,
-                    decoration: const InputDecoration(labelText: 'Category', prefixIcon: Icon(Icons.category)),
+                    decoration: const InputDecoration(
+                      labelText: 'Category',
+                      prefixIcon: Icon(Icons.category),
+                    ),
                     items: categoryList.map((category) {
                       final isSub = category.parentId != null;
                       return DropdownMenuItem(
@@ -454,10 +506,13 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                           children: [
                             if (isSub) ...[
                               const SizedBox(width: 16),
-                              Text('↳ ', style: TextStyle(color: Colors.grey[500])),
+                              Text(
+                                '↳ ',
+                                style: TextStyle(color: Colors.grey[500]),
+                              ),
                             ],
                             Icon(
-                              category.icon, 
+                              category.icon,
                               color: category.color,
                               size: isSub ? 16 : 20,
                             ),
@@ -465,7 +520,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                             Text(
                               category.name,
                               style: TextStyle(
-                                fontWeight: isSub ? FontWeight.normal : FontWeight.bold,
+                                fontWeight: isSub
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
                               ),
                             ),
                           ],
@@ -477,7 +534,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                         _selectedCategory = value;
                       });
                     },
-                    validator: (value) => value == null ? 'Please select a category.' : null,
+                    validator: (value) =>
+                        value == null ? 'Please select a category.' : null,
                   );
                 },
               ),
@@ -494,7 +552,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     onPressed: _pickDate,
                   ),
                 ),
-                controller: TextEditingController(text: DateFormat.yMMMd().format(_selectedDate)),
+                controller: TextEditingController(
+                  text: DateFormat.yMMMd().format(_selectedDate),
+                ),
                 onTap: _pickDate,
               ),
               const SizedBox(height: 16),
@@ -502,7 +562,10 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               // Note
               TextFormField(
                 controller: _noteController,
-                decoration: const InputDecoration(labelText: 'Note (Optional)', prefixIcon: Icon(Icons.note)),
+                decoration: const InputDecoration(
+                  labelText: 'Note (Optional)',
+                  prefixIcon: Icon(Icons.note),
+                ),
                 maxLines: 2,
                 onChanged: (value) {
                   _suggestCategoryFromNote(value);
@@ -514,23 +577,27 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 stream: Stream.value(<domain_payee.Payee>[]),
                 builder: (context, snapshot) {
                   final payees = snapshot.data ?? [];
-                  
+
                   domain_payee.Payee? payeeDropdownValue = _selectedPayee;
-                  if (payeeDropdownValue != null && !payees.any((p) => p.id == payeeDropdownValue!.id)) {
+                  if (payeeDropdownValue != null &&
+                      !payees.any((p) => p.id == payeeDropdownValue!.id)) {
                     payeeDropdownValue = null;
                   }
 
                   return DropdownButtonFormField<domain_payee.Payee>(
                     initialValue: payeeDropdownValue,
-                    decoration: const InputDecoration(labelText: 'Payee (Optional)', prefixIcon: Icon(Icons.person)),
+                    decoration: const InputDecoration(
+                      labelText: 'Payee (Optional)',
+                      prefixIcon: Icon(Icons.person),
+                    ),
                     items: [
                       const DropdownMenuItem(value: null, child: Text('None')),
-                      ...payees.map((p) => DropdownMenuItem(
-                            value: p,
-                            child: Text(p.name),
-                          )),
+                      ...payees.map(
+                        (p) => DropdownMenuItem(value: p, child: Text(p.name)),
+                      ),
                     ],
-                    onChanged: (value) => setState(() => _selectedPayee = value),
+                    onChanged: (value) =>
+                        setState(() => _selectedPayee = value),
                   );
                 },
               ),
@@ -549,7 +616,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     child: Wrap(
                       spacing: 8,
                       children: tags.map((t) {
-                        final isSelected = _selectedTags.any((st) => st.id == t.id);
+                        final isSelected = _selectedTags.any(
+                          (st) => st.id == t.id,
+                        );
                         return FilterChip(
                           label: Text(t.name),
                           selected: isSelected,
@@ -558,7 +627,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                               if (selected) {
                                 _selectedTags.add(t);
                               } else {
-                                _selectedTags.removeWhere((st) => st.id == t.id);
+                                _selectedTags.removeWhere(
+                                  (st) => st.id == t.id,
+                                );
                               }
                             });
                           },
@@ -587,10 +658,13 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                       onPressed: () {
                         // Mock adding an attachment
                         setState(() {
-                          _attachments.add(domain_attachment.Attachment(
-                            id: 0,
-                            filePath: 'dummy_receipt_${DateTime.now().millisecondsSinceEpoch}.jpg',
-                          ));
+                          _attachments.add(
+                            domain_attachment.Attachment(
+                              id: 0,
+                              filePath:
+                                  'dummy_receipt_${DateTime.now().millisecondsSinceEpoch}.jpg',
+                            ),
+                          );
                         });
                       },
                     ),

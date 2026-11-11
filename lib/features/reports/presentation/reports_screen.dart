@@ -23,9 +23,7 @@ class ReportsScreen extends ConsumerWidget {
 
     return Scaffold(
       drawer: const AppDrawer(),
-      appBar: AppBar(
-        title: const Text('Reports & Insights'),
-      ),
+      appBar: AppBar(title: const Text('Reports & Insights')),
       body: monthlyReportAsync.when(
         data: (report) {
           return ListView(
@@ -39,11 +37,26 @@ class ReportsScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      _buildSummaryRow('Income', currencyFormat.format(report.totalIncome), Colors.green, textTheme),
+                      _buildSummaryRow(
+                        'Income',
+                        currencyFormat.format(report.totalIncome),
+                        Colors.green,
+                        textTheme,
+                      ),
                       const Divider(),
-                      _buildSummaryRow('Expense', currencyFormat.format(report.totalExpense), Colors.red, textTheme),
+                      _buildSummaryRow(
+                        'Expense',
+                        currencyFormat.format(report.totalExpense),
+                        Colors.red,
+                        textTheme,
+                      ),
                       const Divider(),
-                      _buildSummaryRow('Savings', currencyFormat.format(report.balance), Theme.of(context).colorScheme.primary, textTheme),
+                      _buildSummaryRow(
+                        'Savings',
+                        currencyFormat.format(report.balance),
+                        Theme.of(context).colorScheme.primary,
+                        textTheme,
+                      ),
                     ],
                   ),
                 ),
@@ -63,9 +76,13 @@ class ReportsScreen extends ConsumerWidget {
                 subtitle: const Text('View expenses by category for the month'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (ctx) => CategoryReportScreen(transactions: report.transactions),
-                  ));
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => CategoryReportScreen(
+                        transactions: report.transactions,
+                      ),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -74,9 +91,13 @@ class ReportsScreen extends ConsumerWidget {
                 subtitle: const Text('View expenses by account for the month'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (ctx) => AccountReportScreen(transactions: report.transactions),
-                  ));
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => AccountReportScreen(
+                        transactions: report.transactions,
+                      ),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -85,9 +106,11 @@ class ReportsScreen extends ConsumerWidget {
                 subtitle: const Text('Compare your spending over time'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (ctx) => const TrendReportScreen(),
-                  ));
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => const TrendReportScreen(),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -96,9 +119,11 @@ class ReportsScreen extends ConsumerWidget {
                 subtitle: const Text('Visualize daily spending intensity'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute<void>(
-                    builder: (ctx) => const SpendingHeatmapScreen(),
-                  ));
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => const SpendingHeatmapScreen(),
+                    ),
+                  );
                 },
               ),
             ],
@@ -113,14 +138,25 @@ class ReportsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryRow(String title, String amount, Color color, TextTheme textTheme) {
+  Widget _buildSummaryRow(
+    String title,
+    String amount,
+    Color color,
+    TextTheme textTheme,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: textTheme.titleMedium),
-          Text(amount, style: textTheme.titleMedium?.copyWith(color: color, fontWeight: FontWeight.bold)),
+          Text(
+            amount,
+            style: textTheme.titleMedium?.copyWith(
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );

@@ -1,6 +1,5 @@
 // BROKEN DEPENDENCY: Experimental
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,7 +18,8 @@ class ReceiptScannerScreen extends ConsumerStatefulWidget {
   const ReceiptScannerScreen({super.key, this.returnResult = false});
 
   @override
-  ConsumerState<ReceiptScannerScreen> createState() => _ReceiptScannerScreenState();
+  ConsumerState<ReceiptScannerScreen> createState() =>
+      _ReceiptScannerScreenState();
 }
 
 class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
@@ -38,8 +38,12 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
       });
 
       final inputImage = InputImage.fromFilePath(image.path);
-      final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
-      final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+      final textRecognizer = TextRecognizer(
+        script: TextRecognitionScript.latin,
+      );
+      final RecognizedText recognizedText = await textRecognizer.processImage(
+        inputImage,
+      );
       await textRecognizer.close();
 
       if (recognizedText.text.isEmpty) {
@@ -58,7 +62,9 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
       });
 
       final llmService = ref.read(llmServiceProvider);
-      final PdfTransactionCandidate candidate = await llmService.parseReceipt(recognizedText.text);
+      final PdfTransactionCandidate candidate = await llmService.parseReceipt(
+        recognizedText.text,
+      );
 
       if (!mounted) return;
       setState(() {
@@ -81,24 +87,21 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
           ),
         );
       }
-
     } on Object catch (e) {
       if (!mounted) return;
       setState(() {
         _isProcessing = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error parsing receipt: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error parsing receipt: $e')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Scan Receipt'),
-      ),
+      appBar: AppBar(title: const Text('Scan Receipt')),
       body: Center(
         child: _isProcessing
             ? Column(
@@ -131,4 +134,3 @@ class _ReceiptScannerScreenState extends ConsumerState<ReceiptScannerScreen> {
     );
   }
 }
-

@@ -13,18 +13,24 @@ class CategoryReportScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final expenseTransactions = transactions.where((tx) => tx.type == domain.TransactionType.expense).toList();
-    final spendingByCategory = groupBy(expenseTransactions, (domain.Transaction tx) => tx.category)
-        .map((category, txs) => MapEntry(category, txs.fold(0.0, (sum, tx) => sum + tx.amount)))
-        .entries
-        .sortedBy<num>((e) => e.value)
-        .reversed
+    final expenseTransactions = transactions
+        .where((tx) => tx.type == domain.TransactionType.expense)
         .toList();
+    final spendingByCategory =
+        groupBy(expenseTransactions, (domain.Transaction tx) => tx.category)
+            .map(
+              (category, txs) => MapEntry(
+                category,
+                txs.fold(0.0, (sum, tx) => sum + tx.amount),
+              ),
+            )
+            .entries
+            .sortedBy<num>((e) => e.value)
+            .reversed
+            .toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Category Spending'),
-      ),
+      appBar: AppBar(title: const Text('Category Spending')),
       body: spendingByCategory.isEmpty
           ? const EmptyStateWidget(
               icon: Icons.bar_chart_outlined,
@@ -36,16 +42,23 @@ class CategoryReportScreen extends ConsumerWidget {
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
-                  maxY: spendingByCategory.first.value * 1.2, // Add 20% padding to max Y
+                  maxY:
+                      spendingByCategory.first.value *
+                      1.2, // Add 20% padding to max Y
                   barTouchData: BarTouchData(
                     touchTooltipData: BarTouchTooltipData(
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
                         final category = spendingByCategory[groupIndex].key;
                         final amount = spendingByCategory[groupIndex].value;
-                        final currencyFormat = ref.watch(currencyFormatProvider);
+                        final currencyFormat = ref.watch(
+                          currencyFormatProvider,
+                        );
                         return BarTooltipItem(
                           '${category.name}\n',
-                          const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                           children: <TextSpan>[
                             TextSpan(
                               text: currencyFormat.format(amount),
@@ -62,19 +75,30 @@ class CategoryReportScreen extends ConsumerWidget {
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (double value, TitleMeta meta) {
-                          final category = spendingByCategory[value.toInt()].key;
+                          final category =
+                              spendingByCategory[value.toInt()].key;
                           return SideTitleWidget(
                             axisSide: meta.axisSide,
                             space: 8.0,
-                            child: Icon(category.icon, color: category.color, size: 24),
+                            child: Icon(
+                              category.icon,
+                              color: category.color,
+                              size: 24,
+                            ),
                           );
                         },
                         reservedSize: 38,
                       ),
                     ),
-                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
                   ),
                   borderData: FlBorderData(show: false),
                   barGroups: spendingByCategory.mapIndexed((index, entry) {

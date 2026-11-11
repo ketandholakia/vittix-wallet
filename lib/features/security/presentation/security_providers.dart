@@ -1,13 +1,15 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vittix_wallet/features/security/data/secure_storage_provider.dart';
-import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart' hide secureStorageProvider;
+import 'package:vittix_wallet/features/settings/presentation/settings_providers.dart'
+    hide secureStorageProvider;
 
 // Provides the asynchronously loaded PIN hash from secure storage.
-final pinHashProvider = StateNotifierProvider<PinHashNotifier, AsyncValue<String?>>((ref) {
-  final storage = ref.watch(secureStorageProvider);
-  return PinHashNotifier(storage);
-});
+final pinHashProvider =
+    StateNotifierProvider<PinHashNotifier, AsyncValue<String?>>((ref) {
+      final storage = ref.watch(secureStorageProvider);
+      return PinHashNotifier(storage);
+    });
 
 class PinHashNotifier extends StateNotifier<AsyncValue<String?>> {
   final FlutterSecureStorage _storage;
@@ -42,7 +44,9 @@ class PinHashNotifier extends StateNotifier<AsyncValue<String?>> {
 }
 
 // State for whether the app lock is currently engaged
-final appLockStateProvider = StateNotifierProvider<AppLockNotifier, bool>((ref) {
+final appLockStateProvider = StateNotifierProvider<AppLockNotifier, bool>((
+  ref,
+) {
   final prefs = ref.watch(sharedPreferencesProvider).asData?.value;
   final initiallyEnabled = prefs?.getBool('isPinLockEnabled') ?? false;
   return AppLockNotifier(initiallyEnabled);

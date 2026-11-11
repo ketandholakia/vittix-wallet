@@ -1,6 +1,13 @@
 import 'package:drift/native.dart';
 import 'package:vittix_wallet/core/database/app_database.dart'
-    hide Transaction, Category, Account, TransactionType, AccountType, isNull, isNotNull;
+    hide
+        Transaction,
+        Category,
+        Account,
+        TransactionType,
+        AccountType,
+        isNull,
+        isNotNull;
 import 'package:vittix_wallet/core/database/database_enums.dart' as db_enums;
 import 'package:vittix_wallet/domain/entities/transaction.dart';
 import 'package:vittix_wallet/domain/entities/category.dart';
@@ -25,7 +32,9 @@ void main() {
         .into(db.wallets)
         .insert(const WalletsCompanion(name: Value('Wallet A')));
 
-    final accountIdA = await db.into(db.accounts).insert(
+    final accountIdA = await db
+        .into(db.accounts)
+        .insert(
           AccountsCompanion.insert(
             walletId: Value(walletId),
             name: 'Cash',
@@ -34,7 +43,9 @@ void main() {
             color: '00FF00',
           ),
         );
-    final accountIdB = await db.into(db.accounts).insert(
+    final accountIdB = await db
+        .into(db.accounts)
+        .insert(
           AccountsCompanion.insert(
             walletId: Value(walletId),
             name: 'Bank',
@@ -43,7 +54,9 @@ void main() {
             color: '0000FF',
           ),
         );
-    final categoryId = await db.into(db.categories).insert(
+    final categoryId = await db
+        .into(db.categories)
+        .insert(
           const CategoriesCompanion(
             name: Value('Transfer'),
             icon: Value(0),
@@ -111,8 +124,14 @@ void main() {
     expect(groupIds.length, 1, reason: 'legs must share one group id');
     expect(groupIds.single, isNotNull);
 
-    expect(rows.where((r) => r.type == db_enums.TransactionType.expense).length, 1);
-    expect(rows.where((r) => r.type == db_enums.TransactionType.income).length, 1);
+    expect(
+      rows.where((r) => r.type == db_enums.TransactionType.expense).length,
+      1,
+    );
+    expect(
+      rows.where((r) => r.type == db_enums.TransactionType.income).length,
+      1,
+    );
     expect(
       rows.map((r) => r.accountId).toSet(),
       equals({accountA.id, accountB.id}),
@@ -137,33 +156,37 @@ void main() {
     expect(rows.single.transferGroupId, isNull);
   });
 
-  test('transfers are excluded from monthly income and expense totals',
-      () async {
-    final repo = repository();
+  test(
+    'transfers are excluded from monthly income and expense totals',
+    () async {
+      final repo = repository();
 
-    await repo.addTransfer(
-      leg(account: accountA, type: TransactionType.expense),
-      leg(account: accountB, type: TransactionType.income),
-    );
+      await repo.addTransfer(
+        leg(account: accountA, type: TransactionType.expense),
+        leg(account: accountB, type: TransactionType.income),
+      );
 
-    // An ordinary expense that must still be counted.
-    await repo.addTransaction(
-      Transaction(
-        id: 0,
-        amount: 100,
-        date: DateTime(2026, 5, 11),
-        type: TransactionType.expense,
-        category: transferCategory,
-        account: accountA,
-        createdAt: DateTime(2026, 5, 11),
-        updatedAt: DateTime(2026, 5, 11),
-      ),
-    );
+      // An ordinary expense that must still be counted.
+      await repo.addTransaction(
+        Transaction(
+          id: 0,
+          amount: 100,
+          date: DateTime(2026, 5, 11),
+          type: TransactionType.expense,
+          category: transferCategory,
+          account: accountA,
+          createdAt: DateTime(2026, 5, 11),
+          updatedAt: DateTime(2026, 5, 11),
+        ),
+      );
 
-    final totals = await db.transactionDao
-        .getMonthlySummaryTotals(DateTime(2026, 5), walletId);
+      final totals = await db.transactionDao.getMonthlySummaryTotals(
+        DateTime(2026, 5),
+        walletId,
+      );
 
-    expect(totals.totalExpense, 100, reason: 'transfer leg must not count');
-    expect(totals.totalIncome, 0, reason: 'transfer leg must not count');
-  });
+      expect(totals.totalExpense, 100, reason: 'transfer leg must not count');
+      expect(totals.totalIncome, 0, reason: 'transfer leg must not count');
+    },
+  );
 }

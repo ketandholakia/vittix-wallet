@@ -1,5 +1,6 @@
 import 'package:drift/native.dart';
-import 'package:vittix_wallet/core/database/app_database.dart' hide isNull, isNotNull;
+import 'package:vittix_wallet/core/database/app_database.dart'
+    hide isNull, isNotNull;
 import 'package:vittix_wallet/features/family/data/wallet_invitation_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -21,51 +22,59 @@ void main() {
     invitationRepo = WalletInvitationRepositoryImpl(walletDao);
 
     // Create Wallet A & Wallet B
-    walletIdA = await database.into(database.wallets).insert(
-      const WalletsCompanion(name: Value('Wallet A')),
-    );
-    walletIdB = await database.into(database.wallets).insert(
-      const WalletsCompanion(name: Value('Wallet B')),
-    );
+    walletIdA = await database
+        .into(database.wallets)
+        .insert(const WalletsCompanion(name: Value('Wallet A')));
+    walletIdB = await database
+        .into(database.wallets)
+        .insert(const WalletsCompanion(name: Value('Wallet B')));
 
     // Insert Accounts for members
-    accountIdA1 = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Account A1',
-        type: AccountType.bank,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
-    accountIdA2 = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Account A2',
-        type: AccountType.bank,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
-    accountIdA3 = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdA),
-        name: 'Account A3',
-        type: AccountType.bank,
-        icon: 0,
-        color: '00FF00',
-      ),
-    );
+    accountIdA1 = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Account A1',
+            type: AccountType.bank,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
+    accountIdA2 = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Account A2',
+            type: AccountType.bank,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
+    accountIdA3 = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdA),
+            name: 'Account A3',
+            type: AccountType.bank,
+            icon: 0,
+            color: '00FF00',
+          ),
+        );
 
-    accountIdB1 = await database.into(database.accounts).insert(
-      AccountsCompanion.insert(
-        walletId: Value(walletIdB),
-        name: 'Account B1',
-        type: AccountType.bank,
-        icon: 0,
-        color: '0000FF',
-      ),
-    );
+    accountIdB1 = await database
+        .into(database.accounts)
+        .insert(
+          AccountsCompanion.insert(
+            walletId: Value(walletIdB),
+            name: 'Account B1',
+            type: AccountType.bank,
+            icon: 0,
+            color: '0000FF',
+          ),
+        );
   });
 
   tearDown(() async {
@@ -150,7 +159,12 @@ void main() {
       // Verify owner is still active
       expect(await walletDao.countActiveOwners(walletIdA), equals(1));
       final members = await walletDao.getMembersForWallet(walletIdA);
-      expect(members.any((m) => m.accountId == accountIdA1 && m.role == WalletRole.owner), isTrue);
+      expect(
+        members.any(
+          (m) => m.accountId == accountIdA1 && m.role == WalletRole.owner,
+        ),
+        isTrue,
+      );
     });
 
     test('Test 4 — Cannot Demote Last Owner', () async {
@@ -213,7 +227,10 @@ void main() {
       // Verify owner role remains OWNER
       expect(await walletDao.countActiveOwners(walletIdA), equals(1));
       final members = await walletDao.getMembersForWallet(walletIdA);
-      expect(members.firstWhere((m) => m.id == ownerMemberId).role, equals(WalletRole.owner));
+      expect(
+        members.firstWhere((m) => m.id == ownerMemberId).role,
+        equals(WalletRole.owner),
+      );
     });
 
     test('Test 5 — Can Demote One of Multiple Owners', () async {
@@ -246,7 +263,10 @@ void main() {
 
       expect(await walletDao.countActiveOwners(walletIdA), equals(1));
       final members = await walletDao.getMembersForWallet(walletIdA);
-      expect(members.firstWhere((m) => m.id == owner1Id).role, equals(WalletRole.admin));
+      expect(
+        members.firstWhere((m) => m.id == owner1Id).role,
+        equals(WalletRole.admin),
+      );
     });
 
     test('Test 6 — Can Remove One of Multiple Owners', () async {
@@ -304,8 +324,18 @@ void main() {
       final activeMembers = await walletDao.getMembersForWallet(walletIdA);
       expect(activeMembers.length, equals(2));
       expect(activeMembers.any((m) => m.accountId == accountIdA2), isFalse);
-      expect(activeMembers.any((m) => m.accountId == accountIdA1 && m.role == WalletRole.owner), isTrue);
-      expect(activeMembers.any((m) => m.accountId == accountIdA3 && m.role == WalletRole.viewer), isTrue);
+      expect(
+        activeMembers.any(
+          (m) => m.accountId == accountIdA1 && m.role == WalletRole.owner,
+        ),
+        isTrue,
+      );
+      expect(
+        activeMembers.any(
+          (m) => m.accountId == accountIdA3 && m.role == WalletRole.viewer,
+        ),
+        isTrue,
+      );
     });
 
     test('Test 8 — Demoting Non-owner Still Works', () async {
@@ -327,7 +357,9 @@ void main() {
         ),
       );
 
-      final member = (await (database.select(database.walletMembers)..where((m) => m.id.equals(adminMemberId))).getSingle());
+      final member = (await (database.select(
+        database.walletMembers,
+      )..where((m) => m.id.equals(adminMemberId))).getSingle());
       expect(member.role, equals(WalletRole.member));
     });
 
@@ -423,14 +455,24 @@ void main() {
       expect(await walletDao.countActiveOwners(walletIdA), equals(1));
       final members = await walletDao.getMembersForWallet(walletIdA);
       expect(members.length, equals(2));
-      expect(members.any((m) => m.accountId == accountIdA1 && m.role == WalletRole.owner), isTrue);
-      expect(members.any((m) => m.accountId == accountIdA2 && m.role == WalletRole.member), isTrue);
+      expect(
+        members.any(
+          (m) => m.accountId == accountIdA1 && m.role == WalletRole.owner,
+        ),
+        isTrue,
+      );
+      expect(
+        members.any(
+          (m) => m.accountId == accountIdA2 && m.role == WalletRole.member,
+        ),
+        isTrue,
+      );
     });
 
     test('Test 12 — Wallet Creation Invariant', () async {
-      final newWalletId = await database.into(database.wallets).insert(
-        const WalletsCompanion(name: Value('New Family Wallet')),
-      );
+      final newWalletId = await database
+          .into(database.wallets)
+          .insert(const WalletsCompanion(name: Value('New Family Wallet')));
 
       // Insert initial owner member
       await walletDao.insertMember(
@@ -490,7 +532,10 @@ void main() {
       // Final state: Owner 2 remains OWNER
       expect(await walletDao.countActiveOwners(walletIdA), equals(1));
       final members = await walletDao.getMembersForWallet(walletIdA);
-      expect(members.firstWhere((m) => m.id == owner2Id).role, equals(WalletRole.owner));
+      expect(
+        members.firstWhere((m) => m.id == owner2Id).role,
+        equals(WalletRole.owner),
+      );
     });
 
     test('Test 14 — No Partial Mutation on Failure', () async {
@@ -502,7 +547,9 @@ void main() {
         ),
       );
 
-      final originalMember = await (database.select(database.walletMembers)..where((m) => m.id.equals(ownerId))).getSingle();
+      final originalMember = await (database.select(
+        database.walletMembers,
+      )..where((m) => m.id.equals(ownerId))).getSingle();
 
       // Attempt invalid demotion
       try {
@@ -517,7 +564,9 @@ void main() {
       } on Object catch (_) {}
 
       // Verify no fields in DB were changed
-      final afterMember = await (database.select(database.walletMembers)..where((m) => m.id.equals(ownerId))).getSingle();
+      final afterMember = await (database.select(
+        database.walletMembers,
+      )..where((m) => m.id.equals(ownerId))).getSingle();
       expect(afterMember.role, equals(WalletRole.owner));
       expect(afterMember.isActive, equals(originalMember.isActive));
       expect(afterMember.joinedAt, equals(originalMember.joinedAt));

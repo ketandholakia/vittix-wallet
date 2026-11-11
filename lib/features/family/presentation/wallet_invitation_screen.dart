@@ -11,16 +11,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
-final walletInvitationRepositoryProvider = Provider<WalletInvitationRepository>((ref) {
-  return WalletInvitationRepositoryImpl(ref.watch(walletDaoProvider));
-});
+final walletInvitationRepositoryProvider = Provider<WalletInvitationRepository>(
+  (ref) {
+    return WalletInvitationRepositoryImpl(ref.watch(walletDaoProvider));
+  },
+);
 
-final walletInvitationServiceProvider = Provider<WalletInvitationService>((ref) {
+final walletInvitationServiceProvider = Provider<WalletInvitationService>((
+  ref,
+) {
   return WalletInvitationService(ref.watch(walletInvitationRepositoryProvider));
 });
 
-final walletInvitationsProvider =
-    StreamProvider<List<db.WalletInvitation>>((ref) {
+final walletInvitationsProvider = StreamProvider<List<db.WalletInvitation>>((
+  ref,
+) {
   final walletId = ref.watch(currentWalletIdProvider);
   return ref.watch(walletDaoProvider).watchInvitationsForWallet(walletId);
 });
@@ -29,10 +34,12 @@ class WalletInvitationScreen extends ConsumerStatefulWidget {
   const WalletInvitationScreen({super.key});
 
   @override
-  ConsumerState<WalletInvitationScreen> createState() => _WalletInvitationScreenState();
+  ConsumerState<WalletInvitationScreen> createState() =>
+      _WalletInvitationScreenState();
 }
 
-class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen> {
+class _WalletInvitationScreenState
+    extends ConsumerState<WalletInvitationScreen> {
   final m.TextEditingController _codeController = m.TextEditingController();
   db.WalletRole _selectedRole = db.WalletRole.member;
   Account? _selectedAccount;
@@ -52,7 +59,9 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
     final currentWalletAsync = ref.watch(currentWalletProvider);
     final invitationsAsync = ref.watch(walletInvitationsProvider);
     final service = ref.watch(walletInvitationServiceProvider);
-    final accountsStream = ref.watch(watchAccountsWithBalanceUseCaseProvider).call();
+    final accountsStream = ref
+        .watch(watchAccountsWithBalanceUseCaseProvider)
+        .call();
 
     return m.Scaffold(
       appBar: m.AppBar(title: const m.Text('Wallet invitations')),
@@ -102,18 +111,24 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
                   contentPadding: m.EdgeInsets.zero,
                   leading: m.Icon(m.Icons.info_outline),
                   title: m.Text('No member accounts available'),
-                  subtitle: m.Text('Create an account first, then invite that account into this wallet as a member.'),
+                  subtitle: m.Text(
+                    'Create an account first, then invite that account into this wallet as a member.',
+                  ),
                 );
               }
               _selectedAccount ??= accounts.first.account;
               return m.DropdownButtonFormField<Account>(
                 initialValue: _selectedAccount,
-                decoration: const m.InputDecoration(labelText: 'Member account to invite'),
+                decoration: const m.InputDecoration(
+                  labelText: 'Member account to invite',
+                ),
                 items: accounts
                     .map(
                       (item) => m.DropdownMenuItem(
                         value: item.account,
-                        child: m.Text('${item.account.name} (#${item.account.id})'),
+                        child: m.Text(
+                          '${item.account.name} (#${item.account.id})',
+                        ),
                       ),
                     )
                     .toList(),
@@ -129,9 +144,15 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
           m.DropdownButton<db.WalletRole>(
             value: _selectedRole,
             items: db.WalletRole.values
-                .map((role) => m.DropdownMenuItem(value: role, child: m.Text(role.name.toUpperCase())))
+                .map(
+                  (role) => m.DropdownMenuItem(
+                    value: role,
+                    child: m.Text(role.name.toUpperCase()),
+                  ),
+                )
                 .toList(),
-            onChanged: (value) => setState(() => _selectedRole = value ?? _selectedRole),
+            onChanged: (value) =>
+                setState(() => _selectedRole = value ?? _selectedRole),
           ),
           const m.SizedBox(height: 12),
           m.TextField(
@@ -144,16 +165,27 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
               final accountId = _selectedAccount?.id;
               if (accountId == null) return;
               final database = ref.read(databaseProvider);
-              final owners = await (database.select(database.walletMembers)..where((m) => m.walletId.equals(walletId) & m.role.equals(db.WalletRole.owner.name))).get();
-              if (owners.isEmpty) return; // Cannot invite without an active owner
+              final owners =
+                  await (database.select(database.walletMembers)..where(
+                        (m) =>
+                            m.walletId.equals(walletId) &
+                            m.role.equals(db.WalletRole.owner.name),
+                      ))
+                      .get();
+              if (owners.isEmpty)
+                return; // Cannot invite without an active owner
 
-              final invitationId = await ref.read(walletInvitationRepositoryProvider).createInvitation(
+              final invitationId = await ref
+                  .read(walletInvitationRepositoryProvider)
+                  .createInvitation(
                     walletId: walletId,
                     invitedAccountId: accountId,
                     role: _selectedRole,
                     invitedByAccountId: owners.first.accountId,
                   );
-              final invitation = await ref.read(walletDaoProvider).getInvitationById(invitationId);
+              final invitation = await ref
+                  .read(walletDaoProvider)
+                  .getInvitationById(invitationId);
               if (invitation == null) return;
               final code = service.buildInvitationCode(invitation);
               setState(() {
@@ -173,7 +205,9 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
               final invitation = await service.resolveInvitation(code);
               setState(() {
                 _preview = invitation;
-                _previewMessage = invitation == null ? 'Invalid or expired invitation code.' : null;
+                _previewMessage = invitation == null
+                    ? 'Invalid or expired invitation code.'
+                    : null;
               });
             },
             icon: const m.Icon(m.Icons.visibility),
@@ -181,7 +215,10 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
           ),
           if (_previewMessage != null) ...[
             const m.SizedBox(height: 8),
-            m.Text(_previewMessage!, style: m.TextStyle(color: m.Theme.of(context).colorScheme.error)),
+            m.Text(
+              _previewMessage!,
+              style: m.TextStyle(color: m.Theme.of(context).colorScheme.error),
+            ),
           ],
           if (_preview != null) ...[
             const m.SizedBox(height: 12),
@@ -189,30 +226,34 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
               child: m.ListTile(
                 leading: const m.Icon(m.Icons.info_outline),
                 title: m.Text('Wallet ${_preview!.walletId}'),
-                        subtitle: m.Text(
+                subtitle: m.Text(
                   'Wallet: ${_preview!.walletId} | Role: ${_preview!.role.name.toUpperCase()} | Status: ${_preview!.status.name.toUpperCase()}',
                 ),
                 trailing: m.TextButton(
-                  onPressed: _preview!.status == db.WalletInvitationStatus.pending
+                  onPressed:
+                      _preview!.status == db.WalletInvitationStatus.pending
                       ? () async {
-                    try {
-                      await ref.read(walletInvitationRepositoryProvider).acceptInvitation(
-                        invitationId: _preview!.id,
-                        token: _preview!.token,
-                        activeAccountId: _preview!.accountId,
-                        walletId: walletId,
-                      );
-                      ref.invalidate(walletInvitationsProvider);
-                      setState(() {
-                        _preview = null;
-                        _previewMessage = 'Wallet invitation accepted successfully.';
-                      });
-                    } on Object catch (e) {
-                      setState(() {
-                        _previewMessage = 'Accept failed: $e';
-                      });
-                    }
-                  }
+                          try {
+                            await ref
+                                .read(walletInvitationRepositoryProvider)
+                                .acceptInvitation(
+                                  invitationId: _preview!.id,
+                                  token: _preview!.token,
+                                  activeAccountId: _preview!.accountId,
+                                  walletId: walletId,
+                                );
+                            ref.invalidate(walletInvitationsProvider);
+                            setState(() {
+                              _preview = null;
+                              _previewMessage =
+                                  'Wallet invitation accepted successfully.';
+                            });
+                          } on Object catch (e) {
+                            setState(() {
+                              _previewMessage = 'Accept failed: $e';
+                            });
+                          }
+                        }
                       : null,
                   child: const m.Text('Accept'),
                 ),
@@ -252,42 +293,73 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
                         mainAxisSize: m.MainAxisSize.min,
                         children: [
                           m.TextButton(
-                            onPressed: invitation.status == db.WalletInvitationStatus.pending
+                            onPressed:
+                                invitation.status ==
+                                    db.WalletInvitationStatus.pending
                                 ? () async {
-                                  try {
-                                    await ref.read(walletInvitationRepositoryProvider).acceptInvitation(
-                                      invitationId: invitation.id,
-                                      token: invitation.token,
-                                      activeAccountId: invitation.accountId,
-                                      walletId: walletId,
-                                    );
-                                    ref.invalidate(walletInvitationsProvider);
-                                    setState(() {
-                                      _preview = invitation;
-                                      _previewMessage = 'Invitation accepted successfully.';
-                                    });
-                                  } on Object catch (e) {
-                                    setState(() {
-                                      _previewMessage = 'Accept failed: $e';
-                                    });
+                                    try {
+                                      await ref
+                                          .read(
+                                            walletInvitationRepositoryProvider,
+                                          )
+                                          .acceptInvitation(
+                                            invitationId: invitation.id,
+                                            token: invitation.token,
+                                            activeAccountId:
+                                                invitation.accountId,
+                                            walletId: walletId,
+                                          );
+                                      ref.invalidate(walletInvitationsProvider);
+                                      setState(() {
+                                        _preview = invitation;
+                                        _previewMessage =
+                                            'Invitation accepted successfully.';
+                                      });
+                                    } on Object catch (e) {
+                                      setState(() {
+                                        _previewMessage = 'Accept failed: $e';
+                                      });
+                                    }
                                   }
-                                }
                                 : null,
                             child: const m.Text('Accept'),
                           ),
                           m.TextButton(
-                            onPressed: invitation.status == db.WalletInvitationStatus.pending
+                            onPressed:
+                                invitation.status ==
+                                    db.WalletInvitationStatus.pending
                                 ? () async {
                                     try {
-                                      final database = ref.read(databaseProvider);
-                                      final owners = await (database.select(database.walletMembers)..where((m) => m.walletId.equals(walletId) & m.role.equals(db.WalletRole.owner.name))).get();
-                                      final ownerId = owners.isNotEmpty ? owners.first.accountId : invitation.invitedByAccountId;
-                                      if (ownerId == null) throw Exception('No actor available');
-                                      await ref.read(walletInvitationRepositoryProvider).revokeInvitation(
-                                        invitationId: invitation.id,
-                                        activeAccountId: ownerId,
-                                        walletId: walletId,
+                                      final database = ref.read(
+                                        databaseProvider,
                                       );
+                                      final owners =
+                                          await (database.select(
+                                                database.walletMembers,
+                                              )..where(
+                                                (m) =>
+                                                    m.walletId.equals(
+                                                      walletId,
+                                                    ) &
+                                                    m.role.equals(
+                                                      db.WalletRole.owner.name,
+                                                    ),
+                                              ))
+                                              .get();
+                                      final ownerId = owners.isNotEmpty
+                                          ? owners.first.accountId
+                                          : invitation.invitedByAccountId;
+                                      if (ownerId == null)
+                                        throw Exception('No actor available');
+                                      await ref
+                                          .read(
+                                            walletInvitationRepositoryProvider,
+                                          )
+                                          .revokeInvitation(
+                                            invitationId: invitation.id,
+                                            activeAccountId: ownerId,
+                                            walletId: walletId,
+                                          );
                                       ref.invalidate(walletInvitationsProvider);
                                     } on Object catch (e) {
                                       setState(() {
@@ -305,7 +377,8 @@ class _WalletInvitationScreenState extends ConsumerState<WalletInvitationScreen>
                   .toList(),
             ),
             loading: () => const m.Center(child: m.CircularProgressIndicator()),
-            error: (error, stack) => m.Text('Unable to load invitations: $error'),
+            error: (error, stack) =>
+                m.Text('Unable to load invitations: $error'),
           ),
         ],
       ),

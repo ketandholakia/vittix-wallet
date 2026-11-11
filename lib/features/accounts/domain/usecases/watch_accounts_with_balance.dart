@@ -6,5 +6,6 @@ class WatchAccountsWithBalance {
 
   WatchAccountsWithBalance(this.repository);
 
-  Stream<List<AccountWithBalance>> call() => repository.watchAccountsWithBalance();
+  Stream<List<AccountWithBalance>> call() =>
+      repository.watchAccountsWithBalance();
 }

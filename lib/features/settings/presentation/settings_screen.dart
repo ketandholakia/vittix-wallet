@@ -80,14 +80,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } else if (lastSync == null) {
       syncStatusMessage = 'Never synchronized';
     } else {
-      final formatted = DateFormat('yyyy-MM-dd HH:mm:ss').format(lastSync.toLocal());
+      final formatted = DateFormat(
+        'yyyy-MM-dd HH:mm:ss',
+      ).format(lastSync.toLocal());
       syncStatusMessage = 'Last synced: $formatted';
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -101,8 +101,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               trailing: DropdownButton<ThemeMode>(
                 value: ref.watch(themeModeProvider),
                 items: const [
-                  DropdownMenuItem(value: ThemeMode.system, child: Text('System')),
-                  DropdownMenuItem(value: ThemeMode.light, child: Text('Light')),
+                  DropdownMenuItem(
+                    value: ThemeMode.system,
+                    child: Text('System'),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.light,
+                    child: Text('Light'),
+                  ),
                   DropdownMenuItem(value: ThemeMode.dark, child: Text('Dark')),
                 ],
                 onChanged: (value) {
@@ -148,13 +154,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               trailing: DropdownButton<RolloverMode>(
                 value: ref.watch(rolloverModeProvider),
                 items: const [
-                  DropdownMenuItem(value: RolloverMode.disabled, child: Text('Disabled')),
-                  DropdownMenuItem(value: RolloverMode.surplusOnly, child: Text('Surplus Only')),
-                  DropdownMenuItem(value: RolloverMode.surplusAndDeficit, child: Text('Surplus & Deficit')),
+                  DropdownMenuItem(
+                    value: RolloverMode.disabled,
+                    child: Text('Disabled'),
+                  ),
+                  DropdownMenuItem(
+                    value: RolloverMode.surplusOnly,
+                    child: Text('Surplus Only'),
+                  ),
+                  DropdownMenuItem(
+                    value: RolloverMode.surplusAndDeficit,
+                    child: Text('Surplus & Deficit'),
+                  ),
                 ],
                 onChanged: (value) {
                   if (value != null) {
-                    ref.read(rolloverModeProvider.notifier).updateRolloverMode(value);
+                    ref
+                        .read(rolloverModeProvider.notifier)
+                        .updateRolloverMode(value);
                   }
                 },
               ),
@@ -165,13 +182,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: ListTile(
               leading: const Icon(Icons.account_balance_wallet_outlined),
               title: const Text('Manage Accounts'),
-              subtitle: const Text('Bank, credit card, loan, cash & income accounts'),
+              subtitle: const Text(
+                'Bank, credit card, loan, cash & income accounts',
+              ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 if (mounted) {
                   Navigator.of(context).push(
-                  MaterialPageRoute<void>(builder: (_) => const AccountScreen()),
-                );
+                    MaterialPageRoute<void>(
+                      builder: (_) => const AccountScreen(),
+                    ),
+                  );
                 }
               },
             ),
@@ -186,8 +207,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onTap: () {
                 if (mounted) {
                   Navigator.of(context).push(
-                  MaterialPageRoute<void>(builder: (_) => const CategoryScreen()),
-                );
+                    MaterialPageRoute<void>(
+                      builder: (_) => const CategoryScreen(),
+                    ),
+                  );
                 }
               },
             ),
@@ -197,13 +220,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: ListTile(
               leading: const Icon(Icons.replay),
               title: const Text('Recurring Transactions'),
-              subtitle: const Text('Manage templates for rent, subscriptions, salary, etc.'),
+              subtitle: const Text(
+                'Manage templates for rent, subscriptions, salary, etc.',
+              ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 if (mounted) {
                   Navigator.of(context).push(
-                  MaterialPageRoute<void>(builder: (_) => const RecurringTransactionsScreen()),
-                );
+                    MaterialPageRoute<void>(
+                      builder: (_) => const RecurringTransactionsScreen(),
+                    ),
+                  );
                 }
               },
             ),
@@ -214,7 +241,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               child: ListTile(
                 leading: const Icon(Icons.sms_outlined),
                 title: const Text('Import SMS'),
-                subtitle: const Text('Scan inbox messages and review detected transactions'),
+                subtitle: const Text(
+                  'Scan inbox messages and review detected transactions',
+                ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () {
                   if (mounted) {
@@ -258,30 +287,42 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         // Persist the PIN under the v2 PBKDF2 scheme. Previously the
                         // hash was computed and discarded, so no PIN was stored.
                         final hashed = await PinHasher.hash(newPin);
-                        await ref.read(pinHashProvider.notifier).updatePinHash(hashed);
-                        ref.read(pinLockEnabledProvider.notifier).updatePinLockEnabled(true);
+                        await ref
+                            .read(pinHashProvider.notifier)
+                            .updatePinHash(hashed);
+                        ref
+                            .read(pinLockEnabledProvider.notifier)
+                            .updatePinLockEnabled(true);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('PIN Lock enabled successfully')),
+                            const SnackBar(
+                              content: Text('PIN Lock enabled successfully'),
+                            ),
                           );
                         }
                       }
                     } else {
                       if (!context.mounted) return;
 
-                      final verifiedPin = await Navigator.of(context).push<String>(
-                        MaterialPageRoute<String>(
-                          builder: (_) => LockScreen(
-                            mode: LockScreenMode.verify,
-                            onCancel: () => Navigator.of(context).pop(),
-                            onSuccess: (pin) => Navigator.of(context).pop(pin),
-                          ),
-                        ),
-                      );
+                      final verifiedPin = await Navigator.of(context)
+                          .push<String>(
+                            MaterialPageRoute<String>(
+                              builder: (_) => LockScreen(
+                                mode: LockScreenMode.verify,
+                                onCancel: () => Navigator.of(context).pop(),
+                                onSuccess: (pin) =>
+                                    Navigator.of(context).pop(pin),
+                              ),
+                            ),
+                          );
                       if (verifiedPin != null) {
-                        ref.read(pinLockEnabledProvider.notifier).updatePinLockEnabled(false);
+                        ref
+                            .read(pinLockEnabledProvider.notifier)
+                            .updatePinLockEnabled(false);
                         // ref.read(pinHashProvider.notifier).updatePinHash(null);
-                        ref.read(biometricsEnabledProvider.notifier).updateBiometricsEnabled(false);
+                        ref
+                            .read(biometricsEnabledProvider.notifier)
+                            .updateBiometricsEnabled(false);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('PIN Lock disabled')),
@@ -301,15 +342,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     onTap: () async {
                       if (!context.mounted) return;
 
-                      final verifiedPin = await Navigator.of(context).push<String>(
-                        MaterialPageRoute<String>(
-                          builder: (_) => LockScreen(
-                            mode: LockScreenMode.verify,
-                            onCancel: () => Navigator.of(context).pop(),
-                            onSuccess: (pin) => Navigator.of(context).pop(pin),
-                          ),
-                        ),
-                      );
+                      final verifiedPin = await Navigator.of(context)
+                          .push<String>(
+                            MaterialPageRoute<String>(
+                              builder: (_) => LockScreen(
+                                mode: LockScreenMode.verify,
+                                onCancel: () => Navigator.of(context).pop(),
+                                onSuccess: (pin) =>
+                                    Navigator.of(context).pop(pin),
+                              ),
+                            ),
+                          );
                       if (verifiedPin == null) return;
 
                       if (!mounted) return;
@@ -326,10 +369,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       );
                       if (newPin != null && newPin.isNotEmpty) {
                         final hashed = await PinHasher.hash(newPin);
-                        await ref.read(pinHashProvider.notifier).updatePinHash(hashed);
+                        await ref
+                            .read(pinHashProvider.notifier)
+                            .updatePinHash(hashed);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('PIN changed successfully')),
+                            const SnackBar(
+                              content: Text('PIN changed successfully'),
+                            ),
                           );
                         }
                       }
@@ -340,10 +387,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     SwitchListTile(
                       secondary: const Icon(Icons.fingerprint),
                       title: const Text('Biometric Unlock'),
-                      subtitle: const Text('Unlock using fingerprint or face scan'),
+                      subtitle: const Text(
+                        'Unlock using fingerprint or face scan',
+                      ),
                       value: isBiometricsEnabled,
                       onChanged: (value) {
-                        ref.read(biometricsEnabledProvider.notifier).updateBiometricsEnabled(value);
+                        ref
+                            .read(biometricsEnabledProvider.notifier)
+                            .updateBiometricsEnabled(value);
                       },
                     ),
                   ],
@@ -362,14 +413,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   SwitchListTile(
                     secondary: const Icon(Icons.cloud_sync_outlined),
                     title: const Text('Simulate Cloud Sync'),
-                    subtitle: const Text('Test sync offline using local storage simulation'),
+                    subtitle: const Text(
+                      'Test sync offline using local storage simulation',
+                    ),
                     value: isSimulated,
                     onChanged: (value) {
-                      ref.read(isSimulatedSyncProvider.notifier).updateIsSimulatedSync(value);
+                      ref
+                          .read(isSimulatedSyncProvider.notifier)
+                          .updateIsSimulatedSync(value);
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
                     child: TextFormField(
                       initialValue: syncUrl,
                       enabled: !isSimulated,
@@ -385,7 +443,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
                     child: TextFormField(
                       initialValue: syncUsername,
                       enabled: !isSimulated,
@@ -396,12 +457,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) {
-                        ref.read(nextcloudUsernameProvider.notifier).updateUsername(value);
+                        ref
+                            .read(nextcloudUsernameProvider.notifier)
+                            .updateUsername(value);
                       },
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
                     child: TextFormField(
                       initialValue: syncPassword,
                       enabled: !isSimulated,
@@ -413,12 +479,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) {
-                        ref.read(nextcloudPasswordProvider.notifier).updatePassword(value);
+                        ref
+                            .read(nextcloudPasswordProvider.notifier)
+                            .updatePassword(value);
                       },
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
                     child: TextFormField(
                       initialValue: syncPassphrase,
                       enabled: !isSimulated,
@@ -450,27 +521,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     onTap: syncState.status == SyncStatus.syncing
                         ? null
                         : () async {
-                            final notifier = ref.read(syncStateProvider.notifier);
+                            final notifier = ref.read(
+                              syncStateProvider.notifier,
+                            );
                             await notifier.performSync();
                             final freshState = ref.read(syncStateProvider);
                             if (!context.mounted) return;
                             if (freshState.status == SyncStatus.success) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Sync completed successfully!'),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
+                                  const SnackBar(
+                                    content: Text(
+                                      'Sync completed successfully!',
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
                               }
                             } else if (freshState.status == SyncStatus.error) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Sync failed: ${freshState.errorMessage}'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
+                                  SnackBar(
+                                    content: Text(
+                                      'Sync failed: ${freshState.errorMessage}',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
                               }
                             }
                           },
@@ -524,7 +601,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         child: const Text('No encryption'),
                       ),
                       FilledButton(
-                        onPressed: () => Navigator.of(ctx).pop(passController.text),
+                        onPressed: () =>
+                            Navigator.of(ctx).pop(passController.text),
                         child: const Text('Create backup'),
                       ),
                     ],
@@ -535,12 +613,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 try {
                   // VACUUM INTO gives a consistent snapshot while the DB is open.
                   final tempDir = await getTemporaryDirectory();
-                  final name = BackupService.timestampedBackupName(DateTime.now());
+                  final name = BackupService.timestampedBackupName(
+                    DateTime.now(),
+                  );
                   final service = ref.read(backupServiceProvider);
                   final File snapshot;
                   if (passphrase.isEmpty) {
-                    snapshot =
-                        await service.createSnapshot(p.join(tempDir.path, name));
+                    snapshot = await service.createSnapshot(
+                      p.join(tempDir.path, name),
+                    );
                   } else {
                     snapshot = await service.createEncryptedSnapshot(
                       p.join(tempDir.path, '$name.enc'),
@@ -568,9 +649,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: ListTile(
               leading: const Icon(Icons.schedule),
               title: const Text('Automatic Backup'),
-              subtitle: const Text('Scheduled snapshots with optional encryption'),
+              subtitle: const Text(
+                'Scheduled snapshots with optional encryption',
+              ),
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const AutoBackupScreen()),
+                MaterialPageRoute<void>(
+                  builder: (_) => const AutoBackupScreen(),
+                ),
               ),
             ),
           ),
@@ -579,19 +664,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: ListTile(
               leading: const Icon(Icons.table_rows),
               title: const Text('Export to CSV'),
-              subtitle: const Text('Save transaction history in spreadsheet format'),
+              subtitle: const Text(
+                'Save transaction history in spreadsheet format',
+              ),
               onTap: () async {
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
                 try {
-                  final transactions = await ref.read(transactionRepositoryProvider).watchAllTransactions().first;
+                  final transactions = await ref
+                      .read(transactionRepositoryProvider)
+                      .watchAllTransactions()
+                      .first;
                   if (transactions.isEmpty) {
                     scaffoldMessenger.showSnackBar(
-                      const SnackBar(content: Text('No transactions to export.')),
+                      const SnackBar(
+                        content: Text('No transactions to export.'),
+                      ),
                     );
                     return;
                   }
 
-                  final categories = await ref.read(categoryRepositoryProvider).watchAllCategories().first;
+                  final categories = await ref
+                      .read(categoryRepositoryProvider)
+                      .watchAllCategories()
+                      .first;
                   final categoryMap = {for (var c in categories) c.id: c};
 
                   final currency = ref.read(currencyProvider);
@@ -603,7 +698,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     currencyCode: currencyCode,
                   );
 
-                  final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+                  final timestamp = DateFormat(
+                    'yyyyMMdd_HHmmss',
+                  ).format(DateTime.now());
                   final fileName = 'expense_export_$timestamp.csv';
                   final tempDir = await getTemporaryDirectory();
                   final exportFile = File(p.join(tempDir.path, fileName));
@@ -626,8 +723,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 8),
           _SettingsCard(
             child: ListTile(
-              leading: Icon(Icons.download_for_offline, color: Theme.of(context).colorScheme.primary),
-              title: Text('Import Data', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+              leading: Icon(
+                Icons.download_for_offline,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              title: Text(
+                'Import Data',
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              ),
               subtitle: const Text('Restore data from a backup file'),
               onTap: () async {
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -655,7 +758,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           controller: passController,
                           autofocus: true,
                           obscureText: true,
-                          decoration: const InputDecoration(labelText: 'Passphrase'),
+                          decoration: const InputDecoration(
+                            labelText: 'Passphrase',
+                          ),
                         ),
                         actions: [
                           TextButton(
@@ -663,7 +768,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             child: const Text('Cancel'),
                           ),
                           FilledButton(
-                            onPressed: () => Navigator.of(ctx).pop(passController.text),
+                            onPressed: () =>
+                                Navigator.of(ctx).pop(passController.text),
                             child: const Text('Decrypt'),
                           ),
                         ],
@@ -671,7 +777,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     );
                     if (passphrase == null || passphrase.isEmpty) return;
 
-                    scratch = await Directory.systemTemp.createTemp('vittix_restore');
+                    scratch = await Directory.systemTemp.createTemp(
+                      'vittix_restore',
+                    );
                     candidate = await BackupService.decryptToFile(
                       picked,
                       passphrase,
@@ -682,17 +790,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   // Inspect the candidate (read-only) before asking the user to
                   // confirm: a junk file must never reach the swap step.
                   // SQLCipher snapshots are encrypted with the live database key.
-                  final databaseKey = await ref.read(databaseKeyProvider.future);
+                  final databaseKey = await ref.read(
+                    databaseKeyProvider.future,
+                  );
                   final validation = await BackupService.validate(
                     candidate,
-                    currentSchemaVersion:
-                        ref.read(databaseProvider).schemaVersion,
+                    currentSchemaVersion: ref
+                        .read(databaseProvider)
+                        .schemaVersion,
                     databaseKey: databaseKey,
                   );
                   if (!validation.isValid) {
                     scaffoldMessenger.showSnackBar(
                       SnackBar(
-                        content: Text('Not a usable backup: ${validation.error}'),
+                        content: Text(
+                          'Not a usable backup: ${validation.error}',
+                        ),
                       ),
                     );
                     return;
@@ -707,10 +820,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         'This will overwrite all current data with the backup file. This action cannot be undone.',
                       ),
                       actions: [
-                        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text('Cancel'),
+                        ),
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(true),
-                          child: Text('Import', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                          child: Text(
+                            'Import',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -718,7 +839,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
                   if (confirmed != true) return;
 
-                  await ref.read(backupServiceProvider).restore(
+                  await ref
+                      .read(backupServiceProvider)
+                      .restore(
                         candidate,
                         liveDbFile: liveDbFile,
                         databaseKey: databaseKey,
@@ -751,8 +874,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           // Reset Data
           _SettingsCard(
             child: ListTile(
-              leading: Icon(Icons.delete_sweep, color: Theme.of(context).colorScheme.error),
-              title: Text('Delete Current Wallet', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              leading: Icon(
+                Icons.delete_sweep,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              title: Text(
+                'Delete Current Wallet',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
               onTap: () async {
                 final confirmed = await showDialog<bool>(
                   context: context,
@@ -770,7 +899,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         onPressed: () => Navigator.of(context).pop(true),
                         child: Text(
                           'Delete',
-                          style: TextStyle(color: Theme.of(context).colorScheme.error),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
                         ),
                       ),
                     ],
@@ -781,10 +912,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   try {
                     final walletId = ref.read(currentWalletIdProvider);
                     final db = ref.read(databaseProvider);
-                    
+
                     await db.walletDao.deleteWallet(walletId);
-                    await ref.read(currentWalletIdProvider.notifier).revalidate();
-                    
+                    await ref
+                        .read(currentWalletIdProvider.notifier)
+                        .revalidate();
+
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -810,8 +943,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 8),
           _SettingsCard(
             child: ListTile(
-              leading: Icon(Icons.delete_forever, color: Theme.of(context).colorScheme.error),
-              title: Text('Reset All Data', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              leading: Icon(
+                Icons.delete_forever,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              title: Text(
+                'Reset All Data',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
               onTap: () async {
                 final confirmed = await showDialog<bool>(
                   context: context,
@@ -829,7 +968,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         onPressed: () => Navigator.of(context).pop(true),
                         child: Text(
                           'Reset',
-                          style: TextStyle(color: Theme.of(context).colorScheme.error),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
                         ),
                       ),
                     ],
@@ -841,20 +982,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     await ref.read(databaseProvider).resetDatabase();
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('All data has been reset.'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
+                        const SnackBar(
+                          content: Text('All data has been reset.'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
                     }
                   } on Object catch (e) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error resetting data: $e'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
+                        SnackBar(
+                          content: Text('Error resetting data: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
                   }
                 }
@@ -877,10 +1018,11 @@ class _SettingsCard extends StatelessWidget {
       elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
+        side: BorderSide(
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+        ),
       ),
       child: child,
     );
   }
 }
-

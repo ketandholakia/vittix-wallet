@@ -9,9 +9,12 @@ import 'package:vittix_wallet/features/settings/presentation/settings_providers.
 
 // Repayment calculation helper
 double calculateEmi(double principal, double annualRate, int tenureMonths) {
-  if (annualRate == 0 || tenureMonths == 0) return principal / (tenureMonths > 0 ? tenureMonths : 1);
+  if (annualRate == 0 || tenureMonths == 0)
+    return principal / (tenureMonths > 0 ? tenureMonths : 1);
   final double r = annualRate / 12 / 100;
-  return principal * (r * math.pow(1 + r, tenureMonths)) / (math.pow(1 + r, tenureMonths) - 1);
+  return principal *
+      (r * math.pow(1 + r, tenureMonths)) /
+      (math.pow(1 + r, tenureMonths) - 1);
 }
 
 // Stream providers for dynamic updates
@@ -34,7 +37,8 @@ class DebtsLoansScreen extends ConsumerStatefulWidget {
   ConsumerState<DebtsLoansScreen> createState() => _DebtsLoansScreenState();
 }
 
-class _DebtsLoansScreenState extends ConsumerState<DebtsLoansScreen> with SingleTickerProviderStateMixin {
+class _DebtsLoansScreenState extends ConsumerState<DebtsLoansScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -64,10 +68,7 @@ class _DebtsLoansScreenState extends ConsumerState<DebtsLoansScreen> with Single
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          _LoansTab(),
-          _PeerDebtsTab(),
-        ],
+        children: const [_LoansTab(), _PeerDebtsTab()],
       ),
     );
   }
@@ -79,8 +80,14 @@ class _DebtsLoansScreenState extends ConsumerState<DebtsLoansScreen> with Single
 class _LoansTab extends ConsumerWidget {
   const _LoansTab();
 
-  Future<double> _getAccountBalance(AppDatabase db, int accountId, int walletId) async {
-    final accounts = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
+  Future<double> _getAccountBalance(
+    AppDatabase db,
+    int accountId,
+    int walletId,
+  ) async {
+    final accounts = await (db.select(
+      db.accounts,
+    )..where((a) => a.walletId.equals(walletId))).get();
     final account = accounts.firstWhere((a) => a.id == accountId);
     return await db.accountDao.getBalanceForAccount(account);
   }
@@ -110,7 +117,11 @@ class _LoansTab extends ConsumerWidget {
                       SizedBox(height: 16),
                       Text(
                         'No active institutional loans',
-                        style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(height: 8),
                       Text(
@@ -122,21 +133,33 @@ class _LoansTab extends ConsumerWidget {
                   ),
                 ),
               ] else ...[
-                Text('Active Loans', style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  'Active Loans',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 8),
                 ...activeLoans.map((loan) {
                   return FutureBuilder<double>(
                     future: _getAccountBalance(db, loan.accountId, walletId),
                     builder: (context, snapshot) {
                       final outstanding = snapshot.data ?? loan.principalAmount;
-                      final repaid = math.max(0.0, loan.principalAmount - outstanding);
-                      final progress = loan.principalAmount > 0 ? repaid / loan.principalAmount : 0.0;
+                      final repaid = math.max(
+                        0.0,
+                        loan.principalAmount - outstanding,
+                      );
+                      final progress = loan.principalAmount > 0
+                          ? repaid / loan.principalAmount
+                          : 0.0;
 
                       return Card(
                         margin: const EdgeInsets.only(bottom: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.08)),
+                          side: BorderSide(
+                            color: Theme.of(
+                              context,
+                            ).dividerColor.withValues(alpha: 0.08),
+                          ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -144,40 +167,58 @@ class _LoansTab extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Text(
                                       loan.name,
-                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   Text(
                                     currencyFormatter.format(outstanding),
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.redAccent),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.redAccent,
+                                    ),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 'Principal: ${currencyFormatter.format(loan.principalAmount)} @ ${loan.interestRate}% APR',
-                                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
                               ),
                               const SizedBox(height: 16),
-                              
+
                               // Repayment Progress Bar
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Repaid: ${currencyFormatter.format(repaid)} (${(progress * 100).toStringAsFixed(1)}%)',
-                                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                   Text(
                                     'Remaining: ${currencyFormatter.format(outstanding)}',
-                                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -188,40 +229,65 @@ class _LoansTab extends ConsumerWidget {
                                   value: progress,
                                   minHeight: 8,
                                   color: Colors.teal,
-                                  backgroundColor: Colors.teal.withValues(alpha: 0.1),
+                                  backgroundColor: Colors.teal.withValues(
+                                    alpha: 0.1,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 16),
 
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'EMI: ${currencyFormatter.format(loan.emiAmount)} / mo',
-                                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                       if (loan.nextEmiDate != null)
                                         Text(
                                           'Next Due: ${DateFormat('yyyy-MM-dd').format(loan.nextEmiDate!)}',
-                                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       TextButton.icon(
-                                        icon: const Icon(Icons.payment, size: 16),
+                                        icon: const Icon(
+                                          Icons.payment,
+                                          size: 16,
+                                        ),
                                         label: const Text('Log Repayment'),
-                                        onPressed: () => _showRepaymentDialog(context, ref, loan, outstanding),
+                                        onPressed: () => _showRepaymentDialog(
+                                          context,
+                                          ref,
+                                          loan,
+                                          outstanding,
+                                        ),
                                       ),
                                       const SizedBox(width: 8),
                                       IconButton(
-                                        icon: const Icon(Icons.check_circle_outline, color: Colors.grey),
+                                        icon: const Icon(
+                                          Icons.check_circle_outline,
+                                          color: Colors.grey,
+                                        ),
                                         tooltip: 'Close Loan',
-                                        onPressed: () => _confirmCloseLoan(context, ref, loan),
+                                        onPressed: () => _confirmCloseLoan(
+                                          context,
+                                          ref,
+                                          loan,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -238,19 +304,39 @@ class _LoansTab extends ConsumerWidget {
 
               if (inactiveLoans.isNotEmpty) ...[
                 const SizedBox(height: 24),
-                Text('Closed Loans', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey)),
+                Text(
+                  'Closed Loans',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(color: Colors.grey),
+                ),
                 const SizedBox(height: 8),
                 ...inactiveLoans.map((loan) {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
-                    color: Theme.of(context).disabledColor.withValues(alpha: 0.02),
+                    color: Theme.of(
+                      context,
+                    ).disabledColor.withValues(alpha: 0.02),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.04)),
+                      side: BorderSide(
+                        color: Theme.of(
+                          context,
+                        ).dividerColor.withValues(alpha: 0.04),
+                      ),
                     ),
                     child: ListTile(
-                      title: Text(loan.name, style: const TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey)),
-                      subtitle: Text('Paid off principal: ${currencyFormatter.format(loan.principalAmount)}', style: const TextStyle(color: Colors.grey)),
+                      title: Text(
+                        loan.name,
+                        style: const TextStyle(
+                          decoration: TextDecoration.lineThrough,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      subtitle: Text(
+                        'Paid off principal: ${currencyFormatter.format(loan.principalAmount)}',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
                       trailing: const Icon(Icons.check, color: Colors.teal),
                     ),
                   );
@@ -283,10 +369,16 @@ class _LoansTab extends ConsumerWidget {
     );
   }
 
-  void _showRepaymentDialog(BuildContext context, WidgetRef ref, LoanDb loan, double outstanding) {
+  void _showRepaymentDialog(
+    BuildContext context,
+    WidgetRef ref,
+    LoanDb loan,
+    double outstanding,
+  ) {
     showDialog<void>(
       context: context,
-      builder: (context) => _RepaymentDialog(loan: loan, outstanding: outstanding),
+      builder: (context) =>
+          _RepaymentDialog(loan: loan, outstanding: outstanding),
     );
   }
 
@@ -295,7 +387,9 @@ class _LoansTab extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Close Loan?'),
-        content: Text('Are you sure you want to mark "${loan.name}" as closed/fully repaid? This will set its status to inactive.'),
+        content: Text(
+          'Are you sure you want to mark "${loan.name}" as closed/fully repaid? This will set its status to inactive.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -304,16 +398,20 @@ class _LoansTab extends ConsumerWidget {
           TextButton(
             onPressed: () async {
               final db = ref.read(databaseProvider);
-              await (db.update(db.loans)
-                ..where((l) => l.id.equals(loan.id)))
-                .write(LoansCompanion(
+              await (db.update(
+                db.loans,
+              )..where((l) => l.id.equals(loan.id))).write(
+                LoansCompanion(
                   isActive: const Value(false),
                   updatedAt: Value(DateTime.now()),
-                ));
+                ),
+              );
               if (context.mounted) Navigator.of(context).pop();
-              
             },
-            child: const Text('Close Loan', style: TextStyle(color: Colors.teal)),
+            child: const Text(
+              'Close Loan',
+              style: TextStyle(color: Colors.teal),
+            ),
           ),
         ],
       ),
@@ -387,7 +485,9 @@ class _AddLoanSheetState extends ConsumerState<_AddLoanSheet> {
               children: [
                 Text(
                   'Add Institutional Loan',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -404,7 +504,9 @@ class _AddLoanSheetState extends ConsumerState<_AddLoanSheet> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.label_outline),
               ),
-              validator: (val) => val == null || val.trim().isEmpty ? 'Please enter a loan name' : null,
+              validator: (val) => val == null || val.trim().isEmpty
+                  ? 'Please enter a loan name'
+                  : null,
             ),
             const SizedBox(height: 16),
             Row(
@@ -412,14 +514,21 @@ class _AddLoanSheetState extends ConsumerState<_AddLoanSheet> {
                 Expanded(
                   child: TextFormField(
                     controller: _principalController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))],
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    ],
                     decoration: const InputDecoration(
                       labelText: 'Principal Amount',
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.monetization_on_outlined),
                     ),
-                    validator: (val) => val == null || double.tryParse(val) == null || double.parse(val) <= 0
+                    validator: (val) =>
+                        val == null ||
+                            double.tryParse(val) == null ||
+                            double.parse(val) <= 0
                         ? 'Enter valid principal'
                         : null,
                   ),
@@ -428,15 +537,22 @@ class _AddLoanSheetState extends ConsumerState<_AddLoanSheet> {
                 Expanded(
                   child: TextFormField(
                     controller: _rateController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))],
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    ],
                     decoration: const InputDecoration(
                       labelText: 'Interest Rate (%)',
                       hintText: 'Annual %',
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.percent),
                     ),
-                    validator: (val) => val == null || double.tryParse(val) == null || double.parse(val) < 0
+                    validator: (val) =>
+                        val == null ||
+                            double.tryParse(val) == null ||
+                            double.parse(val) < 0
                         ? 'Enter valid rate'
                         : null,
                   ),
@@ -456,7 +572,10 @@ class _AddLoanSheetState extends ConsumerState<_AddLoanSheet> {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.calendar_today_outlined),
                     ),
-                    validator: (val) => val == null || int.tryParse(val) == null || int.parse(val) <= 0
+                    validator: (val) =>
+                        val == null ||
+                            int.tryParse(val) == null ||
+                            int.parse(val) <= 0
                         ? 'Enter valid tenure'
                         : null,
                   ),
@@ -466,7 +585,9 @@ class _AddLoanSheetState extends ConsumerState<_AddLoanSheet> {
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.all(16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     icon: const Icon(Icons.calendar_month),
                     label: Text(
@@ -490,15 +611,21 @@ class _AddLoanSheetState extends ConsumerState<_AddLoanSheet> {
                 ),
               ],
             ),
-            
+
             // EMI Calculator Preview Card
             if (_calculatedEmi > 0) ...[
               const SizedBox(height: 20),
               Card(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.05),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)),
+                  side: BorderSide(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
+                  ),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -527,7 +654,9 @@ class _AddLoanSheetState extends ConsumerState<_AddLoanSheet> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               onPressed: _submit,
               child: const Text('Save & Create Loan Account'),
@@ -549,36 +678,42 @@ class _AddLoanSheetState extends ConsumerState<_AddLoanSheet> {
 
     // 1. Create a matching Loan Account inside a Transaction
     await db.transaction(() async {
-      final accId = await db.into(db.accounts).insert(
-        AccountsCompanion.insert(
-          
-          name: '$name (Loan)',
-          type: AccountType.loan,
-          icon: Icons.account_balance.codePoint,
-          color: 'FFFF5722', // Deep Orange for Loan liability
-          openingBalance: Value(principal),
-          isDefault: const Value(false),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
+      final accId = await db
+          .into(db.accounts)
+          .insert(
+            AccountsCompanion.insert(
+              name: '$name (Loan)',
+              type: AccountType.loan,
+              icon: Icons.account_balance.codePoint,
+              color: 'FFFF5722', // Deep Orange for Loan liability
+              openingBalance: Value(principal),
+              isDefault: const Value(false),
+              updatedAt: Value(DateTime.now()),
+            ),
+          );
 
       // 2. Insert Loan detail record
-      final nextEmiDate = DateTime(_startDate.year, _startDate.month + 1, _startDate.day);
-      await db.into(db.loans).insert(
-        LoansCompanion.insert(
-          
-          name: name,
-          accountId: accId,
-          principalAmount: principal,
-          interestRate: rate,
-          tenureMonths: tenure,
-          startDate: _startDate,
-          nextEmiDate: Value(nextEmiDate),
-          emiAmount: _calculatedEmi,
-          isActive: const Value(true),
-          updatedAt: Value(DateTime.now()),
-        ),
+      final nextEmiDate = DateTime(
+        _startDate.year,
+        _startDate.month + 1,
+        _startDate.day,
       );
+      await db
+          .into(db.loans)
+          .insert(
+            LoansCompanion.insert(
+              name: name,
+              accountId: accId,
+              principalAmount: principal,
+              interestRate: rate,
+              tenureMonths: tenure,
+              startDate: _startDate,
+              nextEmiDate: Value(nextEmiDate),
+              emiAmount: _calculatedEmi,
+              isActive: const Value(true),
+              updatedAt: Value(DateTime.now()),
+            ),
+          );
     });
 
     if (mounted) Navigator.of(context).pop();
@@ -611,12 +746,17 @@ class _RepaymentDialogState extends ConsumerState<_RepaymentDialog> {
   Future<void> _loadAccounts() async {
     final db = ref.read(databaseProvider);
     final walletId = ref.read(currentWalletIdProvider);
-    final list = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
+    final list = await (db.select(
+      db.accounts,
+    )..where((a) => a.walletId.equals(walletId))).get();
     setState(() {
       // Repayments should come from bank, cash, or credit accounts (not loan accounts themselves)
       _accounts = list.where((a) => a.type != AccountType.loan).toList();
       if (_accounts.isNotEmpty) {
-        _selectedAccount = _accounts.firstWhere((a) => a.isDefault, orElse: () => _accounts.first);
+        _selectedAccount = _accounts.firstWhere(
+          (a) => a.isDefault,
+          orElse: () => _accounts.first,
+        );
       }
       _isLoading = false;
     });
@@ -631,7 +771,12 @@ class _RepaymentDialogState extends ConsumerState<_RepaymentDialog> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const AlertDialog(content: SizedBox(height: 80, child: Center(child: CircularProgressIndicator())));
+      return const AlertDialog(
+        content: SizedBox(
+          height: 80,
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      );
     }
 
     return AlertDialog(
@@ -646,13 +791,20 @@ class _RepaymentDialogState extends ConsumerState<_RepaymentDialog> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _amountController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))],
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
               decoration: const InputDecoration(
                 labelText: 'Repayment Amount',
                 border: OutlineInputBorder(),
               ),
-              validator: (val) => val == null || double.tryParse(val) == null || double.parse(val) <= 0
+              validator: (val) =>
+                  val == null ||
+                      double.tryParse(val) == null ||
+                      double.parse(val) <= 0
                   ? 'Enter valid amount'
                   : null,
             ),
@@ -664,17 +816,15 @@ class _RepaymentDialogState extends ConsumerState<_RepaymentDialog> {
                 border: OutlineInputBorder(),
               ),
               items: _accounts.map((acc) {
-                return DropdownMenuItem(
-                  value: acc,
-                  child: Text(acc.name),
-                );
+                return DropdownMenuItem(value: acc, child: Text(acc.name));
               }).toList(),
               onChanged: (val) {
                 setState(() {
                   _selectedAccount = val;
                 });
               },
-              validator: (val) => val == null ? 'Please select an account' : null,
+              validator: (val) =>
+                  val == null ? 'Please select an account' : null,
             ),
           ],
         ),
@@ -684,10 +834,7 @@ class _RepaymentDialogState extends ConsumerState<_RepaymentDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
-        TextButton(
-          onPressed: _submit,
-          child: const Text('Submit Payment'),
-        ),
+        TextButton(onPressed: _submit, child: const Text('Submit Payment')),
       ],
     );
   }
@@ -713,40 +860,48 @@ class _RepaymentDialogState extends ConsumerState<_RepaymentDialog> {
       final now = DateTime.now();
 
       // Transaction 1: Expense from source account
-      await db.into(db.transactions).insert(
-        TransactionsCompanion.insert(
-          amount: payAmount,
-          date: now,
-          note: Value(note),
-          type: TransactionType.expense,
-          categoryId: transferCategory.id,
-          accountId: sourceAccountId,
-          updatedAt: Value(now),
-        ),
-      );
+      await db
+          .into(db.transactions)
+          .insert(
+            TransactionsCompanion.insert(
+              amount: payAmount,
+              date: now,
+              note: Value(note),
+              type: TransactionType.expense,
+              categoryId: transferCategory.id,
+              accountId: sourceAccountId,
+              updatedAt: Value(now),
+            ),
+          );
 
       // Transaction 2: Income (Repayment reducer) to Loan Account
-      await db.into(db.transactions).insert(
-        TransactionsCompanion.insert(
-          amount: payAmount,
-          date: now,
-          note: Value(note),
-          type: TransactionType.income,
-          categoryId: transferCategory.id,
-          accountId: loanAccountId,
-          updatedAt: Value(now),
-        ),
-      );
+      await db
+          .into(db.transactions)
+          .insert(
+            TransactionsCompanion.insert(
+              amount: payAmount,
+              date: now,
+              note: Value(note),
+              type: TransactionType.income,
+              categoryId: transferCategory.id,
+              accountId: loanAccountId,
+              updatedAt: Value(now),
+            ),
+          );
 
       // Update next payment date in Loans table
       final currentNextEmi = widget.loan.nextEmiDate ?? now;
-      final newNextEmi = DateTime(currentNextEmi.year, currentNextEmi.month + 1, currentNextEmi.day);
+      final newNextEmi = DateTime(
+        currentNextEmi.year,
+        currentNextEmi.month + 1,
+        currentNextEmi.day,
+      );
 
-      await (db.update(db.loans)..where((l) => l.id.equals(widget.loan.id)))
-        .write(LoansCompanion(
-          nextEmiDate: Value(newNextEmi),
-          updatedAt: Value(now),
-        ));
+      await (db.update(
+        db.loans,
+      )..where((l) => l.id.equals(widget.loan.id))).write(
+        LoansCompanion(nextEmiDate: Value(newNextEmi), updatedAt: Value(now)),
+      );
     });
 
     if (mounted) Navigator.of(context).pop();
@@ -774,11 +929,13 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
     return Scaffold(
       body: debtsAsync.when(
         data: (debts) {
-          final filteredDebts = debts.where((d) => d.isSettled == _showSettled).toList();
+          final filteredDebts = debts
+              .where((d) => d.isSettled == _showSettled)
+              .toList();
 
           // Calculate summary cards
           double totalOwedToYou = 0; // Lent and active
-          double totalYouOwe = 0;   // Borrowed and active
+          double totalYouOwe = 0; // Borrowed and active
           for (final d in debts.where((d) => !d.isSettled)) {
             if (d.type == PeerDebtType.lent) {
               totalOwedToYou += d.amount;
@@ -794,13 +951,24 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.08)),
+                  side: BorderSide(
+                    color: Theme.of(
+                      context,
+                    ).dividerColor.withValues(alpha: 0.08),
+                  ),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      const Text('Peer Net Balances', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+                      const Text(
+                        'Peer Net Balances',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: Colors.grey,
+                        ),
+                      ),
                       const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -809,9 +977,19 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                             children: [
                               Text(
                                 currencyFormatter.format(totalOwedToYou),
-                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.teal),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal,
+                                ),
                               ),
-                              const Text('Owed to You', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                              const Text(
+                                'Owed to You',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 32, child: VerticalDivider()),
@@ -819,9 +997,19 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                             children: [
                               Text(
                                 currencyFormatter.format(totalYouOwe),
-                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.deepOrange),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.deepOrange,
+                                ),
                               ),
-                              const Text('You Owe', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                              const Text(
+                                'You Owe',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -831,7 +1019,7 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Toggle row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -841,7 +1029,9 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   TextButton.icon(
-                    icon: Icon(_showSettled ? Icons.history : Icons.check_circle),
+                    icon: Icon(
+                      _showSettled ? Icons.history : Icons.check_circle,
+                    ),
                     label: Text(_showSettled ? 'Show Active' : 'Show Settled'),
                     onPressed: () {
                       setState(() {
@@ -857,7 +1047,9 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                 const SizedBox(height: 48),
                 Center(
                   child: Text(
-                    _showSettled ? 'No settled debts history' : 'No active peer debts',
+                    _showSettled
+                        ? 'No settled debts history'
+                        : 'No active peer debts',
                     style: const TextStyle(color: Colors.grey),
                   ),
                 ),
@@ -869,13 +1061,19 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                     margin: const EdgeInsets.only(bottom: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.06)),
+                      side: BorderSide(
+                        color: Theme.of(
+                          context,
+                        ).dividerColor.withValues(alpha: 0.06),
+                      ),
                     ),
                     child: ListTile(
                       leading: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: isLent ? Colors.teal.withValues(alpha: 0.08) : Colors.deepOrange.withValues(alpha: 0.08),
+                          color: isLent
+                              ? Colors.teal.withValues(alpha: 0.08)
+                              : Colors.deepOrange.withValues(alpha: 0.08),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -884,17 +1082,26 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                           size: 20,
                         ),
                       ),
-                      title: Text(debt.personName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      title: Text(
+                        debt.personName,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if ((debt.note ?? '').isNotEmpty) ...[
-                            Text((debt.note ?? ''), style: const TextStyle(fontSize: 12)),
+                            Text(
+                              (debt.note ?? ''),
+                              style: const TextStyle(fontSize: 12),
+                            ),
                             const SizedBox(height: 2),
                           ],
                           Text(
                             '${DateFormat('yyyy-MM-dd').format(debt.date)} • ${isLent ? 'Lent' : 'Borrowed'}',
-                            style: const TextStyle(fontSize: 10, color: Colors.grey),
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey,
+                            ),
                           ),
                         ],
                       ),
@@ -912,7 +1119,10 @@ class _PeerDebtsTabState extends ConsumerState<_PeerDebtsTab> {
                           if (!debt.isSettled) ...[
                             const SizedBox(width: 8),
                             IconButton(
-                              icon: const Icon(Icons.done_all, color: Colors.teal),
+                              icon: const Icon(
+                                Icons.done_all,
+                                color: Colors.teal,
+                              ),
                               tooltip: 'Settle Up',
                               onPressed: () => _settleDebt(context, debt),
                             ),
@@ -970,7 +1180,7 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
   final _nameController = TextEditingController();
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
-  
+
   PeerDebtType _debtType = PeerDebtType.lent;
   DateTime _debtDate = DateTime.now();
 
@@ -988,11 +1198,16 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
   Future<void> _loadAccounts() async {
     final db = ref.read(databaseProvider);
     final walletId = ref.read(currentWalletIdProvider);
-    final list = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
+    final list = await (db.select(
+      db.accounts,
+    )..where((a) => a.walletId.equals(walletId))).get();
     setState(() {
       _accounts = list.where((a) => a.type != AccountType.loan).toList();
       if (_accounts.isNotEmpty) {
-        _selectedAccount = _accounts.firstWhere((a) => a.isDefault, orElse: () => _accounts.first);
+        _selectedAccount = _accounts.firstWhere(
+          (a) => a.isDefault,
+          orElse: () => _accounts.first,
+        );
       }
       _isLoading = false;
     });
@@ -1011,7 +1226,10 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
     final mediaQuery = MediaQuery.of(context);
 
     if (_isLoading) {
-      return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
+      return const SizedBox(
+        height: 200,
+        child: Center(child: CircularProgressIndicator()),
+      );
     }
 
     return Padding(
@@ -1032,7 +1250,9 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
               children: [
                 Text(
                   'Log Peer Debt',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -1043,8 +1263,16 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
             const SizedBox(height: 16),
             SegmentedButton<PeerDebtType>(
               segments: const [
-                ButtonSegment(value: PeerDebtType.lent, label: Text('Lent (Owed to me)'), icon: Icon(Icons.arrow_outward)),
-                ButtonSegment(value: PeerDebtType.borrowed, label: Text('Borrowed (I owe)'), icon: Icon(Icons.arrow_downward)),
+                ButtonSegment(
+                  value: PeerDebtType.lent,
+                  label: Text('Lent (Owed to me)'),
+                  icon: Icon(Icons.arrow_outward),
+                ),
+                ButtonSegment(
+                  value: PeerDebtType.borrowed,
+                  label: Text('Borrowed (I owe)'),
+                  icon: Icon(Icons.arrow_downward),
+                ),
               ],
               selected: {_debtType},
               onSelectionChanged: (set) {
@@ -1061,7 +1289,9 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.person_outline),
               ),
-              validator: (val) => val == null || val.trim().isEmpty ? 'Please enter a name' : null,
+              validator: (val) => val == null || val.trim().isEmpty
+                  ? 'Please enter a name'
+                  : null,
             ),
             const SizedBox(height: 16),
             Row(
@@ -1069,14 +1299,21 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
                 Expanded(
                   child: TextFormField(
                     controller: _amountController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))],
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    ],
                     decoration: const InputDecoration(
                       labelText: 'Amount',
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.monetization_on_outlined),
                     ),
-                    validator: (val) => val == null || double.tryParse(val) == null || double.parse(val) <= 0
+                    validator: (val) =>
+                        val == null ||
+                            double.tryParse(val) == null ||
+                            double.parse(val) <= 0
                         ? 'Enter valid amount'
                         : null,
                   ),
@@ -1086,7 +1323,9 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.all(16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     icon: const Icon(Icons.calendar_month),
                     label: Text(DateFormat('yyyy-MM-dd').format(_debtDate)),
@@ -1117,11 +1356,13 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Link account switch
             SwitchListTile(
               title: const Text('Adjust Account Balance'),
-              subtitle: const Text('Log a transaction to track the actual cash movement'),
+              subtitle: const Text(
+                'Log a transaction to track the actual cash movement',
+              ),
               value: _linkAccount,
               onChanged: (val) {
                 setState(() {
@@ -1138,17 +1379,16 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
                   border: OutlineInputBorder(),
                 ),
                 items: _accounts.map((acc) {
-                  return DropdownMenuItem(
-                    value: acc,
-                    child: Text(acc.name),
-                  );
+                  return DropdownMenuItem(value: acc, child: Text(acc.name));
                 }).toList(),
                 onChanged: (val) {
                   setState(() {
                     _selectedAccount = val;
                   });
                 },
-                validator: (val) => _linkAccount && val == null ? 'Please select an account' : null,
+                validator: (val) => _linkAccount && val == null
+                    ? 'Please select an account'
+                    : null,
               ),
             ],
 
@@ -1156,7 +1396,9 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               onPressed: _submit,
               child: const Text('Save Peer Debt'),
@@ -1190,36 +1432,43 @@ class _AddPeerDebtSheetState extends ConsumerState<_AddPeerDebtSheet> {
         // Auto log transaction:
         // Lent: you gave cash -> Expense
         // Borrowed: you received cash -> Income
-        final txType = _debtType == PeerDebtType.lent ? TransactionType.expense : TransactionType.income;
-        final txNote = '${_debtType == PeerDebtType.lent ? 'Lent to' : 'Borrowed from'} $name ${note.isNotEmpty ? '($note)' : ''}';
+        final txType = _debtType == PeerDebtType.lent
+            ? TransactionType.expense
+            : TransactionType.income;
+        final txNote =
+            '${_debtType == PeerDebtType.lent ? 'Lent to' : 'Borrowed from'} $name ${note.isNotEmpty ? '($note)' : ''}';
 
-        transactionId = await db.into(db.transactions).insert(
-          TransactionsCompanion.insert(
-            amount: amount,
-            date: _debtDate,
-            note: Value(txNote),
-            type: txType,
-            categoryId: transferCategory.id,
-            accountId: _selectedAccount!.id,
-            updatedAt: Value(DateTime.now()),
-          ),
-        );
+        transactionId = await db
+            .into(db.transactions)
+            .insert(
+              TransactionsCompanion.insert(
+                amount: amount,
+                date: _debtDate,
+                note: Value(txNote),
+                type: txType,
+                categoryId: transferCategory.id,
+                accountId: _selectedAccount!.id,
+                updatedAt: Value(DateTime.now()),
+              ),
+            );
       }
 
       // Create Peer Debt entry
-      await db.into(db.peerDebts).insert(
-        PeerDebtsCompanion.insert(
-          walletId: walletId,
-          personName: name,
-          type: _debtType,
-          amount: amount,
-          note: Value(note.isNotEmpty ? note : null),
-          date: _debtDate,
-          isSettled: const Value(false),
-          transactionId: Value(transactionId),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
+      await db
+          .into(db.peerDebts)
+          .insert(
+            PeerDebtsCompanion.insert(
+              walletId: walletId,
+              personName: name,
+              type: _debtType,
+              amount: amount,
+              note: Value(note.isNotEmpty ? note : null),
+              date: _debtDate,
+              isSettled: const Value(false),
+              transactionId: Value(transactionId),
+              updatedAt: Value(DateTime.now()),
+            ),
+          );
     });
 
     if (mounted) Navigator.of(context).pop();
@@ -1231,7 +1480,8 @@ class _SettlePeerDebtDialog extends ConsumerStatefulWidget {
   const _SettlePeerDebtDialog({required this.debt});
 
   @override
-  ConsumerState<_SettlePeerDebtDialog> createState() => _SettlePeerDebtDialogState();
+  ConsumerState<_SettlePeerDebtDialog> createState() =>
+      _SettlePeerDebtDialogState();
 }
 
 class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
@@ -1249,11 +1499,16 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
   Future<void> _loadAccounts() async {
     final db = ref.read(databaseProvider);
     final walletId = ref.read(currentWalletIdProvider);
-    final list = await (db.select(db.accounts)..where((a) => a.walletId.equals(walletId))).get();
+    final list = await (db.select(
+      db.accounts,
+    )..where((a) => a.walletId.equals(walletId))).get();
     setState(() {
       _accounts = list.where((a) => a.type != AccountType.loan).toList();
       if (_accounts.isNotEmpty) {
-        _selectedAccount = _accounts.firstWhere((a) => a.isDefault, orElse: () => _accounts.first);
+        _selectedAccount = _accounts.firstWhere(
+          (a) => a.isDefault,
+          orElse: () => _accounts.first,
+        );
       }
       _isLoading = false;
     });
@@ -1262,7 +1517,12 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const AlertDialog(content: SizedBox(height: 80, child: Center(child: CircularProgressIndicator())));
+      return const AlertDialog(
+        content: SizedBox(
+          height: 80,
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      );
     }
 
     final isLent = widget.debt.type == PeerDebtType.lent;
@@ -1281,7 +1541,9 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
           const SizedBox(height: 16),
           SwitchListTile(
             title: const Text('Log Repayment Transaction'),
-            subtitle: const Text('Record cash receipt/payment inside an account'),
+            subtitle: const Text(
+              'Record cash receipt/payment inside an account',
+            ),
             contentPadding: EdgeInsets.zero,
             value: _linkAccount,
             onChanged: (val) {
@@ -1299,10 +1561,7 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
                 border: OutlineInputBorder(),
               ),
               items: _accounts.map((acc) {
-                return DropdownMenuItem(
-                  value: acc,
-                  child: Text(acc.name),
-                );
+                return DropdownMenuItem(value: acc, child: Text(acc.name));
               }).toList(),
               onChanged: (val) {
                 setState(() {
@@ -1334,7 +1593,9 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
       if (_linkAccount && _selectedAccount != null) {
         // Original Lent -> Settlement is Income (getting money back)
         // Original Borrowed -> Settlement is Expense (paying money back)
-        final txType = widget.debt.type == PeerDebtType.lent ? TransactionType.income : TransactionType.expense;
+        final txType = widget.debt.type == PeerDebtType.lent
+            ? TransactionType.income
+            : TransactionType.expense;
         final note = 'Settlement for peer debt: ${widget.debt.personName}';
 
         // Find the 'Transfer' category
@@ -1344,25 +1605,27 @@ class _SettlePeerDebtDialogState extends ConsumerState<_SettlePeerDebtDialog> {
           orElse: () => categories.first,
         );
 
-        await db.into(db.transactions).insert(
-          TransactionsCompanion.insert(
-            amount: widget.debt.amount,
-            date: now,
-            note: Value(note),
-            type: txType,
-            categoryId: transferCategory.id,
-            accountId: _selectedAccount!.id,
-            updatedAt: Value(now),
-          ),
-        );
+        await db
+            .into(db.transactions)
+            .insert(
+              TransactionsCompanion.insert(
+                amount: widget.debt.amount,
+                date: now,
+                note: Value(note),
+                type: txType,
+                categoryId: transferCategory.id,
+                accountId: _selectedAccount!.id,
+                updatedAt: Value(now),
+              ),
+            );
       }
 
       // Mark debt settled
-      await (db.update(db.peerDebts)..where((pd) => pd.id.equals(widget.debt.id)))
-        .write(PeerDebtsCompanion(
-          isSettled: const Value(true),
-          updatedAt: Value(now),
-        ));
+      await (db.update(
+        db.peerDebts,
+      )..where((pd) => pd.id.equals(widget.debt.id))).write(
+        PeerDebtsCompanion(isSettled: const Value(true), updatedAt: Value(now)),
+      );
     });
 
     if (mounted) Navigator.of(context).pop();

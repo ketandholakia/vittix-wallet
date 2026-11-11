@@ -12,9 +12,15 @@ class AccountRepositoryImpl implements AccountRepository {
   /// Null when no authenticated user context exists.
   final int? actorAccountId;
 
-  AccountRepositoryImpl(this._accountDao, [this.walletId, this._walletDao, this.actorAccountId]);
+  AccountRepositoryImpl(
+    this._accountDao, [
+    this.walletId,
+    this._walletDao,
+    this.actorAccountId,
+  ]);
 
-  db.WalletDao get _auditDao => _walletDao ?? db.WalletDao(_accountDao.attachedDatabase);
+  db.WalletDao get _auditDao =>
+      _walletDao ?? db.WalletDao(_accountDao.attachedDatabase);
 
   Future<void> _insertAuditEvent({
     required String action,
@@ -48,13 +54,19 @@ class AccountRepositoryImpl implements AccountRepository {
         actionName: 'manage accounts',
       );
     }
-    final companion = account.toCompanion().copyWith(id: const db.Value.absent());
+    final companion = account.toCompanion().copyWith(
+      id: const db.Value.absent(),
+    );
     final database = _accountDao.attachedDatabase;
     await database.transaction(() async {
       final id = await _accountDao.insertAccount(companion, walletId);
       if (walletId != null) {
         final row = await _accountDao.getAccountById(id, walletId);
-        await _insertAuditEvent(action: 'ACCOUNT_CREATED', entityId: id, entityUuid: row?.uuid);
+        await _insertAuditEvent(
+          action: 'ACCOUNT_CREATED',
+          entityId: id,
+          entityUuid: row?.uuid,
+        );
       }
     });
   }
@@ -75,18 +87,27 @@ class AccountRepositoryImpl implements AccountRepository {
       );
     }
     // Capture uuid before deletion.
-    final existing = walletId != null ? await _accountDao.getAccountById(id, walletId) : null;
+    final existing = walletId != null
+        ? await _accountDao.getAccountById(id, walletId)
+        : null;
     final database = _accountDao.attachedDatabase;
     await database.transaction(() async {
       final deleted = await _accountDao.deleteAccount(id, walletId);
       if (deleted > 0 && existing != null) {
-        await _insertAuditEvent(action: 'ACCOUNT_DELETED', entityId: id, entityUuid: existing.uuid);
+        await _insertAuditEvent(
+          action: 'ACCOUNT_DELETED',
+          entityId: id,
+          entityUuid: existing.uuid,
+        );
       }
     });
   }
 
   @override
-  Future<int> reassignAndDeleteAccount(int fromAccountId, int toAccountId) async {
+  Future<int> reassignAndDeleteAccount(
+    int fromAccountId,
+    int toAccountId,
+  ) async {
     if (fromAccountId == toAccountId) {
       throw ArgumentError.value(
         toAccountId,
@@ -105,16 +126,23 @@ class AccountRepositoryImpl implements AccountRepository {
       // that lives in a different wallet.
       final target = await _accountDao.getAccountById(toAccountId, walletId);
       if (target == null) {
-        throw StateError('Target account $toAccountId is not in the active wallet.');
+        throw StateError(
+          'Target account $toAccountId is not in the active wallet.',
+        );
       }
     }
 
-    final existing = walletId != null ? await _accountDao.getAccountById(fromAccountId, walletId) : null;
+    final existing = walletId != null
+        ? await _accountDao.getAccountById(fromAccountId, walletId)
+        : null;
     final database = _accountDao.attachedDatabase;
     var moved = 0;
     await database.transaction(() async {
-      moved = await database.transactionDao
-          .reassignTransactionsForAccount(fromAccountId, toAccountId, walletId);
+      moved = await database.transactionDao.reassignTransactionsForAccount(
+        fromAccountId,
+        toAccountId,
+        walletId,
+      );
       final deleted = await _accountDao.deleteAccount(fromAccountId, walletId);
       if (deleted > 0 && existing != null) {
         await _insertAuditEvent(
@@ -148,19 +176,26 @@ class AccountRepositoryImpl implements AccountRepository {
     }
     final database = _accountDao.attachedDatabase;
     await database.transaction(() async {
-      final updated = await _accountDao.updateAccount(account.toCompanion(), walletId);
+      final updated = await _accountDao.updateAccount(
+        account.toCompanion(),
+        walletId,
+      );
       if (updated && walletId != null) {
         final row = await _accountDao.getAccountById(account.id, walletId);
-        await _insertAuditEvent(action: 'ACCOUNT_UPDATED', entityId: account.id, entityUuid: row?.uuid);
+        await _insertAuditEvent(
+          action: 'ACCOUNT_UPDATED',
+          entityId: account.id,
+          entityUuid: row?.uuid,
+        );
       }
     });
   }
 
   @override
   Stream<List<Account>> watchAllAccounts() {
-    return _accountDao.watchAllAccounts(walletId).map(
-          (accounts) => accounts.map((a) => a.toDomain()).toList(),
-        );
+    return _accountDao
+        .watchAllAccounts(walletId)
+        .map((accounts) => accounts.map((a) => a.toDomain()).toList());
   }
 
   @override
@@ -168,9 +203,15 @@ class AccountRepositoryImpl implements AccountRepository {
     return watchAllAccounts().asyncMap((accounts) async {
       final results = <AccountWithBalance>[];
       for (final account in accounts) {
-        final dbAccount = await _accountDao.getAccountById(account.id, walletId);
+        final dbAccount = await _accountDao.getAccountById(
+          account.id,
+          walletId,
+        );
         if (dbAccount == null) continue;
-        final balance = await _accountDao.getBalanceForAccount(dbAccount, walletId);
+        final balance = await _accountDao.getBalanceForAccount(
+          dbAccount,
+          walletId,
+        );
         results.add(AccountWithBalance(account: account, balance: balance));
       }
       return results;

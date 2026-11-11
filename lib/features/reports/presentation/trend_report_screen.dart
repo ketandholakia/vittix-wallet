@@ -12,7 +12,9 @@ import 'package:intl/intl.dart';
 final trendPeriodProvider = StateProvider<int>((ref) => 6);
 
 // Provider to fetch the trend data based on the selected period
-final trendReportProvider = FutureProvider.autoDispose<List<TrendDataPoint>>((ref) {
+final trendReportProvider = FutureProvider.autoDispose<List<TrendDataPoint>>((
+  ref,
+) {
   // Invalidate this provider if the use case changes, to force a refetch.
   final months = ref.watch(trendPeriodProvider);
   return ref.watch(getTrendReportUseCaseProvider).call(months);
@@ -28,9 +30,7 @@ class TrendReportScreen extends ConsumerWidget {
     final trendDataAsync = ref.watch(trendReportProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Spending Trend'),
-      ),
+      appBar: AppBar(title: const Text('Spending Trend')),
       body: Column(
         children: [
           Padding(
@@ -43,7 +43,8 @@ class TrendReportScreen extends ConsumerWidget {
               ],
               selected: {trendPeriod},
               onSelectionChanged: (newSelection) {
-                ref.read(trendPeriodProvider.notifier).state = newSelection.first;
+                ref.read(trendPeriodProvider.notifier).state =
+                    newSelection.first;
               },
             ),
           ),
@@ -54,7 +55,8 @@ class TrendReportScreen extends ConsumerWidget {
                   return const EmptyStateWidget(
                     icon: Icons.trending_down,
                     message: 'Not Enough Data',
-                    subMessage: 'More transactions are needed to show a spending trend.',
+                    subMessage:
+                        'More transactions are needed to show a spending trend.',
                   );
                 }
 
@@ -63,13 +65,18 @@ class TrendReportScreen extends ConsumerWidget {
 
                 // Create a map for quick lookups of amounts by month.
                 final dataMap = {
-                  for (var point in data) DateTime(point.date.year, point.date.month): point.amount
+                  for (var point in data)
+                    DateTime(point.date.year, point.date.month): point.amount,
                 };
 
                 // Generate a complete list of months for the selected period to fill any gaps.
                 final now = DateTime.now();
                 final allMonths = List.generate(trendPeriod, (index) {
-                  return DateTime(now.year, now.month - (trendPeriod - 1) + index, 1);
+                  return DateTime(
+                    now.year,
+                    now.month - (trendPeriod - 1) + index,
+                    1,
+                  );
                 });
 
                 // Create chart spots, using 0.0 for months with no data.
@@ -90,12 +97,18 @@ class TrendReportScreen extends ConsumerWidget {
                             return touchedSpots.map((spot) {
                               return LineTooltipItem(
                                 currencyFormatter.format(spot.y),
-                                TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold),
+                                TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 textAlign: TextAlign.center,
                               );
                             }).toList();
                           },
-                          getTooltipColor: (touchedSpot) => Theme.of(context).primaryColor,
+                          getTooltipColor: (touchedSpot) =>
+                              Theme.of(context).primaryColor,
                         ),
                       ),
                       gridData: const FlGridData(show: false),
@@ -107,7 +120,8 @@ class TrendReportScreen extends ConsumerWidget {
                             interval: 1,
                             getTitlesWidget: (value, meta) {
                               final index = value.toInt();
-                              if (index >= allMonths.length) return const SizedBox();
+                              if (index >= allMonths.length)
+                                return const SizedBox();
                               final date = allMonths[index];
                               return SideTitleWidget(
                                 axisSide: meta.axisSide,
@@ -129,8 +143,12 @@ class TrendReportScreen extends ConsumerWidget {
                             },
                           ),
                         ),
-                        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
                       ),
                       borderData: FlBorderData(show: false),
                       lineBarsData: [
@@ -143,7 +161,9 @@ class TrendReportScreen extends ConsumerWidget {
                           dotData: const FlDotData(show: false),
                           belowBarData: BarAreaData(
                             show: true,
-                            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                            color: Theme.of(
+                              context,
+                            ).primaryColor.withValues(alpha: 0.3),
                           ),
                         ),
                       ],
@@ -151,7 +171,9 @@ class TrendReportScreen extends ConsumerWidget {
                   ),
                 );
               },
-              loading: () => const Center(child: CircularProgressIndicator()), // A simple loader is fine here
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
+              ), // A simple loader is fine here
               error: (err, stack) => ErrorDisplayWidget(
                 message: err.toString(),
                 onRetry: () => ref.invalidate(trendReportProvider),

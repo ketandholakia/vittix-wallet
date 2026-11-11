@@ -1,6 +1,7 @@
 // BROKEN DEPENDENCY: Experimental
 
-import 'package:vittix_wallet/features/settings/presentation/guided_onboarding_screen.dart' as guided_onboarding_alias;
+import 'package:vittix_wallet/features/settings/presentation/guided_onboarding_screen.dart'
+    as guided_onboarding_alias;
 import 'package:vittix_wallet/features/accounts/presentation/accounts_overview_widget.dart';
 import 'package:vittix_wallet/core/domain/attention_needed_widget.dart';
 import 'package:vittix_wallet/features/settings/presentation/beta_metrics_widget.dart';
@@ -45,7 +46,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (kDebugMode) {
-        debugPrint('Dashboard first frame built in ${_buildTimer.elapsedMilliseconds}ms');
+        debugPrint(
+          'Dashboard first frame built in ${_buildTimer.elapsedMilliseconds}ms',
+        );
       }
       setState(() => _showSecondarySections = true);
     });
@@ -65,7 +68,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         actions: [
           walletsAsync.when(
             data: (wallets) {
-              final wallet = wallets.where((w) => w.id == currentWalletId).firstOrNull;
+              final wallet = wallets
+                  .where((w) => w.id == currentWalletId)
+                  .firstOrNull;
               return PopupMenuButton<int>(
                 tooltip: 'Switch wallet',
                 icon: Row(
@@ -79,7 +84,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         wallet?.name ?? 'Select wallet',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: Theme.of(context).appBarTheme.foregroundColor ?? Theme.of(context).colorScheme.onPrimary,
+                          color:
+                              Theme.of(context).appBarTheme.foregroundColor ??
+                              Theme.of(context).colorScheme.onPrimary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -90,9 +97,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 onSelected: (value) {
                   if (value == -1) {
-                    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const guided_onboarding_alias.GuidedOnboardingScreen()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) =>
+                            const guided_onboarding_alias.GuidedOnboardingScreen(),
+                      ),
+                    );
                   } else {
-                    ref.read(currentWalletIdProvider.notifier).selectWallet(value);
+                    ref
+                        .read(currentWalletIdProvider.notifier)
+                        .selectWallet(value);
                   }
                 },
                 itemBuilder: (context) {
@@ -103,7 +117,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           child: Row(
                             children: [
                               Expanded(child: Text(walletItem.name)),
-                              if (walletItem.id == currentWalletId) const Icon(Icons.check, size: 18),
+                              if (walletItem.id == currentWalletId)
+                                const Icon(Icons.check, size: 18),
                             ],
                           ),
                         ),
@@ -168,25 +183,34 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   'accounts_overview': const AccountsOverviewWidget(),
                   'assets_overview': const AssetsOverviewWidget(),
                   'recent_transactions': recentTransactionsAsync.when(
-                    data: (transactions) => RecentTransactionsList(transactions: transactions),
+                    data: (transactions) =>
+                        RecentTransactionsList(transactions: transactions),
                     loading: () => const SizedBox.shrink(),
-                    error: (err, stack) => Center(child: Text('Error loading recent transactions: $err')),
+                    error: (err, stack) => Center(
+                      child: Text('Error loading recent transactions: $err'),
+                    ),
                   ),
                   'attention_needed': const AttentionNeededWidget(),
                   'family_automation': const FamilyAutomationDashboard(),
                   'budget_overview': const BudgetOverviewWidget(),
                   'debts_overview': const SizedBox.shrink(),
                   'wallet_member_summary': const WalletMemberSummaryWidget(),
-                  'family_financial_summary': const FamilyFinancialSummaryWidget(),
+                  'family_financial_summary':
+                      const FamilyFinancialSummaryWidget(),
                   'forecast_history': const ForecastHistoryWidget(),
                   'family_goal_summary': const FamilyGoalSummaryWidget(),
-                  'spending_insights_summary': const SpendingInsightsSummaryWidget(),
+                  'spending_insights_summary':
+                      const SpendingInsightsSummaryWidget(),
                   'beta_metrics': const BetaMetricsWidget(),
                   'wallet_activity_feed': const SizedBox.shrink(),
                 };
 
                 final visibleWidgets = widgetsOrder
-                    .where((id) => widgetsHidden[id] != true && widgetMap.containsKey(id))
+                    .where(
+                      (id) =>
+                          widgetsHidden[id] != true &&
+                          widgetMap.containsKey(id),
+                    )
                     .map((id) => widgetMap[id]!)
                     .toList();
 
@@ -196,7 +220,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         .animate()
                         .fade(duration: 400.ms)
                         .slideY(begin: 0.08, curve: Curves.easeOutQuad),
-                    
+
                     if (_showSecondarySections) ...[
                       ...visibleWidgets.asMap().entries.map((entry) {
                         final idx = entry.key;
@@ -209,9 +233,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       const SizedBox(height: 16),
                       TextButton.icon(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute<void>(
-                            builder: (ctx) => const CustomizeDashboardScreen(),
-                          ));
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (ctx) =>
+                                  const CustomizeDashboardScreen(),
+                            ),
+                          );
                         },
                         icon: const Icon(Icons.tune),
                         label: const Text('Customize Dashboard'),
@@ -223,7 +250,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 );
               },
-              loading: () => const SizedBox(height: 200, child: DashboardShimmer()),
+              loading: () =>
+                  const SizedBox(height: 200, child: DashboardShimmer()),
               error: (err, stack) => ErrorDisplayWidget(
                 message: err.toString(),
                 onRetry: () => ref.invalidate(monthlyReportProvider),
@@ -236,4 +264,3 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 }
-

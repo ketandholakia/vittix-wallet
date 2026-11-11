@@ -17,12 +17,16 @@ class AccountScreen extends ConsumerWidget {
 
     await ref.read(addAccountUseCaseProvider).call(account);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Account "${account.name}" added')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Account "${account.name}" added')));
   }
 
-  Future<void> _showEditDialog(BuildContext context, WidgetRef ref, Account account) async {
+  Future<void> _showEditDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Account account,
+  ) async {
     final updated = await showAccountFormDialog(context, ref, account: account);
     if (updated == null || !context.mounted) return;
 
@@ -78,7 +82,8 @@ class AccountScreen extends ConsumerWidget {
         candidates: candidates,
         labelOf: (account) => account.account.name,
         subtitleOf: (account) => account.account.type.label,
-        warning: 'Transactions keep their amounts, dates and categories. '
+        warning:
+            'Transactions keep their amounts, dates and categories. '
             'This cannot be undone.',
       );
       if (target == null || !context.mounted) return;
@@ -114,7 +119,10 @@ class AccountScreen extends ConsumerWidget {
         title: const Text('Delete Account'),
         content: Text('Delete "${item.account.name}"? This cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: Text('Delete', style: TextStyle(color: colorScheme.error)),
@@ -134,7 +142,9 @@ class AccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accountsStream = ref.watch(watchAccountsWithBalanceUseCaseProvider).call();
+    final accountsStream = ref
+        .watch(watchAccountsWithBalanceUseCaseProvider)
+        .call();
     final currencyFormat = ref.watch(currencyFormatProvider);
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
@@ -172,15 +182,22 @@ class AccountScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final item = accounts[index];
               final account = item.account;
-              final balanceLabel = account.type.isLiability ? 'Owed' : 'Balance';
+              final balanceLabel = account.type.isLiability
+                  ? 'Owed'
+                  : 'Balance';
 
               return ListTile(
                 leading: CircleAvatar(
                   backgroundColor: account.color.withValues(alpha: 0.2),
                   child: Icon(account.icon, color: account.color),
                 ),
-                title: Text('${account.name} (#${account.id})', style: textTheme.bodyLarge),
-                subtitle: Text('${account.type.label}${account.isDefault ? ' · Default' : ''}'),
+                title: Text(
+                  '${account.name} (#${account.id})',
+                  style: textTheme.bodyLarge,
+                ),
+                subtitle: Text(
+                  '${account.type.label}${account.isDefault ? ' · Default' : ''}',
+                ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -205,7 +222,10 @@ class AccountScreen extends ConsumerWidget {
                       onPressed: () => _showEditDialog(context, ref, account),
                     ),
                     IconButton(
-                      icon: Icon(Icons.delete_outline, color: colorScheme.error),
+                      icon: Icon(
+                        Icons.delete_outline,
+                        color: colorScheme.error,
+                      ),
                       onPressed: account.isDefault
                           ? null
                           : () => _confirmDelete(context, ref, item, accounts),

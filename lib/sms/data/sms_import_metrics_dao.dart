@@ -4,7 +4,8 @@ import 'package:vittix_wallet/features/transactions/data/tables/sms_import_metri
 part 'sms_import_metrics_dao.g.dart';
 
 @DriftAccessor(tables: [SmsImportMetrics])
-class SmsImportMetricsDao extends DatabaseAccessor<AppDatabase> with _$SmsImportMetricsDaoMixin {
+class SmsImportMetricsDao extends DatabaseAccessor<AppDatabase>
+    with _$SmsImportMetricsDaoMixin {
   SmsImportMetricsDao(super.db);
 
   Future<void> record({
@@ -13,21 +14,29 @@ class SmsImportMetricsDao extends DatabaseAccessor<AppDatabase> with _$SmsImport
     required int rejectedImports,
     required int duplicateDetections,
   }) async {
-    final existing = await (select(smsImportMetrics)..where((t) => t.walletId.equals(walletId))).getSingleOrNull();
+    final existing = await (select(
+      smsImportMetrics,
+    )..where((t) => t.walletId.equals(walletId))).getSingleOrNull();
 
     if (existing == null) {
-      await into(smsImportMetrics).insert(SmsImportMetricsCompanion.insert(
-        walletId: walletId,
-        acceptedImports: Value(acceptedImports),
-        rejectedImports: Value(rejectedImports),
-        duplicateDetections: Value(duplicateDetections),
-      ));
+      await into(smsImportMetrics).insert(
+        SmsImportMetricsCompanion.insert(
+          walletId: walletId,
+          acceptedImports: Value(acceptedImports),
+          rejectedImports: Value(rejectedImports),
+          duplicateDetections: Value(duplicateDetections),
+        ),
+      );
     } else {
-      await (update(smsImportMetrics)..where((t) => t.walletId.equals(walletId))).write(
+      await (update(
+        smsImportMetrics,
+      )..where((t) => t.walletId.equals(walletId))).write(
         SmsImportMetricsCompanion(
           acceptedImports: Value(existing.acceptedImports + acceptedImports),
           rejectedImports: Value(existing.rejectedImports + rejectedImports),
-          duplicateDetections: Value(existing.duplicateDetections + duplicateDetections),
+          duplicateDetections: Value(
+            existing.duplicateDetections + duplicateDetections,
+          ),
           updatedAt: Value(DateTime.now()),
         ),
       );
@@ -35,6 +44,8 @@ class SmsImportMetricsDao extends DatabaseAccessor<AppDatabase> with _$SmsImport
   }
 
   Future<SmsImportMetric?> getForWallet(int walletId) {
-    return (select(smsImportMetrics)..where((t) => t.walletId.equals(walletId))).getSingleOrNull();
+    return (select(
+      smsImportMetrics,
+    )..where((t) => t.walletId.equals(walletId))).getSingleOrNull();
   }
 }

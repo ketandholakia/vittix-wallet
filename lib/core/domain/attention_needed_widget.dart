@@ -17,7 +17,10 @@ class AttentionNeededWidget extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Attention Needed', style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                'Attention Needed',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 12),
               Text('Overdue bills: ${summary.overdueBills}'),
               Text('Missed contributions: ${summary.missedGoalContributions}'),
@@ -32,4 +35,3 @@ class AttentionNeededWidget extends ConsumerWidget {
     );
   }
 }
-

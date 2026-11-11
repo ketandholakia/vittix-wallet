@@ -9,7 +9,8 @@ class Loans extends Table {
   IntColumn get walletId => integer().withDefault(const Constant(1))();
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   TextColumn get name => text().withLength(min: 1, max: 100)();
-  IntColumn get accountId => integer().references(Accounts, #id, onDelete: KeyAction.cascade)();
+  IntColumn get accountId =>
+      integer().references(Accounts, #id, onDelete: KeyAction.cascade)();
   IntColumn get principalAmount => integer().map(const MoneyConverter())();
   RealColumn get interestRate => real()();
   IntColumn get tenureMonths => integer()();
@@ -17,5 +18,6 @@ class Loans extends Table {
   DateTimeColumn get nextEmiDate => dateTime().nullable()();
   IntColumn get emiAmount => integer().map(const MoneyConverter())();
   BoolColumn get isActive => boolean().withDefault(const Constant(true))();
-  DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
+  DateTimeColumn get updatedAt =>
+      dateTime().clientDefault(() => DateTime.now())();
 }

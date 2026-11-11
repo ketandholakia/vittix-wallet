@@ -14,7 +14,8 @@ class AppLockWrapper extends ConsumerStatefulWidget {
   ConsumerState<AppLockWrapper> createState() => _AppLockWrapperState();
 }
 
-class _AppLockWrapperState extends ConsumerState<AppLockWrapper> with WidgetsBindingObserver {
+class _AppLockWrapperState extends ConsumerState<AppLockWrapper>
+    with WidgetsBindingObserver {
   DateTime? _pausedTime;
 
   @override
@@ -56,9 +57,7 @@ class _AppLockWrapperState extends ConsumerState<AppLockWrapper> with WidgetsBin
     final hasPin = ref.watch(pinHashProvider).value != null;
 
     if (isLocked && isPinEnabled && hasPin) {
-      return const LockScreen(
-        mode: LockScreenMode.unlock,
-      );
+      return const LockScreen(mode: LockScreenMode.unlock);
     }
 
     return widget.child;

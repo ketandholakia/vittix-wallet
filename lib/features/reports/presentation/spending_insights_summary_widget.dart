@@ -21,7 +21,10 @@ class SpendingInsightsSummaryWidget extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Spending Insights', style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  'Spending Insights',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 12),
                 for (final insight in insights.take(4))
                   ListTile(
@@ -41,4 +44,3 @@ class SpendingInsightsSummaryWidget extends ConsumerWidget {
     );
   }
 }
-

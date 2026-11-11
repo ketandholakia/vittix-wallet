@@ -14,17 +14,14 @@ class AppDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
-    
+
     return Drawer(
       child: Column(
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  colors.primary,
-                  colors.primaryContainer,
-                ],
+                colors: [colors.primary, colors.primaryContainer],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -40,15 +37,15 @@ class AppDrawer extends ConsumerWidget {
                   Text(
                     'Vittix Wallet',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: colors.onPrimaryContainer,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: colors.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     'Quick Access Tools',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: colors.onPrimaryContainer.withValues(alpha: 0.8),
-                        ),
+                      color: colors.onPrimaryContainer.withValues(alpha: 0.8),
+                    ),
                   ),
                 ],
               ),
@@ -65,7 +62,9 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute<void>(builder: (_) => const AddTransactionScreen()),
+                      MaterialPageRoute<void>(
+                        builder: (_) => const AddTransactionScreen(),
+                      ),
                     );
                   },
                 ),
@@ -76,7 +75,9 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute<void>(builder: (_) => const ReceiptScannerScreen()),
+                      MaterialPageRoute<void>(
+                        builder: (_) => const ReceiptScannerScreen(),
+                      ),
                     );
                   },
                 ),
@@ -87,7 +88,9 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute<void>(builder: (_) => const SubscriptionCalendarScreen()),
+                      MaterialPageRoute<void>(
+                        builder: (_) => const SubscriptionCalendarScreen(),
+                      ),
                     );
                   },
                 ),
@@ -98,7 +101,9 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute<void>(builder: (_) => const AccountScreen()),
+                      MaterialPageRoute<void>(
+                        builder: (_) => const AccountScreen(),
+                      ),
                     );
                   },
                 ),
@@ -109,19 +114,24 @@ class AppDrawer extends ConsumerWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context).push(
-                      MaterialPageRoute<void>(builder: (_) => const CategoryScreen()),
+                      MaterialPageRoute<void>(
+                        builder: (_) => const CategoryScreen(),
+                      ),
                     );
                   },
                 ),
                 const Divider(height: 32),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: Text(
                     'More Options',
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: colors.onSurfaceVariant,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: colors.onSurfaceVariant,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 _buildDrawerItem(
@@ -130,7 +140,7 @@ class AppDrawer extends ConsumerWidget {
                   title: 'Settings',
                   onTap: () {
                     Navigator.pop(context);
-                    // Usually settings is available via BottomNavigationBar, 
+                    // Usually settings is available via BottomNavigationBar,
                     // but we can provide quick access here or let it pop context.
                   },
                 ),
@@ -150,13 +160,8 @@ class AppDrawer extends ConsumerWidget {
   }) {
     return ListTile(
       leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.w500),
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
       onTap: onTap,
     );

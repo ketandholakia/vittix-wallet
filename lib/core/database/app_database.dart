@@ -70,28 +70,22 @@ part 'daos/goal_dao.dart';
 part 'migrations/database_migrations.dart';
 part 'app_database.g.dart';
 
-
-
-
-
-
 // Accounts Table
-
 
 // Categories Table
 
-
 // Transactions Table
 
-
 // Budgets Table
-
 
 // --- DAOs (Data Access Objects) ---
 
 class LastOwnerException implements Exception {
   final String message;
-  const LastOwnerException([this.message = 'Cannot remove or demote the last owner of a wallet. Every wallet must have at least one owner.']);
+  const LastOwnerException([
+    this.message =
+        'Cannot remove or demote the last owner of a wallet. Every wallet must have at least one owner.',
+  ]);
 
   @override
   String toString() => message;
@@ -99,7 +93,9 @@ class LastOwnerException implements Exception {
 
 class WalletPermissionDeniedException implements Exception {
   final String message;
-  const WalletPermissionDeniedException([this.message = 'Permission denied for this wallet operation.']);
+  const WalletPermissionDeniedException([
+    this.message = 'Permission denied for this wallet operation.',
+  ]);
 
   @override
   String toString() => message;
@@ -107,15 +103,14 @@ class WalletPermissionDeniedException implements Exception {
 
 class InvalidActiveWalletException implements Exception {
   final String message;
-  const InvalidActiveWalletException([this.message = 'No valid active wallet available for the current user context.']);
+  const InvalidActiveWalletException([
+    this.message =
+        'No valid active wallet available for the current user context.',
+  ]);
 
   @override
   String toString() => message;
 }
-
-
-
-
 
 // --- DATABASE CLASS ---
 
@@ -163,8 +158,58 @@ const Map<String, String> kTombstonedTables = {
 };
 
 @DriftDatabase(
-  tables: [Accounts, WalletBills, Budgets, Categories, WalletNotifications, Loans, PeerDebts, WalletAllowances, WalletAllowancePayments, WalletSettlements, Wallets, WalletInvitations, WalletMembers, WalletGoals, WalletGoalContributions, WalletGoalSchedules, FeedbackEntries, WalletNotificationPreferences, DeletedRecords, SyncConflicts, Attachments, WalletExpenseSplits, WalletExpenseSplitMembers, MerchantMappings, Payees, RecurringTransactions, SmsImportMetrics, Tags, Transactions, UnrecognizedSmsEntries, WalletActivities, Users],
-  daos: [CategoryDao, AccountDao, TransactionDao, BudgetDao, RecurringTransactionDao, DebtsDao, WalletDao, TransactionTagDao, AttachmentDao, AllowanceDao, GoalDao, BillDao, PayeeDao, SmsParsingDao, SmsImportMetricsDao, UserDao],
+  tables: [
+    Accounts,
+    WalletBills,
+    Budgets,
+    Categories,
+    WalletNotifications,
+    Loans,
+    PeerDebts,
+    WalletAllowances,
+    WalletAllowancePayments,
+    WalletSettlements,
+    Wallets,
+    WalletInvitations,
+    WalletMembers,
+    WalletGoals,
+    WalletGoalContributions,
+    WalletGoalSchedules,
+    FeedbackEntries,
+    WalletNotificationPreferences,
+    DeletedRecords,
+    SyncConflicts,
+    Attachments,
+    WalletExpenseSplits,
+    WalletExpenseSplitMembers,
+    MerchantMappings,
+    Payees,
+    RecurringTransactions,
+    SmsImportMetrics,
+    Tags,
+    Transactions,
+    UnrecognizedSmsEntries,
+    WalletActivities,
+    Users,
+  ],
+  daos: [
+    CategoryDao,
+    AccountDao,
+    TransactionDao,
+    BudgetDao,
+    RecurringTransactionDao,
+    DebtsDao,
+    WalletDao,
+    TransactionTagDao,
+    AttachmentDao,
+    AllowanceDao,
+    GoalDao,
+    BillDao,
+    PayeeDao,
+    SmsParsingDao,
+    SmsImportMetricsDao,
+    UserDao,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -218,7 +263,8 @@ class AppDatabase extends _$AppDatabase {
       for (final column in entry.value) {
         final type = declaredTypes[column];
         if (type == null) continue; // Column did not exist in this schema.
-        final isFloatingPoint = type.contains('REAL') ||
+        final isFloatingPoint =
+            type.contains('REAL') ||
             type.contains('DOUBLE') ||
             type.contains('FLOAT') ||
             type.contains('NUMERIC');
@@ -259,12 +305,8 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration {
-    return MigrationStrategy(
-      onCreate: createSchema,
-      onUpgrade: upgradeSchema,
-    );
+    return MigrationStrategy(onCreate: createSchema, onUpgrade: upgradeSchema);
   }
-
 
   Future<void> resetDatabase() async {
     // This will delete all data from all tables

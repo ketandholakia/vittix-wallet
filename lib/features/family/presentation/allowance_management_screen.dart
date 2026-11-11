@@ -25,7 +25,9 @@ class AllowanceManagementScreen extends ConsumerWidget {
               ? const Center(
                   child: Padding(
                     padding: EdgeInsets.all(24),
-                    child: Text('No allowances yet. Create a wallet allowance for a member to begin tracking payments.'),
+                    child: Text(
+                      'No allowances yet. Create a wallet allowance for a member to begin tracking payments.',
+                    ),
                   ),
                 )
               : ListView.builder(
@@ -35,15 +37,41 @@ class AllowanceManagementScreen extends ConsumerWidget {
                     final canManage = permissions.canManageAllowances(role);
                     return ListTile(
                       title: Text(allowance.memberName),
-                      subtitle: Text('${allowance.amount.toStringAsFixed(0)} • ${allowance.frequency}'),
+                      subtitle: Text(
+                        '${allowance.amount.toStringAsFixed(0)} • ${allowance.frequency}',
+                      ),
                       trailing: Wrap(
                         spacing: 8,
                         children: [
-                          if (canManage) IconButton(icon: const Icon(Icons.edit), onPressed: () => _edit(context, ref, walletId, allowance)),
-                          if (canManage && allowance.isActive) IconButton(icon: const Icon(Icons.pause), onPressed: () => _toggle(ref, walletId, allowance, false)),
-                          if (canManage && !allowance.isActive) IconButton(icon: const Icon(Icons.play_arrow), onPressed: () => _toggle(ref, walletId, allowance, true)),
-                          if (canManage) IconButton(icon: const Icon(Icons.payments_outlined), onPressed: () => _recordPayment(context, ref, allowance)),
-                          if (canManage) IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(ref, allowance.id)),
+                          if (canManage)
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () =>
+                                  _edit(context, ref, walletId, allowance),
+                            ),
+                          if (canManage && allowance.isActive)
+                            IconButton(
+                              icon: const Icon(Icons.pause),
+                              onPressed: () =>
+                                  _toggle(ref, walletId, allowance, false),
+                            ),
+                          if (canManage && !allowance.isActive)
+                            IconButton(
+                              icon: const Icon(Icons.play_arrow),
+                              onPressed: () =>
+                                  _toggle(ref, walletId, allowance, true),
+                            ),
+                          if (canManage)
+                            IconButton(
+                              icon: const Icon(Icons.payments_outlined),
+                              onPressed: () =>
+                                  _recordPayment(context, ref, allowance),
+                            ),
+                          if (canManage)
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => _delete(ref, allowance.id),
+                            ),
                         ],
                       ),
                     );
@@ -67,7 +95,11 @@ class AllowanceManagementScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _create(BuildContext context, WidgetRef ref, int walletId) async {
+  Future<void> _create(
+    BuildContext context,
+    WidgetRef ref,
+    int walletId,
+  ) async {
     final amount = TextEditingController();
     final memberId = TextEditingController();
     await showDialog<void>(
@@ -77,15 +109,27 @@ class AllowanceManagementScreen extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: memberId, decoration: const InputDecoration(labelText: 'Member ID')),
-            TextField(controller: amount, decoration: const InputDecoration(labelText: 'Amount'), keyboardType: TextInputType.number),
+            TextField(
+              controller: memberId,
+              decoration: const InputDecoration(labelText: 'Member ID'),
+            ),
+            TextField(
+              controller: amount,
+              decoration: const InputDecoration(labelText: 'Amount'),
+              keyboardType: TextInputType.number,
+            ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
             onPressed: () async {
-              await ref.read(allowanceRepositoryProvider).addAllowance(
+              await ref
+                  .read(allowanceRepositoryProvider)
+                  .addAllowance(
                     db.WalletAllowancesCompanion.insert(
                       walletId: walletId,
                       memberId: int.tryParse(memberId.text) ?? 1,
@@ -103,24 +147,42 @@ class AllowanceManagementScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _edit(BuildContext context, WidgetRef ref, int walletId, AllowanceViewModel allowance) async {
+  Future<void> _edit(
+    BuildContext context,
+    WidgetRef ref,
+    int walletId,
+    AllowanceViewModel allowance,
+  ) async {
     final amount = TextEditingController(text: allowance.amount.toString());
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Edit Allowance'),
-        content: TextField(controller: amount, decoration: const InputDecoration(labelText: 'Amount'), keyboardType: TextInputType.number),
+        content: TextField(
+          controller: amount,
+          decoration: const InputDecoration(labelText: 'Amount'),
+          keyboardType: TextInputType.number,
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
             onPressed: () async {
-              await ref.read(allowanceRepositoryProvider).updateAllowance(
+              await ref
+                  .read(allowanceRepositoryProvider)
+                  .updateAllowance(
                     db.WalletAllowancesCompanion(
                       id: db.Value(allowance.id),
                       walletId: db.Value(walletId),
                       memberId: db.Value(allowance.memberId),
-                      amount: db.Value(double.tryParse(amount.text) ?? allowance.amount),
-                      frequency: const db.Value(db.WalletAllowanceFrequency.monthly),
+                      amount: db.Value(
+                        double.tryParse(amount.text) ?? allowance.amount,
+                      ),
+                      frequency: const db.Value(
+                        db.WalletAllowanceFrequency.monthly,
+                      ),
                       startDate: db.Value(allowance.startDate),
                       isActive: db.Value(allowance.isActive),
                     ),
@@ -134,8 +196,15 @@ class AllowanceManagementScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _toggle(WidgetRef ref, int walletId, AllowanceViewModel allowance, bool active) async {
-    await ref.read(allowanceRepositoryProvider).updateAllowance(
+  Future<void> _toggle(
+    WidgetRef ref,
+    int walletId,
+    AllowanceViewModel allowance,
+    bool active,
+  ) async {
+    await ref
+        .read(allowanceRepositoryProvider)
+        .updateAllowance(
           db.WalletAllowancesCompanion(
             id: db.Value(allowance.id),
             walletId: db.Value(walletId),
@@ -152,7 +221,11 @@ class AllowanceManagementScreen extends ConsumerWidget {
     await ref.read(allowanceRepositoryProvider).deleteAllowance(id);
   }
 
-  Future<void> _recordPayment(BuildContext context, WidgetRef ref, AllowanceViewModel allowance) async {
+  Future<void> _recordPayment(
+    BuildContext context,
+    WidgetRef ref,
+    AllowanceViewModel allowance,
+  ) async {
     final amount = TextEditingController(text: allowance.amount.toString());
     final notes = TextEditingController();
     await showDialog<void>(
@@ -162,15 +235,27 @@ class AllowanceManagementScreen extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: amount, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Amount')),
-            TextField(controller: notes, decoration: const InputDecoration(labelText: 'Notes')),
+            TextField(
+              controller: amount,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Amount'),
+            ),
+            TextField(
+              controller: notes,
+              decoration: const InputDecoration(labelText: 'Notes'),
+            ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           FilledButton(
             onPressed: () async {
-              await ref.read(allowanceRepositoryProvider).addPayment(
+              await ref
+                  .read(allowanceRepositoryProvider)
+                  .addPayment(
                     db.WalletAllowancePaymentsCompanion.insert(
                       allowanceId: allowance.id,
                       memberId: allowance.memberId,

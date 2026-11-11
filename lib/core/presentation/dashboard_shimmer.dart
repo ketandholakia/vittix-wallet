@@ -18,8 +18,12 @@ class DashboardShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Theme.of(context).brightness == Brightness.light ? Colors.grey[300]! : Colors.grey[800]!,
-      highlightColor: Theme.of(context).brightness == Brightness.light ? Colors.grey[100]! : Colors.grey[600]!,
+      baseColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.grey[300]!
+          : Colors.grey[800]!,
+      highlightColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.grey[100]!
+          : Colors.grey[600]!,
       child: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -29,14 +33,17 @@ class DashboardShimmer extends StatelessWidget {
           _buildContainer(40, width: 250),
           const SizedBox(height: 24),
           Row(
-            children: List.generate(3, (_) => Expanded(
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: _buildContainer(80, radius: 0),
+            children: List.generate(
+              3,
+              (_) => Expanded(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: _buildContainer(80, radius: 0),
+                  ),
                 ),
               ),
-            )),
+            ),
           ),
           const SizedBox(height: 24),
           // Chart Shimmer
@@ -47,26 +54,34 @@ class DashboardShimmer extends StatelessWidget {
             children: [
               const CircleAvatar(radius: 70, backgroundColor: Colors.white),
               const SizedBox(width: 24),
-              Expanded(child: Column(
-                children: List.generate(4, (_) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: _buildContainer(20),
-                )),
-              )),
+              Expanded(
+                child: Column(
+                  children: List.generate(
+                    4,
+                    (_) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: _buildContainer(20),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 24),
           // List Shimmer
           _buildContainer(20, width: 200),
           const SizedBox(height: 16),
-          ...List.generate(3, (_) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
-            child: ListTile(
-              leading: const CircleAvatar(backgroundColor: Colors.white),
-              title: _buildContainer(16),
-              subtitle: _buildContainer(12, width: 100),
+          ...List.generate(
+            3,
+            (_) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: ListTile(
+                leading: const CircleAvatar(backgroundColor: Colors.white),
+                title: _buildContainer(16),
+                subtitle: _buildContainer(12, width: 100),
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );

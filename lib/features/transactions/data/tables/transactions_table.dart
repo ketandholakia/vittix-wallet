@@ -15,13 +15,16 @@ class Transactions extends Table {
   TextColumn get note => text().nullable()();
 
   // Enum for transaction type
-  TextColumn get type => text().map(const EnumNameConverter(TransactionType.values))();
+  TextColumn get type =>
+      text().map(const EnumNameConverter(TransactionType.values))();
 
   // Foreign key to Categories table
-  IntColumn get categoryId => integer().references(Categories, #id, onDelete: KeyAction.cascade)();
+  IntColumn get categoryId =>
+      integer().references(Categories, #id, onDelete: KeyAction.cascade)();
 
   // Foreign key to Accounts table
-  IntColumn get accountId => integer().references(Accounts, #id, onDelete: KeyAction.restrict)();
+  IntColumn get accountId =>
+      integer().references(Accounts, #id, onDelete: KeyAction.restrict)();
 
   /// Groups the two legs of a transfer. Both rows share one value, which is
   /// what makes a transfer first-class: it can be excluded from income/expense

@@ -11,7 +11,9 @@ class SpendingInsightsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final expenseTransactions = transactions.where((tx) => tx.type == domain.TransactionType.expense).toList();
+    final expenseTransactions = transactions
+        .where((tx) => tx.type == domain.TransactionType.expense)
+        .toList();
 
     if (expenseTransactions.isEmpty) {
       return const Card(
@@ -23,14 +25,31 @@ class SpendingInsightsWidget extends ConsumerWidget {
     }
 
     // Calculate insights
-    final spendingByCategory = groupBy(expenseTransactions, (domain.Transaction tx) => tx.category)
-        .map((category, txs) => MapEntry(category, txs.fold(0.0, (sum, tx) => sum + tx.amount)));
+    final spendingByCategory =
+        groupBy(
+          expenseTransactions,
+          (domain.Transaction tx) => tx.category,
+        ).map(
+          (category, txs) =>
+              MapEntry(category, txs.fold(0.0, (sum, tx) => sum + tx.amount)),
+        );
 
-    final highestSpending = spendingByCategory.entries.sortedBy<num>((e) => e.value).lastOrNull;
-    final lowestSpending = spendingByCategory.entries.sortedBy<num>((e) => e.value).firstOrNull;
+    final highestSpending = spendingByCategory.entries
+        .sortedBy<num>((e) => e.value)
+        .lastOrNull;
+    final lowestSpending = spendingByCategory.entries
+        .sortedBy<num>((e) => e.value)
+        .firstOrNull;
 
-    final totalSpending = expenseTransactions.fold<double>(0.0, (sum, tx) => sum + tx.amount);
-    final daysInMonth = DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day;
+    final totalSpending = expenseTransactions.fold<double>(
+      0.0,
+      (sum, tx) => sum + tx.amount,
+    );
+    final daysInMonth = DateTime(
+      DateTime.now().year,
+      DateTime.now().month + 1,
+      0,
+    ).day;
     final averageDailyExpense = totalSpending / daysInMonth;
 
     final currencyFormat = ref.watch(currencyFormatProvider);
@@ -57,7 +76,8 @@ class SpendingInsightsWidget extends ConsumerWidget {
                 '${lowestSpending.key.name} (${currencyFormat.format(lowestSpending.value)})',
                 Colors.green,
               ),
-            if (lowestSpending != null && lowestSpending != highestSpending) const Divider(),
+            if (lowestSpending != null && lowestSpending != highestSpending)
+              const Divider(),
             _buildInsightRow(
               context,
               Icons.calculate,
@@ -71,15 +91,28 @@ class SpendingInsightsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildInsightRow(BuildContext context, IconData icon, String title, String value, Color color) {
+  Widget _buildInsightRow(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String value,
+    Color color,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
           Icon(icon, color: color),
           const SizedBox(width: 16),
-          Expanded(child: Text(title, style: Theme.of(context).textTheme.bodyLarge)),
-          Text(value, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
+          Expanded(
+            child: Text(title, style: Theme.of(context).textTheme.bodyLarge),
+          ),
+          Text(
+            value,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );

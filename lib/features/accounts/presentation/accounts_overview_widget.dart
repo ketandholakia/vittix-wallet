@@ -14,7 +14,9 @@ class AccountsOverviewWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accountsStream = ref.watch(watchAccountsWithBalanceUseCaseProvider).call();
+    final accountsStream = ref
+        .watch(watchAccountsWithBalanceUseCaseProvider)
+        .call();
     final currencyFormat = ref.watch(currencyFormatProvider);
     final textTheme = Theme.of(context).textTheme;
 
@@ -41,7 +43,9 @@ class AccountsOverviewWidget extends ConsumerWidget {
                       TextButton.icon(
                         onPressed: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute<void>(builder: (_) => const TransferFormScreen()),
+                            MaterialPageRoute<void>(
+                              builder: (_) => const TransferFormScreen(),
+                            ),
                           );
                         },
                         icon: const Icon(Icons.swap_horiz, size: 18),
@@ -50,7 +54,9 @@ class AccountsOverviewWidget extends ConsumerWidget {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute<void>(builder: (_) => const AccountScreen()),
+                            MaterialPageRoute<void>(
+                              builder: (_) => const AccountScreen(),
+                            ),
                           );
                         },
                         child: const Text('Manage'),
@@ -64,7 +70,10 @@ class AccountsOverviewWidget extends ConsumerWidget {
               height: 110,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 itemCount: accounts.length,
                 separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
@@ -76,67 +85,80 @@ class AccountsOverviewWidget extends ConsumerWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute<void>(
-                            builder: (_) => TransactionListScreen(initialFilterAccount: account),
+                            builder: (_) => TransactionListScreen(
+                              initialFilterAccount: account,
+                            ),
                           ),
                         );
                       },
                       child: Container(
                         width: 150,
                         padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(account.icon, color: account.color, size: 20),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                child: Text(
-                                  account.name,
-                                  style: textTheme.titleSmall,
-                                  overflow: TextOverflow.ellipsis,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  account.icon,
+                                  color: account.color,
+                                  size: 20,
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          Text(
-                            account.type.isLiability ? 'Owed' : 'Balance',
-                            style: textTheme.bodySmall,
-                          ),
-                          Builder(
-                            builder: (context) {
-                              var format = currencyFormat;
-                              if (account.currencyCode != null) {
-                                try {
-                                  final currency = Currency.values.byName(account.currencyCode!);
-                                  final info = currencyData[currency]!;
-                                  format = NumberFormat.currency(locale: info.locale, symbol: info.symbol);
-                                } on ArgumentError catch (error) {
-                                  AppLogger.warn(
-                                    'Unknown currency code '
-                                    '"${account.currencyCode}"',
-                                    error,
-                                  );
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    account.name,
+                                    style: textTheme.titleSmall,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            Text(
+                              account.type.isLiability ? 'Owed' : 'Balance',
+                              style: textTheme.bodySmall,
+                            ),
+                            Builder(
+                              builder: (context) {
+                                var format = currencyFormat;
+                                if (account.currencyCode != null) {
+                                  try {
+                                    final currency = Currency.values.byName(
+                                      account.currencyCode!,
+                                    );
+                                    final info = currencyData[currency]!;
+                                    format = NumberFormat.currency(
+                                      locale: info.locale,
+                                      symbol: info.symbol,
+                                    );
+                                  } on ArgumentError catch (error) {
+                                    AppLogger.warn(
+                                      'Unknown currency code '
+                                      '"${account.currencyCode}"',
+                                      error,
+                                    );
+                                  }
                                 }
-                              }
-                              return Text(
-                                format.format(item.balance),
-                                style: textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: account.type.isLiability && item.balance > 0
-                                      ? Theme.of(context).colorScheme.error
-                                      : null,
-                                ),
-                              );
-                            }
-                          ),
-                        ],
+                                return Text(
+                                  format.format(item.balance),
+                                  style: textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        account.type.isLiability &&
+                                            item.balance > 0
+                                        ? Theme.of(context).colorScheme.error
+                                        : null,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
               ),
             ),
           ],

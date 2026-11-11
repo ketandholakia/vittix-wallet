@@ -28,10 +28,10 @@ class PinAttemptLimiter {
   /// Process-local monotonic clock. Persisted values are only honoured when the
   /// stored process id matches this process.
   static final Stopwatch _uptime = Stopwatch()..start();
-  static final String _processId =
-      List<int>.generate(8, (_) => Random.secure().nextInt(256))
-          .map((b) => b.toRadixString(16).padLeft(2, '0'))
-          .join();
+  static final String _processId = List<int>.generate(
+    8,
+    (_) => Random.secure().nextInt(256),
+  ).map((b) => b.toRadixString(16).padLeft(2, '0')).join();
 
   /// Failures tolerated before the first cooldown.
   static const freeAttempts = 5;
@@ -78,8 +78,9 @@ class PinAttemptLimiter {
   Future<bool> _lockedByMonotonic() async {
     final process = await _store.read(_lockProcessKey);
     if (process != _processId) return false;
-    final target =
-        int.tryParse(await _store.read(_lockedUntilMonotonicKey) ?? '');
+    final target = int.tryParse(
+      await _store.read(_lockedUntilMonotonicKey) ?? '',
+    );
     return target != null && _uptime.elapsedMilliseconds < target;
   }
 
@@ -101,8 +102,9 @@ class PinAttemptLimiter {
     if (now == null) {
       final process = await _store.read(_lockProcessKey);
       if (process == _processId) {
-        final target =
-            int.tryParse(await _store.read(_lockedUntilMonotonicKey) ?? '');
+        final target = int.tryParse(
+          await _store.read(_lockedUntilMonotonicKey) ?? '',
+        );
         if (target != null) {
           final leftMs = target - _uptime.elapsedMilliseconds;
           if (leftMs > 0) remaining = Duration(milliseconds: leftMs);

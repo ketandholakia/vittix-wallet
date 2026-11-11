@@ -20,17 +20,18 @@ class BudgetScreen extends ConsumerWidget {
     // For now, we'll just get budgets for the current month.
     // This can be enhanced with a date picker later.
     final rolloverMode = ref.watch(rolloverModeProvider);
-    final budgetStatusStream = ref.watch(getBudgetStatusUseCaseProvider).call(DateTime.now(), rolloverMode);
+    final budgetStatusStream = ref
+        .watch(getBudgetStatusUseCaseProvider)
+        .call(DateTime.now(), rolloverMode);
 
     return Scaffold(
       drawer: const AppDrawer(),
-      appBar: AppBar(
-        title: const Text('Budgets'),
-      ),
+      appBar: AppBar(title: const Text('Budgets')),
       body: StreamBuilder<List<Budget>>(
         stream: budgetStatusStream,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              !snapshot.hasData) {
             return const ShimmerList();
           }
           if (snapshot.hasError) {
@@ -41,7 +42,8 @@ class BudgetScreen extends ConsumerWidget {
             return const EmptyStateWidget(
               icon: Icons.pie_chart_outline,
               message: 'No Budgets Found',
-              subMessage: 'Create a budget to track your spending against a goal.',
+              subMessage:
+                  'Create a budget to track your spending against a goal.',
             );
           }
 

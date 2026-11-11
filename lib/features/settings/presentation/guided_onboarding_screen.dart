@@ -10,10 +10,12 @@ class GuidedOnboardingScreen extends ConsumerStatefulWidget {
   const GuidedOnboardingScreen({super.key});
 
   @override
-  ConsumerState<GuidedOnboardingScreen> createState() => _GuidedOnboardingScreenState();
+  ConsumerState<GuidedOnboardingScreen> createState() =>
+      _GuidedOnboardingScreenState();
 }
 
-class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen> {
+class _GuidedOnboardingScreenState
+    extends ConsumerState<GuidedOnboardingScreen> {
   final _walletNameController = TextEditingController(text: 'My Wallet');
   bool _sharedWallet = false;
   bool _walletCreated = false;
@@ -22,7 +24,10 @@ class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(databaseProvider).walletDao.logOnboardingActivity(
+      await ref
+          .read(databaseProvider)
+          .walletDao
+          .logOnboardingActivity(
             walletId: ref.read(currentWalletIdProvider),
             action: 'wallet_creation_started',
           );
@@ -39,18 +44,27 @@ class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen>
     final name = _walletNameController.text.trim();
     if (name.isEmpty) return;
     final db = ref.read(databaseProvider);
-    final walletId = await db.into(db.wallets).insert(
+    final walletId = await db
+        .into(db.wallets)
+        .insert(
           WalletsCompanion.insert(
             name: name,
             type: Value(_sharedWallet ? 'shared' : 'personal'),
           ),
         );
-    await db.walletDao.logWalletCreated(walletId: walletId, walletType: _sharedWallet ? 'shared' : 'personal');
-    unawaited(ref.read(currentWalletIdProvider.notifier).selectWallet(walletId));
+    await db.walletDao.logWalletCreated(
+      walletId: walletId,
+      walletType: _sharedWallet ? 'shared' : 'personal',
+    );
+    unawaited(
+      ref.read(currentWalletIdProvider.notifier).selectWallet(walletId),
+    );
     ref.invalidate(availableWalletsProvider);
     setState(() => _walletCreated = true);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wallet created locally')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Wallet created locally')));
     }
   }
 
@@ -76,7 +90,9 @@ class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen>
             child: ListTile(
               leading: Icon(Icons.account_balance_wallet_outlined),
               title: Text('What is a wallet?'),
-              subtitle: Text('A wallet keeps one set of transactions, budgets, goals, and family members together.'),
+              subtitle: Text(
+                'A wallet keeps one set of transactions, budgets, goals, and family members together.',
+              ),
             ),
           ),
           const SizedBox(height: 12),
@@ -84,7 +100,9 @@ class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen>
             child: ListTile(
               leading: Icon(Icons.groups_outlined),
               title: Text('Personal vs shared'),
-              subtitle: Text('Personal wallets are for one person. Shared wallets are for a family or group.'),
+              subtitle: Text(
+                'Personal wallets are for one person. Shared wallets are for a family or group.',
+              ),
             ),
           ),
           const SizedBox(height: 12),
@@ -97,7 +115,9 @@ class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen>
             value: _sharedWallet,
             onChanged: (value) => setState(() => _sharedWallet = value),
             title: const Text('Shared wallet'),
-            subtitle: const Text('Turn this on only if multiple people will use the same wallet.'),
+            subtitle: const Text(
+              'Turn this on only if multiple people will use the same wallet.',
+            ),
           ),
           const SizedBox(height: 12),
           FilledButton.icon(
@@ -111,7 +131,9 @@ class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen>
               child: ListTile(
                 leading: Icon(Icons.verified_outlined),
                 title: Text('Wallet created'),
-                subtitle: Text('Next, invite members if this is shared, or import SMS transactions for local review.'),
+                subtitle: Text(
+                  'Next, invite members if this is shared, or import SMS transactions for local review.',
+                ),
               ),
             ),
           ],
@@ -120,7 +142,9 @@ class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen>
             child: ListTile(
               leading: Icon(Icons.mail_outline),
               title: Text('Invite acceptance'),
-              subtitle: Text('Review the wallet name, role, expiry status, and access that will be granted before accepting.'),
+              subtitle: Text(
+                'Review the wallet name, role, expiry status, and access that will be granted before accepting.',
+              ),
             ),
           ),
           const SizedBox(height: 12),
@@ -128,7 +152,9 @@ class _GuidedOnboardingScreenState extends ConsumerState<GuidedOnboardingScreen>
             child: ListTile(
               leading: Icon(Icons.sms_outlined),
               title: Text('SMS setup'),
-              subtitle: Text('SMS permission is only used to scan inbox messages on-device. Every candidate stays in review until you save it.'),
+              subtitle: Text(
+                'SMS permission is only used to scan inbox messages on-device. Every candidate stays in review until you save it.',
+              ),
             ),
           ),
         ],

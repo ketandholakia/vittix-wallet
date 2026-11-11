@@ -81,7 +81,9 @@ class _AutoBackupScreenState extends ConsumerState<AutoBackupScreen> {
       _status = null;
     });
     try {
-      final file = await ref.read(autoBackupServiceProvider).runIfDue(
+      final file = await ref
+          .read(autoBackupServiceProvider)
+          .runIfDue(
             // Ignore the interval for a manual run.
             settings: _settings.copyWith(enabled: true, intervalDays: 0),
             prefs: prefs,
@@ -103,7 +105,8 @@ class _AutoBackupScreenState extends ConsumerState<AutoBackupScreen> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final canEncrypt = _hasStoredPassphrase || _passphraseController.text.isNotEmpty;
+    final canEncrypt =
+        _hasStoredPassphrase || _passphraseController.text.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Automatic Backup')),
@@ -132,16 +135,17 @@ class _AutoBackupScreenState extends ConsumerState<AutoBackupScreen> {
               DropdownMenuItem(value: 7, child: Text('Every 7 days')),
               DropdownMenuItem(value: 30, child: Text('Every 30 days')),
             ],
-            onChanged: (v) => v == null
-                ? null
-                : _update(_settings.copyWith(intervalDays: v)),
+            onChanged: (v) =>
+                v == null ? null : _update(_settings.copyWith(intervalDays: v)),
           ),
           const SizedBox(height: 12),
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.folder_outlined),
             title: const Text('Backup folder'),
-            subtitle: Text(_settings.directoryPath ?? 'Not set - tap to choose'),
+            subtitle: Text(
+              _settings.directoryPath ?? 'Not set - tap to choose',
+            ),
             onTap: _pickFolder,
           ),
           const Divider(height: 32),
@@ -167,7 +171,8 @@ class _AutoBackupScreenState extends ConsumerState<AutoBackupScreen> {
               labelText: _hasStoredPassphrase
                   ? 'Passphrase (replace existing)'
                   : 'Passphrase',
-              helperText: 'Stored in the platform keystore, not in the database.',
+              helperText:
+                  'Stored in the platform keystore, not in the database.',
               border: const OutlineInputBorder(),
             ),
           ),

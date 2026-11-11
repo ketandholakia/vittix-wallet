@@ -19,7 +19,9 @@ class BudgetActivityDetailScreen extends ConsumerWidget {
                   final activity = activities[index];
                   return ListTile(
                     title: Text(activity.action),
-                    subtitle: Text('${activity.actor} • ${activity.timestamp}\n${activity.details}'),
+                    subtitle: Text(
+                      '${activity.actor} • ${activity.timestamp}\n${activity.details}',
+                    ),
                     isThreeLine: true,
                   );
                 },

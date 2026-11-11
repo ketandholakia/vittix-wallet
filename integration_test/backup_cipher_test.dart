@@ -51,13 +51,15 @@ void main() {
     dbFile = File(p.join(tmp.path, 'encrypted.sqlite'));
 
     final random = Random.secure();
-    databaseKey =
-        base64.encode(List<int>.generate(32, (_) => random.nextInt(256)));
+    databaseKey = base64.encode(
+      List<int>.generate(32, (_) => random.nextInt(256)),
+    );
 
     db = AppDatabase.forTesting(
       NativeDatabase(
         dbFile,
-        setup: (raw) => raw.execute(DatabaseEncryption.pragmaForKey(databaseKey)),
+        setup: (raw) =>
+            raw.execute(DatabaseEncryption.pragmaForKey(databaseKey)),
       ),
     );
     await db
@@ -76,81 +78,97 @@ void main() {
     }
   });
 
-  test('VACUUM INTO snapshot of an encrypted DB is encrypted, not plaintext',
-      () async {
-    final service = BackupService(db);
-    final snapshot = await service.createSnapshot(p.join(tmp.path, 'snap.db'));
+  test(
+    'VACUUM INTO snapshot of an encrypted DB is encrypted, not plaintext',
+    () async {
+      final service = BackupService(db);
+      final snapshot = await service.createSnapshot(
+        p.join(tmp.path, 'snap.db'),
+      );
 
-    final raf = snapshot.openSync();
-    final header = raf.readSync(16);
-    raf.closeSync();
+      final raf = snapshot.openSync();
+      final header = raf.readSync(16);
+      raf.closeSync();
 
-    // (a) The first 16 bytes are NOT the SQLite magic: the snapshot keeps the
-    // SQLCipher key and is therefore encrypted.
-    expect(String.fromCharCodes(header), isNot(startsWith('SQLite format 3')));
-    expect(DatabaseEncryption.isPlaintextFile(snapshot), isFalse);
+      // (a) The first 16 bytes are NOT the SQLite magic: the snapshot keeps the
+      // SQLCipher key and is therefore encrypted.
+      expect(
+        String.fromCharCodes(header),
+        isNot(startsWith('SQLite format 3')),
+      );
+      expect(DatabaseEncryption.isPlaintextFile(snapshot), isFalse);
 
-    // Validation is key-aware.
-    final withoutKey = await BackupService.validate(
-      snapshot,
-      currentSchemaVersion: db.schemaVersion,
-    );
-    expect(withoutKey.isValid, isFalse,
-        reason: 'an encrypted snapshot must not validate as plaintext');
+      // Validation is key-aware.
+      final withoutKey = await BackupService.validate(
+        snapshot,
+        currentSchemaVersion: db.schemaVersion,
+      );
+      expect(
+        withoutKey.isValid,
+        isFalse,
+        reason: 'an encrypted snapshot must not validate as plaintext',
+      );
 
-    final withKey = await BackupService.validate(
-      snapshot,
-      currentSchemaVersion: db.schemaVersion,
-      databaseKey: databaseKey,
-    );
-    expect(withKey.isValid, isTrue, reason: withKey.error);
+      final withKey = await BackupService.validate(
+        snapshot,
+        currentSchemaVersion: db.schemaVersion,
+        databaseKey: databaseKey,
+      );
+      expect(withKey.isValid, isTrue, reason: withKey.error);
 
-    // (b) restore() followed by reopening the database works.
-    final liveFile = File(p.join(tmp.path, 'live.sqlite'));
-    await service.restore(
-      snapshot,
-      liveDbFile: liveFile,
-      databaseKey: databaseKey,
-    );
+      // (b) restore() followed by reopening the database works.
+      final liveFile = File(p.join(tmp.path, 'live.sqlite'));
+      await service.restore(
+        snapshot,
+        liveDbFile: liveFile,
+        databaseKey: databaseKey,
+      );
 
-    final reopened = AppDatabase.forTesting(
-      NativeDatabase(
-        liveFile,
-        setup: (raw) => raw.execute(DatabaseEncryption.pragmaForKey(databaseKey)),
-      ),
-    );
-    final wallets = await reopened.select(reopened.wallets).get();
-    await reopened.close();
+      final reopened = AppDatabase.forTesting(
+        NativeDatabase(
+          liveFile,
+          setup: (raw) =>
+              raw.execute(DatabaseEncryption.pragmaForKey(databaseKey)),
+        ),
+      );
+      final wallets = await reopened.select(reopened.wallets).get();
+      await reopened.close();
 
-    expect(wallets.map((w) => w.name), contains('Cipher Wallet'));
-    expect(await File('${liveFile.path}.bak').exists(), isTrue,
-        reason: 'the previous database must be kept as .bak');
-  });
+      expect(wallets.map((w) => w.name), contains('Cipher Wallet'));
+      expect(
+        await File('${liveFile.path}.bak').exists(),
+        isTrue,
+        reason: 'the previous database must be kept as .bak',
+      );
+    },
+  );
 
-  test('passphrase container validation is key-aware on a real SQLCipher DB',
-      () async {
-    final service = BackupService(db);
-    final container = await service.createEncryptedSnapshot(
-      p.join(tmp.path, 'backup.db.enc'),
-      'smoke-passphrase',
-    );
+  test(
+    'passphrase container validation is key-aware on a real SQLCipher DB',
+    () async {
+      final service = BackupService(db);
+      final container = await service.createEncryptedSnapshot(
+        p.join(tmp.path, 'backup.db.enc'),
+        'smoke-passphrase',
+      );
 
-    expect(BackupService.isEncryptedFile(container), isTrue);
+      expect(BackupService.isEncryptedFile(container), isTrue);
 
-    final result = await BackupService.validate(
-      container,
-      currentSchemaVersion: db.schemaVersion,
-      passphrase: 'smoke-passphrase',
-      databaseKey: databaseKey,
-    );
-    expect(result.isValid, isTrue, reason: result.error);
+      final result = await BackupService.validate(
+        container,
+        currentSchemaVersion: db.schemaVersion,
+        passphrase: 'smoke-passphrase',
+        databaseKey: databaseKey,
+      );
+      expect(result.isValid, isTrue, reason: result.error);
 
-    final wrongPass = await BackupService.validate(
-      container,
-      currentSchemaVersion: db.schemaVersion,
-      passphrase: 'not-the-passphrase',
-      databaseKey: databaseKey,
-    );
-    expect(wrongPass.isValid, isFalse);
-  });
+      final wrongPass = await BackupService.validate(
+        container,
+        currentSchemaVersion: db.schemaVersion,
+        passphrase: 'not-the-passphrase',
+        databaseKey: databaseKey,
+      );
+      expect(wrongPass.isValid, isFalse);
+    },
+  );
 }

@@ -33,12 +33,16 @@ class QuickAddWidget extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   'Quick Add',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const Spacer(),
                 Text(
                   'Tap to create',
-                  style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
@@ -47,7 +51,10 @@ class QuickAddWidget extends StatelessWidget {
               children: [
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: () => _openTransaction(context, domain.TransactionType.expense),
+                    onPressed: () => _openTransaction(
+                      context,
+                      domain.TransactionType.expense,
+                    ),
                     icon: const Icon(Icons.remove_circle_outline),
                     label: const Text('Expense'),
                   ),
@@ -55,7 +62,10 @@ class QuickAddWidget extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: () => _openTransaction(context, domain.TransactionType.income),
+                    onPressed: () => _openTransaction(
+                      context,
+                      domain.TransactionType.income,
+                    ),
                     icon: const Icon(Icons.add_circle_outline),
                     label: const Text('Income'),
                   ),
@@ -68,4 +78,3 @@ class QuickAddWidget extends StatelessWidget {
     );
   }
 }
-

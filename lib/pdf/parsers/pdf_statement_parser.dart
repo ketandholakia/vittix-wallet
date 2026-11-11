@@ -17,7 +17,8 @@ abstract class PdfStatementParser {
     required double amount,
     required DateTime date,
   }) {
-    final payload = '${merchant.toLowerCase()}_${amount.toStringAsFixed(2)}_${date.millisecondsSinceEpoch}_${rawBlock.length}';
+    final payload =
+        '${merchant.toLowerCase()}_${amount.toStringAsFixed(2)}_${date.millisecondsSinceEpoch}_${rawBlock.length}';
     return md5.convert(utf8.encode(payload)).toString();
   }
 }

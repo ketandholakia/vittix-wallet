@@ -43,7 +43,7 @@ class _BudgetFormDialogState extends State<_BudgetFormDialog> {
   @override
   void initState() {
     super.initState();
-    
+
     final currency = widget.ref.read(currencyProvider);
     final info = currencyData[currency]!;
     _amountFormatter = CurrencyTextInputFormatter.currency(
@@ -54,7 +54,9 @@ class _BudgetFormDialogState extends State<_BudgetFormDialog> {
 
     final existing = widget.budget;
     _amountController = TextEditingController(
-      text: existing != null ? _amountFormatter.formatDouble(existing.amount) : '',
+      text: existing != null
+          ? _amountFormatter.formatDouble(existing.amount)
+          : '',
     );
     if (existing != null) {
       _selectedCategory = existing.category;
@@ -115,8 +117,9 @@ class _BudgetFormDialogState extends State<_BudgetFormDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final categoriesStream =
-        widget.ref.watch(watchAllCategoriesUseCaseProvider).call();
+    final categoriesStream = widget.ref
+        .watch(watchAllCategoriesUseCaseProvider)
+        .call();
 
     return AlertDialog(
       title: Text(_isEditing ? 'Edit Budget' : 'Add Budget'),
@@ -134,14 +137,19 @@ class _BudgetFormDialogState extends State<_BudgetFormDialog> {
                 }
                 final rawCategories = snapshot.data!;
                 // Flatten categories hierarchically
-                final topLevel = rawCategories.where((c) => c.parentId == null).toList();
+                final topLevel = rawCategories
+                    .where((c) => c.parentId == null)
+                    .toList();
                 final categoryList = <Category>[];
                 for (final parent in topLevel) {
                   categoryList.add(parent);
-                  categoryList.addAll(rawCategories.where((c) => c.parentId == parent.id));
+                  categoryList.addAll(
+                    rawCategories.where((c) => c.parentId == parent.id),
+                  );
                 }
                 for (final cat in rawCategories) {
-                  if (cat.parentId != null && !topLevel.any((p) => p.id == cat.parentId)) {
+                  if (cat.parentId != null &&
+                      !topLevel.any((p) => p.id == cat.parentId)) {
                     categoryList.add(cat);
                   }
                 }
@@ -169,7 +177,10 @@ class _BudgetFormDialogState extends State<_BudgetFormDialog> {
                         children: [
                           if (isSub) ...[
                             const SizedBox(width: 16),
-                            Text('↳ ', style: TextStyle(color: Colors.grey[500])),
+                            Text(
+                              '↳ ',
+                              style: TextStyle(color: Colors.grey[500]),
+                            ),
                           ],
                           Icon(
                             category.icon,
@@ -180,7 +191,9 @@ class _BudgetFormDialogState extends State<_BudgetFormDialog> {
                           Text(
                             category.name,
                             style: TextStyle(
-                              fontWeight: isSub ? FontWeight.normal : FontWeight.bold,
+                              fontWeight: isSub
+                                  ? FontWeight.normal
+                                  : FontWeight.bold,
                             ),
                           ),
                         ],

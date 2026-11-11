@@ -5,11 +5,11 @@ import 'package:vittix_wallet/features/transactions/data/tables/transactions_tab
 import 'package:vittix_wallet/features/family/data/tables/wallets_table.dart';
 import 'package:uuid/uuid.dart';
 
-
 @DataClassName('PeerDebtDb')
 class PeerDebts extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get walletId => integer().references(Wallets, #id, onDelete: KeyAction.cascade)();
+  IntColumn get walletId =>
+      integer().references(Wallets, #id, onDelete: KeyAction.cascade)();
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
   TextColumn get personName => text().withLength(min: 1, max: 100)();
   IntColumn get type => intEnum<PeerDebtType>()();
@@ -17,6 +17,11 @@ class PeerDebts extends Table {
   TextColumn get note => text().nullable()();
   DateTimeColumn get date => dateTime()();
   BoolColumn get isSettled => boolean().withDefault(const Constant(false))();
-  IntColumn get transactionId => integer().nullable().references(Transactions, #id, onDelete: KeyAction.setNull)();
-  DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
+  IntColumn get transactionId => integer().nullable().references(
+    Transactions,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
+  DateTimeColumn get updatedAt =>
+      dateTime().clientDefault(() => DateTime.now())();
 }

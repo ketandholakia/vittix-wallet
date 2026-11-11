@@ -2,20 +2,15 @@ import 'package:vittix_wallet/features/accounts/domain/account.dart';
 import 'package:vittix_wallet/features/categories/domain/category.dart';
 import 'package:vittix_wallet/features/transactions/domain/transaction.dart';
 
-enum RecurringInterval {
-  daily,
-  weekly,
-  monthly,
-  yearly,
-}
+enum RecurringInterval { daily, weekly, monthly, yearly }
 
 extension RecurringIntervalX on RecurringInterval {
   String get label => switch (this) {
-        RecurringInterval.daily => 'Daily',
-        RecurringInterval.weekly => 'Weekly',
-        RecurringInterval.monthly => 'Monthly',
-        RecurringInterval.yearly => 'Yearly',
-      };
+    RecurringInterval.daily => 'Daily',
+    RecurringInterval.weekly => 'Weekly',
+    RecurringInterval.monthly => 'Monthly',
+    RecurringInterval.yearly => 'Yearly',
+  };
 }
 
 class RecurringTransaction {

@@ -26,7 +26,9 @@ Future<T?> showReassignDeleteDialog<T>({
     context: context,
     builder: (dialogContext) {
       final colorScheme = Theme.of(dialogContext).colorScheme;
-      final countLabel = affectedCount == 1 ? '1 $recordNoun' : '$affectedCount ${recordNoun}s';
+      final countLabel = affectedCount == 1
+          ? '1 $recordNoun'
+          : '$affectedCount ${recordNoun}s';
 
       return StatefulBuilder(
         builder: (context, setState) {
@@ -66,7 +68,10 @@ Future<T?> showReassignDeleteDialog<T>({
                               ? null
                               : Text(subtitle),
                           trailing: isSelected
-                              ? Icon(Icons.check_circle, color: colorScheme.primary)
+                              ? Icon(
+                                  Icons.check_circle,
+                                  color: colorScheme.primary,
+                                )
                               : null,
                           onTap: () => setState(() => selected = candidate),
                         );
@@ -77,10 +82,9 @@ Future<T?> showReassignDeleteDialog<T>({
                     const SizedBox(height: 12),
                     Text(
                       warning,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: colorScheme.onSurfaceVariant),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ],

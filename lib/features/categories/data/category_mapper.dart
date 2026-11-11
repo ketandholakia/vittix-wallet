@@ -31,6 +31,12 @@ extension CategoryDomainMapper on domain.Category {
   db.CategoriesCompanion toCompanion() {
     // Use Value() for non-nullable fields, even when updating
     return db.CategoriesCompanion(
-        id: Value(id), name: Value(name), icon: Value(icon.codePoint), color: Value(colorToHex(color)), isDefault: Value(isDefault), parentId: Value(parentId));
+      id: Value(id),
+      name: Value(name),
+      icon: Value(icon.codePoint),
+      color: Value(colorToHex(color)),
+      isDefault: Value(isDefault),
+      parentId: Value(parentId),
+    );
   }
 }

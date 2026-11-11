@@ -1,6 +1,18 @@
 part of '../app_database.dart';
 
-@DriftAccessor(tables: [Wallets, WalletMembers, WalletInvitations, WalletSettlements, WalletExpenseSplits, WalletExpenseSplitMembers, PeerDebts, Transactions, WalletActivities])
+@DriftAccessor(
+  tables: [
+    Wallets,
+    WalletMembers,
+    WalletInvitations,
+    WalletSettlements,
+    WalletExpenseSplits,
+    WalletExpenseSplitMembers,
+    PeerDebts,
+    Transactions,
+    WalletActivities,
+  ],
+)
 class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
   WalletDao(super.db);
 
@@ -11,22 +23,25 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
   }) async {
     if (actorAccountId == null && actorUserId == null) return null;
     final query = select(walletMembers)
-      ..where((m) =>
-          m.walletId.equals(walletId) &
-          m.isActive.equals(true) &
-          // A7 step 3: prefer the real identity when supplied, otherwise fall
-          // back to the legacy money-account path until every call site has
-          // been migrated.
-          (actorUserId != null
-              ? m.userId.equals(actorUserId)
-              : m.accountId.equals(actorAccountId!)));
+      ..where(
+        (m) =>
+            m.walletId.equals(walletId) &
+            m.isActive.equals(true) &
+            // A7 step 3: prefer the real identity when supplied, otherwise fall
+            // back to the legacy money-account path until every call site has
+            // been migrated.
+            (actorUserId != null
+                ? m.userId.equals(actorUserId)
+                : m.accountId.equals(actorAccountId!)),
+      );
     final list = await query.get();
     return list.isEmpty ? null : list.first.role;
   }
 
   Future<void> checkPermission({
     required int walletId,
-    required bool Function(WalletPermissionService service, WalletRole? role) permissionCheck,
+    required bool Function(WalletPermissionService service, WalletRole? role)
+    permissionCheck,
     int? actorAccountId,
     int? actorUserId,
     String actionName = 'this operation',
@@ -45,8 +60,14 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     }
   }
 
-  Future<bool> isWalletValid(int walletId, {int? actorAccountId, int? actorUserId}) async {
-    final wallet = await (select(wallets)..where((w) => w.id.equals(walletId))).getSingleOrNull();
+  Future<bool> isWalletValid(
+    int walletId, {
+    int? actorAccountId,
+    int? actorUserId,
+  }) async {
+    final wallet = await (select(
+      wallets,
+    )..where((w) => w.id.equals(walletId))).getSingleOrNull();
     if (wallet == null) return false;
 
     if (actorAccountId != null || actorUserId != null) {
@@ -67,7 +88,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
   Future<List<Wallet>> getAccessibleWallets({int? actorAccountId}) async {
     if (actorAccountId != null) {
       final memberQuery = select(walletMembers)
-        ..where((m) => m.accountId.equals(actorAccountId) & m.isActive.equals(true));
+        ..where(
+          (m) => m.accountId.equals(actorAccountId) & m.isActive.equals(true),
+        );
       final memberRows = await memberQuery.get();
       final walletIds = memberRows.map((m) => m.walletId).toSet();
       if (walletIds.isEmpty) return [];
@@ -85,12 +108,20 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     }
   }
 
-  Future<int?> validateActiveWallet(int? walletId, {int? actorAccountId}) async {
+  Future<int?> validateActiveWallet(
+    int? walletId, {
+    int? actorAccountId,
+  }) async {
     if (walletId != null) {
-      final isValid = await isWalletValid(walletId, actorAccountId: actorAccountId);
+      final isValid = await isWalletValid(
+        walletId,
+        actorAccountId: actorAccountId,
+      );
       if (isValid) return walletId;
     }
-    final accessible = await getAccessibleWallets(actorAccountId: actorAccountId);
+    final accessible = await getAccessibleWallets(
+      actorAccountId: actorAccountId,
+    );
     return accessible.isEmpty ? null : accessible.first.id;
   }
 
@@ -98,7 +129,8 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
   /// This is a wallet-level check that does not require a specific actor.
   Future<bool> hasActiveMemberWithPermission({
     required int walletId,
-    required bool Function(WalletPermissionService service, WalletRole? role) permissionCheck,
+    required bool Function(WalletPermissionService service, WalletRole? role)
+    permissionCheck,
   }) async {
     final members = await getMembersForWallet(walletId);
     const service = WalletPermissionService();
@@ -118,15 +150,21 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
 
   Future<int> countActiveOwners(int walletId) async {
     final query = select(walletMembers)
-      ..where((m) =>
-          m.walletId.equals(walletId) &
-          m.role.equalsValue(WalletRole.owner) &
-          m.isActive.equals(true));
+      ..where(
+        (m) =>
+            m.walletId.equals(walletId) &
+            m.role.equalsValue(WalletRole.owner) &
+            m.isActive.equals(true),
+      );
     final list = await query.get();
     return list.length;
   }
 
-  Future<int> insertMember(Insertable<WalletMember> member, {int? actorAccountId, int? actorUserId}) async {
+  Future<int> insertMember(
+    Insertable<WalletMember> member, {
+    int? actorAccountId,
+    int? actorUserId,
+  }) async {
     // Resolve wallet/account for the audit event before insert.
     int? memberWalletId;
     int? memberAccountId;
@@ -135,7 +173,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       memberAccountId = member.accountId;
     } else if (member is WalletMembersCompanion) {
       memberWalletId = member.walletId.present ? member.walletId.value : null;
-      memberAccountId = member.accountId.present ? member.accountId.value : null;
+      memberAccountId = member.accountId.present
+          ? member.accountId.value
+          : null;
     }
     if (memberWalletId == null || memberAccountId == null) {
       return into(walletMembers).insert(member);
@@ -160,7 +200,11 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<bool> updateMember(Insertable<WalletMember> companion, {int? actorAccountId, int? actorUserId}) async {
+  Future<bool> updateMember(
+    Insertable<WalletMember> companion, {
+    int? actorAccountId,
+    int? actorUserId,
+  }) async {
     return transaction(() async {
       int? memberId;
       if (companion is WalletMember) {
@@ -172,7 +216,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       // Resolve existing member outside nested block so audit code can access it.
       WalletMember? existing;
       if (memberId != null) {
-        existing = await (select(walletMembers)..where((m) => m.id.equals(memberId!))).getSingleOrNull();
+        existing = await (select(
+          walletMembers,
+        )..where((m) => m.id.equals(memberId!))).getSingleOrNull();
         if (existing != null) {
           await checkPermission(
             walletId: existing.walletId,
@@ -190,19 +236,32 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
               newRole = companion.role;
               newIsActive = companion.isActive;
             } else if (companion is WalletMembersCompanion) {
-              newRole = companion.role.present ? companion.role.value : existing.role;
-              newIsActive = companion.isActive.present ? companion.isActive.value : existing.isActive;
+              newRole = companion.role.present
+                  ? companion.role.value
+                  : existing.role;
+              newIsActive = companion.isActive.present
+                  ? companion.isActive.value
+                  : existing.isActive;
             }
 
-            if ((newRole != null && newRole != WalletRole.owner) || (newIsActive != null && !newIsActive)) {
-              final actorRole = await getRoleInWallet(existing.walletId, actorAccountId: actorAccountId, actorUserId: actorUserId);
+            if ((newRole != null && newRole != WalletRole.owner) ||
+                (newIsActive != null && !newIsActive)) {
+              final actorRole = await getRoleInWallet(
+                existing.walletId,
+                actorAccountId: actorAccountId,
+                actorUserId: actorUserId,
+              );
               if (actorRole != null && actorRole != WalletRole.owner) {
-                throw const WalletPermissionDeniedException('Permission denied: Only wallet owners can demote another owner.');
+                throw const WalletPermissionDeniedException(
+                  'Permission denied: Only wallet owners can demote another owner.',
+                );
               }
 
               final ownerCount = await countActiveOwners(existing.walletId);
               if (ownerCount <= 1) {
-                throw const LastOwnerException('Cannot demote or remove the last owner of the wallet. Assign another owner first.');
+                throw const LastOwnerException(
+                  'Cannot demote or remove the last owner of the wallet. Assign another owner first.',
+                );
               }
             }
           }
@@ -217,7 +276,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         if (companion is WalletMember) {
           newRole = companion.role;
         } else if (companion is WalletMembersCompanion) {
-          newRole = companion.role.present ? companion.role.value : existing.role;
+          newRole = companion.role.present
+              ? companion.role.value
+              : existing.role;
         }
         if (newRole != null && newRole != existing.role) {
           await insertActivity(
@@ -226,7 +287,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
               action: 'MEMBER_ROLE_CHANGED',
               entityType: 'wallet_member',
               entityId: existing.accountId,
-              details: Value('Role changed from ${existing.role.name} to ${newRole.name}'),
+              details: Value(
+                'Role changed from ${existing.role.name} to ${newRole.name}',
+              ),
               source: 'user',
             ),
             existing.walletId,
@@ -240,7 +303,12 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<void> deactivateMember(int walletId, int accountId, {int? actorAccountId, int? actorUserId}) async {
+  Future<void> deactivateMember(
+    int walletId,
+    int accountId, {
+    int? actorAccountId,
+    int? actorUserId,
+  }) async {
     await transaction(() async {
       await checkPermission(
         walletId: walletId,
@@ -250,16 +318,23 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         actionName: 'remove members',
       );
 
-      final existing = await (select(walletMembers)
-            ..where((m) => m.walletId.equals(walletId) & m.accountId.equals(accountId) & m.isActive.equals(true)))
-          .getSingleOrNull();
+      final existing =
+          await (select(walletMembers)..where(
+                (m) =>
+                    m.walletId.equals(walletId) &
+                    m.accountId.equals(accountId) &
+                    m.isActive.equals(true),
+              ))
+              .getSingleOrNull();
 
       if (existing == null) return;
 
       if (existing.role == WalletRole.owner) {
         final ownerCount = await countActiveOwners(walletId);
         if (ownerCount <= 1) {
-          throw const LastOwnerException('Cannot remove the last owner of the wallet. Assign another owner first.');
+          throw const LastOwnerException(
+            'Cannot remove the last owner of the wallet. Assign another owner first.',
+          );
         }
       }
 
@@ -282,9 +357,15 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<void> deleteMember(int memberId, {int? actorAccountId, int? actorUserId}) async {
+  Future<void> deleteMember(
+    int memberId, {
+    int? actorAccountId,
+    int? actorUserId,
+  }) async {
     await transaction(() async {
-      final existing = await (select(walletMembers)..where((m) => m.id.equals(memberId))).getSingleOrNull();
+      final existing = await (select(
+        walletMembers,
+      )..where((m) => m.id.equals(memberId))).getSingleOrNull();
       if (existing == null) return;
 
       await checkPermission(
@@ -298,7 +379,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       if (existing.isActive && existing.role == WalletRole.owner) {
         final ownerCount = await countActiveOwners(existing.walletId);
         if (ownerCount <= 1) {
-          throw const LastOwnerException('Cannot remove the last owner of the wallet. Assign another owner first.');
+          throw const LastOwnerException(
+            'Cannot remove the last owner of the wallet. Assign another owner first.',
+          );
         }
       }
 
@@ -324,36 +407,52 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       into(walletInvitations).insert(companion);
 
   Stream<List<WalletInvitation>> watchInvitationsForWallet(int walletId) {
-    return (select(walletInvitations)..where((i) => i.walletId.equals(walletId))).watch();
+    return (select(
+      walletInvitations,
+    )..where((i) => i.walletId.equals(walletId))).watch();
   }
 
   Future<List<WalletInvitation>> getInvitationsForWallet(int walletId) {
-    return (select(walletInvitations)..where((i) => i.walletId.equals(walletId))).get();
+    return (select(
+      walletInvitations,
+    )..where((i) => i.walletId.equals(walletId))).get();
   }
 
   Future<WalletInvitation?> getInvitationById(int id) {
-    return (select(walletInvitations)..where((i) => i.id.equals(id))).getSingleOrNull();
+    return (select(
+      walletInvitations,
+    )..where((i) => i.id.equals(id))).getSingleOrNull();
   }
 
   Future<WalletInvitation?> getInvitationByIdAndToken(int id, String token) {
-    return (select(walletInvitations)..where((i) => i.id.equals(id) & i.token.equals(token))).getSingleOrNull();
+    return (select(
+      walletInvitations,
+    )..where((i) => i.id.equals(id) & i.token.equals(token))).getSingleOrNull();
   }
 
   Future<bool> updateInvitation(Insertable<WalletInvitation> companion) {
     return update(walletInvitations).replace(companion);
   }
 
-  Future<int> consumeInvitationAtomically(int id, String token, WalletInvitationStatus expectedStatus) async {
-    return await (update(walletInvitations)
-          ..where((i) =>
+  Future<int> consumeInvitationAtomically(
+    int id,
+    String token,
+    WalletInvitationStatus expectedStatus,
+  ) async {
+    return await (update(walletInvitations)..where(
+          (i) =>
               i.id.equals(id) &
               i.token.equals(token) &
               i.status.equals(WalletInvitationStatus.pending.name) &
-              (i.expiresAt.isNull() | i.expiresAt.isBiggerThanValue(DateTime.now()))))
-        .write(WalletInvitationsCompanion(
-      status: Value(expectedStatus),
-      respondedAt: Value(DateTime.now()),
-    ));
+              (i.expiresAt.isNull() |
+                  i.expiresAt.isBiggerThanValue(DateTime.now())),
+        ))
+        .write(
+          WalletInvitationsCompanion(
+            status: Value(expectedStatus),
+            respondedAt: Value(DateTime.now()),
+          ),
+        );
   }
 
   // --- Wallet-scoped Activity operations (P2-3) ---
@@ -384,8 +483,16 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     return into(walletActivities).insert(row);
   }
 
-  Future<List<WalletActivity>> getActivityForWallet(int walletId, {int? limit, int? offset, int? actorAccountId, String? action, String? entityType}) async {
-    final query = select(walletActivities)..where((a) => a.walletId.equals(walletId));
+  Future<List<WalletActivity>> getActivityForWallet(
+    int walletId, {
+    int? limit,
+    int? offset,
+    int? actorAccountId,
+    String? action,
+    String? entityType,
+  }) async {
+    final query = select(walletActivities)
+      ..where((a) => a.walletId.equals(walletId));
     if (actorAccountId != null) {
       query.where((a) => a.actorAccountId.equals(actorAccountId));
     }
@@ -402,8 +509,15 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     return query.get();
   }
 
-  Stream<List<WalletActivity>> watchActivityForWallet(int walletId, {int? limit, int? actorAccountId, String? action, String? entityType}) {
-    final query = select(walletActivities)..where((a) => a.walletId.equals(walletId));
+  Stream<List<WalletActivity>> watchActivityForWallet(
+    int walletId, {
+    int? limit,
+    int? actorAccountId,
+    String? action,
+    String? entityType,
+  }) {
+    final query = select(walletActivities)
+      ..where((a) => a.walletId.equals(walletId));
     if (actorAccountId != null) {
       query.where((a) => a.actorAccountId.equals(actorAccountId));
     }
@@ -420,7 +534,10 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     return query.watch();
   }
 
-  Future<void> logOnboardingActivity({required int walletId, required String action}) async {
+  Future<void> logOnboardingActivity({
+    required int walletId,
+    required String action,
+  }) async {
     await insertActivity(
       WalletActivitiesCompanion.insert(
         walletId: walletId,
@@ -433,7 +550,11 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     );
   }
 
-  Future<void> logWalletCreated({required int walletId, required String walletType, int? actorAccountId}) async {
+  Future<void> logWalletCreated({
+    required int walletId,
+    required String walletType,
+    int? actorAccountId,
+  }) async {
     await insertActivity(
       WalletActivitiesCompanion.insert(
         walletId: walletId,
@@ -442,14 +563,22 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         entityId: walletId,
         details: Value('Wallet type: $walletType'),
         source: 'user',
-        actorAccountId: actorAccountId != null ? Value(actorAccountId) : const Value.absent(),
+        actorAccountId: actorAccountId != null
+            ? Value(actorAccountId)
+            : const Value.absent(),
       ),
       walletId,
       actorAccountId: actorAccountId,
     );
   }
 
-  Future<void> logRoleChanged({required int walletId, required int accountId, required WalletRole oldRole, required WalletRole newRole, int? actorAccountId}) async {
+  Future<void> logRoleChanged({
+    required int walletId,
+    required int accountId,
+    required WalletRole oldRole,
+    required WalletRole newRole,
+    int? actorAccountId,
+  }) async {
     await insertActivity(
       WalletActivitiesCompanion.insert(
         walletId: walletId,
@@ -458,14 +587,20 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         entityId: accountId,
         details: Value('Role changed from ${oldRole.name} to ${newRole.name}'),
         source: 'user',
-        actorAccountId: actorAccountId != null ? Value(actorAccountId) : const Value.absent(),
+        actorAccountId: actorAccountId != null
+            ? Value(actorAccountId)
+            : const Value.absent(),
       ),
       walletId,
       actorAccountId: actorAccountId,
     );
   }
 
-  Future<void> logMemberRemoved({required int walletId, required int accountId, int? actorAccountId}) async {
+  Future<void> logMemberRemoved({
+    required int walletId,
+    required int accountId,
+    int? actorAccountId,
+  }) async {
     await insertActivity(
       WalletActivitiesCompanion.insert(
         walletId: walletId,
@@ -473,14 +608,21 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         entityType: 'WalletMember',
         entityId: accountId,
         source: 'user',
-        actorAccountId: actorAccountId != null ? Value(actorAccountId) : const Value.absent(),
+        actorAccountId: actorAccountId != null
+            ? Value(actorAccountId)
+            : const Value.absent(),
       ),
       walletId,
       actorAccountId: actorAccountId,
     );
   }
 
-  Future<void> logMemberAdded({required int walletId, required int accountId, int? actorAccountId, int? actorUserId}) async {
+  Future<void> logMemberAdded({
+    required int walletId,
+    required int accountId,
+    int? actorAccountId,
+    int? actorUserId,
+  }) async {
     await insertActivity(
       WalletActivitiesCompanion.insert(
         walletId: walletId,
@@ -488,7 +630,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         entityType: 'WalletMember',
         entityId: accountId,
         source: 'user',
-        actorAccountId: actorAccountId != null ? Value(actorAccountId) : const Value.absent(),
+        actorAccountId: actorAccountId != null
+            ? Value(actorAccountId)
+            : const Value.absent(),
       ),
       walletId,
       actorAccountId: actorAccountId,
@@ -496,7 +640,13 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     );
   }
 
-  Future<void> logInvitationActivity({required int walletId, required int invitationId, required String action, int? actorAccountId, int? actorUserId}) async {
+  Future<void> logInvitationActivity({
+    required int walletId,
+    required int invitationId,
+    required String action,
+    int? actorAccountId,
+    int? actorUserId,
+  }) async {
     await insertActivity(
       WalletActivitiesCompanion.insert(
         walletId: walletId,
@@ -504,7 +654,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         entityType: 'WalletInvitation',
         entityId: invitationId,
         source: 'user',
-        actorAccountId: actorAccountId != null ? Value(actorAccountId) : const Value.absent(),
+        actorAccountId: actorAccountId != null
+            ? Value(actorAccountId)
+            : const Value.absent(),
       ),
       walletId,
       actorAccountId: actorAccountId,
@@ -573,30 +725,44 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       ];
 
       for (final table in directTables) {
-        await db.customStatement('DELETE FROM $table WHERE wallet_id = ?', [walletId]);
+        await db.customStatement('DELETE FROM $table WHERE wallet_id = ?', [
+          walletId,
+        ]);
       }
 
       // 3. Delete the wallet itself
       await db.customStatement('DELETE FROM wallets WHERE id = ?', [walletId]);
-      db.notifyUpdates(db.allTables.map((t) => TableUpdate(t.actualTableName)).toSet());
+      db.notifyUpdates(
+        db.allTables.map((t) => TableUpdate(t.actualTableName)).toSet(),
+      );
     });
   }
 
   // --- Wallet-scoped Split operations (P2-2) ---
 
   Stream<List<WalletExpenseSplit>> watchSplitsForWallet(int walletId) {
-    return (select(walletExpenseSplits)..where((s) => s.walletId.equals(walletId))).watch();
+    return (select(
+      walletExpenseSplits,
+    )..where((s) => s.walletId.equals(walletId))).watch();
   }
 
   Future<List<WalletExpenseSplit>> getSplitsForWallet(int walletId) {
-    return (select(walletExpenseSplits)..where((s) => s.walletId.equals(walletId))).get();
+    return (select(
+      walletExpenseSplits,
+    )..where((s) => s.walletId.equals(walletId))).get();
   }
 
   Future<WalletExpenseSplit?> getSplitById(int id, int walletId) {
-    return (select(walletExpenseSplits)..where((s) => s.id.equals(id) & s.walletId.equals(walletId))).getSingleOrNull();
+    return (select(walletExpenseSplits)
+          ..where((s) => s.id.equals(id) & s.walletId.equals(walletId)))
+        .getSingleOrNull();
   }
 
-  Future<int> insertSplit(Insertable<WalletExpenseSplit> split, int walletId, {int? actorAccountId}) async {
+  Future<int> insertSplit(
+    Insertable<WalletExpenseSplit> split,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canCreateSplits(r),
@@ -610,22 +776,40 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       transactionId = split.transactionId;
       paidByMemberId = split.paidByMemberId;
     } else if (split is WalletExpenseSplitsCompanion) {
-      transactionId = split.transactionId.present ? split.transactionId.value : null;
-      paidByMemberId = split.paidByMemberId.present ? split.paidByMemberId.value : null;
+      transactionId = split.transactionId.present
+          ? split.transactionId.value
+          : null;
+      paidByMemberId = split.paidByMemberId.present
+          ? split.paidByMemberId.value
+          : null;
     }
 
     if (transactionId != null) {
       final tid = transactionId;
-      final tx = await (select(transactions)..where((t) => t.id.equals(tid) & t.walletId.equals(walletId))).getSingleOrNull();
+      final tx =
+          await (select(transactions)
+                ..where((t) => t.id.equals(tid) & t.walletId.equals(walletId)))
+              .getSingleOrNull();
       if (tx == null) {
-        throw const WalletPermissionDeniedException('Target transaction does not belong to the target wallet.');
+        throw const WalletPermissionDeniedException(
+          'Target transaction does not belong to the target wallet.',
+        );
       }
     }
     if (paidByMemberId != null) {
       final pbid = paidByMemberId;
-      final member = await (select(walletMembers)..where((m) => m.id.equals(pbid) & m.walletId.equals(walletId) & m.isActive.equals(true))).getSingleOrNull();
+      final member =
+          await (select(walletMembers)..where(
+                (m) =>
+                    m.id.equals(pbid) &
+                    m.walletId.equals(walletId) &
+                    m.isActive.equals(true),
+              ))
+              .getSingleOrNull();
       if (member == null) {
-        throw const WalletPermissionDeniedException('Paid-by member does not belong to the target wallet.');
+        throw const WalletPermissionDeniedException(
+          'Paid-by member does not belong to the target wallet.',
+        );
       }
     }
 
@@ -634,7 +818,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         : split;
     return transaction(() async {
       final id = await into(walletExpenseSplits).insert(scoped);
-      final row = await (select(walletExpenseSplits)..where((s) => s.id.equals(id))).getSingle();
+      final row = await (select(
+        walletExpenseSplits,
+      )..where((s) => s.id.equals(id))).getSingle();
       await insertActivity(
         WalletActivitiesCompanion.insert(
           walletId: walletId,
@@ -651,7 +837,11 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<bool> updateSplit(Insertable<WalletExpenseSplit> companion, int walletId, {int? actorAccountId}) async {
+  Future<bool> updateSplit(
+    Insertable<WalletExpenseSplit> companion,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageSettlements(r),
@@ -661,15 +851,20 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     int? id;
     if (companion is WalletExpenseSplit) {
       id = companion.id;
-    } else if (companion is WalletExpenseSplitsCompanion && companion.id.present) {
+    } else if (companion is WalletExpenseSplitsCompanion &&
+        companion.id.present) {
       id = companion.id.value;
     }
     if (id == null) return false;
 
-    final existing = await (select(walletExpenseSplits)..where((s) => s.id.equals(id!) & s.walletId.equals(walletId))).getSingleOrNull();
+    final existing =
+        await (select(walletExpenseSplits)
+              ..where((s) => s.id.equals(id!) & s.walletId.equals(walletId)))
+            .getSingleOrNull();
     if (existing == null) return false;
 
-    final query = update(walletExpenseSplits)..where((s) => s.id.equals(id!) & s.walletId.equals(walletId));
+    final query = update(walletExpenseSplits)
+      ..where((s) => s.id.equals(id!) & s.walletId.equals(walletId));
     return transaction(() async {
       final count = await query.write(companion);
       if (count > 0) {
@@ -698,10 +893,15 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       actionName: 'manage splits',
     );
     // Capture uuid before deletion (the row will be gone after delete).
-    final existing = await (select(walletExpenseSplits)..where((s) => s.id.equals(id) & s.walletId.equals(walletId))).getSingleOrNull();
+    final existing =
+        await (select(walletExpenseSplits)
+              ..where((s) => s.id.equals(id) & s.walletId.equals(walletId)))
+            .getSingleOrNull();
     if (existing == null) return 0;
     return transaction(() async {
-      final deleted = await (delete(walletExpenseSplits)..where((s) => s.id.equals(id) & s.walletId.equals(walletId))).go();
+      final deleted = await (delete(
+        walletExpenseSplits,
+      )..where((s) => s.id.equals(id) & s.walletId.equals(walletId))).go();
       if (deleted > 0) {
         await insertActivity(
           WalletActivitiesCompanion.insert(
@@ -722,22 +922,44 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
 
   // --- Wallet-scoped Split Member operations (P2-2) ---
 
-  Stream<List<WalletExpenseSplitMember>> watchSplitMembersForWallet(int walletId) {
+  Stream<List<WalletExpenseSplitMember>> watchSplitMembersForWallet(
+    int walletId,
+  ) {
     final query = select(walletExpenseSplitMembers).join([
-      innerJoin(walletExpenseSplits, walletExpenseSplits.id.equalsExp(walletExpenseSplitMembers.splitId)),
+      innerJoin(
+        walletExpenseSplits,
+        walletExpenseSplits.id.equalsExp(walletExpenseSplitMembers.splitId),
+      ),
     ])..where(walletExpenseSplits.walletId.equals(walletId));
-    return query.watch().map((rows) => rows.map((r) => r.readTable(walletExpenseSplitMembers)).toList());
+    return query.watch().map(
+      (rows) =>
+          rows.map((r) => r.readTable(walletExpenseSplitMembers)).toList(),
+    );
   }
 
-  Future<List<WalletExpenseSplitMember>> getSplitMembersForSplit(int splitId, int walletId) async {
-    final query = select(walletExpenseSplitMembers).join([
-      innerJoin(walletExpenseSplits, walletExpenseSplits.id.equalsExp(walletExpenseSplitMembers.splitId)),
-    ])..where(walletExpenseSplitMembers.splitId.equals(splitId) & walletExpenseSplits.walletId.equals(walletId));
+  Future<List<WalletExpenseSplitMember>> getSplitMembersForSplit(
+    int splitId,
+    int walletId,
+  ) async {
+    final query =
+        select(walletExpenseSplitMembers).join([
+          innerJoin(
+            walletExpenseSplits,
+            walletExpenseSplits.id.equalsExp(walletExpenseSplitMembers.splitId),
+          ),
+        ])..where(
+          walletExpenseSplitMembers.splitId.equals(splitId) &
+              walletExpenseSplits.walletId.equals(walletId),
+        );
     final rows = await query.get();
     return rows.map((r) => r.readTable(walletExpenseSplitMembers)).toList();
   }
 
-  Future<int> insertSplitMember(Insertable<WalletExpenseSplitMember> member, int walletId, {int? actorAccountId}) async {
+  Future<int> insertSplitMember(
+    Insertable<WalletExpenseSplitMember> member,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canCreateSplits(r),
@@ -756,25 +978,45 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     }
 
     if (splitId == null || memberId == null) {
-      throw const WalletPermissionDeniedException('Split member requires both splitId and memberId.');
+      throw const WalletPermissionDeniedException(
+        'Split member requires both splitId and memberId.',
+      );
     }
 
     final sid = splitId;
-    final split = await (select(walletExpenseSplits)..where((s) => s.id.equals(sid) & s.walletId.equals(walletId))).getSingleOrNull();
+    final split =
+        await (select(walletExpenseSplits)
+              ..where((s) => s.id.equals(sid) & s.walletId.equals(walletId)))
+            .getSingleOrNull();
     if (split == null) {
-      throw const WalletPermissionDeniedException('Target split does not belong to the target wallet.');
+      throw const WalletPermissionDeniedException(
+        'Target split does not belong to the target wallet.',
+      );
     }
 
     final mid = memberId;
-    final walletMember = await (select(walletMembers)..where((m) => m.id.equals(mid) & m.walletId.equals(walletId) & m.isActive.equals(true))).getSingleOrNull();
+    final walletMember =
+        await (select(walletMembers)..where(
+              (m) =>
+                  m.id.equals(mid) &
+                  m.walletId.equals(walletId) &
+                  m.isActive.equals(true),
+            ))
+            .getSingleOrNull();
     if (walletMember == null) {
-      throw const WalletPermissionDeniedException('Target member does not belong to the target wallet.');
+      throw const WalletPermissionDeniedException(
+        'Target member does not belong to the target wallet.',
+      );
     }
 
     return into(walletExpenseSplitMembers).insert(member);
   }
 
-  Future<bool> updateSplitMember(Insertable<WalletExpenseSplitMember> companion, int walletId, {int? actorAccountId}) async {
+  Future<bool> updateSplitMember(
+    Insertable<WalletExpenseSplitMember> companion,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageSettlements(r),
@@ -784,51 +1026,83 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     int? id;
     if (companion is WalletExpenseSplitMember) {
       id = companion.id;
-    } else if (companion is WalletExpenseSplitMembersCompanion && companion.id.present) {
+    } else if (companion is WalletExpenseSplitMembersCompanion &&
+        companion.id.present) {
       id = companion.id.value;
     }
     if (id == null) return false;
     final memberId = id;
 
-    final existing = await (select(walletExpenseSplitMembers)..where((m) => m.id.equals(memberId))).getSingleOrNull();
+    final existing = await (select(
+      walletExpenseSplitMembers,
+    )..where((m) => m.id.equals(memberId))).getSingleOrNull();
     if (existing == null) return false;
-    final split = await (select(walletExpenseSplits)..where((s) => s.id.equals(existing.splitId) & s.walletId.equals(walletId))).getSingleOrNull();
+    final split =
+        await (select(walletExpenseSplits)..where(
+              (s) =>
+                  s.id.equals(existing.splitId) & s.walletId.equals(walletId),
+            ))
+            .getSingleOrNull();
     if (split == null) return false;
 
-    final query = update(walletExpenseSplitMembers)..where((m) => m.id.equals(memberId));
+    final query = update(walletExpenseSplitMembers)
+      ..where((m) => m.id.equals(memberId));
     final count = await query.write(companion);
     return count > 0;
   }
 
-  Future<int> deleteSplitMember(int id, int walletId, {int? actorAccountId}) async {
+  Future<int> deleteSplitMember(
+    int id,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageSettlements(r),
       actorAccountId: actorAccountId,
       actionName: 'manage split members',
     );
-    final existing = await (select(walletExpenseSplitMembers)..where((m) => m.id.equals(id))).getSingleOrNull();
+    final existing = await (select(
+      walletExpenseSplitMembers,
+    )..where((m) => m.id.equals(id))).getSingleOrNull();
     if (existing == null) return 0;
-    final split = await (select(walletExpenseSplits)..where((s) => s.id.equals(existing.splitId) & s.walletId.equals(walletId))).getSingleOrNull();
+    final split =
+        await (select(walletExpenseSplits)..where(
+              (s) =>
+                  s.id.equals(existing.splitId) & s.walletId.equals(walletId),
+            ))
+            .getSingleOrNull();
     if (split == null) return 0;
-    return (delete(walletExpenseSplitMembers)..where((m) => m.id.equals(id))).go();
+    return (delete(
+      walletExpenseSplitMembers,
+    )..where((m) => m.id.equals(id))).go();
   }
 
   // --- Wallet-scoped Settlement operations (P2-2) ---
 
   Stream<List<WalletSettlement>> watchSettlementsForWallet(int walletId) {
-    return (select(walletSettlements)..where((s) => s.walletId.equals(walletId))).watch();
+    return (select(
+      walletSettlements,
+    )..where((s) => s.walletId.equals(walletId))).watch();
   }
 
   Future<List<WalletSettlement>> getSettlementsForWallet(int walletId) {
-    return (select(walletSettlements)..where((s) => s.walletId.equals(walletId))).get();
+    return (select(
+      walletSettlements,
+    )..where((s) => s.walletId.equals(walletId))).get();
   }
 
   Future<WalletSettlement?> getSettlementById(int id, int walletId) {
-    return (select(walletSettlements)..where((s) => s.id.equals(id) & s.walletId.equals(walletId))).getSingleOrNull();
+    return (select(walletSettlements)
+          ..where((s) => s.id.equals(id) & s.walletId.equals(walletId)))
+        .getSingleOrNull();
   }
 
-  Future<int> insertSettlement(Insertable<WalletSettlement> settlement, int walletId, {int? actorAccountId}) async {
+  Future<int> insertSettlement(
+    Insertable<WalletSettlement> settlement,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageSettlements(r),
@@ -842,22 +1116,44 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       payerMemberId = settlement.payerMemberId;
       receiverMemberId = settlement.receiverMemberId;
     } else if (settlement is WalletSettlementsCompanion) {
-      payerMemberId = settlement.payerMemberId.present ? settlement.payerMemberId.value : null;
-      receiverMemberId = settlement.receiverMemberId.present ? settlement.receiverMemberId.value : null;
+      payerMemberId = settlement.payerMemberId.present
+          ? settlement.payerMemberId.value
+          : null;
+      receiverMemberId = settlement.receiverMemberId.present
+          ? settlement.receiverMemberId.value
+          : null;
     }
 
     if (payerMemberId != null) {
       final pid = payerMemberId;
-      final member = await (select(walletMembers)..where((m) => m.id.equals(pid) & m.walletId.equals(walletId) & m.isActive.equals(true))).getSingleOrNull();
+      final member =
+          await (select(walletMembers)..where(
+                (m) =>
+                    m.id.equals(pid) &
+                    m.walletId.equals(walletId) &
+                    m.isActive.equals(true),
+              ))
+              .getSingleOrNull();
       if (member == null) {
-        throw const WalletPermissionDeniedException('Payer member does not belong to the target wallet.');
+        throw const WalletPermissionDeniedException(
+          'Payer member does not belong to the target wallet.',
+        );
       }
     }
     if (receiverMemberId != null) {
       final rid = receiverMemberId;
-      final member = await (select(walletMembers)..where((m) => m.id.equals(rid) & m.walletId.equals(walletId) & m.isActive.equals(true))).getSingleOrNull();
+      final member =
+          await (select(walletMembers)..where(
+                (m) =>
+                    m.id.equals(rid) &
+                    m.walletId.equals(walletId) &
+                    m.isActive.equals(true),
+              ))
+              .getSingleOrNull();
       if (member == null) {
-        throw const WalletPermissionDeniedException('Receiver member does not belong to the target wallet.');
+        throw const WalletPermissionDeniedException(
+          'Receiver member does not belong to the target wallet.',
+        );
       }
     }
 
@@ -866,7 +1162,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         : settlement;
     return transaction(() async {
       final id = await into(walletSettlements).insert(scoped);
-      final row = await (select(walletSettlements)..where((s) => s.id.equals(id))).getSingle();
+      final row = await (select(
+        walletSettlements,
+      )..where((s) => s.id.equals(id))).getSingle();
       await insertActivity(
         WalletActivitiesCompanion.insert(
           walletId: walletId,
@@ -883,7 +1181,11 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<bool> updateSettlement(Insertable<WalletSettlement> companion, int walletId, {int? actorAccountId}) async {
+  Future<bool> updateSettlement(
+    Insertable<WalletSettlement> companion,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageSettlements(r),
@@ -893,15 +1195,20 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     int? id;
     if (companion is WalletSettlement) {
       id = companion.id;
-    } else if (companion is WalletSettlementsCompanion && companion.id.present) {
+    } else if (companion is WalletSettlementsCompanion &&
+        companion.id.present) {
       id = companion.id.value;
     }
     if (id == null) return false;
 
-    final existing = await (select(walletSettlements)..where((s) => s.id.equals(id!) & s.walletId.equals(walletId))).getSingleOrNull();
+    final existing =
+        await (select(walletSettlements)
+              ..where((s) => s.id.equals(id!) & s.walletId.equals(walletId)))
+            .getSingleOrNull();
     if (existing == null) return false;
 
-    final query = update(walletSettlements)..where((s) => s.id.equals(id!) & s.walletId.equals(walletId));
+    final query = update(walletSettlements)
+      ..where((s) => s.id.equals(id!) & s.walletId.equals(walletId));
     return transaction(() async {
       final count = await query.write(companion);
       if (count > 0) {
@@ -922,7 +1229,11 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<int> deleteSettlement(int id, int walletId, {int? actorAccountId}) async {
+  Future<int> deleteSettlement(
+    int id,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageSettlements(r),
@@ -930,10 +1241,15 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       actionName: 'manage settlements',
     );
     // Capture uuid before deletion (the row will be gone after delete).
-    final existing = await (select(walletSettlements)..where((s) => s.id.equals(id) & s.walletId.equals(walletId))).getSingleOrNull();
+    final existing =
+        await (select(walletSettlements)
+              ..where((s) => s.id.equals(id) & s.walletId.equals(walletId)))
+            .getSingleOrNull();
     if (existing == null) return 0;
     return transaction(() async {
-      final deleted = await (delete(walletSettlements)..where((s) => s.id.equals(id) & s.walletId.equals(walletId))).go();
+      final deleted = await (delete(
+        walletSettlements,
+      )..where((s) => s.id.equals(id) & s.walletId.equals(walletId))).go();
       if (deleted > 0) {
         await insertActivity(
           WalletActivitiesCompanion.insert(
@@ -955,14 +1271,22 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
   // --- Wallet-scoped PeerDebt operations (P2-2) ---
 
   Future<List<PeerDebtDb>> getPeerDebtsForWallet(int walletId) {
-    return (select(peerDebts)..where((pd) => pd.walletId.equals(walletId))).get();
+    return (select(
+      peerDebts,
+    )..where((pd) => pd.walletId.equals(walletId))).get();
   }
 
   Future<PeerDebtDb?> getPeerDebtById(int id, int walletId) {
-    return (select(peerDebts)..where((pd) => pd.id.equals(id) & pd.walletId.equals(walletId))).getSingleOrNull();
+    return (select(peerDebts)
+          ..where((pd) => pd.id.equals(id) & pd.walletId.equals(walletId)))
+        .getSingleOrNull();
   }
 
-  Future<int> insertPeerDebt(Insertable<PeerDebtDb> peerDebt, int walletId, {int? actorAccountId}) async {
+  Future<int> insertPeerDebt(
+    Insertable<PeerDebtDb> peerDebt,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageDebts(r),
@@ -974,14 +1298,21 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     if (peerDebt is PeerDebtDb) {
       transactionId = peerDebt.transactionId;
     } else if (peerDebt is PeerDebtsCompanion) {
-      transactionId = peerDebt.transactionId.present ? peerDebt.transactionId.value : null;
+      transactionId = peerDebt.transactionId.present
+          ? peerDebt.transactionId.value
+          : null;
     }
 
     if (transactionId != null) {
       final tid = transactionId;
-      final tx = await (select(transactions)..where((t) => t.id.equals(tid) & t.walletId.equals(walletId))).getSingleOrNull();
+      final tx =
+          await (select(transactions)
+                ..where((t) => t.id.equals(tid) & t.walletId.equals(walletId)))
+              .getSingleOrNull();
       if (tx == null) {
-        throw const WalletPermissionDeniedException('Target transaction does not belong to the target wallet.');
+        throw const WalletPermissionDeniedException(
+          'Target transaction does not belong to the target wallet.',
+        );
       }
     }
 
@@ -990,7 +1321,9 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
         : peerDebt;
     return transaction(() async {
       final id = await into(peerDebts).insert(scoped);
-      final row = await (select(peerDebts)..where((pd) => pd.id.equals(id))).getSingle();
+      final row = await (select(
+        peerDebts,
+      )..where((pd) => pd.id.equals(id))).getSingle();
       await insertActivity(
         WalletActivitiesCompanion.insert(
           walletId: walletId,
@@ -1007,7 +1340,11 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<bool> updatePeerDebt(Insertable<PeerDebtDb> companion, int walletId, {int? actorAccountId}) async {
+  Future<bool> updatePeerDebt(
+    Insertable<PeerDebtDb> companion,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageDebts(r),
@@ -1022,10 +1359,14 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     }
     if (id == null) return false;
 
-    final existing = await (select(peerDebts)..where((pd) => pd.id.equals(id!) & pd.walletId.equals(walletId))).getSingleOrNull();
+    final existing =
+        await (select(peerDebts)
+              ..where((pd) => pd.id.equals(id!) & pd.walletId.equals(walletId)))
+            .getSingleOrNull();
     if (existing == null) return false;
 
-    final query = update(peerDebts)..where((pd) => pd.id.equals(id!) & pd.walletId.equals(walletId));
+    final query = update(peerDebts)
+      ..where((pd) => pd.id.equals(id!) & pd.walletId.equals(walletId));
     return transaction(() async {
       final count = await query.write(companion);
       if (count > 0) {
@@ -1046,7 +1387,11 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
     });
   }
 
-  Future<int> deletePeerDebt(int id, int walletId, {int? actorAccountId}) async {
+  Future<int> deletePeerDebt(
+    int id,
+    int walletId, {
+    int? actorAccountId,
+  }) async {
     await checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageDebts(r),
@@ -1054,10 +1399,15 @@ class WalletDao extends DatabaseAccessor<AppDatabase> with _$WalletDaoMixin {
       actionName: 'manage debts',
     );
     // Capture uuid before deletion (the row will be gone after delete).
-    final existing = await (select(peerDebts)..where((pd) => pd.id.equals(id) & pd.walletId.equals(walletId))).getSingleOrNull();
+    final existing =
+        await (select(peerDebts)
+              ..where((pd) => pd.id.equals(id) & pd.walletId.equals(walletId)))
+            .getSingleOrNull();
     if (existing == null) return 0;
     return transaction(() async {
-      final deleted = await (delete(peerDebts)..where((pd) => pd.id.equals(id) & pd.walletId.equals(walletId))).go();
+      final deleted = await (delete(
+        peerDebts,
+      )..where((pd) => pd.id.equals(id) & pd.walletId.equals(walletId))).go();
       if (deleted > 0) {
         await insertActivity(
           WalletActivitiesCompanion.insert(

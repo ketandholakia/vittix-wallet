@@ -20,25 +20,70 @@ void main() {
     usecase = GetMonthlySummary(mockTransactionRepository);
   });
 
-  final testCategory = Category(id: 1, name: 'Food', icon: Icons.fastfood, color: Colors.red);
-  final testAccount = const Account(id: 1, name: 'Cash', type: AccountType.cash, icon: Icons.payments, color: Colors.green);
+  final testCategory = Category(
+    id: 1,
+    name: 'Food',
+    icon: Icons.fastfood,
+    color: Colors.red,
+  );
+  final testAccount = const Account(
+    id: 1,
+    name: 'Cash',
+    type: AccountType.cash,
+    icon: Icons.payments,
+    color: Colors.green,
+  );
   final tTransactions = [
-    Transaction(id: 1, amount: 100, date: DateTime.now(), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()),
-    Transaction(id: 2, amount: 500, date: DateTime.now(), type: TransactionType.income, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()),
-    Transaction(id: 3, amount: 50, date: DateTime.now(), type: TransactionType.expense, category: testCategory, account: testAccount, createdAt: DateTime.now(), updatedAt: DateTime.now()),
+    Transaction(
+      id: 1,
+      amount: 100,
+      date: DateTime.now(),
+      type: TransactionType.expense,
+      category: testCategory,
+      account: testAccount,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Transaction(
+      id: 2,
+      amount: 500,
+      date: DateTime.now(),
+      type: TransactionType.income,
+      category: testCategory,
+      account: testAccount,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    Transaction(
+      id: 3,
+      amount: 50,
+      date: DateTime.now(),
+      type: TransactionType.expense,
+      category: testCategory,
+      account: testAccount,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
   ];
   final tDateTime = DateTime.now();
 
-  test('should get monthly summary from the repository and calculate totals correctly', () async {
-    when(mockTransactionRepository.watchTransactionsInMonth(any)).thenAnswer((_) => Stream.value(tTransactions));
-    when(mockTransactionRepository.getMonthlySummaryTotals(any)).thenAnswer((_) async => (500.0, 150.0));
+  test(
+    'should get monthly summary from the repository and calculate totals correctly',
+    () async {
+      when(
+        mockTransactionRepository.watchTransactionsInMonth(any),
+      ).thenAnswer((_) => Stream.value(tTransactions));
+      when(
+        mockTransactionRepository.getMonthlySummaryTotals(any),
+      ).thenAnswer((_) async => (500.0, 150.0));
 
-    final resultStream = usecase(tDateTime);
+      final resultStream = usecase(tDateTime);
 
-    final report = await resultStream;
-    expect(report.totalExpense, 150.0);
-    expect(report.totalIncome, 500.0);
-    expect(report.balance, 350.0);
-    expect(report.transactions, tTransactions);
-  });
+      final report = await resultStream;
+      expect(report.totalExpense, 150.0);
+      expect(report.totalIncome, 500.0);
+      expect(report.balance, 350.0);
+      expect(report.transactions, tTransactions);
+    },
+  );
 }

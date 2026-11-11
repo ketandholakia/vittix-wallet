@@ -18,7 +18,9 @@ class WalletMembersScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Wallet members')),
       body: membersAsync.when(
         data: (members) {
-          final canManage = permissions.canManageMembers(roleAsync.asData?.value);
+          final canManage = permissions.canManageMembers(
+            roleAsync.asData?.value,
+          );
           return ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: members.length,
@@ -38,10 +40,14 @@ class WalletMembersScreen extends ConsumerWidget {
                         onChanged: canManage
                             ? (value) async {
                                 if (value == null) return;
-                                final walletId = ref.read(currentWalletIdProvider);
+                                final walletId = ref.read(
+                                  currentWalletIdProvider,
+                                );
                                 final previousRole = member.role;
                                 try {
-                                  await ref.read(walletDaoProvider).updateMember(
+                                  await ref
+                                      .read(walletDaoProvider)
+                                      .updateMember(
                                         WalletMembersCompanion(
                                           id: Value(member.id),
                                           walletId: Value(walletId),
@@ -51,7 +57,9 @@ class WalletMembersScreen extends ConsumerWidget {
                                           isActive: Value(member.isActive),
                                         ),
                                       );
-                                  await ref.read(walletDaoProvider).logRoleChanged(
+                                  await ref
+                                      .read(walletDaoProvider)
+                                      .logRoleChanged(
                                         walletId: walletId,
                                         accountId: member.accountId,
                                         oldRole: previousRole,
@@ -68,16 +76,34 @@ class WalletMembersScreen extends ConsumerWidget {
                               }
                             : null,
                         items: WalletRole.values
-                            .map((role) => DropdownMenuItem(value: role, child: Text(role.name.toUpperCase())))
+                            .map(
+                              (role) => DropdownMenuItem(
+                                value: role,
+                                child: Text(role.name.toUpperCase()),
+                              ),
+                            )
                             .toList(),
                       ),
                       IconButton(
-                        onPressed: canManage && permissions.canRemoveMembers(roleAsync.asData?.value)
+                        onPressed:
+                            canManage &&
+                                permissions.canRemoveMembers(
+                                  roleAsync.asData?.value,
+                                )
                             ? () async {
-                                final walletId = ref.read(currentWalletIdProvider);
+                                final walletId = ref.read(
+                                  currentWalletIdProvider,
+                                );
                                 try {
-                                  await ref.read(walletDaoProvider).deactivateMember(walletId, member.accountId);
-                                  await ref.read(walletDaoProvider).logMemberRemoved(
+                                  await ref
+                                      .read(walletDaoProvider)
+                                      .deactivateMember(
+                                        walletId,
+                                        member.accountId,
+                                      );
+                                  await ref
+                                      .read(walletDaoProvider)
+                                      .logMemberRemoved(
                                         walletId: walletId,
                                         accountId: member.accountId,
                                         actorAccountId: null,
@@ -102,7 +128,8 @@ class WalletMembersScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Unable to load members: $error')),
+        error: (error, stack) =>
+            Center(child: Text('Unable to load members: $error')),
       ),
     );
   }

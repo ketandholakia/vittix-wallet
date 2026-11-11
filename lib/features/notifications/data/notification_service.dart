@@ -5,7 +5,8 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
 
 class NotificationService {
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
     tz.initializeTimeZones();
@@ -13,23 +14,27 @@ class NotificationService {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+    const DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
 
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS,
+        );
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   Future<void> requestPermissions() async {
     await _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.requestNotificationsPermission();
   }
 
@@ -38,7 +43,8 @@ class NotificationService {
   Future<AndroidScheduleMode> _androidScheduleMode() async {
     final android = _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     if (android == null) return AndroidScheduleMode.exactAllowWhileIdle;
     try {
       final canExact = await android.canScheduleExactNotifications() ?? false;
@@ -75,7 +81,8 @@ class NotificationService {
         scheduledTime,
         details,
         androidScheduleMode: scheduleMode,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
       );
     } on PlatformException catch (error) {
@@ -90,7 +97,8 @@ class NotificationService {
         scheduledTime,
         details,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
       );
     }
@@ -113,7 +121,10 @@ class NotificationService {
     );
   }
 
-  Future<void> showRecurringNotification(String templateName, String amountString) async {
+  Future<void> showRecurringNotification(
+    String templateName,
+    String amountString,
+  ) async {
     await _flutterLocalNotificationsPlugin.show(
       templateName.hashCode,
       'Recurring Transaction Created',
@@ -151,7 +162,8 @@ class NotificationService {
         scheduledTime,
         details,
         androidScheduleMode: scheduleMode,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
       );
     } on PlatformException catch (error) {
@@ -166,7 +178,8 @@ class NotificationService {
         scheduledTime,
         details,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
       );
     }
@@ -175,7 +188,13 @@ class NotificationService {
   tz.TZDateTime _nextFirstOfMonth9AM() {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     // Schedule for the 1st of the next month at 9:00 AM
-    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, 1, 9);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      1,
+      9,
+    );
     if (scheduledDate.isBefore(now)) {
       scheduledDate = tz.TZDateTime(tz.local, now.year, now.month + 1, 1, 9);
     }
@@ -184,7 +203,13 @@ class NotificationService {
 
   tz.TZDateTime _nextInstanceOf8PM() {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, 20);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      20,
+    );
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }

@@ -19,7 +19,9 @@ class _SpendingPieChartState extends ConsumerState<SpendingPieChart> {
 
   @override
   Widget build(BuildContext context) {
-    final expenseTransactions = widget.transactions.where((tx) => tx.type == domain.TransactionType.expense).toList();
+    final expenseTransactions = widget.transactions
+        .where((tx) => tx.type == domain.TransactionType.expense)
+        .toList();
 
     if (expenseTransactions.isEmpty) {
       return const SizedBox.shrink();
@@ -37,7 +39,10 @@ class _SpendingPieChartState extends ConsumerState<SpendingPieChart> {
     final sortedSpending = spendingByCategory.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    final totalSpending = expenseTransactions.fold<double>(0, (sum, item) => sum + item.amount);
+    final totalSpending = expenseTransactions.fold<double>(
+      0,
+      (sum, item) => sum + item.amount,
+    );
 
     final pieChartSections = sortedSpending.map((entry) {
       final category = entry.key;
@@ -116,11 +121,14 @@ class _SpendingPieChartState extends ConsumerState<SpendingPieChart> {
           pieTouchData: PieTouchData(
             touchCallback: (FlTouchEvent event, pieTouchResponse) {
               setState(() {
-                if (!event.isInterestedForInteractions || pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                if (!event.isInterestedForInteractions ||
+                    pieTouchResponse == null ||
+                    pieTouchResponse.touchedSection == null) {
                   touchedIndex = -1;
                   return;
                 }
-                touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                touchedIndex =
+                    pieTouchResponse.touchedSection!.touchedSectionIndex;
               });
             },
           ),
@@ -133,7 +141,10 @@ class _SpendingPieChartState extends ConsumerState<SpendingPieChart> {
     );
   }
 
-  Widget _buildLegend(List<MapEntry<Category, double>> sortedSpending, WidgetRef ref) {
+  Widget _buildLegend(
+    List<MapEntry<Category, double>> sortedSpending,
+    WidgetRef ref,
+  ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,18 +154,19 @@ class _SpendingPieChartState extends ConsumerState<SpendingPieChart> {
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Row(
             children: [
-              Container(
-                width: 16,
-                height: 16,
-                color: entry.key.color,
-              ),
+              Container(width: 16, height: 16, color: entry.key.color),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(entry.key.name, style: Theme.of(context).textTheme.bodyLarge),
+                child: Text(
+                  entry.key.name,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               ),
               Text(
                 currencyFormat.format(entry.value),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),

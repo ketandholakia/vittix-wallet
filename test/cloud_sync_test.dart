@@ -23,17 +23,21 @@ void main() {
 
     test('Trigger should log deleted account to deleted_records', () async {
       // Insert account
-      final id = await db.into(db.accounts).insert(
-        AccountsCompanion.insert(
-          uuid: const Value('acc-uuid-1'),
-          name: 'Account 1',
-          type: AccountType.bank,
-          icon: 1,
-          color: '000000',
-        ),
-      );
+      final id = await db
+          .into(db.accounts)
+          .insert(
+            AccountsCompanion.insert(
+              uuid: const Value('acc-uuid-1'),
+              name: 'Account 1',
+              type: AccountType.bank,
+              icon: 1,
+              color: '000000',
+            ),
+          );
 
-      final acc = await (db.select(db.accounts)..where((a) => a.id.equals(id))).getSingle();
+      final acc = await (db.select(
+        db.accounts,
+      )..where((a) => a.id.equals(id))).getSingle();
       expect(acc.uuid, 'acc-uuid-1');
 
       // Delete account
@@ -48,14 +52,16 @@ void main() {
 
     test('Trigger should log deleted category to deleted_records', () async {
       // Insert category
-      final id = await db.into(db.categories).insert(
-        CategoriesCompanion.insert(
-          uuid: const Value('cat-uuid-1'),
-          name: 'Category 1',
-          icon: 1,
-          color: 'FFFFFF',
-        ),
-      );
+      final id = await db
+          .into(db.categories)
+          .insert(
+            CategoriesCompanion.insert(
+              uuid: const Value('cat-uuid-1'),
+              name: 'Category 1',
+              icon: 1,
+              color: 'FFFFFF',
+            ),
+          );
 
       // Delete category
       await (db.delete(db.categories)..where((c) => c.id.equals(id))).go();
@@ -69,35 +75,41 @@ void main() {
 
     test('Trigger should log deleted transaction to deleted_records', () async {
       // Set up Category & Account first due to foreign keys
-      final catId = await db.into(db.categories).insert(
-        CategoriesCompanion.insert(
-          uuid: const Value('cat-1'),
-          name: 'Category 1',
-          icon: 1,
-          color: 'FFFFFF',
-        ),
-      );
-      final accId = await db.into(db.accounts).insert(
-        AccountsCompanion.insert(
-          uuid: const Value('acc-1'),
-          name: 'Account 1',
-          type: AccountType.bank,
-          icon: 1,
-          color: '000000',
-        ),
-      );
+      final catId = await db
+          .into(db.categories)
+          .insert(
+            CategoriesCompanion.insert(
+              uuid: const Value('cat-1'),
+              name: 'Category 1',
+              icon: 1,
+              color: 'FFFFFF',
+            ),
+          );
+      final accId = await db
+          .into(db.accounts)
+          .insert(
+            AccountsCompanion.insert(
+              uuid: const Value('acc-1'),
+              name: 'Account 1',
+              type: AccountType.bank,
+              icon: 1,
+              color: '000000',
+            ),
+          );
 
       // Insert transaction
-      final id = await db.into(db.transactions).insert(
-        TransactionsCompanion.insert(
-          uuid: const Value('tx-uuid-1'),
-          amount: 50.0,
-          date: DateTime.now(),
-          type: TransactionType.expense,
-          categoryId: catId,
-          accountId: accId,
-        ),
-      );
+      final id = await db
+          .into(db.transactions)
+          .insert(
+            TransactionsCompanion.insert(
+              uuid: const Value('tx-uuid-1'),
+              amount: 50.0,
+              date: DateTime.now(),
+              type: TransactionType.expense,
+              categoryId: catId,
+              accountId: accId,
+            ),
+          );
 
       // Delete transaction
       await (db.delete(db.transactions)..where((t) => t.id.equals(id))).go();
@@ -110,24 +122,28 @@ void main() {
     });
 
     test('Trigger should log deleted budget to deleted_records', () async {
-      final catId = await db.into(db.categories).insert(
-        CategoriesCompanion.insert(
-          uuid: const Value('cat-1'),
-          name: 'Category 1',
-          icon: 1,
-          color: 'FFFFFF',
-        ),
-      );
+      final catId = await db
+          .into(db.categories)
+          .insert(
+            CategoriesCompanion.insert(
+              uuid: const Value('cat-1'),
+              name: 'Category 1',
+              icon: 1,
+              color: 'FFFFFF',
+            ),
+          );
 
       // Insert budget
-      final id = await db.into(db.budgets).insert(
-        BudgetsCompanion.insert(
-          uuid: const Value('budget-uuid-1'),
-          amount: 500.0,
-          period: '2026-06',
-          categoryId: catId,
-        ),
-      );
+      final id = await db
+          .into(db.budgets)
+          .insert(
+            BudgetsCompanion.insert(
+              uuid: const Value('budget-uuid-1'),
+              amount: 500.0,
+              period: '2026-06',
+              categoryId: catId,
+            ),
+          );
 
       // Delete budget
       await (db.delete(db.budgets)..where((b) => b.id.equals(id))).go();
@@ -139,49 +155,60 @@ void main() {
       expect(deleted.first.deletedTable, 'budgets');
     });
 
-    test('Trigger should log deleted recurring transaction to deleted_records', () async {
-      final catId = await db.into(db.categories).insert(
-        CategoriesCompanion.insert(
-          uuid: const Value('cat-1'),
-          name: 'Category 1',
-          icon: 1,
-          color: 'FFFFFF',
-        ),
-      );
-      final accId = await db.into(db.accounts).insert(
-        AccountsCompanion.insert(
-          uuid: const Value('acc-1'),
-          name: 'Account 1',
-          type: AccountType.bank,
-          icon: 1,
-          color: '000000',
-        ),
-      );
+    test(
+      'Trigger should log deleted recurring transaction to deleted_records',
+      () async {
+        final catId = await db
+            .into(db.categories)
+            .insert(
+              CategoriesCompanion.insert(
+                uuid: const Value('cat-1'),
+                name: 'Category 1',
+                icon: 1,
+                color: 'FFFFFF',
+              ),
+            );
+        final accId = await db
+            .into(db.accounts)
+            .insert(
+              AccountsCompanion.insert(
+                uuid: const Value('acc-1'),
+                name: 'Account 1',
+                type: AccountType.bank,
+                icon: 1,
+                color: '000000',
+              ),
+            );
 
-      // Insert recurring
-      final id = await db.into(db.recurringTransactions).insert(
-        RecurringTransactionsCompanion.insert(
-          uuid: const Value('rec-uuid-1'),
-          name: 'Rent',
-          amount: 1000.0,
-          type: TransactionType.expense,
-          categoryId: catId,
-          accountId: accId,
-          interval: 'monthly',
-          startDate: DateTime.now(),
-          nextDueDate: DateTime.now().add(const Duration(days: 30)),
-        ),
-      );
+        // Insert recurring
+        final id = await db
+            .into(db.recurringTransactions)
+            .insert(
+              RecurringTransactionsCompanion.insert(
+                uuid: const Value('rec-uuid-1'),
+                name: 'Rent',
+                amount: 1000.0,
+                type: TransactionType.expense,
+                categoryId: catId,
+                accountId: accId,
+                interval: 'monthly',
+                startDate: DateTime.now(),
+                nextDueDate: DateTime.now().add(const Duration(days: 30)),
+              ),
+            );
 
-      // Delete recurring
-      await (db.delete(db.recurringTransactions)..where((r) => r.id.equals(id))).go();
+        // Delete recurring
+        await (db.delete(
+          db.recurringTransactions,
+        )..where((r) => r.id.equals(id))).go();
 
-      // Check deleted_records
-      final deleted = await db.select(db.deletedRecords).get();
-      expect(deleted.length, 1);
-      expect(deleted.first.uuid, 'rec-uuid-1');
-      expect(deleted.first.deletedTable, 'recurring_transactions');
-    });
+        // Check deleted_records
+        final deleted = await db.select(db.deletedRecords).get();
+        expect(deleted.length, 1);
+        expect(deleted.first.uuid, 'rec-uuid-1');
+        expect(deleted.first.deletedTable, 'recurring_transactions');
+      },
+    );
   });
 
   group('Cloud Sync Engine & Conflict Resolution', () {
@@ -189,9 +216,7 @@ void main() {
     late ProviderContainer container;
 
     setUp(() async {
-      SharedPreferences.setMockInitialValues({
-        'isSimulatedSync': true,
-      });
+      SharedPreferences.setMockInitialValues({'isSimulatedSync': true});
 
       db = AppDatabase.forTesting(NativeDatabase.memory());
 
@@ -200,7 +225,9 @@ void main() {
       final walletId = await db
           .into(db.wallets)
           .insert(const WalletsCompanion(name: Value('Sync Wallet')));
-      final accountId = await db.into(db.accounts).insert(
+      final accountId = await db
+          .into(db.accounts)
+          .insert(
             AccountsCompanion.insert(
               walletId: Value(walletId),
               name: 'Sync Account',
@@ -209,7 +236,9 @@ void main() {
               color: '000000',
             ),
           );
-      await db.into(db.walletMembers).insert(
+      await db
+          .into(db.walletMembers)
+          .insert(
             WalletMembersCompanion.insert(
               walletId: walletId,
               accountId: accountId,
@@ -218,9 +247,7 @@ void main() {
           );
 
       container = ProviderContainer(
-        overrides: [
-          databaseProvider.overrideWithValue(db),
-        ],
+        overrides: [databaseProvider.overrideWithValue(db)],
       );
     });
 
@@ -229,112 +256,134 @@ void main() {
       container.dispose();
     });
 
-    test('LWW - should overwrite older local record with newer remote record', () async {
-      final originalTime = DateTime(2026, 6, 1, 10, 0, 0);
-      final newerTime = DateTime(2026, 6, 1, 12, 0, 0);
+    test(
+      'LWW - should overwrite older local record with newer remote record',
+      () async {
+        final originalTime = DateTime(2026, 6, 1, 10, 0, 0);
+        final newerTime = DateTime(2026, 6, 1, 12, 0, 0);
 
-      // 1. Insert local category (updated at 10:00)
-      await db.into(db.categories).insert(
-        CategoriesCompanion.insert(
-          uuid: const Value('cat-lww-1'),
-          name: 'Old Local Name',
-          icon: 1,
-          color: 'FFFFFF',
-          updatedAt: Value(originalTime),
-        ),
-      );
+        // 1. Insert local category (updated at 10:00)
+        await db
+            .into(db.categories)
+            .insert(
+              CategoriesCompanion.insert(
+                uuid: const Value('cat-lww-1'),
+                name: 'Old Local Name',
+                icon: 1,
+                color: 'FFFFFF',
+                updatedAt: Value(originalTime),
+              ),
+            );
 
-      // Set up simulated server state with same category, but newer updatedAt and different name
-      final prefs = await SharedPreferences.getInstance();
-      final serverState = <String, dynamic>{
-        'accounts': <dynamic>[],
-        'categories': <dynamic>[
-          {
-            'uuid': 'cat-lww-1',
-            'name': 'New Remote Name',
-            'icon': 1,
-            'color': '00FF00',
-            'isDefault': false,
-            'parentUuid': null,
-            'updatedAt': newerTime.millisecondsSinceEpoch,
-          }
-        ],
-        'transactions': <dynamic>[],
-        'budgets': <dynamic>[],
-        'recurring_transactions': <dynamic>[],
-        'deletions': <dynamic>[],
-      };
-      await prefs.setString('simulated_server_state', jsonEncode(serverState));
+        // Set up simulated server state with same category, but newer updatedAt and different name
+        final prefs = await SharedPreferences.getInstance();
+        final serverState = <String, dynamic>{
+          'accounts': <dynamic>[],
+          'categories': <dynamic>[
+            {
+              'uuid': 'cat-lww-1',
+              'name': 'New Remote Name',
+              'icon': 1,
+              'color': '00FF00',
+              'isDefault': false,
+              'parentUuid': null,
+              'updatedAt': newerTime.millisecondsSinceEpoch,
+            },
+          ],
+          'transactions': <dynamic>[],
+          'budgets': <dynamic>[],
+          'recurring_transactions': <dynamic>[],
+          'deletions': <dynamic>[],
+        };
+        await prefs.setString(
+          'simulated_server_state',
+          jsonEncode(serverState),
+        );
 
-      // Run sync
-      await container.read(syncStateProvider.notifier).performSync();
+        // Run sync
+        await container.read(syncStateProvider.notifier).performSync();
 
-      expect(container.read(syncStateProvider).status, SyncStatus.success);
+        expect(container.read(syncStateProvider).status, SyncStatus.success);
 
-      // Verify local database category updated to newer remote values
-      final updatedCat = await (db.select(db.categories)..where((c) => c.uuid.equals('cat-lww-1'))).getSingle();
-      expect(updatedCat.name, 'New Remote Name');
-      expect(updatedCat.color, '00FF00');
-    });
+        // Verify local database category updated to newer remote values
+        final updatedCat = await (db.select(
+          db.categories,
+        )..where((c) => c.uuid.equals('cat-lww-1'))).getSingle();
+        expect(updatedCat.name, 'New Remote Name');
+        expect(updatedCat.color, '00FF00');
+      },
+    );
 
-    test('LWW - should NOT overwrite newer local record with older remote record', () async {
-      final newerTime = DateTime(2026, 6, 1, 12, 0, 0);
-      final originalTime = DateTime(2026, 6, 1, 10, 0, 0);
+    test(
+      'LWW - should NOT overwrite newer local record with older remote record',
+      () async {
+        final newerTime = DateTime(2026, 6, 1, 12, 0, 0);
+        final originalTime = DateTime(2026, 6, 1, 10, 0, 0);
 
-      // 1. Insert local category (updated at 12:00)
-      await db.into(db.categories).insert(
-        CategoriesCompanion.insert(
-          uuid: const Value('cat-lww-2'),
-          name: 'New Local Name',
-          icon: 1,
-          color: 'FFFFFF',
-          updatedAt: Value(newerTime),
-        ),
-      );
+        // 1. Insert local category (updated at 12:00)
+        await db
+            .into(db.categories)
+            .insert(
+              CategoriesCompanion.insert(
+                uuid: const Value('cat-lww-2'),
+                name: 'New Local Name',
+                icon: 1,
+                color: 'FFFFFF',
+                updatedAt: Value(newerTime),
+              ),
+            );
 
-      // Set up simulated server state with same category, but older updatedAt and different name
-      final prefs = await SharedPreferences.getInstance();
-      final serverState = <String, dynamic>{
-        'accounts': <dynamic>[],
-        'categories': <dynamic>[
-          {
-            'uuid': 'cat-lww-2',
-            'name': 'Old Remote Name',
-            'icon': 1,
-            'color': '00FF00',
-            'isDefault': false,
-            'parentUuid': null,
-            'updatedAt': originalTime.millisecondsSinceEpoch,
-          }
-        ],
-        'transactions': <dynamic>[],
-        'budgets': <dynamic>[],
-        'recurring_transactions': <dynamic>[],
-        'deletions': <dynamic>[],
-      };
-      await prefs.setString('simulated_server_state', jsonEncode(serverState));
+        // Set up simulated server state with same category, but older updatedAt and different name
+        final prefs = await SharedPreferences.getInstance();
+        final serverState = <String, dynamic>{
+          'accounts': <dynamic>[],
+          'categories': <dynamic>[
+            {
+              'uuid': 'cat-lww-2',
+              'name': 'Old Remote Name',
+              'icon': 1,
+              'color': '00FF00',
+              'isDefault': false,
+              'parentUuid': null,
+              'updatedAt': originalTime.millisecondsSinceEpoch,
+            },
+          ],
+          'transactions': <dynamic>[],
+          'budgets': <dynamic>[],
+          'recurring_transactions': <dynamic>[],
+          'deletions': <dynamic>[],
+        };
+        await prefs.setString(
+          'simulated_server_state',
+          jsonEncode(serverState),
+        );
 
-      // Run sync
-      await container.read(syncStateProvider.notifier).performSync();
+        // Run sync
+        await container.read(syncStateProvider.notifier).performSync();
 
-      expect(container.read(syncStateProvider).status, SyncStatus.success);
+        expect(container.read(syncStateProvider).status, SyncStatus.success);
 
-      // Verify local database category was NOT updated
-      final currentCat = await (db.select(db.categories)..where((c) => c.uuid.equals('cat-lww-2'))).getSingle();
-      expect(currentCat.name, 'New Local Name');
-      expect(currentCat.color, 'FFFFFF');
-    });
+        // Verify local database category was NOT updated
+        final currentCat = await (db.select(
+          db.categories,
+        )..where((c) => c.uuid.equals('cat-lww-2'))).getSingle();
+        expect(currentCat.name, 'New Local Name');
+        expect(currentCat.color, 'FFFFFF');
+      },
+    );
 
     test('Deletion - should apply remote deletion log locally', () async {
       // 1. Insert local category
-      await db.into(db.categories).insert(
-        CategoriesCompanion.insert(
-          uuid: const Value('cat-to-delete'),
-          name: 'Category to Delete',
-          icon: 1,
-          color: 'FFFFFF',
-        ),
-      );
+      await db
+          .into(db.categories)
+          .insert(
+            CategoriesCompanion.insert(
+              uuid: const Value('cat-to-delete'),
+              name: 'Category to Delete',
+              icon: 1,
+              color: 'FFFFFF',
+            ),
+          );
 
       // Verify it exists
       var list = await db.select(db.categories).get();
@@ -353,7 +402,7 @@ void main() {
             'uuid': 'cat-to-delete',
             'tableName': 'categories',
             'deletedAt': DateTime.now().millisecondsSinceEpoch,
-          }
+          },
         ],
       };
       await prefs.setString('simulated_server_state', jsonEncode(serverState));
@@ -367,7 +416,7 @@ void main() {
       list = await db.select(db.categories).get();
       expect(list.any((c) => c.uuid == 'cat-to-delete'), false);
     });
-   group('Cloud Sync Migration v5', () {
+    group('Cloud Sync Migration v5', () {
       test('Database initializes and runs migrations successfully', () async {
         final testDb = AppDatabase.forTesting(NativeDatabase.memory());
         // The test build must expose the schema version it actually creates.

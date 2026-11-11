@@ -107,10 +107,7 @@ extension AppDatabaseMigrations on AppDatabase {
   }
 
   Future<void> migrateToV8(Migrator m) async {
-    await m.addColumn(
-      recurringTransactions,
-      recurringTransactions.walletId,
-    );
+    await m.addColumn(recurringTransactions, recurringTransactions.walletId);
     await customStatement(
       'UPDATE recurring_transactions SET wallet_id = (SELECT wallet_id FROM '
       'accounts WHERE accounts.id = recurring_transactions.account_id) '
@@ -158,8 +155,9 @@ extension AppDatabaseMigrations on AppDatabase {
       'OR wallet_id NOT IN (SELECT id FROM wallets)',
     ).get();
     if (orphanResult.isNotEmpty) {
-      final orphanUuids =
-          orphanResult.map((r) => r.read<String>('uuid')).join(', ');
+      final orphanUuids = orphanResult
+          .map((r) => r.read<String>('uuid'))
+          .join(', ');
       throw StateError(
         'Migration to schema v9 failed: ${orphanResult.length} peer debt(s) '
         'have no resolvable wallet ownership. Orphan UUIDs: $orphanUuids. '
@@ -221,10 +219,12 @@ extension AppDatabaseMigrations on AppDatabase {
     if (table.isEmpty) {
       await m.createTable(deletedRecords);
     } else {
-      final columns =
-          await customSelect("PRAGMA table_info('deleted_records')").get();
-      final hasWalletId =
-          columns.any((row) => row.read<String>('name') == 'wallet_id');
+      final columns = await customSelect(
+        "PRAGMA table_info('deleted_records')",
+      ).get();
+      final hasWalletId = columns.any(
+        (row) => row.read<String>('name') == 'wallet_id',
+      );
       if (!hasWalletId) {
         await m.addColumn(deletedRecords, deletedRecords.walletId);
       }

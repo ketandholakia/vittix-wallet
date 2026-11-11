@@ -4,13 +4,22 @@ abstract class AllowanceRepository {
   Stream<List<WalletAllowance>> watchAllowances();
   Future<List<WalletAllowance>> getAllowances();
   Future<WalletAllowance?> getAllowanceById(int id);
-  Future<int> addAllowance(Insertable<WalletAllowance> allowance, {int? actorAccountId});
-  Future<bool> updateAllowance(Insertable<WalletAllowance> allowance, {int? actorAccountId});
+  Future<int> addAllowance(
+    Insertable<WalletAllowance> allowance, {
+    int? actorAccountId,
+  });
+  Future<bool> updateAllowance(
+    Insertable<WalletAllowance> allowance, {
+    int? actorAccountId,
+  });
   Future<int> deleteAllowance(int id, {int? actorAccountId});
 
   Stream<List<WalletAllowancePayment>> watchPayments();
   Future<List<WalletAllowancePayment>> getPayments();
-  Future<int> addPayment(Insertable<WalletAllowancePayment> payment, {int? actorAccountId});
+  Future<int> addPayment(
+    Insertable<WalletAllowancePayment> payment, {
+    int? actorAccountId,
+  });
   Future<int> deletePayment(int id, {int? actorAccountId});
 }
 
@@ -37,7 +46,10 @@ class AllowanceRepositoryImpl implements AllowanceRepository {
   }
 
   @override
-  Future<int> addAllowance(Insertable<WalletAllowance> allowance, {int? actorAccountId}) async {
+  Future<int> addAllowance(
+    Insertable<WalletAllowance> allowance, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageAllowances(r),
@@ -48,7 +60,10 @@ class AllowanceRepositoryImpl implements AllowanceRepository {
   }
 
   @override
-  Future<bool> updateAllowance(Insertable<WalletAllowance> allowance, {int? actorAccountId}) async {
+  Future<bool> updateAllowance(
+    Insertable<WalletAllowance> allowance, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
       permissionCheck: (s, r) => s.canManageAllowances(r),
@@ -80,10 +95,14 @@ class AllowanceRepositoryImpl implements AllowanceRepository {
   }
 
   @override
-  Future<int> addPayment(Insertable<WalletAllowancePayment> payment, {int? actorAccountId}) async {
+  Future<int> addPayment(
+    Insertable<WalletAllowancePayment> payment, {
+    int? actorAccountId,
+  }) async {
     await _walletDao?.checkPermission(
       walletId: walletId,
-      permissionCheck: (s, r) => s.canViewOwnAllowance(r) || s.canManageAllowances(r),
+      permissionCheck: (s, r) =>
+          s.canViewOwnAllowance(r) || s.canManageAllowances(r),
       actorAccountId: actorAccountId,
       actionName: 'record allowance payments',
     );

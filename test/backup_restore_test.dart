@@ -2,7 +2,14 @@ import 'dart:io';
 
 import 'package:drift/native.dart';
 import 'package:vittix_wallet/core/database/app_database.dart'
-    hide Transaction, Category, Account, TransactionType, AccountType, isNull, isNotNull;
+    hide
+        Transaction,
+        Category,
+        Account,
+        TransactionType,
+        AccountType,
+        isNull,
+        isNotNull;
 import 'package:vittix_wallet/core/services/backup_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
@@ -34,8 +41,7 @@ void main() {
     final junk = File(p.join(dir.path, 'junk.db'));
     await junk.writeAsString('this is definitely not a database file' * 20);
 
-    final result =
-        await BackupService.validate(junk, currentSchemaVersion: 11);
+    final result = await BackupService.validate(junk, currentSchemaVersion: 11);
     expect(result.isValid, isFalse);
     expect(result.error, contains('Not a SQLite'));
   });
@@ -46,8 +52,10 @@ void main() {
       List<int>.generate(256, (i) => (i * 41 + 3) % 256),
     );
 
-    final withoutKey =
-        await BackupService.validate(encrypted, currentSchemaVersion: 11);
+    final withoutKey = await BackupService.validate(
+      encrypted,
+      currentSchemaVersion: 11,
+    );
     expect(withoutKey.isValid, isFalse);
     expect(withoutKey.error, contains('database key'));
   });
@@ -55,12 +63,16 @@ void main() {
   test('validate accepts a real migrated database', () async {
     final dbFile = File(p.join(dir.path, 'db.sqlite'));
     final db = AppDatabase.forTesting(NativeDatabase(dbFile));
-    await db.into(db.wallets).insert(const WalletsCompanion(name: Value('Wallet A')));
+    await db
+        .into(db.wallets)
+        .insert(const WalletsCompanion(name: Value('Wallet A')));
     final schemaVersion = db.schemaVersion;
     await db.close();
 
-    final result =
-        await BackupService.validate(dbFile, currentSchemaVersion: schemaVersion);
+    final result = await BackupService.validate(
+      dbFile,
+      currentSchemaVersion: schemaVersion,
+    );
     expect(result.isValid, isTrue, reason: result.error);
     expect(result.schemaVersion, schemaVersion);
   });
@@ -69,10 +81,15 @@ void main() {
     final dbFile = File(p.join(dir.path, 'newer.sqlite'));
     final db = AppDatabase.forTesting(NativeDatabase(dbFile));
     // Drift opens lazily, so touch the database to materialise the file.
-    await db.into(db.wallets).insert(const WalletsCompanion(name: Value('Wallet A')));
+    await db
+        .into(db.wallets)
+        .insert(const WalletsCompanion(name: Value('Wallet A')));
     await db.close();
 
-    final result = await BackupService.validate(dbFile, currentSchemaVersion: 1);
+    final result = await BackupService.validate(
+      dbFile,
+      currentSchemaVersion: 1,
+    );
     expect(result.isValid, isFalse);
     expect(result.error, contains('newer app version'));
   });
@@ -80,7 +97,9 @@ void main() {
   test('createSnapshot produces a valid copy that still validates', () async {
     final dbFile = File(p.join(dir.path, 'db.sqlite'));
     final db = AppDatabase.forTesting(NativeDatabase(dbFile));
-    await db.into(db.wallets).insert(const WalletsCompanion(name: Value('Wallet A')));
+    await db
+        .into(db.wallets)
+        .insert(const WalletsCompanion(name: Value('Wallet A')));
 
     final service = BackupService(db);
     final snapshot = await service.createSnapshot(p.join(dir.path, 'snap.db'));
@@ -89,15 +108,20 @@ void main() {
 
     expect(await snapshot.exists(), isTrue);
     expect(snapshot.lengthSync(), greaterThan(0));
-    final check =
-        await BackupService.validate(snapshot, currentSchemaVersion: schemaVersion);
+    final check = await BackupService.validate(
+      snapshot,
+      currentSchemaVersion: schemaVersion,
+    );
     expect(check.isValid, isTrue, reason: check.error);
   });
 
   group('encrypted container', () {
     test('round-trips arbitrary bytes', () async {
       final clear = List<int>.generate(1024, (i) => i % 256);
-      final container = await BackupService.encryptBytes(clear, 'correct horse');
+      final container = await BackupService.encryptBytes(
+        clear,
+        'correct horse',
+      );
 
       expect(container.length, greaterThan(clear.length));
       final back = await BackupService.decryptBytes(container, 'correct horse');
@@ -105,8 +129,10 @@ void main() {
     });
 
     test('wrong passphrase is rejected', () async {
-      final container =
-          await BackupService.encryptBytes(List<int>.filled(64, 7), 'right');
+      final container = await BackupService.encryptBytes(
+        List<int>.filled(64, 7),
+        'right',
+      );
       expect(
         () => BackupService.decryptBytes(container, 'wrong'),
         throwsFormatException,
@@ -114,8 +140,10 @@ void main() {
     });
 
     test('a truncated container is rejected', () async {
-      final container =
-          await BackupService.encryptBytes(List<int>.filled(64, 7), 'right');
+      final container = await BackupService.encryptBytes(
+        List<int>.filled(64, 7),
+        'right',
+      );
       final truncated = container.sublist(0, 20);
       expect(
         () => BackupService.decryptBytes(truncated, 'right'),
@@ -123,33 +151,40 @@ void main() {
       );
     });
 
-    test('isEncryptedFile distinguishes containers from plain databases',
-        () async {
-      final dbFile = File(p.join(dir.path, 'plain.sqlite'));
-      final db = AppDatabase.forTesting(NativeDatabase(dbFile));
-      await db.into(db.wallets).insert(const WalletsCompanion(name: Value('Wallet A')));
-      await db.close();
+    test(
+      'isEncryptedFile distinguishes containers from plain databases',
+      () async {
+        final dbFile = File(p.join(dir.path, 'plain.sqlite'));
+        final db = AppDatabase.forTesting(NativeDatabase(dbFile));
+        await db
+            .into(db.wallets)
+            .insert(const WalletsCompanion(name: Value('Wallet A')));
+        await db.close();
 
-      final encrypted = File(p.join(dir.path, 'enc.db'))
-        ..writeAsBytesSync(await BackupService.encryptBytes(
-          await dbFile.readAsBytes(),
-          'pw',
-        ));
+        final encrypted = File(p.join(dir.path, 'enc.db'))
+          ..writeAsBytesSync(
+            await BackupService.encryptBytes(await dbFile.readAsBytes(), 'pw'),
+          );
 
-      expect(BackupService.isEncryptedFile(dbFile), isFalse);
-      expect(BackupService.isEncryptedFile(encrypted), isTrue);
-      expect(
-        (await BackupService.validate(encrypted, currentSchemaVersion: 11))
-            .isValid,
-        isFalse,
-        reason: 'a container needs its passphrase',
-      );
-    });
+        expect(BackupService.isEncryptedFile(dbFile), isFalse);
+        expect(BackupService.isEncryptedFile(encrypted), isTrue);
+        expect(
+          (await BackupService.validate(
+            encrypted,
+            currentSchemaVersion: 11,
+          )).isValid,
+          isFalse,
+          reason: 'a container needs its passphrase',
+        );
+      },
+    );
 
     test('encrypted snapshot decrypts back into a valid database', () async {
       final dbFile = File(p.join(dir.path, 'db.sqlite'));
       final db = AppDatabase.forTesting(NativeDatabase(dbFile));
-      await db.into(db.wallets).insert(const WalletsCompanion(name: Value('Wallet A')));
+      await db
+          .into(db.wallets)
+          .insert(const WalletsCompanion(name: Value('Wallet A')));
       final schemaVersion = db.schemaVersion;
 
       final service = BackupService(db);
@@ -166,8 +201,10 @@ void main() {
         'my passphrase',
         p.join(dir.path, 'decrypted.sqlite'),
       );
-      final check =
-          await BackupService.validate(plain, currentSchemaVersion: schemaVersion);
+      final check = await BackupService.validate(
+        plain,
+        currentSchemaVersion: schemaVersion,
+      );
       expect(check.isValid, isTrue, reason: check.error);
 
       // The container can also be validated in one step with its passphrase.
@@ -194,14 +231,17 @@ void main() {
     await source
         .into(source.wallets)
         .insert(const WalletsCompanion(name: Value('Restored Wallet')));
-    final snapshot = await BackupService(source)
-        .createSnapshot(p.join(dir.path, 'backup.db'));
+    final snapshot = await BackupService(
+      source,
+    ).createSnapshot(p.join(dir.path, 'backup.db'));
     await source.close();
 
     // Destination database that currently holds different data.
     final liveFile = File(p.join(dir.path, 'live.sqlite'));
     final live = AppDatabase.forTesting(NativeDatabase(liveFile));
-    await live.into(live.wallets).insert(const WalletsCompanion(name: Value('Old Wallet')));
+    await live
+        .into(live.wallets)
+        .insert(const WalletsCompanion(name: Value('Old Wallet')));
 
     await BackupService(live).restore(snapshot, liveDbFile: liveFile);
 

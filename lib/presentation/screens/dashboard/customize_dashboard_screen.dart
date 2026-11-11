@@ -30,9 +30,7 @@ class CustomizeDashboardScreen extends ConsumerWidget {
     };
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Customize Dashboard'),
-      ),
+      appBar: AppBar(title: const Text('Customize Dashboard')),
       body: ReorderableListView.builder(
         itemCount: widgetsOrder.length,
         onReorderItem: (oldIndex, newIndex) {
@@ -51,7 +49,9 @@ class CustomizeDashboardScreen extends ConsumerWidget {
             trailing: Switch(
               value: !isHidden,
               onChanged: (value) {
-                ref.read(dashboardWidgetsHiddenProvider.notifier).toggleWidget(widgetId, !value);
+                ref
+                    .read(dashboardWidgetsHiddenProvider.notifier)
+                    .toggleWidget(widgetId, !value);
               },
             ),
           );

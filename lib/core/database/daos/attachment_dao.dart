@@ -1,7 +1,8 @@
 part of '../app_database.dart';
 
 @DriftAccessor(tables: [Attachments, Transactions])
-class AttachmentDao extends DatabaseAccessor<AppDatabase> with _$AttachmentDaoMixin {
+class AttachmentDao extends DatabaseAccessor<AppDatabase>
+    with _$AttachmentDaoMixin {
   AttachmentDao(super.db);
   Future<void> insertAttachment(dynamic a) async {}
 }

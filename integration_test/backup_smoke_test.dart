@@ -2,7 +2,14 @@ import 'dart:io';
 
 import 'package:drift/native.dart';
 import 'package:vittix_wallet/core/database/app_database.dart'
-    hide Transaction, Category, Account, TransactionType, AccountType, isNull, isNotNull;
+    hide
+        Transaction,
+        Category,
+        Account,
+        TransactionType,
+        AccountType,
+        isNull,
+        isNotNull;
 import 'package:vittix_wallet/core/services/auto_backup.dart';
 import 'package:vittix_wallet/core/services/backup_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -135,9 +142,9 @@ void main() {
 
   test('restore swaps the database file on device', () async {
     // Snapshot the current data.
-    final snapshot = await BackupService(db).createSnapshot(
-      p.join(tmp.path, 'source_backup.db'),
-    );
+    final snapshot = await BackupService(
+      db,
+    ).createSnapshot(p.join(tmp.path, 'source_backup.db'));
 
     // Seed a different database at the "live" path.
     final liveFile = File(p.join(tmp.path, 'live.sqlite'));

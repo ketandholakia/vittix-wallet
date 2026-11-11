@@ -50,7 +50,9 @@ final deleteCategoryUseCaseProvider = Provider<DeleteCategory>((ref) {
   return DeleteCategory(repo);
 });
 
-final checkBudgetThresholdsUseCaseProvider = Provider<CheckBudgetThresholds?>((ref) {
+final checkBudgetThresholdsUseCaseProvider = Provider<CheckBudgetThresholds?>((
+  ref,
+) {
   final prefsAsync = ref.watch(sharedPreferencesProvider);
   return prefsAsync.when(
     data: (prefs) {
@@ -67,7 +69,10 @@ final checkBudgetThresholdsUseCaseProvider = Provider<CheckBudgetThresholds?>((r
 });
 
 final addTransactionUseCaseProvider = Provider<AddTransaction>((ref) {
-  return AddTransaction(ref.watch(transactionRepositoryProvider), ref.watch(checkBudgetThresholdsUseCaseProvider));
+  return AddTransaction(
+    ref.watch(transactionRepositoryProvider),
+    ref.watch(checkBudgetThresholdsUseCaseProvider),
+  );
 });
 
 final addTransferUseCaseProvider = Provider<AddTransfer>((ref) {
@@ -75,7 +80,10 @@ final addTransferUseCaseProvider = Provider<AddTransfer>((ref) {
 });
 
 final updateTransactionUseCaseProvider = Provider<UpdateTransaction>((ref) {
-  return UpdateTransaction(ref.watch(transactionRepositoryProvider), ref.watch(checkBudgetThresholdsUseCaseProvider));
+  return UpdateTransaction(
+    ref.watch(transactionRepositoryProvider),
+    ref.watch(checkBudgetThresholdsUseCaseProvider),
+  );
 });
 
 final deleteTransactionUseCaseProvider = Provider<DeleteTransaction>((ref) {
@@ -83,10 +91,11 @@ final deleteTransactionUseCaseProvider = Provider<DeleteTransaction>((ref) {
   return DeleteTransaction(repo);
 });
 
-final watchRecentTransactionsUseCaseProvider = Provider<WatchRecentTransactions>((ref) {
-  final repo = ref.watch(transactionRepositoryProvider);
-  return WatchRecentTransactions(repo);
-});
+final watchRecentTransactionsUseCaseProvider =
+    Provider<WatchRecentTransactions>((ref) {
+      final repo = ref.watch(transactionRepositoryProvider);
+      return WatchRecentTransactions(repo);
+    });
 
 // --- Summary Use Cases ---
 
@@ -129,9 +138,10 @@ final watchAllAccountsUseCaseProvider = Provider<WatchAllAccounts>((ref) {
   return WatchAllAccounts(ref.watch(accountRepositoryProvider));
 });
 
-final watchAccountsWithBalanceUseCaseProvider = Provider<WatchAccountsWithBalance>((ref) {
-  return WatchAccountsWithBalance(ref.watch(accountRepositoryProvider));
-});
+final watchAccountsWithBalanceUseCaseProvider =
+    Provider<WatchAccountsWithBalance>((ref) {
+      return WatchAccountsWithBalance(ref.watch(accountRepositoryProvider));
+    });
 
 final addAccountUseCaseProvider = Provider<AddAccount>((ref) {
   return AddAccount(ref.watch(accountRepositoryProvider));
@@ -159,10 +169,11 @@ final deleteRecurringUseCaseProvider = Provider<DeleteRecurring>((ref) {
   return DeleteRecurring(ref.watch(recurringTransactionRepositoryProvider));
 });
 
-final processRecurringTransactionsUseCaseProvider = Provider<ProcessRecurringTransactions>((ref) {
-  return ProcessRecurringTransactions(
-    ref.watch(recurringTransactionRepositoryProvider),
-    ref.watch(addTransactionUseCaseProvider),
-    ref.watch(notificationServiceProvider),
-  );
-});
+final processRecurringTransactionsUseCaseProvider =
+    Provider<ProcessRecurringTransactions>((ref) {
+      return ProcessRecurringTransactions(
+        ref.watch(recurringTransactionRepositoryProvider),
+        ref.watch(addTransactionUseCaseProvider),
+        ref.watch(notificationServiceProvider),
+      );
+    });

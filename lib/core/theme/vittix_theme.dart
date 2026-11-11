@@ -67,7 +67,9 @@ class VittixTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: VittixColors.accentGreen,
           foregroundColor: VittixColors.textPrimary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         ),
       ),
@@ -75,7 +77,9 @@ class VittixTheme {
         style: FilledButton.styleFrom(
           backgroundColor: VittixColors.accentGreen,
           foregroundColor: VittixColors.textPrimary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -94,7 +98,10 @@ class VittixTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: VittixColors.primaryNavy, width: 1.5),
+          borderSide: const BorderSide(
+            color: VittixColors.primaryNavy,
+            width: 1.5,
+          ),
         ),
       ),
       snackBarTheme: const SnackBarThemeData(
@@ -161,7 +168,9 @@ class VittixTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: VittixColors.accentGreen,
           foregroundColor: VittixColors.textPrimary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         ),
       ),
@@ -169,7 +178,9 @@ class VittixTheme {
         style: FilledButton.styleFrom(
           backgroundColor: VittixColors.accentGreen,
           foregroundColor: VittixColors.textPrimary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -188,7 +199,10 @@ class VittixTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: VittixColors.accentGreen, width: 1.5),
+          borderSide: const BorderSide(
+            color: VittixColors.accentGreen,
+            width: 1.5,
+          ),
         ),
       ),
       snackBarTheme: const SnackBarThemeData(

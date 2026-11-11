@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('MaterialApp renders a simple screen', (WidgetTester tester) async {
+  testWidgets('MaterialApp renders a simple screen', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       const MaterialApp(home: Scaffold(body: Text('Vittix Wallet'))),
     );

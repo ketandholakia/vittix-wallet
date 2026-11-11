@@ -26,8 +26,7 @@ class TransactionListScreen extends ConsumerStatefulWidget {
       _TransactionListScreenState();
 }
 
-class _TransactionListScreenState
-    extends ConsumerState<TransactionListScreen> {
+class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   late DateTime _selectedMonth;
   bool _isSearching = false;
   final _searchController = TextEditingController();
@@ -58,8 +57,11 @@ class _TransactionListScreenState
 
   void _goToPreviousMonth() {
     setState(() {
-      _selectedMonth =
-          DateTime(_selectedMonth.year, _selectedMonth.month - 1, 1);
+      _selectedMonth = DateTime(
+        _selectedMonth.year,
+        _selectedMonth.month - 1,
+        1,
+      );
       // Clear date range on month change
       _filterStartDate = null;
       _filterEndDate = null;
@@ -68,8 +70,11 @@ class _TransactionListScreenState
 
   void _goToNextMonth() {
     final now = DateTime.now();
-    final nextMonth =
-        DateTime(_selectedMonth.year, _selectedMonth.month + 1, 1);
+    final nextMonth = DateTime(
+      _selectedMonth.year,
+      _selectedMonth.month + 1,
+      1,
+    );
     // Don't go beyond current month
     if (nextMonth.isAfter(DateTime(now.year, now.month + 1, 0))) return;
     setState(() {
@@ -82,12 +87,12 @@ class _TransactionListScreenState
 
   bool get _isCurrentMonth {
     final now = DateTime.now();
-    return _selectedMonth.year == now.year &&
-        _selectedMonth.month == now.month;
+    return _selectedMonth.year == now.year && _selectedMonth.month == now.month;
   }
 
   List<domain.Transaction> _applyFilters(
-      List<domain.Transaction> transactions) {
+    List<domain.Transaction> transactions,
+  ) {
     return transactions.where((tx) {
       // Type filter
       if (_filterType != null && tx.type != _filterType) return false;
@@ -112,8 +117,10 @@ class _TransactionListScreenState
       }
 
       // Amount range filter
-      if (_filterMinAmount != null && tx.amount < _filterMinAmount!) return false;
-      if (_filterMaxAmount != null && tx.amount > _filterMaxAmount!) return false;
+      if (_filterMinAmount != null && tx.amount < _filterMinAmount!)
+        return false;
+      if (_filterMaxAmount != null && tx.amount > _filterMaxAmount!)
+        return false;
 
       // Search query (note text or category name)
       if (_searchQuery.isNotEmpty) {
@@ -167,14 +174,24 @@ class _TransactionListScreenState
         DateTime? tempStartDate = _filterStartDate;
         DateTime? tempEndDate = _filterEndDate;
         final tempMinController = TextEditingController(
-            text: _filterMinAmount != null ? _filterMinAmount.toString() : '');
+          text: _filterMinAmount != null ? _filterMinAmount.toString() : '',
+        );
         final tempMaxController = TextEditingController(
-            text: _filterMaxAmount != null ? _filterMaxAmount.toString() : '');
+          text: _filterMaxAmount != null ? _filterMaxAmount.toString() : '',
+        );
 
         return StatefulBuilder(
           builder: (context, setModalState) {
-            final monthStart = DateTime(_selectedMonth.year, _selectedMonth.month, 1);
-            final monthEnd = DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
+            final monthStart = DateTime(
+              _selectedMonth.year,
+              _selectedMonth.month,
+              1,
+            );
+            final monthEnd = DateTime(
+              _selectedMonth.year,
+              _selectedMonth.month + 1,
+              0,
+            );
 
             return Padding(
               padding: EdgeInsets.only(
@@ -192,7 +209,10 @@ class _TransactionListScreenState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Filter Transactions', style: Theme.of(context).textTheme.titleLarge),
+                        Text(
+                          'Filter Transactions',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
                         TextButton(
                           onPressed: () {
                             setModalState(() {
@@ -213,15 +233,24 @@ class _TransactionListScreenState
                     const SizedBox(height: 8),
 
                     // Transaction Type
-                    Text('Transaction Type', style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      'Transaction Type',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 8),
                     SizedBox(
                       width: double.infinity,
                       child: SegmentedButton<domain.TransactionType?>(
                         segments: const [
                           ButtonSegment(value: null, label: Text('All')),
-                          ButtonSegment(value: domain.TransactionType.expense, label: Text('Expense')),
-                          ButtonSegment(value: domain.TransactionType.income, label: Text('Income')),
+                          ButtonSegment(
+                            value: domain.TransactionType.expense,
+                            label: Text('Expense'),
+                          ),
+                          ButtonSegment(
+                            value: domain.TransactionType.income,
+                            label: Text('Income'),
+                          ),
                         ],
                         selected: {tempType},
                         onSelectionChanged: (newSelection) {
@@ -235,18 +264,25 @@ class _TransactionListScreenState
 
                     // Category
                     StreamBuilder<List<Category>>(
-                      stream: ref.watch(watchAllCategoriesUseCaseProvider).call(),
+                      stream: ref
+                          .watch(watchAllCategoriesUseCaseProvider)
+                          .call(),
                       builder: (context, snapshot) {
                         final rawCategories = snapshot.data ?? [];
                         // Flatten categories hierarchically
-                        final topLevel = rawCategories.where((c) => c.parentId == null).toList();
+                        final topLevel = rawCategories
+                            .where((c) => c.parentId == null)
+                            .toList();
                         final list = <Category>[];
                         for (final parent in topLevel) {
                           list.add(parent);
-                          list.addAll(rawCategories.where((c) => c.parentId == parent.id));
+                          list.addAll(
+                            rawCategories.where((c) => c.parentId == parent.id),
+                          );
                         }
                         for (final cat in rawCategories) {
-                          if (cat.parentId != null && !topLevel.any((p) => p.id == cat.parentId)) {
+                          if (cat.parentId != null &&
+                              !topLevel.any((p) => p.id == cat.parentId)) {
                             list.add(cat);
                           }
                         }
@@ -263,17 +299,25 @@ class _TransactionListScreenState
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Category', style: Theme.of(context).textTheme.titleSmall),
+                            Text(
+                              'Category',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
                             const SizedBox(height: 8),
                             DropdownButtonFormField<Category?>(
-                              initialValue: tempCategory != null ? dropdownValue : null,
+                              initialValue: tempCategory != null
+                                  ? dropdownValue
+                                  : null,
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.category),
                                 border: OutlineInputBorder(),
                               ),
                               hint: const Text('All Categories'),
                               items: [
-                                const DropdownMenuItem<Category?>(value: null, child: Text('All Categories')),
+                                const DropdownMenuItem<Category?>(
+                                  value: null,
+                                  child: Text('All Categories'),
+                                ),
                                 ...list.map((c) {
                                   final isSub = c.parentId != null;
                                   return DropdownMenuItem<Category?>(
@@ -282,14 +326,25 @@ class _TransactionListScreenState
                                       children: [
                                         if (isSub) ...[
                                           const SizedBox(width: 16),
-                                          Text('↳ ', style: TextStyle(color: Colors.grey[500])),
+                                          Text(
+                                            '↳ ',
+                                            style: TextStyle(
+                                              color: Colors.grey[500],
+                                            ),
+                                          ),
                                         ],
-                                        Icon(c.icon, color: c.color, size: isSub ? 16 : 20),
+                                        Icon(
+                                          c.icon,
+                                          color: c.color,
+                                          size: isSub ? 16 : 20,
+                                        ),
                                         const SizedBox(width: 8),
                                         Text(
                                           c.name,
                                           style: TextStyle(
-                                            fontWeight: isSub ? FontWeight.normal : FontWeight.bold,
+                                            fontWeight: isSub
+                                                ? FontWeight.normal
+                                                : FontWeight.bold,
                                           ),
                                         ),
                                       ],
@@ -317,27 +372,41 @@ class _TransactionListScreenState
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Account', style: Theme.of(context).textTheme.titleSmall),
+                            Text(
+                              'Account',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
                             const SizedBox(height: 8),
                             DropdownButtonFormField<Account?>(
-                              initialValue: tempAccount != null && list.contains(tempAccount) ? tempAccount : null,
+                              initialValue:
+                                  tempAccount != null &&
+                                      list.contains(tempAccount)
+                                  ? tempAccount
+                                  : null,
                               decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.account_balance_wallet_outlined),
+                                prefixIcon: Icon(
+                                  Icons.account_balance_wallet_outlined,
+                                ),
                                 border: OutlineInputBorder(),
                               ),
                               hint: const Text('All Accounts'),
                               items: [
-                                const DropdownMenuItem(value: null, child: Text('All Accounts')),
-                                ...list.map((a) => DropdownMenuItem(
-                                      value: a,
-                                      child: Row(
-                                        children: [
-                                          Icon(a.icon, color: a.color, size: 20),
-                                          const SizedBox(width: 8),
-                                          Text(a.name),
-                                        ],
-                                      ),
-                                    )),
+                                const DropdownMenuItem(
+                                  value: null,
+                                  child: Text('All Accounts'),
+                                ),
+                                ...list.map(
+                                  (a) => DropdownMenuItem(
+                                    value: a,
+                                    child: Row(
+                                      children: [
+                                        Icon(a.icon, color: a.color, size: 20),
+                                        const SizedBox(width: 8),
+                                        Text(a.name),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                               onChanged: (val) {
                                 setModalState(() {
@@ -352,7 +421,10 @@ class _TransactionListScreenState
                     const SizedBox(height: 16),
 
                     // Date Range
-                    Text('Date Range (within selected month)', style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      'Date Range (within selected month)',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
@@ -375,7 +447,10 @@ class _TransactionListScreenState
                               decoration: const InputDecoration(
                                 labelText: 'Start Date',
                                 border: OutlineInputBorder(),
-                                suffixIcon: Icon(Icons.calendar_today, size: 18),
+                                suffixIcon: Icon(
+                                  Icons.calendar_today,
+                                  size: 18,
+                                ),
                               ),
                               child: Text(
                                 tempStartDate != null
@@ -405,7 +480,10 @@ class _TransactionListScreenState
                               decoration: const InputDecoration(
                                 labelText: 'End Date',
                                 border: OutlineInputBorder(),
-                                suffixIcon: Icon(Icons.calendar_today, size: 18),
+                                suffixIcon: Icon(
+                                  Icons.calendar_today,
+                                  size: 18,
+                                ),
                               ),
                               child: Text(
                                 tempEndDate != null
@@ -420,7 +498,10 @@ class _TransactionListScreenState
                     const SizedBox(height: 16),
 
                     // Amount Range
-                    Text('Amount Range', style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      'Amount Range',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
@@ -432,7 +513,9 @@ class _TransactionListScreenState
                               border: OutlineInputBorder(),
                               prefixText: '₹',
                             ),
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -444,7 +527,9 @@ class _TransactionListScreenState
                               border: OutlineInputBorder(),
                               prefixText: '₹',
                             ),
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
                           ),
                         ),
                       ],
@@ -462,8 +547,12 @@ class _TransactionListScreenState
                             _filterAccount = tempAccount;
                             _filterStartDate = tempStartDate;
                             _filterEndDate = tempEndDate;
-                            _filterMinAmount = double.tryParse(tempMinController.text);
-                            _filterMaxAmount = double.tryParse(tempMaxController.text);
+                            _filterMinAmount = double.tryParse(
+                              tempMinController.text,
+                            );
+                            _filterMaxAmount = double.tryParse(
+                              tempMaxController.text,
+                            );
                           });
                           Navigator.of(context).pop();
                         },
@@ -482,7 +571,9 @@ class _TransactionListScreenState
 
   @override
   Widget build(BuildContext context) {
-    final monthlyTransactionsStream = ref.watch(transactionRepositoryProvider).watchTransactionsInMonth(_selectedMonth);
+    final monthlyTransactionsStream = ref
+        .watch(transactionRepositoryProvider)
+        .watchTransactionsInMonth(_selectedMonth);
     final textTheme = Theme.of(context).textTheme;
     final monthLabel = DateFormat.yMMMM().format(_selectedMonth);
 
@@ -538,8 +629,7 @@ class _TransactionListScreenState
             return const ShimmerList();
           }
           if (snapshot.hasError) {
-            return Center(
-                child: Text('An error occurred: ${snapshot.error}'));
+            return Center(child: Text('An error occurred: ${snapshot.error}'));
           }
 
           final transactions = snapshot.data!;
@@ -561,8 +651,7 @@ class _TransactionListScreenState
             children: [
               // Month Navigation
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -572,8 +661,9 @@ class _TransactionListScreenState
                     ),
                     Text(
                       monthLabel,
-                      style: textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.chevron_right),
@@ -586,27 +676,31 @@ class _TransactionListScreenState
               // Summary Header
               Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 12),
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildSummaryColumn(
-                        'Income',
-                        currencyFormat.format(filteredIncome),
-                        Colors.green,
-                        textTheme),
+                      'Income',
+                      currencyFormat.format(filteredIncome),
+                      Colors.green,
+                      textTheme,
+                    ),
                     _buildSummaryColumn(
-                        'Expense',
-                        currencyFormat.format(filteredExpense),
-                        Colors.red,
-                        textTheme),
+                      'Expense',
+                      currencyFormat.format(filteredExpense),
+                      Colors.red,
+                      textTheme,
+                    ),
                     _buildSummaryColumn(
-                        'Balance',
-                        currencyFormat
-                            .format(filteredIncome - filteredExpense),
-                        Theme.of(context).colorScheme.primary,
-                        textTheme),
+                      'Balance',
+                      currencyFormat.format(filteredIncome - filteredExpense),
+                      Theme.of(context).colorScheme.primary,
+                      textTheme,
+                    ),
                   ],
                 ),
               ),
@@ -614,8 +708,10 @@ class _TransactionListScreenState
               // Filter Chips
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     ActionChip(
@@ -628,7 +724,11 @@ class _TransactionListScreenState
                     // Type filter chip
                     if (_filterType != null) ...[
                       InputChip(
-                        label: Text(_filterType == domain.TransactionType.income ? 'Income' : 'Expense'),
+                        label: Text(
+                          _filterType == domain.TransactionType.income
+                              ? 'Income'
+                              : 'Expense',
+                        ),
                         onDeleted: () => setState(() => _filterType = null),
                       ),
                       const SizedBox(width: 8),
@@ -637,7 +737,11 @@ class _TransactionListScreenState
                     // Category filter chip
                     if (_filterCategory != null) ...[
                       InputChip(
-                        avatar: Icon(_filterCategory!.icon, color: _filterCategory!.color, size: 16),
+                        avatar: Icon(
+                          _filterCategory!.icon,
+                          color: _filterCategory!.color,
+                          size: 16,
+                        ),
                         label: Text(_filterCategory!.name),
                         onDeleted: () => setState(() => _filterCategory = null),
                       ),
@@ -647,7 +751,11 @@ class _TransactionListScreenState
                     // Account filter chip
                     if (_filterAccount != null) ...[
                       InputChip(
-                        avatar: Icon(_filterAccount!.icon, color: _filterAccount!.color, size: 16),
+                        avatar: Icon(
+                          _filterAccount!.icon,
+                          color: _filterAccount!.color,
+                          size: 16,
+                        ),
                         label: Text(_filterAccount!.name),
                         onDeleted: () => setState(() => _filterAccount = null),
                       ),
@@ -661,8 +769,8 @@ class _TransactionListScreenState
                           _filterStartDate != null && _filterEndDate != null
                               ? '${DateFormat.Md().format(_filterStartDate!)} - ${DateFormat.Md().format(_filterEndDate!)}'
                               : _filterStartDate != null
-                                  ? 'From ${DateFormat.Md().format(_filterStartDate!)}'
-                                  : 'To ${DateFormat.Md().format(_filterEndDate!)}',
+                              ? 'From ${DateFormat.Md().format(_filterStartDate!)}'
+                              : 'To ${DateFormat.Md().format(_filterEndDate!)}',
                         ),
                         onDeleted: () => setState(() {
                           _filterStartDate = null;
@@ -673,14 +781,15 @@ class _TransactionListScreenState
                     ],
 
                     // Amount range chip
-                    if (_filterMinAmount != null || _filterMaxAmount != null) ...[
+                    if (_filterMinAmount != null ||
+                        _filterMaxAmount != null) ...[
                       InputChip(
                         label: Text(
                           _filterMinAmount != null && _filterMaxAmount != null
                               ? '₹${_filterMinAmount!.toStringAsFixed(0)} - ₹${_filterMaxAmount!.toStringAsFixed(0)}'
                               : _filterMinAmount != null
-                                  ? '≥ ₹${_filterMinAmount!.toStringAsFixed(0)}'
-                                  : '≤ ₹${_filterMaxAmount!.toStringAsFixed(0)}',
+                              ? '≥ ₹${_filterMinAmount!.toStringAsFixed(0)}'
+                              : '≤ ₹${_filterMaxAmount!.toStringAsFixed(0)}',
                         ),
                         onDeleted: () => setState(() {
                           _filterMinAmount = null;
@@ -701,8 +810,9 @@ class _TransactionListScreenState
                     children: [
                       Text(
                         '${filteredTransactions.length} of ${transactions.length} transactions',
-                        style: textTheme.bodySmall
-                            ?.copyWith(color: Colors.grey),
+                        style: textTheme.bodySmall?.copyWith(
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),
@@ -716,16 +826,19 @@ class _TransactionListScreenState
                         message: _hasActiveFilters || _searchQuery.isNotEmpty
                             ? 'No matching transactions'
                             : 'No transactions this month',
-                        subMessage: _hasActiveFilters ||
-                                _searchQuery.isNotEmpty
+                        subMessage: _hasActiveFilters || _searchQuery.isNotEmpty
                             ? 'Try adjusting your filters or search.'
                             : 'Tap the + button to add your first one.',
                       )
                     : GroupedListView<domain.Transaction, DateTime>(
                         elements: filteredTransactions,
-                        groupBy: (tx) => DateTime(tx.date.year, tx.date.month, tx.date.day),
+                        groupBy: (tx) =>
+                            DateTime(tx.date.year, tx.date.month, tx.date.day),
                         groupHeaderBuilder: (domain.Transaction tx) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 8.0,
+                          ),
                           child: Text(
                             _formatDateHeader(tx.date),
                             style: textTheme.titleSmall?.copyWith(
@@ -734,7 +847,8 @@ class _TransactionListScreenState
                             ),
                           ),
                         ),
-                        itemBuilder: (context, tx) => TransactionListItem(transaction: tx),
+                        itemBuilder: (context, tx) =>
+                            TransactionListItem(transaction: tx),
                         useStickyGroupSeparators: false,
                         order: GroupedListOrder.DESC,
                       ),
@@ -748,7 +862,9 @@ class _TransactionListScreenState
           // Manual entry is the default add flow. Receipt scanning is offered
           // as a small link inside the manual entry form itself.
           Navigator.of(context).push(
-            MaterialPageRoute<void>(builder: (_) => const AddTransactionScreen()),
+            MaterialPageRoute<void>(
+              builder: (_) => const AddTransactionScreen(),
+            ),
           );
         },
         child: const Icon(Icons.add),
@@ -757,16 +873,25 @@ class _TransactionListScreenState
   }
 
   Widget _buildSummaryColumn(
-      String title, String amount, Color color, TextTheme textTheme) {
+    String title,
+    String amount,
+    Color color,
+    TextTheme textTheme,
+  ) {
     return Column(
       children: [
-        Text(title,
-            style:
-                textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
+        Text(
+          title,
+          style: textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+        ),
         const SizedBox(height: 4),
-        Text(amount,
-            style: textTheme.titleMedium
-                ?.copyWith(color: color, fontWeight: FontWeight.bold)),
+        Text(
+          amount,
+          style: textTheme.titleMedium?.copyWith(
+            color: color,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }
@@ -786,4 +911,3 @@ class _TransactionListScreenState
     }
   }
 }
-

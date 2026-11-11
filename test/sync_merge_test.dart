@@ -7,22 +7,14 @@ void main() {
   group('resolveSyncConflict', () {
     test('ignores remote timestamps more than 5 minutes in the future', () {
       expect(
-        resolveSyncConflict(
-          now,
-          now.add(const Duration(minutes: 6)),
-          now: now,
-        ),
+        resolveSyncConflict(now, now.add(const Duration(minutes: 6)), now: now),
         SyncMergeAction.keepLocal,
       );
     });
 
     test('a clearly newer remote wins', () {
       expect(
-        resolveSyncConflict(
-          now,
-          now.add(const Duration(seconds: 5)),
-          now: now,
-        ),
+        resolveSyncConflict(now, now.add(const Duration(seconds: 5)), now: now),
         SyncMergeAction.takeRemote,
       );
     });
@@ -40,11 +32,7 @@ void main() {
 
     test('near-simultaneous edits are a conflict, not a silent drop', () {
       expect(
-        resolveSyncConflict(
-          now,
-          now.add(const Duration(seconds: 1)),
-          now: now,
-        ),
+        resolveSyncConflict(now, now.add(const Duration(seconds: 1)), now: now),
         SyncMergeAction.conflict,
       );
       expect(resolveSyncConflict(now, now, now: now), SyncMergeAction.conflict);
@@ -60,13 +48,15 @@ void main() {
       conflicts.clear();
     });
 
-    Map<String, dynamic> remote(String uuid, DateTime updatedAt,
-            {String name = 'remote'}) =>
-        {
-          'uuid': uuid,
-          'updatedAt': updatedAt.millisecondsSinceEpoch,
-          'name': name,
-        };
+    Map<String, dynamic> remote(
+      String uuid,
+      DateTime updatedAt, {
+      String name = 'remote',
+    }) => {
+      'uuid': uuid,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      'name': name,
+    };
 
     Future<SyncMergeStats> merge(
       List<Map<String, dynamic>> changes, {
@@ -93,21 +83,20 @@ void main() {
     }
 
     test('inserts a row that does not exist locally', () async {
-      final stats = await merge([
-        remote('a', now, name: 'new'),
-      ]);
+      final stats = await merge([remote('a', now, name: 'new')]);
 
       expect(stats.inserted, 1);
       expect(local['a']!['name'], 'new');
     });
 
     test('takes a clearly newer remote row', () async {
-      local['a'] = remote('a', now.subtract(const Duration(seconds: 10)),
-          name: 'local');
+      local['a'] = remote(
+        'a',
+        now.subtract(const Duration(seconds: 10)),
+        name: 'local',
+      );
 
-      final stats = await merge([
-        remote('a', now, name: 'remote-new'),
-      ]);
+      final stats = await merge([remote('a', now, name: 'remote-new')]);
 
       expect(stats.updated, 1);
       expect(local['a']!['name'], 'remote-new');
@@ -124,19 +113,24 @@ void main() {
       expect(local['a']!['name'], 'local');
     });
 
-    test('records a conflict and keeps local for near-simultaneous edits',
-        () async {
-      local['a'] = remote('a', now, name: 'local');
+    test(
+      'records a conflict and keeps local for near-simultaneous edits',
+      () async {
+        local['a'] = remote('a', now, name: 'local');
 
-      final stats = await merge([
-        remote('a', now.add(const Duration(seconds: 1)), name: 'remote'),
-      ]);
+        final stats = await merge([
+          remote('a', now.add(const Duration(seconds: 1)), name: 'remote'),
+        ]);
 
-      expect(stats.conflicts, 1);
-      expect(conflicts, ['a:remote']);
-      expect(local['a']!['name'], 'local',
-          reason: 'the local row is kept and the remote payload is logged');
-    });
+        expect(stats.conflicts, 1);
+        expect(conflicts, ['a:remote']);
+        expect(
+          local['a']!['name'],
+          'local',
+          reason: 'the local row is kept and the remote payload is logged',
+        );
+      },
+    );
 
     test('ignores remote timestamps more than 5 minutes ahead', () async {
       final stats = await merge([

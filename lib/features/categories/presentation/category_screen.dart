@@ -21,8 +21,16 @@ class CategoryScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _showEditDialog(BuildContext context, WidgetRef ref, Category category) async {
-    final updated = await showCategoryFormDialog(context, ref, category: category);
+  Future<void> _showEditDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Category category,
+  ) async {
+    final updated = await showCategoryFormDialog(
+      context,
+      ref,
+      category: category,
+    );
     if (updated == null || !context.mounted) return;
 
     await ref.read(updateCategoryUseCaseProvider).call(updated);
@@ -105,7 +113,10 @@ class CategoryScreen extends ConsumerWidget {
       if (target == null || !context.mounted) return;
 
       try {
-        final moved = await repo.reassignAndDeleteCategory(category.id, target.id);
+        final moved = await repo.reassignAndDeleteCategory(
+          category.id,
+          target.id,
+        );
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -161,7 +172,9 @@ class CategoryScreen extends ConsumerWidget {
     final result = <Category>[];
     for (final parent in topLevel) {
       result.add(parent);
-      final children = categories.where((c) => c.parentId == parent.id).toList();
+      final children = categories
+          .where((c) => c.parentId == parent.id)
+          .toList();
       result.addAll(children);
     }
     // Add orphans just in case
@@ -175,14 +188,14 @@ class CategoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categoriesStream = ref.watch(watchAllCategoriesUseCaseProvider).call();
+    final categoriesStream = ref
+        .watch(watchAllCategoriesUseCaseProvider)
+        .call();
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Categories'),
-      ),
+      appBar: AppBar(title: const Text('Categories')),
       body: StreamBuilder<List<Category>>(
         stream: categoriesStream,
         builder: (context, snapshot) {
@@ -224,7 +237,7 @@ class CategoryScreen extends ConsumerWidget {
                     backgroundColor: category.color.withValues(alpha: 0.2),
                     maxRadius: isSub ? 16 : 20,
                     child: Icon(
-                      category.icon, 
+                      category.icon,
                       color: category.color,
                       size: isSub ? 16 : 20,
                     ),
@@ -234,15 +247,20 @@ class CategoryScreen extends ConsumerWidget {
                       if (isSub) ...[
                         Text(
                           '↳ ',
-                          style: TextStyle(color: Colors.grey[500], fontSize: 16),
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 16,
+                          ),
                         ),
                       ],
                       Expanded(
                         child: Text(
-                          category.name, 
+                          category.name,
                           style: isSub
                               ? textTheme.bodyLarge
-                              : textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                              : textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                         ),
                       ),
                     ],
@@ -254,14 +272,23 @@ class CategoryScreen extends ConsumerWidget {
                       IconButton(
                         icon: const Icon(Icons.edit_outlined),
                         tooltip: 'Edit',
-                        onPressed: () => _showEditDialog(context, ref, category),
+                        onPressed: () =>
+                            _showEditDialog(context, ref, category),
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete_outline, color: colorScheme.error),
+                        icon: Icon(
+                          Icons.delete_outline,
+                          color: colorScheme.error,
+                        ),
                         tooltip: 'Delete',
                         onPressed: category.isDefault
                             ? null
-                            : () => _confirmDelete(context, ref, category, categories),
+                            : () => _confirmDelete(
+                                context,
+                                ref,
+                                category,
+                                categories,
+                              ),
                       ),
                     ],
                   ),

@@ -43,8 +43,11 @@ void main() {
 
     test('older v2 iteration counts are flagged for upgrade', () async {
       final old = await PinHasher.hash('1234', iterations: 50000);
-      expect(await PinHasher.verify('1234', old), isTrue,
-          reason: 'existing hashes must keep verifying');
+      expect(
+        await PinHasher.verify('1234', old),
+        isTrue,
+        reason: 'existing hashes must keep verifying',
+      );
       expect(PinHasher.needsUpgrade(old), isTrue);
 
       final current = await PinHasher.hash('1234');
@@ -54,7 +57,10 @@ void main() {
 
     test('malformed stored values are rejected rather than throwing', () async {
       expect(await PinHasher.verify('1234', 'not-a-hash'), isFalse);
-      expect(await PinHasher.verify('1234', 'pbkdf2-sha256\$bad\$x\$y'), isFalse);
+      expect(
+        await PinHasher.verify('1234', 'pbkdf2-sha256\$bad\$x\$y'),
+        isFalse,
+      );
       expect(
         await PinHasher.verify('1234', 'pbkdf2-sha256\$0\$AAAA\$AAAA'),
         isFalse,
@@ -89,7 +95,10 @@ void main() {
       final until = await limiter.registerFailure(now: now);
       expect(until, isNotNull);
       expect(await limiter.isLocked(now: now), isTrue);
-      expect(await limiter.isLocked(now: until!.add(const Duration(seconds: 1))), isFalse);
+      expect(
+        await limiter.isLocked(now: until!.add(const Duration(seconds: 1))),
+        isFalse,
+      );
     });
 
     test('cooldown starts after the free attempts and then grows', () {
@@ -122,8 +131,11 @@ void main() {
       expect(await limiter.isLocked(now: now), isTrue);
 
       final rolledBack = now.subtract(const Duration(hours: 3));
-      expect(await limiter.isLocked(now: rolledBack), isTrue,
-          reason: 'the persisted high-water mark must keep the lockout');
+      expect(
+        await limiter.isLocked(now: rolledBack),
+        isTrue,
+        reason: 'the persisted high-water mark must keep the lockout',
+      );
       expect(
         (await limiter.remainingLockout(now: rolledBack)).inSeconds,
         greaterThanOrEqualTo(29),

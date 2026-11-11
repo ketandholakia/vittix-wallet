@@ -33,7 +33,11 @@ class BudgetListItem extends ConsumerWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () async {
-          final result = await showBudgetFormDialog(context, ref, budget: budget);
+          final result = await showBudgetFormDialog(
+            context,
+            ref,
+            budget: budget,
+          );
           if (result != null) {
             await ref.read(updateBudgetUseCaseProvider).call(result);
           }
@@ -51,23 +55,33 @@ class BudgetListItem extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(budget.category.name, style: Theme.of(context).textTheme.titleMedium),
+                        Text(
+                          budget.category.name,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                         if (budget.rolloverAmount != 0.0) ...[
                           const SizedBox(height: 2),
                           Row(
                             children: [
                               Icon(
-                                budget.rolloverAmount > 0 ? Icons.trending_up : Icons.trending_down,
+                                budget.rolloverAmount > 0
+                                    ? Icons.trending_up
+                                    : Icons.trending_down,
                                 size: 12,
-                                color: budget.rolloverAmount > 0 ? Colors.green : Colors.red,
+                                color: budget.rolloverAmount > 0
+                                    ? Colors.green
+                                    : Colors.red,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 budget.rolloverAmount > 0
                                     ? '${currencyFormat.format(budget.rolloverAmount)} rolled over'
                                     : '${currencyFormat.format(budget.rolloverAmount.abs())} deficit carried',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: budget.rolloverAmount > 0 ? Colors.green : Colors.red,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: budget.rolloverAmount > 0
+                                          ? Colors.green
+                                          : Colors.red,
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
@@ -79,11 +93,17 @@ class BudgetListItem extends ConsumerWidget {
                   ),
                   Text(
                     '${(progress * 100).toStringAsFixed(0)}%',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(width: 4),
                   IconButton(
-                    icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error, size: 20),
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: Theme.of(context).colorScheme.error,
+                      size: 20,
+                    ),
                     onPressed: () async {
                       final confirmed = await showDialog<bool>(
                         context: context,
@@ -101,14 +121,18 @@ class BudgetListItem extends ConsumerWidget {
                               onPressed: () => Navigator.of(context).pop(true),
                               child: Text(
                                 'Delete',
-                                style: TextStyle(color: Theme.of(context).colorScheme.error),
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
                               ),
                             ),
                           ],
                         ),
                       );
                       if (confirmed == true) {
-                        await ref.read(deleteBudgetUseCaseProvider).call(budget.id);
+                        await ref
+                            .read(deleteBudgetUseCaseProvider)
+                            .call(budget.id);
                       }
                     },
                   ),
@@ -135,12 +159,15 @@ class BudgetListItem extends ConsumerWidget {
                     children: [
                       Text(
                         'Total Limit: ${currencyFormat.format(total)}',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       if (budget.rolloverAmount != 0.0)
                         Text(
                           '(${currencyFormat.format(budget.amount)} base)',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                     ],
                   ),
@@ -152,9 +179,9 @@ class BudgetListItem extends ConsumerWidget {
                 child: Text(
                   'Remaining: ${currencyFormat.format(remaining)}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: remaining < 0 ? Colors.red : null,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: remaining < 0 ? Colors.red : null,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

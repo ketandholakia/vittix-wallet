@@ -5,8 +5,9 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
   UserDao(super.db);
 
   /// Users are global: one person can belong to several wallets.
-  Stream<List<User>> watchAllUsers() =>
-      (select(users)..orderBy([(u) => OrderingTerm.asc(u.displayName)])).watch();
+  Stream<List<User>> watchAllUsers() => (select(
+    users,
+  )..orderBy([(u) => OrderingTerm.asc(u.displayName)])).watch();
 
   Future<List<User>> getAllUsers() =>
       (select(users)..orderBy([(u) => OrderingTerm.asc(u.displayName)])).get();
@@ -23,28 +24,28 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
   /// not have to care whether the identity already exists.
   Future<User> findOrCreateUser(String displayName, {String? email}) async {
     final trimmed = displayName.trim();
-    final existing = await (select(users)
-          ..where((u) => u.displayName.equals(trimmed))
-          ..limit(1))
-        .getSingleOrNull();
+    final existing =
+        await (select(users)
+              ..where((u) => u.displayName.equals(trimmed))
+              ..limit(1))
+            .getSingleOrNull();
     if (existing != null) return existing;
 
-    final id = await insertUser(UsersCompanion.insert(
-      displayName: trimmed,
-      email: Value(email),
-    ));
+    final id = await insertUser(
+      UsersCompanion.insert(displayName: trimmed, email: Value(email)),
+    );
     return (await getUserById(id))!;
   }
 
   Future<bool> updateUser(UsersCompanion user) async {
     if (!user.id.present) return false;
-    final updated = await (update(users)
-          ..where((u) => u.id.equals(user.id.value)))
-        .write(user.copyWith(updatedAt: Value(DateTime.now())));
+    final updated =
+        await (update(users)..where((u) => u.id.equals(user.id.value))).write(
+          user.copyWith(updatedAt: Value(DateTime.now())),
+        );
     return updated > 0;
   }
 
   Future<int> deleteUser(int id) =>
       (delete(users)..where((u) => u.id.equals(id))).go();
 }
-

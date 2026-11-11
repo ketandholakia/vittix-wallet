@@ -99,17 +99,42 @@ class CsvTransactionImporter {
       throw FormatException('Missing required CSV column: $label');
     }
 
-    final dateIndex = requiredIndex(['date', 'txn_date', 'transaction date', 'transaction_date'], 'date');
-    final typeIndex = requiredIndex(['type', 'transaction type', 'txn_type'], 'type');
-    final categoryIndex = requiredIndex(['category', 'category name', 'category_name'], 'category');
-    final accountIndex = requiredIndex(['account', 'account name', 'account_name'], 'account');
-    final amountIndex = requiredIndex(['amount', 'transaction amount', 'txn_amount'], 'amount');
-    final noteIndex = _firstMatchingIndex(
-      columnIndex,
-      ['note', 'notes', 'description', 'memo'],
-    );
+    final dateIndex = requiredIndex([
+      'date',
+      'txn_date',
+      'transaction date',
+      'transaction_date',
+    ], 'date');
+    final typeIndex = requiredIndex([
+      'type',
+      'transaction type',
+      'txn_type',
+    ], 'type');
+    final categoryIndex = requiredIndex([
+      'category',
+      'category name',
+      'category_name',
+    ], 'category');
+    final accountIndex = requiredIndex([
+      'account',
+      'account name',
+      'account_name',
+    ], 'account');
+    final amountIndex = requiredIndex([
+      'amount',
+      'transaction amount',
+      'txn_amount',
+    ], 'amount');
+    final noteIndex = _firstMatchingIndex(columnIndex, [
+      'note',
+      'notes',
+      'description',
+      'memo',
+    ]);
 
-    final existingTransactions = await transactionRepository.watchAllTransactions().first;
+    final existingTransactions = await transactionRepository
+        .watchAllTransactions()
+        .first;
     final existingFingerprints = {
       for (final tx in existingTransactions) _fingerprintFromTransaction(tx),
     };
@@ -117,8 +142,12 @@ class CsvTransactionImporter {
 
     final accounts = await accountRepository.watchAllAccounts().first;
     final categories = await categoryRepository.watchAllCategories().first;
-    final accountByName = {for (final account in accounts) _normalize(account.name): account};
-    final categoryByName = {for (final category in categories) _normalize(category.name): category};
+    final accountByName = {
+      for (final account in accounts) _normalize(account.name): account,
+    };
+    final categoryByName = {
+      for (final category in categories) _normalize(category.name): category,
+    };
 
     var imported = 0;
     var duplicates = 0;
@@ -151,7 +180,11 @@ class CsvTransactionImporter {
         );
 
         final amount = _parseAmount(row[amountIndex]);
-        final note = noteIndex == null ? null : row[noteIndex].trim().isEmpty ? null : row[noteIndex].trim();
+        final note = noteIndex == null
+            ? null
+            : row[noteIndex].trim().isEmpty
+            ? null
+            : row[noteIndex].trim();
         final fingerprint = _fingerprint(
           date: date,
           type: type,
@@ -161,7 +194,8 @@ class CsvTransactionImporter {
           note: note,
         );
 
-        if (!seenFingerprints.add(fingerprint) || existingFingerprints.contains(fingerprint)) {
+        if (!seenFingerprints.add(fingerprint) ||
+            existingFingerprints.contains(fingerprint)) {
           duplicates++;
           continue;
         }
@@ -226,22 +260,54 @@ class CsvTransactionImporter {
       throw FormatException('Missing required CSV column: $label');
     }
 
-    final dateIndex = requiredIndex(['date', 'txn_date', 'transaction date', 'transaction_date'], 'date');
-    final typeIndex = requiredIndex(['type', 'transaction type', 'txn_type'], 'type');
-    final categoryIndex = requiredIndex(['category', 'category name', 'category_name'], 'category');
-    final accountIndex = requiredIndex(['account', 'account name', 'account_name'], 'account');
-    final amountIndex = requiredIndex(['amount', 'transaction amount', 'txn_amount'], 'amount');
-    final noteIndex = _firstMatchingIndex(columnIndex, ['note', 'notes', 'description', 'memo']);
+    final dateIndex = requiredIndex([
+      'date',
+      'txn_date',
+      'transaction date',
+      'transaction_date',
+    ], 'date');
+    final typeIndex = requiredIndex([
+      'type',
+      'transaction type',
+      'txn_type',
+    ], 'type');
+    final categoryIndex = requiredIndex([
+      'category',
+      'category name',
+      'category_name',
+    ], 'category');
+    final accountIndex = requiredIndex([
+      'account',
+      'account name',
+      'account_name',
+    ], 'account');
+    final amountIndex = requiredIndex([
+      'amount',
+      'transaction amount',
+      'txn_amount',
+    ], 'amount');
+    final noteIndex = _firstMatchingIndex(columnIndex, [
+      'note',
+      'notes',
+      'description',
+      'memo',
+    ]);
     final detectedDateFormat = _detectDateFormat(rows.skip(1), dateIndex);
 
-    final existingTransactions = await transactionRepository.watchAllTransactions().first;
+    final existingTransactions = await transactionRepository
+        .watchAllTransactions()
+        .first;
     final existingFingerprints = {
       for (final tx in existingTransactions) _fingerprintFromTransaction(tx),
     };
     final accounts = await accountRepository.watchAllAccounts().first;
     final categories = await categoryRepository.watchAllCategories().first;
-    final accountByName = {for (final account in accounts) _normalize(account.name): account};
-    final categoryByName = {for (final category in categories) _normalize(category.name): category};
+    final accountByName = {
+      for (final account in accounts) _normalize(account.name): account,
+    };
+    final categoryByName = {
+      for (final category in categories) _normalize(category.name): category,
+    };
     final seenFingerprints = <String>{};
     final missingAccounts = <String>{};
     final missingCategories = <String>{};
@@ -267,11 +333,17 @@ class CsvTransactionImporter {
 
         final categoryKey = _normalize(categoryName);
         final accountKey = _normalize(accountName);
-        if (!categoryByName.containsKey(categoryKey)) missingCategories.add(categoryName);
-        if (!accountByName.containsKey(accountKey)) missingAccounts.add(accountName);
+        if (!categoryByName.containsKey(categoryKey))
+          missingCategories.add(categoryName);
+        if (!accountByName.containsKey(accountKey))
+          missingAccounts.add(accountName);
 
         final amount = _parseAmount(row[amountIndex]);
-        final note = noteIndex == null ? null : row[noteIndex].trim().isEmpty ? null : row[noteIndex].trim();
+        final note = noteIndex == null
+            ? null
+            : row[noteIndex].trim().isEmpty
+            ? null
+            : row[noteIndex].trim();
         final categoryId = categoryByName[categoryKey]?.id ?? 0;
         final accountId = accountByName[accountKey]?.id ?? 0;
         final fingerprint = _fingerprint(
@@ -282,7 +354,9 @@ class CsvTransactionImporter {
           accountId: accountId,
           note: note,
         );
-        final duplicate = !seenFingerprints.add(fingerprint) || existingFingerprints.contains(fingerprint);
+        final duplicate =
+            !seenFingerprints.add(fingerprint) ||
+            existingFingerprints.contains(fingerprint);
         if (duplicate) {
           duplicates++;
           _appendPreviewRow(
@@ -459,7 +533,8 @@ class CsvTransactionImporter {
     final firstDigit = input.indexOf(RegExp(r'\d'));
     if (firstDigit > 0) {
       final prefix = input.substring(0, firstDigit);
-      input = '${prefix.contains('-') ? '-' : ''}${input.substring(firstDigit)}';
+      input =
+          '${prefix.contains('-') ? '-' : ''}${input.substring(firstDigit)}';
     }
 
     final cleaned = input.replaceAll(RegExp(r'[^0-9,.\-]'), '').trim();
@@ -474,7 +549,9 @@ class CsvTransactionImporter {
     if (lastComma >= 0 && lastDot >= 0) {
       // Both separators present: whichever comes last is the decimal point.
       normalized = lastComma > lastDot
-          ? cleaned.replaceAll('.', '').replaceAll(',', '.') // 1.234,56
+          ? cleaned
+                .replaceAll('.', '')
+                .replaceAll(',', '.') // 1.234,56
           : cleaned.replaceAll(',', ''); // 1,234.56 / 1,50,000.00
     } else if (lastComma >= 0) {
       // Only commas. A single comma followed by 1-2 digits is a decimal
@@ -585,7 +662,10 @@ class CsvTransactionImporter {
     'MM-dd-yyyy': DateFormat('MM-dd-yyyy'),
   };
 
-  static int? _firstMatchingIndex(Map<String, int> columnIndex, List<String> names) {
+  static int? _firstMatchingIndex(
+    Map<String, int> columnIndex,
+    List<String> names,
+  ) {
     for (final name in names) {
       final index = columnIndex[_normalize(name)];
       if (index != null) {
@@ -595,7 +675,10 @@ class CsvTransactionImporter {
     return null;
   }
 
-  static List<List<String>> _parseCsv(String input, {required String delimiter}) {
+  static List<List<String>> _parseCsv(
+    String input, {
+    required String delimiter,
+  }) {
     final rows = <List<String>>[];
     var row = <String>[];
     final field = StringBuffer();

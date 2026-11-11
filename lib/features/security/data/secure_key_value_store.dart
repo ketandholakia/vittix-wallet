@@ -10,10 +10,8 @@ abstract class SecureKeyValueStore {
 /// Production implementation backed by the platform keystore.
 class SecureStorageKeyValueStore implements SecureKeyValueStore {
   SecureStorageKeyValueStore([FlutterSecureStorage? storage])
-      : _storage = storage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(),
-            );
+    : _storage =
+          storage ?? const FlutterSecureStorage(aOptions: AndroidOptions());
 
   final FlutterSecureStorage _storage;
 

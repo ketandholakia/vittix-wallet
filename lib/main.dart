@@ -27,13 +27,11 @@ Future<void> main() async {
   useSqlCipher();
 
   if (kDebugMode) {
-    debugPrint('Flutter binding initialized in ${startup.elapsedMilliseconds}ms');
+    debugPrint(
+      'Flutter binding initialized in ${startup.elapsedMilliseconds}ms',
+    );
   }
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -109,7 +107,8 @@ class _MyAppState extends ConsumerState<MyApp> {
       key: 'lastRecurringBootstrapDay',
       today: today,
       label: 'recurring transactions',
-      action: () => ref.read(processRecurringTransactionsUseCaseProvider).call(),
+      action: () =>
+          ref.read(processRecurringTransactionsUseCaseProvider).call(),
     );
 
     await _runOncePerDay(
@@ -236,11 +235,7 @@ class _BrandSplashScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF071524),
-              Color(0xFF0B1F3A),
-              Color(0xFF12315A),
-            ],
+            colors: [Color(0xFF071524), Color(0xFF0B1F3A), Color(0xFF12315A)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -255,14 +250,20 @@ class _BrandSplashScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: colors.surface.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(28),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.12),
+                    ),
                   ),
                   child: const BrandLogo(size: 112),
                 ),
                 const SizedBox(height: 24),
                 const Text(
                   'Vittix Wallet',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 const Text(
@@ -277,7 +278,9 @@ class _BrandSplashScreen extends StatelessWidget {
                     minHeight: 4,
                     borderRadius: BorderRadius.circular(99),
                     backgroundColor: Colors.white.withValues(alpha: 0.12),
-                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF5AD84F)),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      Color(0xFF5AD84F),
+                    ),
                   ),
                 ),
               ],

@@ -9,11 +9,20 @@ import 'package:uuid/uuid.dart';
 @DataClassName('WalletExpenseSplit')
 class WalletExpenseSplits extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get walletId => integer().references(Wallets, #id, onDelete: KeyAction.cascade)();
+  IntColumn get walletId =>
+      integer().references(Wallets, #id, onDelete: KeyAction.cascade)();
   TextColumn get uuid => text().clientDefault(() => const Uuid().v4())();
-  IntColumn get transactionId => integer().references(Transactions, #id, onDelete: KeyAction.cascade)();
-  IntColumn get paidByMemberId => integer().references(WalletMembers, #id, onDelete: KeyAction.cascade)();
-  TextColumn get splitMethod => text().map(const EnumNameConverter(WalletExpenseSplitMethod.values))();
-  IntColumn get createdByAccountId => integer().nullable().references(Accounts, #id, onDelete: KeyAction.setNull)();
-  DateTimeColumn get createdAt => dateTime().clientDefault(() => DateTime.now())();
+  IntColumn get transactionId =>
+      integer().references(Transactions, #id, onDelete: KeyAction.cascade)();
+  IntColumn get paidByMemberId =>
+      integer().references(WalletMembers, #id, onDelete: KeyAction.cascade)();
+  TextColumn get splitMethod =>
+      text().map(const EnumNameConverter(WalletExpenseSplitMethod.values))();
+  IntColumn get createdByAccountId => integer().nullable().references(
+    Accounts,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
+  DateTimeColumn get createdAt =>
+      dateTime().clientDefault(() => DateTime.now())();
 }

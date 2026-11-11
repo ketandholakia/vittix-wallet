@@ -1,5 +1,5 @@
-
-import 'package:vittix_wallet/core/database/app_database.dart' hide Column, Category;
+import 'package:vittix_wallet/core/database/app_database.dart'
+    hide Column, Category;
 import 'package:flutter/material.dart';
 import 'package:vittix_wallet/core/providers/database_provider.dart';
 import 'package:vittix_wallet/core/providers/usecase_providers.dart';
@@ -11,10 +11,12 @@ class MerchantMappingsScreen extends ConsumerStatefulWidget {
   const MerchantMappingsScreen({super.key});
 
   @override
-  ConsumerState<MerchantMappingsScreen> createState() => _MerchantMappingsScreenState();
+  ConsumerState<MerchantMappingsScreen> createState() =>
+      _MerchantMappingsScreenState();
 }
 
-class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen> {
+class _MerchantMappingsScreenState
+    extends ConsumerState<MerchantMappingsScreen> {
   @override
   Widget build(BuildContext context) {
     final currentWalletId = ref.watch(currentWalletIdProvider);
@@ -38,7 +40,9 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
           }
           final mappings = snapshot.data!;
           if (mappings.isEmpty) {
-            return const Center(child: Text('No custom merchant mappings yet.'));
+            return const Center(
+              child: Text('No custom merchant mappings yet.'),
+            );
           }
           return ListView.builder(
             itemCount: mappings.length,
@@ -57,7 +61,10 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
                     IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () async {
-                        await dao.deleteMerchantMapping(mapping.id, authorizedWalletId: currentWalletId);
+                        await dao.deleteMerchantMapping(
+                          mapping.id,
+                          authorizedWalletId: currentWalletId,
+                        );
                         setState(() {});
                       },
                     ),
@@ -71,9 +78,16 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
     );
   }
 
-  Future<void> _showMappingDialog(BuildContext context, MerchantMapping? existing) async {
-    final patternController = TextEditingController(text: existing?.originalPattern);
-    final cleanNameController = TextEditingController(text: existing?.cleanName);
+  Future<void> _showMappingDialog(
+    BuildContext context,
+    MerchantMapping? existing,
+  ) async {
+    final patternController = TextEditingController(
+      text: existing?.originalPattern,
+    );
+    final cleanNameController = TextEditingController(
+      text: existing?.cleanName,
+    );
     int? selectedCategoryId = existing?.defaultCategoryId;
 
     final categoriesStream = ref.read(watchAllCategoriesUseCaseProvider).call();
@@ -94,15 +108,21 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
                   children: [
                     TextField(
                       controller: patternController,
-                      decoration: const InputDecoration(labelText: 'Original Pattern (Regex allowed)'),
+                      decoration: const InputDecoration(
+                        labelText: 'Original Pattern (Regex allowed)',
+                      ),
                     ),
                     TextField(
                       controller: cleanNameController,
-                      decoration: const InputDecoration(labelText: 'Clean Name'),
+                      decoration: const InputDecoration(
+                        labelText: 'Clean Name',
+                      ),
                     ),
                     DropdownButtonFormField<int>(
                       initialValue: selectedCategoryId,
-                      decoration: const InputDecoration(labelText: 'Default Category (Optional)'),
+                      decoration: const InputDecoration(
+                        labelText: 'Default Category (Optional)',
+                      ),
                       items: [
                         const DropdownMenuItem<int>(
                           value: null,
@@ -113,7 +133,7 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
                             value: c.id,
                             child: Text(c.name),
                           ),
-                        )
+                        ),
                       ],
                       onChanged: (val) {
                         setStateDialog(() {
@@ -131,7 +151,9 @@ class _MerchantMappingsScreenState extends ConsumerState<MerchantMappingsScreen>
                 ),
                 FilledButton(
                   onPressed: () async {
-                    if (patternController.text.isEmpty || cleanNameController.text.isEmpty) return;
+                    if (patternController.text.isEmpty ||
+                        cleanNameController.text.isEmpty)
+                      return;
 
                     final dao = ref.read(smsParsingDaoProvider);
                     final currentWalletId = ref.read(currentWalletIdProvider);

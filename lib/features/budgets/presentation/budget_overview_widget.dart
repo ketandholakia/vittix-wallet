@@ -10,8 +10,9 @@ class BudgetOverviewWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rolloverMode = ref.watch(rolloverModeProvider);
-    final budgetStatusStream =
-        ref.watch(getBudgetStatusUseCaseProvider).call(DateTime.now(), rolloverMode);
+    final budgetStatusStream = ref
+        .watch(getBudgetStatusUseCaseProvider)
+        .call(DateTime.now(), rolloverMode);
     final currencyFormat = ref.watch(currencyFormatProvider);
     final textTheme = Theme.of(context).textTheme;
 
@@ -47,8 +48,10 @@ class BudgetOverviewWidget extends ConsumerWidget {
               height: 100,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 itemCount: budgets.length,
                 separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
@@ -56,8 +59,9 @@ class BudgetOverviewWidget extends ConsumerWidget {
                   final spent = budget.spentAmount;
                   final total = budget.totalLimit;
                   final remaining = budget.remainingAmount;
-                  final progress =
-                      total > 0 ? (spent / total).clamp(0.0, 1.0) : 0.0;
+                  final progress = total > 0
+                      ? (spent / total).clamp(0.0, 1.0)
+                      : 0.0;
 
                   Color progressColor;
                   if (progress >= 1.0) {
@@ -77,8 +81,11 @@ class BudgetOverviewWidget extends ConsumerWidget {
                         children: [
                           Row(
                             children: [
-                              Icon(budget.category.icon,
-                                  color: budget.category.color, size: 18),
+                              Icon(
+                                budget.category.icon,
+                                color: budget.category.color,
+                                size: 18,
+                              ),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
@@ -90,7 +97,8 @@ class BudgetOverviewWidget extends ConsumerWidget {
                               Text(
                                 '${(progress * 100).toStringAsFixed(0)}%',
                                 style: textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),

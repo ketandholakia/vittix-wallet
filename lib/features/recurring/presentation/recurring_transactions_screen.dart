@@ -52,7 +52,8 @@ class RecurringTransactionsScreen extends ConsumerWidget {
             return const EmptyStateWidget(
               icon: Icons.replay,
               message: 'No Recurring Templates',
-              subMessage: 'Create templates to automatically record rent, subscriptions, or salaries.',
+              subMessage:
+                  'Create templates to automatically record rent, subscriptions, or salaries.',
             );
           }
 
@@ -68,7 +69,9 @@ class RecurringTransactionsScreen extends ConsumerWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                   side: BorderSide(
-                    color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).dividerColor.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Padding(
@@ -76,8 +79,14 @@ class RecurringTransactionsScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: template.category.color.withValues(alpha: 0.2),
-                        child: Icon(template.category.icon, color: template.category.color, size: 20),
+                        backgroundColor: template.category.color.withValues(
+                          alpha: 0.2,
+                        ),
+                        child: Icon(
+                          template.category.icon,
+                          color: template.category.color,
+                          size: 20,
+                        ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -86,23 +95,34 @@ class RecurringTransactionsScreen extends ConsumerWidget {
                           children: [
                             Text(
                               template.name,
-                              style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                              style: textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               '${template.category.name} · ${template.account.name}',
-                              style: textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                              style: textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
                             ),
                             const SizedBox(height: 6),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
                                 '${template.interval.label} · Next due: ${DateFormat.yMMMd().format(template.nextDueDate)}',
-                                style: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
+                                style: textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ],
@@ -120,23 +140,34 @@ class RecurringTransactionsScreen extends ConsumerWidget {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+                            icon: Icon(
+                              Icons.delete_outline,
+                              color: Theme.of(context).colorScheme.error,
+                            ),
                             onPressed: () async {
                               final confirmed = await showDialog<bool>(
                                 context: context,
                                 builder: (ctx) => AlertDialog(
                                   title: const Text('Delete Template'),
-                                  content: Text('Are you sure you want to delete the recurring template "${template.name}"?'),
+                                  content: Text(
+                                    'Are you sure you want to delete the recurring template "${template.name}"?',
+                                  ),
                                   actions: [
                                     TextButton(
-                                      onPressed: () => Navigator.of(ctx).pop(false),
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(false),
                                       child: const Text('Cancel'),
                                     ),
                                     TextButton(
-                                      onPressed: () => Navigator.of(ctx).pop(true),
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(true),
                                       child: Text(
                                         'Delete',
-                                        style: TextStyle(color: Theme.of(context).colorScheme.error),
+                                        style: TextStyle(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.error,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -144,7 +175,9 @@ class RecurringTransactionsScreen extends ConsumerWidget {
                               );
 
                               if (confirmed == true) {
-                                await ref.read(deleteRecurringUseCaseProvider).call(template.id);
+                                await ref
+                                    .read(deleteRecurringUseCaseProvider)
+                                    .call(template.id);
                               }
                             },
                           ),
@@ -161,7 +194,9 @@ class RecurringTransactionsScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute<void>(builder: (_) => const AddRecurringTransactionScreen()),
+            MaterialPageRoute<void>(
+              builder: (_) => const AddRecurringTransactionScreen(),
+            ),
           );
         },
         child: const Icon(Icons.add),

@@ -20,7 +20,10 @@ class ForecastHistoryWidget extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Forecast Trends', style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                'Forecast Trends',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 12),
               for (final point in history.points)
                 Padding(
@@ -34,7 +37,9 @@ class ForecastHistoryWidget extends ConsumerWidget {
                   ),
                 ),
               const SizedBox(height: 4),
-              const Text('30-day trend and 90-day trend are derived locally from forecast providers.'),
+              const Text(
+                '30-day trend and 90-day trend are derived locally from forecast providers.',
+              ),
             ],
           ),
         ),
@@ -44,4 +49,3 @@ class ForecastHistoryWidget extends ConsumerWidget {
     );
   }
 }
-
